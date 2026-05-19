@@ -38,29 +38,30 @@ const allowedProtocols = new Set(["https:", "http:", "mailto:"]);
 const rawSiteContent = {
   hero: {
     name: "Merce",
-    tagline: "Frontend engineer building thoughtful web experiences.",
+    tagline: "Software Engineer specialized in Flutter and mobile development.",
     summary:
-      "I turn product ideas into accessible, fast, maintainable interfaces with strong foundations and a practical delivery mindset.",
+      "I build production-ready mobile experiences with clean architecture, reliable delivery practices, and a strong product mindset.",
   },
   summary: {
     eyebrow: "About",
     title:
-      "I care about clean architecture, resilient UI, and teams that can move without losing quality.",
-    body: "My work combines frontend engineering, product thinking, and a strong bias for readable systems. This MVP keeps the portfolio focused: who I am, what I build, and how to reach me.",
+      "I care about mobile products that stay maintainable while teams keep moving.",
+    body: "I’m a Software Engineer specialized in Flutter and mobile development, with hands-on experience shipping production apps and contributing across UI, business logic, REST API integration, testing, and QA validation. My background combines mobile delivery, clean architecture, and practical product thinking while I keep growing across Android/Kotlin, iOS/Swift, and full-stack foundations through projects like InkScroller.",
   },
   contacts: [
     {
-      label: "Email",
-      href: "mailto:hello@example.com",
+      label: "GitLab",
+      href: "https://gitlab.com/mfranchescagonzalezcejas/",
+      external: true,
     },
     {
-      label: "GitLab",
-      href: "https://gitlab.com/merce",
+      label: "GitHub",
+      href: "https://github.com/mfranchescagonzalezcejas",
       external: true,
     },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/merce",
+      href: "https://www.linkedin.com/in/mercedes-franchesca-gonzalez-cejas-7555a7177",
       external: true,
     },
   ],
@@ -68,27 +69,38 @@ const rawSiteContent = {
     {
       name: "InkScroller",
       description:
-        "A focused reading and writing experience for long-form text, built as a product-minded side project with a dedicated backend roadmap.",
+        "A full-stack mobile manga reader built with Flutter, FastAPI, PostgreSQL, Firebase Auth, Cloud Run, Riverpod, and GitHub Actions.",
       featured: true,
       links: [
         {
-          label: "Project repository",
-          href: "https://github.com/merce/inkscroller",
+          label: "Frontend",
+          href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+          external: true,
+        },
+        {
+          label: "Backend",
+          href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
           external: true,
         },
       ],
     },
     {
+      name: "La Mercè 2024",
+      description:
+        "A Flutter app released to production for a Barcelona cultural event, developed as part of real mobile product delivery.",
+      links: [],
+    },
+    {
+      name: "Barcelona a la Butxaca",
+      description:
+        "A public mobile app where I contributed to the air quality feature and ongoing maintenance and product evolution.",
+      links: [],
+    },
+    {
       name: "Portfolio Web",
       description:
-        "This static Astro landing page, designed as a small, accessible, deployable portfolio MVP.",
-      links: [
-        {
-          label: "Source placeholder",
-          href: "https://example.com/portfolio-web",
-          external: true,
-        },
-      ],
+        "This static Astro landing page, designed as a small, accessible, deployable portfolio MVP with Vercel deployment.",
+      links: [],
     },
   ],
 } satisfies SiteContent;
