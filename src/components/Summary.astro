@@ -5,13 +5,11 @@ const { summary } = Astro.props;
 
 <section
   id="about"
-  class="scroll-mt-8 px-6 py-12 lg:px-8"
+  class="scroll-mt-32 px-6 py-12 lg:px-8"
   aria-labelledby="summary-title"
 >
   <div class="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_24rem]">
-    <div
-      class="rounded-3xl border border-teal-700/50 bg-slate-900/70 p-8 sm:p-10"
-    >
+    <div class="rounded-3xl border border-[#134E4A] bg-[#0B1B2A] p-8 sm:p-10">
       <p
         class="text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase"
       >
@@ -23,13 +21,13 @@ const { summary } = Astro.props;
       >
         {summary.title}
       </h2>
-      <p class="mt-5 text-lg leading-8 text-teal-50/75">
+      <p class="mt-5 text-lg leading-8 text-[#B6E7E1]">
         {summary.body}
       </p>
     </div>
 
     <aside
-      class="rounded-3xl border border-cyan-600/45 bg-cyan-950/35 p-7"
+      class="rounded-3xl border border-[#0E7490] bg-[#062A30] p-7"
       aria-label="Working style"
     >
       <p
@@ -40,12 +38,12 @@ const { summary } = Astro.props;
       <h3 class="mt-4 text-2xl font-extrabold text-white">
         Clean architecture
       </h3>
-      <p class="mt-3 text-sm leading-6 text-cyan-100/75">
+      <p class="mt-3 text-sm leading-6 text-[#BAE6FD]">
         Readable systems, layered thinking, repository patterns, and
         maintainable delivery.
       </p>
       <h3 class="mt-5 text-2xl font-extrabold text-white">Quality mindset</h3>
-      <p class="mt-3 text-sm leading-6 text-cyan-100/75">
+      <p class="mt-3 text-sm leading-6 text-[#BAE6FD]">
         Testing, functional validation, Jira workflows, and release confidence
         from QA experience.
       </p>

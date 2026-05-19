@@ -7,8 +7,8 @@ const { project, featured = false } = Astro.props;
   class:list={[
     "rounded-3xl border p-6 shadow-xl shadow-slate-950/20",
     featured
-      ? "border-cyan-300/40 bg-cyan-950/55 sm:p-8"
-      : "border-teal-800/50 bg-slate-900/70",
+      ? "border-[#38BDF8] bg-[#082F49] sm:p-8"
+      : "border-[#134E4A] bg-[#0B1B2A]",
   ]}
 >
   <div class="flex flex-wrap items-center gap-3">
@@ -31,7 +31,7 @@ const { project, featured = false } = Astro.props;
   <p
     class:list={[
       "mt-4 leading-7",
-      featured ? "text-base text-cyan-50/80" : "text-sm text-teal-50/70",
+      featured ? "text-base text-[#DBEAFE]" : "text-sm text-[#B6E7E1]",
     ]}
   >
     {project.description}
@@ -45,7 +45,7 @@ const { project, featured = false } = Astro.props;
         {project.links.map((link) => (
           <li>
             <a
-              class="inline-flex rounded-full border border-cyan-300/40 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:border-cyan-200 hover:bg-cyan-300/10 hover:text-white"
+              class="inline-flex rounded-full border border-[#38BDF8] bg-[#082F49] px-4 py-2 text-sm font-bold text-[#BAE6FD] transition hover:bg-cyan-300/10 hover:text-white"
               href={link.href}
               target={link.external ? "_blank" : undefined}
               rel={link.external ? "noreferrer" : undefined}

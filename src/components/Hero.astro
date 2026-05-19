@@ -3,12 +3,9 @@
 const { hero, links } = Astro.props;
 ---
 
-<section
-  class="mx-auto max-w-6xl px-6 pt-8 pb-12 sm:pt-12 lg:px-8"
-  aria-labelledby="hero-title"
->
+<section class="px-6 pt-8 pb-12 sm:pt-12 lg:px-8" aria-labelledby="hero-title">
   <div
-    class="rounded-[2rem] border border-cyan-500/25 bg-[linear-gradient(135deg,rgba(15,118,110,0.35),rgba(6,17,31,0.98)_52%,rgba(8,47,73,0.5))] p-6 shadow-2xl shadow-cyan-950/30 sm:p-10 lg:grid lg:grid-cols-[1fr_24rem] lg:gap-12 lg:p-16"
+    class="mx-auto max-w-6xl rounded-[2rem] border border-[#155E75] bg-[linear-gradient(135deg,#0F2A3A_0%,#06111F_54%,#042F2E_100%)] p-6 shadow-2xl shadow-cyan-950/30 sm:p-10 lg:grid lg:grid-cols-[1fr_24rem] lg:gap-12 lg:p-16"
   >
     <div>
       <p class="mb-3 text-sm font-extrabold text-teal-100">
@@ -25,10 +22,10 @@ const { hero, links } = Astro.props;
       >
         {hero.name}
       </h1>
-      <p class="mt-6 max-w-3xl text-2xl leading-9 font-semibold text-teal-50">
+      <p class="mt-6 max-w-3xl text-2xl leading-9 font-semibold text-[#C8F7F0]">
         {hero.tagline}
       </p>
-      <p class="mt-5 max-w-2xl text-lg leading-8 text-teal-100/80">
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-[#C8F7F0]/85">
         {hero.summary}
       </p>
       <ul class="mt-8 flex flex-wrap gap-3" aria-label="Primary profile links">
@@ -55,7 +52,7 @@ const { hero, links } = Astro.props;
     </div>
 
     <aside
-      class="mt-10 rounded-3xl border border-cyan-500/25 bg-slate-950/45 p-6 lg:mt-0"
+      class="mt-10 rounded-3xl border border-[#164E63] bg-[#071827] p-6 lg:mt-0"
       aria-label="Professional focus"
     >
       <p
@@ -66,7 +63,7 @@ const { hero, links } = Astro.props;
       <h2 class="mt-4 text-2xl leading-8 font-extrabold text-white">
         Mobile delivery + product quality
       </h2>
-      <p class="mt-4 text-base leading-7 text-teal-100/80">
+      <p class="mt-4 text-base leading-7 text-[#A7F3D0]">
         Flutter-first profile with production experience, QA awareness, native
         Android/iOS foundations, and full-stack project ownership.
       </p>
