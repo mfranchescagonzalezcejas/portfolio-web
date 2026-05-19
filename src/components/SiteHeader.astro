@@ -1,0 +1,41 @@
+---
+const navItems = [
+  { label: "About", href: "#about" },
+  { label: "Experience", href: "#experience" },
+  { label: "Projects", href: "#projects" },
+  { label: "Education", href: "#education" },
+];
+---
+
+<header class="mx-auto max-w-6xl px-6 pt-6 lg:px-8">
+  <nav
+    class="flex items-center justify-between rounded-[1.75rem] border border-cyan-500/30 bg-slate-950/55 px-4 py-3 shadow-lg shadow-cyan-950/20 backdrop-blur sm:px-5"
+    aria-label="Primary navigation"
+  >
+    <a
+      class="flex items-center gap-3"
+      href="#main-content"
+      aria-label="Mercy home"
+    >
+      <span
+        class="h-9 w-9 rounded-xl bg-[linear-gradient(135deg,#14b8a6,#38bdf8)] shadow-lg shadow-teal-950/30"
+        aria-hidden="true"></span>
+      <span class="text-base font-extrabold text-teal-50">Mercy</span>
+    </a>
+
+    <ul class="hidden items-center gap-5 sm:flex">
+      {
+        navItems.map((item) => (
+          <li>
+            <a
+              class="text-sm font-bold text-cyan-100/80 transition hover:text-teal-200"
+              href={item.href}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
