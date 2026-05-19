@@ -1,6 +1,6 @@
 ---
 // @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
-const { links } = Astro.props;
+const { links, section } = Astro.props;
 
 const linkStyles = [
   "bg-[#14B8A6] text-[#042F2E] hover:bg-teal-300",
@@ -17,17 +17,16 @@ const linkStyles = [
       <p
         class="text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase"
       >
-        Contact
+        {section.eyebrow}
       </p>
       <h2 id="contact-title" class="mt-4 text-3xl font-extrabold text-white">
-        Let’s connect
+        {section.title}
       </h2>
       <p class="mt-3 max-w-2xl text-base leading-7 text-[#B6E7E1]">
-        No public email for now — LinkedIn, GitLab, and GitHub are the contact
-        paths.
+        {section.body}
       </p>
     </div>
-    <nav aria-label="Contact and social links">
+    <nav aria-label={section.ariaLabel}>
       <ul class="flex flex-wrap gap-3">
         {
           links.map((link, index) => (

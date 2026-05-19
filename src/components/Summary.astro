@@ -40,24 +40,24 @@ const skillStyles = [
 
     <aside
       class="rounded-3xl border border-[#0E7490] bg-[#062A30] p-7"
-      aria-label="Working style"
+      aria-label={summary.workingStyleLabel}
     >
       <p
         class="text-xs font-extrabold tracking-[0.28em] text-cyan-300 uppercase"
       >
-        Working style
+        {summary.workingStyleLabel}
       </p>
       <h3 class="mt-4 text-2xl font-extrabold text-white">
-        Clean architecture
+        {summary.cleanArchitectureTitle}
       </h3>
       <p class="mt-3 text-sm leading-6 text-[#BAE6FD]">
-        Readable systems, layered thinking, repository patterns, and
-        maintainable delivery.
+        {summary.cleanArchitectureBody}
       </p>
-      <h3 class="mt-5 text-2xl font-extrabold text-white">Quality mindset</h3>
+      <h3 class="mt-5 text-2xl font-extrabold text-white">
+        {summary.qualityMindsetTitle}
+      </h3>
       <p class="mt-3 text-sm leading-6 text-[#BAE6FD]">
-        Testing, functional validation, Jira workflows, and release confidence
-        from QA experience.
+        {summary.qualityMindsetBody}
       </p>
     </aside>
   </div>

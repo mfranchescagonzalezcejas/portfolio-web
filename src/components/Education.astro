@@ -1,6 +1,6 @@
 ---
 // @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
-const { education } = Astro.props;
+const { education, section } = Astro.props;
 
 const cardStyles = [
   "border-[#0E7490] bg-[#062A30]",
@@ -21,10 +21,10 @@ const cardStyles = [
       <p
         class="text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase"
       >
-        Education
+        {section.eyebrow}
       </p>
       <h2 id="education-title" class="mt-4 text-3xl font-extrabold text-white">
-        Engineering foundation with ongoing AI development training.
+        {section.title}
       </h2>
     </div>
 
