@@ -1,22 +1,29 @@
 # Portfolio Web
 
-Static personal landing page MVP built with Astro and Tailwind CSS.
+Personal landing page built with **Astro** and **Tailwind CSS**. The current version is an MVP/base: it is ready to run, build, and deploy as a static site, but final copy, links, and visual tuning are still pending.
 
-The site introduces the owner, highlights selected work, and provides contact paths without adding backend, CMS, blog, or app-like scope.
-
-## Requirements
-
-- Node.js compatible with the installed Astro toolchain.
-- npm, using the committed `package-lock.json` for reproducible installs.
-
-## Local setup
+## Quick start
 
 ```bash
 npm install
 npm run dev
 ```
 
-The local development server is provided by Astro. Use the URL printed by the command output.
+Open the local URL printed by Astro, usually:
+
+```text
+http://localhost:4321
+```
+
+## Project status
+
+| Area | Status |
+|---|---|
+| Stack | Astro + Tailwind CSS |
+| Deployment target | Vercel |
+| Output | Static site in `dist/` |
+| Backend | Not included in the MVP |
+| Content | Placeholder-based; final owner copy and URLs pending |
 
 ## Quality gates
 
@@ -29,7 +36,7 @@ npm run format:check
 npm run build
 ```
 
-Useful development commands:
+Useful local commands:
 
 ```bash
 npm run format
@@ -38,26 +45,31 @@ npm run preview
 
 `npm run preview` serves the production build locally after `npm run build`.
 
-## Vercel deployment settings
+## Vercel settings
 
-- Framework preset: Astro
-- Install command: `npm install`
-- Build command: `npm run build`
-- Output directory: `dist`
-- Server/runtime requirement: none; the MVP is a static site.
+Use these settings when importing the GitLab repo into Vercel:
+
+| Setting | Value |
+|---|---|
+| Framework preset | Astro |
+| Install command | `npm install` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+
+No server runtime is required for the MVP.
 
 ## MVP scope
 
 Included:
 
-- Hero/intro content.
+- Hero/introduction.
 - Professional summary.
 - Featured projects, including InkScroller.
 - Contact/social links.
 - Responsive, semantic, keyboard-friendly layout.
-- Static build suitable for Vercel.
+- Static deployment suitable for Vercel.
 
-Explicitly excluded from this MVP:
+Out of scope for this MVP:
 
 - Blog or CMS.
 - Newsletter flows.
@@ -68,6 +80,19 @@ Explicitly excluded from this MVP:
 
 ## Content placeholders
 
-Final owner copy and destinations still need confirmation before public launch. Current placeholder content is kept in `src/data/site.ts`, including the placeholder email address and any placeholder project URLs.
+The editable site content lives in:
+
+```text
+src/data/site.ts
+```
+
+Before a real public launch, replace the placeholder values for:
+
+- email address
+- LinkedIn URL
+- GitLab URL
+- InkScroller URL
+- project source/demo URLs
+- final personal copy
 
 Configured links are validated before rendering. Invalid contact or project links are dropped from the published page instead of being emitted as broken interactive links.
