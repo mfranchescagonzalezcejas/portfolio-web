@@ -1,0 +1,41 @@
+---
+// @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
+const { hero, primaryLink } = Astro.props;
+---
+
+<section
+  class="mx-auto max-w-5xl px-6 pt-24 pb-16 sm:pt-32 lg:px-8"
+  aria-labelledby="hero-title"
+>
+  <div class="max-w-3xl">
+    <p
+      class="mb-5 text-sm font-semibold tracking-[0.3em] text-sky-300 uppercase"
+    >
+      Personal portfolio
+    </p>
+    <h1
+      id="hero-title"
+      class="text-4xl font-bold tracking-tight text-white sm:text-6xl"
+    >
+      {hero.name}
+    </h1>
+    <p class="mt-6 text-2xl leading-9 font-semibold text-slate-100">
+      {hero.tagline}
+    </p>
+    <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
+      {hero.summary}
+    </p>
+    {
+      primaryLink && (
+        <a
+          class="mt-8 inline-flex rounded-full bg-sky-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-200"
+          href={primaryLink.href}
+          target={primaryLink.external ? "_blank" : undefined}
+          rel={primaryLink.external ? "noreferrer" : undefined}
+        >
+          {primaryLink.label}
+        </a>
+      )
+    }
+  </div>
+</section>

@@ -1,0 +1,22 @@
+---
+import ContactLinks from "../components/ContactLinks.astro";
+import Hero from "../components/Hero.astro";
+import Projects from "../components/Projects.astro";
+import Summary from "../components/Summary.astro";
+import { siteContent } from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const primaryContact = siteContent.contacts[0];
+---
+
+<BaseLayout
+  title={`${siteContent.hero.name} | Personal Portfolio`}
+  description={siteContent.hero.summary}
+>
+  <main id="main-content">
+    <Hero hero={siteContent.hero} primaryLink={primaryContact} />
+    <Summary summary={siteContent.summary} />
+    <Projects projects={siteContent.projects} />
+    <ContactLinks links={siteContent.contacts} />
+  </main>
+</BaseLayout>

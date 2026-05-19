@@ -1,0 +1,35 @@
+---
+// @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
+const { links } = Astro.props;
+---
+
+<section class="px-6 py-16 lg:px-8" aria-labelledby="contact-title">
+  <div
+    class="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10"
+  >
+    <p class="text-sm font-semibold tracking-[0.3em] text-sky-300 uppercase">
+      Contact
+    </p>
+    <h2 id="contact-title" class="mt-4 text-3xl font-bold text-white">
+      Want to talk about a project or role?
+    </h2>
+    <nav class="mt-8" aria-label="Contact and social links">
+      <ul class="flex flex-wrap gap-3">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                class="inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-sky-100"
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noreferrer" : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</section>
