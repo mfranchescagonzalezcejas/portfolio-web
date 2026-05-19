@@ -35,10 +35,10 @@ Chain strategy: stacked-to-main
 
 ## Phase 2: Core Content + Components
 
-- [ ] 2.1 Create `src/data/site.ts` with typed `LinkItem`, `Project`, `SiteContent`, plus URL validation helpers that drop/flag invalid links before render.
-- [ ] 2.2 Seed `src/data/site.ts` content for hero, summary, contacts, and featured projects ensuring InkScroller is first, described, and linked externally.
-- [ ] 2.3 Create layout/page skeleton: `src/layouts/BaseLayout.astro` (metadata + skip link) and `src/pages/index.astro` composing sections in required order.
-- [ ] 2.4 Create section components: `src/components/Hero.astro`, `Summary.astro`, `ProjectCard.astro`, `Projects.astro`, `ContactLinks.astro` using semantic HTML and keyboard-friendly links.
+- [x] 2.1 Create `src/data/site.ts` with typed `LinkItem`, `Project`, `SiteContent`, plus URL validation helpers that drop/flag invalid links before render.
+- [x] 2.2 Seed `src/data/site.ts` content for hero, summary, contacts, and featured projects ensuring InkScroller is first, described, and linked externally.
+- [x] 2.3 Create layout/page skeleton: `src/layouts/BaseLayout.astro` (metadata + skip link) and `src/pages/index.astro` composing sections in required order.
+- [x] 2.4 Create section components: `src/components/Hero.astro`, `Summary.astro`, `ProjectCard.astro`, `Projects.astro`, `ContactLinks.astro` using semantic HTML and keyboard-friendly links.
 
 ## Phase 3: Integration + Verification
 

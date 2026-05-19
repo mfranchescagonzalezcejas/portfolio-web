@@ -1,0 +1,23 @@
+---
+// @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
+import ProjectCard from "./ProjectCard.astro";
+
+const { projects } = Astro.props;
+---
+
+<section
+  class="mx-auto max-w-5xl px-6 py-16 lg:px-8"
+  aria-labelledby="projects-title"
+>
+  <div class="max-w-3xl">
+    <p class="text-sm font-semibold tracking-[0.3em] text-sky-300 uppercase">
+      Featured work
+    </p>
+    <h2 id="projects-title" class="mt-4 text-3xl font-bold text-white">
+      Projects that show how I think and build
+    </h2>
+  </div>
+  <div class="mt-10 grid gap-6 md:grid-cols-2">
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </div>
+</section>
