@@ -42,12 +42,25 @@ Chain strategy: stacked-to-main
 
 ## Phase 3: Integration + Verification
 
-- [ ] 3.1 Wire validated data into `src/pages/index.astro` and `src/components/Projects.astro` so invalid contact/project links are not published.
-- [ ] 3.2 Create `public/` assets only if available (icons/images optional) and verify page still passes core scenarios without media.
-- [ ] 3.3 Run and fix baseline gates: `npm run check`, `npm run lint`, `npm run format:check`, `npm run build`; ensure static `dist/` output.
+- [x] 3.1 Wire validated data into `src/pages/index.astro` and `src/components/Projects.astro` so invalid contact/project links are not published.
+- [x] 3.2 Create `public/` assets only if available (icons/images optional) and verify page still passes core scenarios without media.
+- [x] 3.3 Run and fix baseline gates: `npm run check`, `npm run lint`, `npm run format:check`, `npm run build`; ensure static `dist/` output.
 - [ ] 3.4 Manual acceptance via `npm run preview`: mobile/desktop readability, no horizontal scroll, tab order, focus visibility, outbound link behavior.
+
+> MR3 note: no final media assets are available, so no `public/` assets were created. `npm run preview` was feasible for a static smoke check of rendered HTML/CSS and outbound-link attributes; full human mobile/desktop visual review and keyboard tab-order walkthrough remain open.
 
 ## Phase 4: Documentation + Delivery Readiness
 
-- [ ] 4.1 Replace template `README.md` with local setup, quality gate commands, Vercel build/output settings, and MVP scope exclusions.
-- [ ] 4.2 Add tracking alignment note in `openspec/changes/personal-landing-page/tasks.md` checklist comments (or adjacent section) mapping tasks to GitLab Issues/Board cards.
+- [x] 4.1 Replace template `README.md` with local setup, quality gate commands, Vercel build/output settings, and MVP scope exclusions.
+- [x] 4.2 Add tracking alignment note in `openspec/changes/personal-landing-page/tasks.md` checklist comments (or adjacent section) mapping tasks to GitLab Issues/Board cards.
+
+## Tracking Alignment
+
+GitLab Issues/Board cards remain the source of truth for execution tracking. Map the implementation slices as follows without inventing issue IDs in this artifact:
+
+- Work Unit 1 / MR1 (`feature/personal-landing-scaffold` → `develop`): Phase 1 tasks 1.1-1.3.
+- Work Unit 2 / MR2 (`feature/personal-landing-content` → `develop`): Phase 2 tasks 2.1-2.4.
+- Work Unit 3 / MR3 (`feature/personal-landing-polish` → `develop`): Phase 3 tasks 3.1-3.4 and Phase 4 tasks 4.1-4.2.
+- Work Unit 4 / final stabilization (`develop` → `main`): final promotion after the develop validation window; not part of MR3.
+
+When GitLab issue keys or board card URLs are created, link them from the matching work-unit rows above instead of replacing the SDD task IDs.
