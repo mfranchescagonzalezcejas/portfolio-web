@@ -1,0 +1,61 @@
+schema: spec-driven
+
+context: |
+  Project: portfolio-web
+  Goal: Personal website / personal landing page
+  Stack: Not detected yet (repository bootstrap stage)
+  Architecture: Not detected yet (no source files)
+  Testing: No test runner configured
+  Style: No lint/format/type-check config detected
+
+testing:
+  strict_tdd: false
+  detected_at: 2026-05-19
+  runner:
+    available: false
+    command: ""
+    framework: ""
+  layers:
+    unit:
+      available: false
+      tool: ""
+    integration:
+      available: false
+      tool: ""
+    e2e:
+      available: false
+      tool: ""
+  coverage:
+    available: false
+    command: ""
+  quality:
+    linter:
+      available: false
+      command: ""
+    type_checker:
+      available: false
+      command: ""
+    formatter:
+      available: false
+      command: ""
+
+rules:
+  proposal:
+    - Include scope boundaries and rollback plan for risky changes.
+  specs:
+    - Use Given/When/Then scenarios.
+    - Use RFC 2119 keywords (MUST, SHOULD, MAY).
+  design:
+    - Document architecture decisions and tradeoffs.
+  tasks:
+    - Group tasks by phase and keep each task session-sized.
+  apply:
+    - Follow existing repository patterns.
+    tdd: false
+    test_command: ""
+  verify:
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
+  archive:
+    - Warn before merging destructive deltas.

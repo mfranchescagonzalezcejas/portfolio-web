@@ -1,0 +1,28 @@
+---
+// @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
+const { summary } = Astro.props;
+---
+
+<section
+  class="border-y border-white/10 bg-white/5 px-6 py-16 lg:px-8"
+  aria-labelledby="summary-title"
+>
+  <div
+    class="mx-auto grid max-w-5xl gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start"
+  >
+    <p class="text-sm font-semibold tracking-[0.3em] text-sky-300 uppercase">
+      {summary.eyebrow}
+    </p>
+    <div>
+      <h2
+        id="summary-title"
+        class="text-2xl leading-9 font-bold text-white sm:text-3xl"
+      >
+        {summary.title}
+      </h2>
+      <p class="mt-5 text-lg leading-8 text-slate-300">
+        {summary.body}
+      </p>
+    </div>
+  </div>
+</section>
