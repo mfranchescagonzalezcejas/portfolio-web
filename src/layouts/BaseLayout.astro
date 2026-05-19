@@ -3,11 +3,19 @@ import SpeedInsights from "@vercel/speed-insights/astro";
 import SiteHeader from "../components/SiteHeader.astro";
 import "../styles/global.css";
 
-const { title, description } = Astro.props;
+const {
+  title,
+  description,
+  lang,
+  skipLink,
+  navItems,
+  languageSwitcher,
+  header,
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,9 +27,14 @@ const { title, description } = Astro.props;
       class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-sky-300 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-950"
       href="#main-content"
     >
-      Skip to content
+      {skipLink}
     </a>
-    <SiteHeader />
+    <SiteHeader
+      currentLocale={lang}
+      navItems={navItems}
+      languageSwitcher={languageSwitcher}
+      header={header}
+    />
     <slot />
     <SpeedInsights />
   </body>

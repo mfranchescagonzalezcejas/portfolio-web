@@ -1,6 +1,6 @@
 ---
 // @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
-const { project, featured = false } = Astro.props;
+const { project, featured = false, featuredLabel, linksLabel } = Astro.props;
 ---
 
 <article
@@ -23,7 +23,7 @@ const { project, featured = false } = Astro.props;
     {
       project.featured && (
         <span class="rounded-full bg-teal-300/15 px-3 py-1 text-xs font-extrabold tracking-wide text-teal-100 ring-1 ring-teal-300/25">
-          Featured
+          {featuredLabel}
         </span>
       )
     }
@@ -40,7 +40,7 @@ const { project, featured = false } = Astro.props;
     project.links.length > 0 && (
       <ul
         class="mt-6 flex flex-wrap gap-3"
-        aria-label={`${project.name} links`}
+        aria-label={`${project.name} · ${linksLabel}`}
       >
         {project.links.map((link) => (
           <li>
