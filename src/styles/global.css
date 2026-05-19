@@ -10,7 +10,7 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  background: #0f172a;
+  background: #06111f;
   color: #e5e7eb;
 }
 
@@ -23,12 +23,13 @@ body {
   min-height: 100vh;
   margin: 0;
   background:
+    radial-gradient(circle at 12% 0%, rgb(20 184 166 / 20%), transparent 28rem),
     radial-gradient(
-      circle at top left,
-      rgb(56 189 248 / 14%),
-      transparent 28rem
+      circle at 88% 12%,
+      rgb(56 189 248 / 13%),
+      transparent 24rem
     ),
-    #0f172a;
+    linear-gradient(180deg, #06111f 0%, #071827 45%, #06111f 100%);
   color: #e5e7eb;
   text-rendering: optimizeLegibility;
 }

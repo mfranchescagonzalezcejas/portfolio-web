@@ -1,41 +1,86 @@
 ---
 // @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
-const { hero, primaryLink } = Astro.props;
+const { hero, links } = Astro.props;
 ---
 
 <section
-  class="mx-auto max-w-5xl px-6 pt-24 pb-16 sm:pt-32 lg:px-8"
+  class="mx-auto max-w-6xl px-6 pt-8 pb-12 sm:pt-12 lg:px-8"
   aria-labelledby="hero-title"
 >
-  <div class="max-w-3xl">
-    <p
-      class="mb-5 text-sm font-semibold tracking-[0.3em] text-sky-300 uppercase"
+  <div
+    class="rounded-[2rem] border border-cyan-500/25 bg-[linear-gradient(135deg,rgba(15,118,110,0.35),rgba(6,17,31,0.98)_52%,rgba(8,47,73,0.5))] p-6 shadow-2xl shadow-cyan-950/30 sm:p-10 lg:grid lg:grid-cols-[1fr_24rem] lg:gap-12 lg:p-16"
+  >
+    <div>
+      <p class="mb-3 text-sm font-extrabold text-teal-100">
+        {hero.shortName}
+      </p>
+      <p
+        class="mb-5 text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase"
+      >
+        Software Engineer · Flutter & Mobile
+      </p>
+      <h1
+        id="hero-title"
+        class="text-4xl leading-tight font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl"
+      >
+        {hero.name}
+      </h1>
+      <p class="mt-6 max-w-3xl text-2xl leading-9 font-semibold text-teal-50">
+        {hero.tagline}
+      </p>
+      <p class="mt-5 max-w-2xl text-lg leading-8 text-teal-100/80">
+        {hero.summary}
+      </p>
+      <ul class="mt-8 flex flex-wrap gap-3" aria-label="Primary profile links">
+        {
+          links.map((link, index) => (
+            <li>
+              <a
+                class:list={[
+                  "inline-flex rounded-full px-5 py-3 text-sm font-extrabold transition focus-visible:outline-teal-300",
+                  index === 0
+                    ? "bg-teal-400 text-teal-950 hover:bg-teal-300"
+                    : "border border-cyan-300/45 bg-slate-950/40 text-cyan-100 hover:border-cyan-200 hover:text-white",
+                ]}
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noreferrer" : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <aside
+      class="mt-10 rounded-3xl border border-cyan-500/25 bg-slate-950/45 p-6 lg:mt-0"
+      aria-label="Professional focus"
     >
-      Personal portfolio
-    </p>
-    <h1
-      id="hero-title"
-      class="text-4xl font-bold tracking-tight text-white sm:text-6xl"
-    >
-      {hero.name}
-    </h1>
-    <p class="mt-6 text-2xl leading-9 font-semibold text-slate-100">
-      {hero.tagline}
-    </p>
-    <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-      {hero.summary}
-    </p>
-    {
-      primaryLink && (
-        <a
-          class="mt-8 inline-flex rounded-full bg-sky-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-200"
-          href={primaryLink.href}
-          target={primaryLink.external ? "_blank" : undefined}
-          rel={primaryLink.external ? "noreferrer" : undefined}
-        >
-          {primaryLink.label}
-        </a>
-      )
-    }
+      <p
+        class="text-xs font-extrabold tracking-[0.28em] text-cyan-300 uppercase"
+      >
+        Signal
+      </p>
+      <h2 class="mt-4 text-2xl leading-8 font-extrabold text-white">
+        Mobile delivery + product quality
+      </h2>
+      <p class="mt-4 text-base leading-7 text-teal-100/80">
+        Flutter-first profile with production experience, QA awareness, native
+        Android/iOS foundations, and full-stack project ownership.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {
+          ["Flutter", "Kotlin", "Swift", "REST APIs", "QA validation"].map(
+            (skill) => (
+              <span class="rounded-full bg-teal-500/15 px-3 py-1 text-xs font-bold text-teal-100 ring-1 ring-teal-300/20">
+                {skill}
+              </span>
+            ),
+          )
+        }
+      </div>
+    </aside>
   </div>
 </section>

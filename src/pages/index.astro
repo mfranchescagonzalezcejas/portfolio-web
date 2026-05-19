@@ -1,12 +1,12 @@
 ---
 import ContactLinks from "../components/ContactLinks.astro";
+import Education from "../components/Education.astro";
+import Experience from "../components/Experience.astro";
 import Hero from "../components/Hero.astro";
 import Projects from "../components/Projects.astro";
 import Summary from "../components/Summary.astro";
 import { siteContent } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const primaryContact = siteContent.contacts[0];
 ---
 
 <BaseLayout
@@ -14,9 +14,11 @@ const primaryContact = siteContent.contacts[0];
   description={siteContent.hero.summary}
 >
   <main id="main-content">
-    <Hero hero={siteContent.hero} primaryLink={primaryContact} />
+    <Hero hero={siteContent.hero} links={siteContent.contacts} />
     <Summary summary={siteContent.summary} />
+    <Experience experience={siteContent.experience} />
     <Projects projects={siteContent.projects} />
+    <Education education={siteContent.education} />
     <ContactLinks links={siteContent.contacts} />
   </main>
 </BaseLayout>

@@ -1,0 +1,35 @@
+---
+// @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
+const { education } = Astro.props;
+---
+
+<section
+  class="mx-auto max-w-6xl px-6 py-12 lg:px-8"
+  aria-labelledby="education-title"
+>
+  <div class="grid gap-6 lg:grid-cols-[1fr_32rem]">
+    <div class="rounded-3xl border border-teal-800/50 bg-slate-900/70 p-8">
+      <p
+        class="text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase"
+      >
+        Education
+      </p>
+      <h2 id="education-title" class="mt-4 text-3xl font-extrabold text-white">
+        Engineering foundation with ongoing AI development training.
+      </h2>
+    </div>
+
+    <div class="grid gap-4">
+      {
+        education.map((item) => (
+          <article class="rounded-3xl border border-cyan-700/45 bg-cyan-950/30 p-6">
+            <h3 class="text-lg font-extrabold text-white">{item.title}</h3>
+            <p class="mt-2 text-sm font-semibold text-cyan-100/75">
+              {item.meta}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

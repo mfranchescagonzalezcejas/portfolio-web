@@ -3,23 +3,36 @@
 const { links } = Astro.props;
 ---
 
-<section class="px-6 py-16 lg:px-8" aria-labelledby="contact-title">
+<section class="px-6 py-12 lg:px-8" aria-labelledby="contact-title">
   <div
-    class="mx-auto max-w-5xl rounded-3xl border border-white/10 bg-white/5 p-8 sm:p-10"
+    class="mx-auto flex max-w-6xl flex-col gap-8 rounded-3xl border border-teal-800/50 bg-slate-900/70 p-8 sm:p-10 lg:flex-row lg:items-center lg:justify-between"
   >
-    <p class="text-sm font-semibold tracking-[0.3em] text-sky-300 uppercase">
-      Contact
-    </p>
-    <h2 id="contact-title" class="mt-4 text-3xl font-bold text-white">
-      Want to talk about a project or role?
-    </h2>
-    <nav class="mt-8" aria-label="Contact and social links">
+    <div>
+      <p
+        class="text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase"
+      >
+        Contact
+      </p>
+      <h2 id="contact-title" class="mt-4 text-3xl font-extrabold text-white">
+        Let’s connect
+      </h2>
+      <p class="mt-3 max-w-2xl text-base leading-7 text-teal-50/70">
+        No public email for now — LinkedIn, GitLab, and GitHub are the contact
+        paths.
+      </p>
+    </div>
+    <nav aria-label="Contact and social links">
       <ul class="flex flex-wrap gap-3">
         {
-          links.map((link) => (
+          links.map((link, index) => (
             <li>
               <a
-                class="inline-flex rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-sky-100"
+                class:list={[
+                  "inline-flex rounded-full px-4 py-2 text-sm font-extrabold transition",
+                  index === 0
+                    ? "bg-teal-400 text-teal-950 hover:bg-teal-300"
+                    : "border border-cyan-300/40 text-cyan-100 hover:bg-cyan-300/10 hover:text-white",
+                ]}
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}

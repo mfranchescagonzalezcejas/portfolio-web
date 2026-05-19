@@ -16,15 +16,15 @@ The site should communicate three things quickly:
 
 ## Visual direction
 
-| Area | Direction |
-|---|---|
-| Mood | Dark, calm, technical, polished, slightly personal |
-| Brand feel | Professional portfolio with subtle Kagerae-inspired identity |
-| Shape language | Rounded cards, soft borders, layered panels, restrained glow |
-| Color base | Deep navy/slate background |
-| Accent colors | Teal as primary; blue/cyan as secondary accents; violet only if it adds depth without stealing focus |
-| Typography | Clean sans-serif; strong hierarchy; avoid decorative fonts for now |
-| Motion | Minimal; hover/focus states only until the content is stable |
+| Area           | Direction                                                                                            |
+| -------------- | ---------------------------------------------------------------------------------------------------- |
+| Mood           | Dark, calm, technical, polished, slightly personal                                                   |
+| Brand feel     | Professional portfolio with subtle Kagerae-inspired identity                                         |
+| Shape language | Rounded cards, soft borders, layered panels, restrained glow                                         |
+| Color base     | Deep navy/slate background                                                                           |
+| Accent colors  | Teal as primary; blue/cyan as secondary accents; violet only if it adds depth without stealing focus |
+| Typography     | Clean sans-serif; strong hierarchy; avoid decorative fonts for now                                   |
+| Motion         | Minimal; hover/focus states only until the content is stable                                         |
 
 ## Color direction
 
@@ -32,13 +32,13 @@ The visual identity should lean into the user's preferred colors: **teal and blu
 
 Recommended palette direction:
 
-| Role | Color family | Usage |
-|---|---|---|
-| Background | deep navy / blue-black | page background and large sections |
-| Surface | slate / dark teal-tinted panels | cards and content blocks |
-| Primary accent | teal | buttons, focus, badges, key highlights |
-| Secondary accent | sky / blue | gradients, subtle dividers, secondary highlights |
-| Optional depth | violet, very restrained | small glow or gradient depth only |
+| Role             | Color family                    | Usage                                            |
+| ---------------- | ------------------------------- | ------------------------------------------------ |
+| Background       | deep navy / blue-black          | page background and large sections               |
+| Surface          | slate / dark teal-tinted panels | cards and content blocks                         |
+| Primary accent   | teal                            | buttons, focus, badges, key highlights           |
+| Secondary accent | sky / blue                      | gradients, subtle dividers, secondary highlights |
+| Optional depth   | violet, very restrained         | small glow or gradient depth only                |
 
 Avoid making the site feel neon or cyberpunk-heavy. The target is polished, calm, and technical with a teal/blue identity.
 
@@ -130,15 +130,15 @@ Use only:
 
 Likely files for the design pass:
 
-| File | Expected change |
-|---|---|
-| `src/styles/global.css` | stronger background, design tokens, base visual polish |
-| `src/components/Hero.astro` | improved hierarchy and action layout |
-| `src/components/Summary.astro` | shorter, more scannable profile section |
-| `src/components/Projects.astro` | featured project layout and responsive grid |
-| `src/components/ProjectCard.astro` | card hierarchy, featured variant, link treatment |
-| `src/components/ContactLinks.astro` | simpler closing section with social links |
-| `src/data/site.ts` | optional skill chips or richer project metadata if needed |
+| File                                | Expected change                                           |
+| ----------------------------------- | --------------------------------------------------------- |
+| `src/styles/global.css`             | stronger background, design tokens, base visual polish    |
+| `src/components/Hero.astro`         | improved hierarchy and action layout                      |
+| `src/components/Summary.astro`      | shorter, more scannable profile section                   |
+| `src/components/Projects.astro`     | featured project layout and responsive grid               |
+| `src/components/ProjectCard.astro`  | card hierarchy, featured variant, link treatment          |
+| `src/components/ContactLinks.astro` | simpler closing section with social links                 |
+| `src/data/site.ts`                  | optional skill chips or richer project metadata if needed |
 
 ## Accessibility constraints
 
