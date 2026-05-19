@@ -44,7 +44,7 @@ const skillChips = [
       <p class="mt-5 max-w-2xl text-lg leading-8 text-[#C8F7F0]/85">
         {hero.summary}
       </p>
-      <ul class="mt-8 flex flex-wrap gap-3" aria-label="Primary profile links">
+      <ul class="mt-8 flex flex-wrap gap-3" aria-label={hero.profileLinksLabel}>
         {
           links.map((link, index) => (
             <li>
@@ -67,7 +67,7 @@ const skillChips = [
 
     <aside
       class="mt-10 rounded-3xl border border-[#164E63] bg-[#071827] p-6 md:mt-0 lg:p-7"
-      aria-label="Professional focus"
+      aria-label={hero.panelAriaLabel}
     >
       <p
         class="text-xs font-extrabold tracking-[0.28em] text-cyan-300 uppercase"

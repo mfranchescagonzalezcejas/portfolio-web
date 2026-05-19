@@ -56,6 +56,8 @@ export type SiteContent = {
     panelLabel: string;
     panelTitle: string;
     panelText: string;
+    profileLinksLabel: string;
+    panelAriaLabel: string;
     skills: string[];
   };
   summary: {
@@ -158,6 +160,8 @@ const rawSiteContent = {
       panelTitle: "Mobile delivery + product quality",
       panelText:
         "Flutter-first profile with production experience, QA awareness, native Android/iOS foundations, and full-stack project ownership.",
+      profileLinksLabel: "Primary profile links",
+      panelAriaLabel: "Professional focus",
       skills: ["Flutter", "Kotlin", "Swift", "REST APIs", "QA validation"],
     },
     summary: {
@@ -314,6 +318,8 @@ const rawSiteContent = {
       panelTitle: "Entrega mobile + calidad de producto",
       panelText:
         "Perfil centrado en Flutter, con experiencia en producción, mirada de QA, bases nativas Android/iOS y ownership full-stack en proyectos.",
+      profileLinksLabel: "Enlaces principales del perfil",
+      panelAriaLabel: "Foco profesional",
       skills: ["Flutter", "Kotlin", "Swift", "REST APIs", "Validación QA"],
     },
     summary: {
