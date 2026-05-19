@@ -1,6 +1,12 @@
 ---
 // @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
 const { links } = Astro.props;
+
+const linkStyles = [
+  "bg-[#14B8A6] text-[#042F2E] hover:bg-teal-300",
+  "border border-[#38BDF8] bg-[#082F49] text-[#BAE6FD] hover:bg-sky-900",
+  "border border-[#2DD4BF] bg-[#0F172A] text-[#CCFBF1] hover:bg-slate-800",
+];
 ---
 
 <section class="px-6 py-12 lg:px-8" aria-labelledby="contact-title">
@@ -29,9 +35,7 @@ const { links } = Astro.props;
               <a
                 class:list={[
                   "inline-flex rounded-full px-4 py-2 text-sm font-extrabold transition",
-                  index === 0
-                    ? "bg-teal-400 text-teal-950 hover:bg-teal-300"
-                    : "border border-[#38BDF8] bg-[#082F49] text-[#BAE6FD] hover:bg-cyan-300/10 hover:text-white",
+                  linkStyles[index] ?? linkStyles[1],
                 ]}
                 href={link.href}
                 target={link.external ? "_blank" : undefined}

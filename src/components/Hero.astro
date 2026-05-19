@@ -1,6 +1,20 @@
 ---
 // @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
 const { hero, links } = Astro.props;
+
+const linkStyles = [
+  "bg-[#14B8A6] text-[#042F2E] hover:bg-teal-300",
+  "border border-[#38BDF8] bg-[#082F49] text-[#BAE6FD] hover:bg-sky-900",
+  "border border-[#2DD4BF] bg-[#0F172A] text-[#CCFBF1] hover:bg-slate-800",
+];
+
+const skillChips = [
+  { label: "Flutter", className: "bg-[#0F766E] text-white" },
+  { label: "Kotlin", className: "bg-[#075985] text-white" },
+  { label: "Swift", className: "bg-[#115E59] text-white" },
+  { label: "REST APIs", className: "bg-[#1E3A8A] text-white" },
+  { label: "QA validation", className: "bg-[#0E7490] text-white" },
+];
 ---
 
 <section class="px-6 pt-8 pb-12 sm:pt-12 lg:px-8" aria-labelledby="hero-title">
@@ -37,9 +51,7 @@ const { hero, links } = Astro.props;
               <a
                 class:list={[
                   "inline-flex rounded-full px-5 py-3 text-sm font-extrabold transition focus-visible:outline-teal-300",
-                  index === 0
-                    ? "bg-teal-400 text-teal-950 hover:bg-teal-300"
-                    : "border border-cyan-300/45 bg-slate-950/40 text-cyan-100 hover:border-cyan-200 hover:text-white",
+                  linkStyles[index] ?? linkStyles[1],
                 ]}
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
@@ -73,13 +85,16 @@ const { hero, links } = Astro.props;
       </p>
       <div class="mt-6 flex flex-wrap gap-2">
         {
-          ["Flutter", "Kotlin", "Swift", "REST APIs", "QA validation"].map(
-            (skill) => (
-              <span class="rounded-full bg-teal-500/15 px-3 py-1 text-xs font-bold text-teal-100 ring-1 ring-teal-300/20">
-                {skill}
-              </span>
-            ),
-          )
+          skillChips.map((skill) => (
+            <span
+              class:list={[
+                "rounded-full px-3 py-1 text-xs font-bold",
+                skill.className,
+              ]}
+            >
+              {skill.label}
+            </span>
+          ))
         }
       </div>
     </aside>
