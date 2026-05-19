@@ -1,4 +1,5 @@
 ---
+import SpeedInsights from "@vercel/speed-insights/astro";
 import "../styles/global.css";
 
 const { title, description } = Astro.props;
@@ -20,5 +21,6 @@ const { title, description } = Astro.props;
       Skip to content
     </a>
     <slot />
+    <SpeedInsights />
   </body>
 </html>
