@@ -27,7 +27,9 @@ const otherProjects = projects.filter((project) => project !== featuredProject);
       </h2>
     </div>
 
-    <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_24rem]">
+    <div
+      class="mt-8 grid gap-6 md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_24rem]"
+    >
       {featuredProject && <ProjectCard project={featuredProject} featured />}
       <div class="grid gap-6">
         {otherProjects.map((project) => <ProjectCard project={project} />)}
