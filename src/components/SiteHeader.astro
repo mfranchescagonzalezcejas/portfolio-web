@@ -9,7 +9,7 @@ const navItems = [
 
 <header class="sticky top-0 z-40 px-6 pt-6 lg:px-8">
   <nav
-    class="mx-auto flex max-w-6xl items-center justify-between rounded-[1.75rem] border border-cyan-500/30 bg-slate-950/55 px-4 py-3 shadow-lg shadow-cyan-950/20 backdrop-blur sm:px-5"
+    class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 rounded-[1.75rem] border border-cyan-500/30 bg-slate-950/55 px-4 py-3 shadow-lg shadow-cyan-950/20 backdrop-blur sm:flex-nowrap sm:px-5"
     aria-label="Primary navigation"
   >
     <a
@@ -23,7 +23,9 @@ const navItems = [
       <span class="text-base font-extrabold text-teal-50">Mercy</span>
     </a>
 
-    <ul class="hidden items-center gap-5 sm:flex">
+    <ul
+      class="flex w-full items-center gap-4 overflow-x-auto sm:w-auto sm:gap-5 sm:overflow-visible"
+    >
       {
         navItems.map((item) => (
           <li>

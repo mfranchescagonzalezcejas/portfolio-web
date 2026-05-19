@@ -30,6 +30,7 @@ export type SiteContent = {
     name: string;
     tagline: string;
     summary: string;
+    skills: string[];
   };
   summary: {
     eyebrow: string;
@@ -59,6 +60,7 @@ const rawSiteContent = {
     tagline: "Software Engineer specialized in Flutter and mobile development.",
     summary:
       "I build production-ready mobile experiences with clean architecture, reliable delivery practices, and a strong product mindset.",
+    skills: ["Flutter", "Kotlin", "Swift", "REST APIs", "QA validation"],
   },
   summary: {
     eyebrow: "About",

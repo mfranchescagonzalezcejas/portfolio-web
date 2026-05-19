@@ -9,11 +9,11 @@ const linkStyles = [
 ];
 
 const skillChips = [
-  { label: "Flutter", className: "bg-[#0F766E] text-white" },
-  { label: "Kotlin", className: "bg-[#075985] text-white" },
-  { label: "Swift", className: "bg-[#115E59] text-white" },
-  { label: "REST APIs", className: "bg-[#1E3A8A] text-white" },
-  { label: "QA validation", className: "bg-[#0E7490] text-white" },
+  "bg-[#0F766E] text-white",
+  "bg-[#075985] text-white",
+  "bg-[#115E59] text-white",
+  "bg-[#1E3A8A] text-white",
+  "bg-[#0E7490] text-white",
 ];
 ---
 
@@ -85,14 +85,14 @@ const skillChips = [
       </p>
       <div class="mt-6 flex flex-wrap gap-2">
         {
-          skillChips.map((skill) => (
+          hero.skills.map((skill, index) => (
             <span
               class:list={[
                 "rounded-full px-3 py-1 text-xs font-bold",
-                skill.className,
+                skillChips[index] ?? skillChips[0],
               ]}
             >
-              {skill.label}
+              {skill}
             </span>
           ))
         }
