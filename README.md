@@ -23,7 +23,7 @@ http://localhost:4321
 | Deployment target | Vercel |
 | Output | Static site in `dist/` |
 | Backend | Not included in the MVP |
-| Content | Placeholder-based; final owner copy and URLs pending |
+| Content | Real positioning and social links started; project-specific URLs and visual tuning pending |
 
 ## Quality gates
 
@@ -86,13 +86,10 @@ The editable site content lives in:
 src/data/site.ts
 ```
 
-Before a real public launch, replace the placeholder values for:
+Before a real public launch, confirm or replace the remaining content values for:
 
-- email address
-- LinkedIn URL
-- GitLab URL
 - InkScroller URL
 - project source/demo URLs
-- final personal copy
+- final personal copy and visual tone
 
 Configured links are validated before rendering. Invalid contact or project links are dropped from the published page instead of being emitted as broken interactive links.
