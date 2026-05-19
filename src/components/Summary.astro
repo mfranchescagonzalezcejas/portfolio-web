@@ -1,6 +1,16 @@
 ---
 // @ts-nocheck -- ESLint baseline cannot parse typed Astro frontmatter yet.
 const { summary } = Astro.props;
+
+const skillStyles = [
+  "border-[#0F766E] bg-[#0F766E]/45 text-[#CCFBF1]",
+  "border-[#075985] bg-[#075985]/45 text-[#BAE6FD]",
+  "border-[#115E59] bg-[#115E59]/45 text-[#CCFBF1]",
+  "border-[#0F766E] bg-[#0F766E]/45 text-[#CCFBF1]",
+  "border-[#0E7490] bg-[#0E7490]/45 text-[#CFFAFE]",
+  "border-[#1E3A8A] bg-[#1E3A8A]/55 text-[#DBEAFE]",
+  "border-[#164E63] bg-[#082F49]/55 text-[#BAE6FD]",
+];
 ---
 
 <section
@@ -54,8 +64,13 @@ const { summary } = Astro.props;
 
   <div class="mx-auto mt-6 flex max-w-6xl flex-wrap gap-2">
     {
-      summary.skills.map((skill) => (
-        <span class="rounded-full border border-teal-300/20 bg-teal-500/10 px-3 py-1 text-xs font-bold text-teal-100">
+      summary.skills.map((skill, index) => (
+        <span
+          class:list={[
+            "rounded-full border px-3 py-1 text-xs font-bold",
+            skillStyles[index] ?? skillStyles[0],
+          ]}
+        >
           {skill}
         </span>
       ))
