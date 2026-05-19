@@ -80,6 +80,12 @@ const rawSiteContent = {
       links: [],
     },
     {
+      name: "Barcelona a la Butxaca",
+      description:
+        "A public mobile app where I contributed to the air quality feature and ongoing maintenance and product evolution.",
+      links: [],
+    },
+    {
       name: "Portfolio Web",
       description:
         "This static Astro landing page, designed as a small, accessible, deployable portfolio MVP with Vercel deployment.",
