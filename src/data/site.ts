@@ -120,7 +120,7 @@ const normalizeLink = (link: LinkItem): LinkItem => ({
   ...link,
   label: link.label.trim(),
   href: link.href.trim(),
-  external: link.external ?? externalFromHref(link.href),
+  external: link.external ?? externalFromHref(link.href.trim()),
 });
 
 const validateLinks = (
