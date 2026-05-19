@@ -88,8 +88,9 @@ src/data/site.ts
 
 Before a real public launch, confirm or replace the remaining content values for:
 
-- InkScroller URL
-- project source/demo URLs
+- La Mercè 2024 public URL, if available
+- Barcelona a la Butxaca public URL, if available
+- Portfolio source URL, if the repo becomes public or gets a public mirror
 - final personal copy and visual tone
 
 Configured links are validated before rendering. Invalid contact or project links are dropped from the published page instead of being emitted as broken interactive links.

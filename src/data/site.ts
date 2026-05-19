@@ -71,7 +71,18 @@ const rawSiteContent = {
       description:
         "A full-stack mobile manga reader built with Flutter, FastAPI, PostgreSQL, Firebase Auth, Cloud Run, Riverpod, and GitHub Actions.",
       featured: true,
-      links: [],
+      links: [
+        {
+          label: "Frontend",
+          href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+          external: true,
+        },
+        {
+          label: "Backend",
+          href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+          external: true,
+        },
+      ],
     },
     {
       name: "La Mercè 2024",
@@ -89,13 +100,7 @@ const rawSiteContent = {
       name: "Portfolio Web",
       description:
         "This static Astro landing page, designed as a small, accessible, deployable portfolio MVP with Vercel deployment.",
-      links: [
-        {
-          label: "Source",
-          href: "https://gitlab.com/mfranchescagonzalezcejas/portfolio-web",
-          external: true,
-        },
-      ],
+      links: [],
     },
   ],
 } satisfies SiteContent;
