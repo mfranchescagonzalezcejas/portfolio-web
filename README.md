@@ -1,6 +1,6 @@
 # Portfolio Web
 
-Personal landing page built with **Astro** and **Tailwind CSS**. The current version is an MVP/base: it is ready to run, build, and deploy as a static site, but final copy, links, and visual tuning are still pending.
+Personal landing page built with **React** (Vite) and **Tailwind CSS**. The current version is a lightweight MVP that is ready to run, build, and deploy as a static app, with route support for `/`, `/en`, and `/es`.
 
 ## Quick start
 
@@ -9,17 +9,17 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Astro, usually:
+Open the local URL printed by Vite, usually:
 
 ```text
-http://localhost:4321
+http://localhost:5173
 ```
 
 ## Project status
 
 | Area | Status |
 |---|---|
-| Stack | Astro + Tailwind CSS |
+| Stack | React + Vite + Tailwind CSS |
 | Deployment target | Vercel |
 | Output | Static site in `dist/` |
 | Backend | Not included in the MVP |
@@ -30,7 +30,7 @@ http://localhost:4321
 Run these before opening or updating a merge request:
 
 ```bash
-npm run check
+npm run typecheck
 npm run lint
 npm run format:check
 npm run build
@@ -51,12 +51,20 @@ Use these settings when importing the GitLab repo into Vercel:
 
 | Setting | Value |
 |---|---|
-| Framework preset | Astro |
+| Framework preset | Vite |
 | Install command | `npm install` |
 | Build command | `npm run build` |
 | Output directory | `dist` |
 
 No server runtime is required for the MVP.
+
+### Routing notes
+
+Static routes supported:
+
+- `/` defaults to English content.
+- `/en` shows English locale content.
+- `/es` shows Spanish locale content.
 
 ## MVP scope
 
