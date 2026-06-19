@@ -126,6 +126,8 @@ describe("navigation anchors", () => {
         name: /Tools and engineering stack/i,
       }),
     ).toBeInTheDocument();
+
+    expect(skillsSection).toHaveClass("scroll-mt-32");
   });
 
   it("uses a valid heading id for the Contact section", () => {

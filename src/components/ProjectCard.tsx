@@ -30,7 +30,7 @@ export default function ProjectCard({
           {project.name}
         </h3>
 
-        {project.featured && (
+        {featured && featuredLabel && (
           <span className="rounded-full bg-teal-300/15 px-3 py-1 text-xs font-extrabold tracking-wide text-teal-100 ring-1 ring-teal-300/25">
             {featuredLabel}
           </span>

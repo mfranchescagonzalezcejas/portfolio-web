@@ -148,6 +148,7 @@ const assertNoJsContract = (
   expect(bodyText).toContain(contract.summarySnippet);
   expect(bodyText).toContain(contract.cta);
   expect(bodyText).toContain(contract.footerText);
+  expect(bodyText).not.toMatch(/\u00A9\s*20\d{2}/);
   expect(bodyText.trim().length).toBeGreaterThan(400);
 };
 

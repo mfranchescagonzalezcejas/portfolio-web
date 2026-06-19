@@ -19,7 +19,7 @@ export default function Skills({ skills, section }: SkillsProps) {
   return (
     <section
       id="skills"
-      className="px-6 py-12 lg:px-8"
+      className="scroll-mt-32 px-6 py-12 lg:px-8"
       aria-labelledby="skills-title"
     >
       <div className="mx-auto max-w-6xl">

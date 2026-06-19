@@ -30,6 +30,7 @@ http://localhost:5173
 Run these before opening or updating a merge request:
 
 ```bash
+npm run test
 npm run typecheck
 npm run lint
 npm run format:check
