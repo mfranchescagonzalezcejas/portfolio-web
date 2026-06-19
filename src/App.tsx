@@ -30,6 +30,7 @@ const resolveLocale = (path: string): Locale => {
 export default function App() {
   const locale = resolveLocale(window.location.pathname);
   const site = siteContentByLocale[locale];
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     document.documentElement.lang = site.locale;
@@ -71,7 +72,9 @@ export default function App() {
       </main>
 
       <footer className="px-6 py-8 text-center text-sm text-[#93c5fd] lg:px-8">
-        <p>DevDigi by Mercedes Gonzalez • © 2026 · {site.footerText}</p>
+        <p>
+          DevDigi by Mercedes Gonzalez • © {currentYear} · {site.footerText}
+        </p>
       </footer>
     </div>
   );

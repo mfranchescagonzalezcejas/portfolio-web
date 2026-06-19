@@ -56,7 +56,7 @@ export default function ProjectCard({
                 className="inline-flex rounded-full border border-[#38BDF8] bg-[#082F49] px-4 py-2 text-sm font-bold text-[#BAE6FD] transition hover:bg-cyan-300/10 hover:text-white"
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noreferrer" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
               >
                 {link.label}
               </a>

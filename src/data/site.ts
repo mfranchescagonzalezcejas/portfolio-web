@@ -534,6 +534,8 @@ const validateLinks = (
   links: LinkItem[],
   context: Omit<InvalidLink, "locale" | "label" | "href">,
 ): { links: LinkItem[]; invalidLinks: InvalidLink[] } => {
+  const isLinkItem = (link: LinkItem | null): link is LinkItem => link !== null;
+
   const invalidLinks: InvalidLink[] = [];
   const validLinks = links
     .map((link) => {
@@ -551,7 +553,7 @@ const validateLinks = (
 
       return null;
     })
-    .filter(Boolean) as LinkItem[];
+    .filter(isLinkItem);
 
   return { links: validLinks, invalidLinks };
 };

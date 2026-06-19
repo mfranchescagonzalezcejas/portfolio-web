@@ -42,7 +42,7 @@ export default function ContactLinks({ links, section }: ContactLinksProps) {
                   className={`inline-flex rounded-full px-4 py-2 text-sm font-extrabold transition ${linkStyles[index % linkStyles.length]}`}
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noreferrer" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
                 >
                   {link.label}
                 </a>

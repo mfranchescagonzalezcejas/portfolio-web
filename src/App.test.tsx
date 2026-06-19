@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   cleanup,
   render,
@@ -24,6 +24,7 @@ const renderAtPath = (path: string) => {
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   window.history.pushState({}, "", "/");
 });
 
@@ -87,9 +88,31 @@ describe("locale routing behavior", () => {
       );
     },
   );
+
+  it("renders the current year in the footer", () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2030-06-19T12:00:00.000Z"));
+
+    renderAtPath("/");
+
+    expect(
+      screen.getByText((content) => content.includes("© 2030")),
+    ).toBeInTheDocument();
+  });
 });
 
 describe("navigation anchors", () => {
+  it("uses a non-navigation group for the language switcher", () => {
+    renderAtPath("/");
+
+    expect(
+      screen.getByRole("group", { name: "Change language" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole("navigation", { name: "Primary navigation" }),
+    ).toHaveLength(1);
+  });
+
   it("includes a valid Skills anchor and target section", () => {
     renderAtPath("/");
 
@@ -111,5 +134,20 @@ describe("navigation anchors", () => {
     const contactSection = document.getElementById("contact");
     expect(contactSection).toHaveAttribute("aria-labelledby", "contact-title");
     expect(document.getElementById("contact-title")).not.toBeNull();
+  });
+
+  it("protects external links opened in new tabs", () => {
+    renderAtPath("/");
+
+    const externalLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("target") === "_blank");
+
+    expect(externalLinks.length).toBeGreaterThan(0);
+    externalLinks.forEach((link) => {
+      expect(link.getAttribute("rel")?.split(/\s+/)).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    });
   });
 });

@@ -51,8 +51,9 @@ export default function SiteHeader({
             ))}
           </ul>
 
-          <nav
+          <div
             className="flex items-center gap-1 rounded-full border border-cyan-400/30 bg-slate-950/50 p-1"
+            role="group"
             aria-label={languageSwitcher.label}
           >
             {Object.entries(languageSwitcher.options).map(([locale, label]) => (
@@ -69,7 +70,7 @@ export default function SiteHeader({
                 {label}
               </a>
             ))}
-          </nav>
+          </div>
         </div>
       </nav>
     </header>

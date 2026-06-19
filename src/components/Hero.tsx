@@ -70,7 +70,7 @@ export default function Hero({ hero, links }: HeroProps) {
                   }`}
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noreferrer" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
                 >
                   {link.label}
                 </a>
