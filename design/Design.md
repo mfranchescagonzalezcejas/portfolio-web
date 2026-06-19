@@ -76,7 +76,7 @@ Badge:
 
 Headline:
 
-> Hi, I’m Mercedes.  
+> Hi, I’m Mercedes.
 > I build polished mobile apps for real users.
 
 Highlight **mobile apps** with a teal/cyan gradient.
@@ -155,7 +155,7 @@ Use a vertical timeline with polished cards.
 
 ### Worldline Global Services
 
-**Native Apps Developer**  
+**Native Apps Developer**
 Barcelona · Apr 2024 – Jan 2026
 
 Important: Worldline is not the current job. Do not show a “CURRENT” badge.
@@ -197,7 +197,7 @@ Important: These are professional company projects Mercedes contributed to durin
 
 ### Avanade
 
-**Front-End Developer Intern**  
+**Front-End Developer Intern**
 Barcelona · Oct 2021 – Apr 2022
 
 Bullets:
@@ -367,7 +367,7 @@ Buttons:
 
 Text:
 
-> DevDigi by Mercedes Gonzalez  
+> DevDigi by Mercedes Gonzalez
 > © 2026 · Built with care in Barcelona
 
 ## Content Safety Rules
