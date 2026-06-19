@@ -12,6 +12,6 @@
     "types": ["vite/client"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*", "index.html", "vite.config.ts"],
-  "exclude": ["dist"]
+  "include": ["src/**/*", "index.html"],
+  "exclude": ["dist", "vite.config.ts", "src/localized-html-contract.test.ts"]
 }
