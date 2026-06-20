@@ -31,6 +31,45 @@ export type NavItem = {
   href: string;
 };
 
+export type SectionHeading = {
+  eyebrow: string;
+  title: string;
+};
+
+export type HeroContent = {
+  shortName: string;
+  name: string;
+  eyebrow: string;
+  tagline: string;
+  summary: string;
+  panelLabel: string;
+  panelTitle: string;
+  panelText: string;
+  profileLinksLabel: string;
+  panelAriaLabel: string;
+  ctaLabel: string;
+  skills: string[];
+};
+
+export type SummaryContent = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  workingStyleLabel: string;
+  cleanArchitectureTitle: string;
+  cleanArchitectureBody: string;
+  qualityMindsetTitle: string;
+  qualityMindsetBody: string;
+  skills: string[];
+};
+
+export type ContactSection = {
+  eyebrow: string;
+  title: string;
+  body: string;
+  ariaLabel: string;
+};
+
 export type SiteContent = {
   locale: Locale;
   meta: {
@@ -47,53 +86,22 @@ export type SiteContent = {
     ariaLabel: string;
     homeLabel: string;
   };
-  hero: {
-    shortName: string;
-    name: string;
-    eyebrow: string;
-    tagline: string;
-    summary: string;
-    panelLabel: string;
-    panelTitle: string;
-    panelText: string;
-    profileLinksLabel: string;
-    panelAriaLabel: string;
-    skills: string[];
-  };
-  summary: {
-    eyebrow: string;
-    title: string;
-    body: string;
-    workingStyleLabel: string;
-    cleanArchitectureTitle: string;
-    cleanArchitectureBody: string;
-    qualityMindsetTitle: string;
-    qualityMindsetBody: string;
-    skills: string[];
-  };
-  experienceSection: {
-    eyebrow: string;
-    title: string;
-  };
+  hero: HeroContent;
+  summary: SummaryContent;
+  experienceSection: SectionHeading;
   projectsSection: {
     eyebrow: string;
     title: string;
     featuredLabel: string;
     linksLabel: string;
   };
-  educationSection: {
-    eyebrow: string;
-    title: string;
-  };
-  contactSection: {
-    eyebrow: string;
-    title: string;
-    body: string;
-    ariaLabel: string;
-  };
+  educationSection: SectionHeading;
+  contactSection: ContactSection;
+  footerText: string;
   experience: Experience[];
   projects: Project[];
   education: Education[];
+  skillsSection: SectionHeading;
   contacts: LinkItem[];
 };
 
@@ -125,20 +133,22 @@ const sharedContacts: LinkItem[] = [
   },
 ];
 
-const rawSiteContent = {
+const rawSiteContent: Record<Locale, SiteContent> = {
   en: {
     locale: "en",
     meta: {
-      title: "Mercedes Franchesca Gonzalez Cejas | Personal Portfolio",
+      title: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       description:
-        "Software Engineer specialized in Flutter and mobile development.",
+        "DevDigi is my personal developer brand. Mobile Developer focused on Flutter, Android, and iOS delivery.",
     },
     skipLink: "Skip to content",
     nav: [
       { label: "About", href: "#about" },
       { label: "Experience", href: "#experience" },
       { label: "Projects", href: "#projects" },
+      { label: "Skills", href: "#skills" },
       { label: "Education", href: "#education" },
+      { label: "Contact", href: "#contact" },
     ],
     languageSwitcher: {
       label: "Change language",
@@ -146,88 +156,104 @@ const rawSiteContent = {
     },
     header: {
       ariaLabel: "Primary navigation",
-      homeLabel: "Mercy home",
+      homeLabel: "DevDigi home",
     },
     hero: {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
-      eyebrow: "Software Engineer · Flutter & Mobile",
-      tagline:
-        "Software Engineer specialized in Flutter and mobile development.",
+      eyebrow: "Open to mobile roles · Barcelona / Remote",
+      tagline: "I build polished mobile apps for real users.",
       summary:
-        "I build production-ready mobile experiences with clean architecture, reliable delivery practices, and a strong product mindset.",
+        "Mobile-focused engineer with hands-on experience shipping production-ready applications, maintaining clean architecture and reliable release workflows.",
       panelLabel: "Signal",
-      panelTitle: "Mobile delivery + product quality",
+      panelTitle: "Production-ready mobile delivery",
       panelText:
-        "Flutter-first profile with production experience, QA awareness, native Android/iOS foundations, and full-stack project ownership.",
+        "DevDigi combines Flutter, Android, iOS, API integration, and QA-minded engineering so teams can move quickly without losing maintainability.",
       profileLinksLabel: "Primary profile links",
+      ctaLabel: "Contact me",
       panelAriaLabel: "Professional focus",
-      skills: ["Flutter", "Kotlin", "Swift", "REST APIs", "QA validation"],
-    },
-    summary: {
-      eyebrow: "About",
-      title:
-        "I care about mobile products that stay maintainable while teams keep moving.",
-      body: "I’m a Software Engineer specialized in Flutter and mobile development, with hands-on experience shipping production apps and contributing across UI, business logic, REST API integration, testing, and QA validation. My background combines mobile delivery, clean architecture, and practical product thinking while I keep growing across Android/Kotlin, iOS/Swift, and full-stack foundations through projects like InkScroller.",
-      workingStyleLabel: "Working style",
-      cleanArchitectureTitle: "Clean architecture",
-      cleanArchitectureBody:
-        "Readable systems, layered thinking, repository patterns, and maintainable delivery.",
-      qualityMindsetTitle: "Quality mindset",
-      qualityMindsetBody:
-        "Testing, functional validation, Jira workflows, and release confidence from QA experience.",
       skills: [
         "Flutter",
         "Dart",
         "Kotlin",
         "Swift",
         "REST APIs",
-        "QA validation",
+        "CI/CD",
+        "QA",
+      ],
+    },
+    summary: {
+      eyebrow: "About",
+      title: "I am a Mobile Developer focused on production-ready mobile apps.",
+      body: "DevDigi is my personal developer brand. I am a software engineer focused on practical mobile engineering, mainly Flutter, Android/Kotlin, and iOS/Swift. I care about clean architecture, maintainability, API integration, and release confidence.",
+      workingStyleLabel: "Working style",
+      cleanArchitectureTitle: "Clean architecture",
+      cleanArchitectureBody:
+        "Layered codebases, repository pattern, and clear boundaries for long-lived feature ownership.",
+      qualityMindsetTitle: "Quality mindset",
+      qualityMindsetBody:
+        "Testing awareness, structured manual QA support, release validation, and clear team communication.",
+      skills: [
+        "Flutter",
+        "Dart",
+        "Kotlin",
+        "Swift",
+        "REST APIs",
+        "Jenkins",
+        "GitLab",
+        "Jira",
         "CI/CD",
       ],
     },
     experienceSection: {
       eyebrow: "Experience",
-      title: "Production context, not just side projects.",
+      title: "Experience building real mobile apps",
     },
     projectsSection: {
       eyebrow: "Projects",
-      title: "Selected proof of work.",
+      title: "Selected proof of work",
       featuredLabel: "Featured",
       linksLabel: "Project links",
     },
     educationSection: {
       eyebrow: "Education",
-      title: "Engineering foundation with ongoing AI development training.",
+      title: "Engineering foundation with current AI studies.",
+    },
+    skillsSection: {
+      eyebrow: "Skills",
+      title: "Tools and engineering stack",
     },
     contactSection: {
       eyebrow: "Contact",
-      title: "Let’s connect",
-      body: "No public email for now — LinkedIn, GitLab, and GitHub are the contact paths.",
+      title: "Let’s build great mobile products.",
+      body: "Open to Mobile Developer, Flutter Developer, and Android Developer opportunities in Barcelona, hybrid, or remote.",
       ariaLabel: "Contact and social links",
     },
+    footerText: "Built with care in Barcelona",
     contacts: sharedContacts,
     experience: [
       {
-        company: "Worldline",
+        company: "Worldline Global Services",
         role: "Native Apps Developer",
-        period: "2023–2026 · Barcelona",
+        period: "Apr 2024 – Jan 2026 · Barcelona",
         description:
-          "Production mobile work across Flutter, Android, iOS, QA validation, and release-focused delivery.",
+          "Contributed to production mobile applications across Flutter, Android, and iOS in a real delivery context.",
         highlights: [
-          "Main developer on La Mercè 2024, a Flutter app released to production.",
-          "Built the air quality feature for Barcelona a la Butxaca and contributed to maintenance/evolution.",
-          "Supported QA validation for Nescafé Dolce Gusto with Jira, test plans, and device flows.",
+          "Contributed to La Mercè, a public Flutter app used in a major Barcelona cultural event.",
+          "Built and shipped the air quality feature for Barcelona a la Butxaca.",
+          "Supported QA validation for Nescafé Dolce Gusto using Jira, manual test plans, and reconnection test cases.",
+          "Participated in CI/CD and release validation flows for production deliveries.",
         ],
       },
       {
         company: "Avanade",
         role: "Front-End Developer Intern",
-        period: "2021–2022 · Barcelona",
+        period: "Oct 2021 – Apr 2022 · Barcelona",
         description:
-          "Early professional experience building client-facing solutions with PowerApps and Microsoft ecosystem tools.",
+          "Built and customized internal solutions with Microsoft ecosystem tools.",
         highlights: [
-          "Frontend internship context kept secondary to preserve the mobile-first portfolio narrative.",
+          "Delivered client-facing workflow features using PowerApps.",
+          "Worked in cross-functional collaboration to improve internal team productivity.",
         ],
       },
     ],
@@ -235,7 +261,7 @@ const rawSiteContent = {
       {
         name: "InkScroller",
         description:
-          "A full-stack mobile manga reader built with Flutter, FastAPI, PostgreSQL, Firebase Auth, Cloud Run, Riverpod, and GitHub Actions.",
+          "Full-stack mobile manga reader built with Flutter, FastAPI, PostgreSQL, Firebase Auth, Railway, and GitHub Actions.",
         featured: true,
         links: [
           {
@@ -251,21 +277,27 @@ const rawSiteContent = {
         ],
       },
       {
-        name: "La Mercè 2024",
+        name: "DevDigi Portfolio Web",
         description:
-          "A Flutter app released to production for a Barcelona cultural event, developed as part of real mobile product delivery.",
+          "Personal developer brand and portfolio website focused on mobile engineering and technical growth.",
         links: [],
       },
       {
-        name: "Barcelona a la Butxaca",
+        name: "Android Expense Tracker",
         description:
-          "A public mobile app where I contributed to the air quality feature and ongoing maintenance and product evolution.",
+          "Personal mobile sample project with Kotlin, Jetpack Compose, Room, and Koin to track expense categories and validation flows.",
         links: [],
       },
       {
-        name: "Portfolio Web",
+        name: "iOS Expense Tracker · UIKit",
         description:
-          "This static Astro landing page, designed as a small, accessible, deployable portfolio MVP with Vercel deployment.",
+          "Mobile sample project in Swift/UIKit exploring native iOS architecture and UI patterns.",
+        links: [],
+      },
+      {
+        name: "iOS Expense Tracker · SwiftUI",
+        description:
+          "Mobile sample project in SwiftUI focused on declarative UI and maintainable state flow.",
         links: [],
       },
     ],
@@ -276,10 +308,10 @@ const rawSiteContent = {
       },
       {
         title: "AI Development Master",
-        meta: "BIG School · in progress",
+        meta: "BIG School · In progress",
       },
       {
-        title: "English B2",
+        title: "English: B2",
         meta: "EOI Vall d’Hebron · Spanish and Catalan native",
       },
     ],
@@ -287,16 +319,18 @@ const rawSiteContent = {
   es: {
     locale: "es",
     meta: {
-      title: "Mercedes Franchesca Gonzalez Cejas | Portfolio personal",
+      title: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       description:
-        "Ingeniera de software especializada en Flutter y desarrollo móvil.",
+        "DevDigi es la marca personal de Mercedes; Ingeniería móvil con foco en Flutter, Android e iOS.",
     },
     skipLink: "Saltar al contenido",
     nav: [
       { label: "Sobre mí", href: "#about" },
       { label: "Experiencia", href: "#experience" },
       { label: "Proyectos", href: "#projects" },
+      { label: "Competencias", href: "#skills" },
       { label: "Educación", href: "#education" },
+      { label: "Contacto", href: "#contact" },
     ],
     languageSwitcher: {
       label: "Cambiar idioma",
@@ -304,88 +338,105 @@ const rawSiteContent = {
     },
     header: {
       ariaLabel: "Navegación principal",
-      homeLabel: "Inicio de Mercy",
+      homeLabel: "Inicio de DevDigi",
     },
     hero: {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
-      eyebrow: "Ingeniera de software · Flutter & Mobile",
+      eyebrow: "Abierta a roles móviles · Barcelona / Remoto",
       tagline:
-        "Ingeniera de software especializada en Flutter y desarrollo móvil.",
+        "Diseño y desarrollo apps móviles de calidad para usuarios reales.",
       summary:
-        "Construyo experiencias móviles listas para producción con arquitectura limpia, prácticas de entrega confiables y mentalidad de producto.",
+        "Ingeniera de software con experiencia en productos móviles en producción, centrada en arquitectura limpia y entregas fiables.",
       panelLabel: "Señal",
-      panelTitle: "Entrega mobile + calidad de producto",
+      panelTitle: "Entrega móvil en producción",
       panelText:
-        "Perfil centrado en Flutter, con experiencia en producción, mirada de QA, bases nativas Android/iOS y ownership full-stack en proyectos.",
+        "En DevDigi combino Flutter, Android, iOS, integración de APIs y QA para que los productos puedan escalar sin perder mantenibilidad.",
       profileLinksLabel: "Enlaces principales del perfil",
+      ctaLabel: "Contáctame",
       panelAriaLabel: "Foco profesional",
-      skills: ["Flutter", "Kotlin", "Swift", "REST APIs", "Validación QA"],
-    },
-    summary: {
-      eyebrow: "Sobre mí",
-      title:
-        "Me importan los productos móviles que siguen siendo mantenibles mientras los equipos avanzan.",
-      body: "Soy Ingeniera de Software especializada en Flutter y desarrollo móvil, con experiencia práctica publicando apps en producción y aportando en UI, lógica de negocio, integración con REST APIs, testing y validación QA. Mi perfil combina entrega mobile, arquitectura limpia y pensamiento de producto mientras sigo creciendo en Android/Kotlin, iOS/Swift y bases full-stack a través de proyectos como InkScroller.",
-      workingStyleLabel: "Forma de trabajar",
-      cleanArchitectureTitle: "Arquitectura limpia",
-      cleanArchitectureBody:
-        "Sistemas legibles, pensamiento por capas, patrones de repositorio y entrega mantenible.",
-      qualityMindsetTitle: "Mentalidad de calidad",
-      qualityMindsetBody:
-        "Testing, validación funcional, flujos con Jira y confianza de release desde experiencia en QA.",
       skills: [
         "Flutter",
         "Dart",
         "Kotlin",
         "Swift",
         "REST APIs",
-        "Validación QA",
+        "CI/CD",
+        "QA",
+      ],
+    },
+    summary: {
+      eyebrow: "Sobre mí",
+      title: "Ingeniera móvil enfocada en apps robustas para uso real.",
+      body: "DevDigi es mi marca personal. Trabajo principalmente con Flutter, Android/Kotlin e iOS/Swift, combinando buenas prácticas de arquitectura y enfoque de producto.",
+      workingStyleLabel: "Forma de trabajar",
+      cleanArchitectureTitle: "Arquitectura limpia",
+      cleanArchitectureBody:
+        "Estructuras por capas, repository pattern y límites claros para mantener código mantenible.",
+      qualityMindsetTitle: "Mentalidad de calidad",
+      qualityMindsetBody:
+        "Conciencia de testing, soporte de QA manual, validación de releases y comunicación clara con equipos.",
+      skills: [
+        "Flutter",
+        "Dart",
+        "Kotlin",
+        "Swift",
+        "REST APIs",
+        "Jenkins",
+        "GitLab",
+        "Jira",
         "CI/CD",
       ],
     },
     experienceSection: {
       eyebrow: "Experiencia",
-      title: "Contexto de producción, no solo proyectos personales.",
+      title: "Experiencia construyendo apps móviles reales",
     },
     projectsSection: {
       eyebrow: "Proyectos",
-      title: "Pruebas seleccionadas de trabajo real.",
+      title: "Trabajos seleccionados",
       featuredLabel: "Destacado",
       linksLabel: "Enlaces del proyecto",
     },
     educationSection: {
       eyebrow: "Educación",
-      title: "Base de ingeniería con formación actual en desarrollo de IA.",
+      title: "Base de ingeniería y formación continuada en IA.",
+    },
+    skillsSection: {
+      eyebrow: "Competencias",
+      title: "Herramientas y stack de ingeniería",
     },
     contactSection: {
       eyebrow: "Contacto",
-      title: "Conectemos",
-      body: "Sin email público por ahora — LinkedIn, GitLab y GitHub son las vías de contacto.",
-      ariaLabel: "Enlaces de contacto y redes",
+      title: "Construyamos productos móviles excelentes.",
+      body: "Abierta a roles como Mobile Developer, Flutter Developer y Android Developer en Barcelona, híbrido o remoto.",
+      ariaLabel: "Enlaces de contacto",
     },
+    footerText: "Desarrollado con cariño en Barcelona",
     contacts: sharedContacts,
     experience: [
       {
-        company: "Worldline",
+        company: "Worldline Global Services",
         role: "Native Apps Developer",
-        period: "2023–2026 · Barcelona",
+        period: "Abr 2024 – Ene 2026 · Barcelona",
         description:
-          "Trabajo mobile en producción con Flutter, Android, iOS, validación QA y entrega orientada a releases.",
+          "Contribuí al desarrollo de aplicaciones móviles en producción con Flutter, Android e iOS.",
         highlights: [
-          "Desarrolladora principal en La Mercè 2024, una app Flutter publicada en producción.",
-          "Construí la funcionalidad de calidad del aire para Barcelona a la Butxaca y contribuí a mantenimiento/evolución.",
-          "Apoyé la validación QA para Nescafé Dolce Gusto con Jira, planes de prueba y flujos en dispositivos.",
+          "Contribuí a La Mercè, una app Flutter pública para un gran evento cultural de Barcelona.",
+          "Implementé la funcionalidad de calidad del aire en Barcelona a la Butxaca.",
+          "Apoyé QA manual para Nescafé Dolce Gusto con Jira, planes de prueba y validación de flujos.",
+          "Participé en flujos de CI/CD y validación de release para entornos de producción.",
         ],
       },
       {
         company: "Avanade",
         role: "Front-End Developer Intern",
-        period: "2021–2022 · Barcelona",
+        period: "Oct 2021 – Abr 2022 · Barcelona",
         description:
-          "Primera experiencia profesional construyendo soluciones para cliente con PowerApps y herramientas del ecosistema Microsoft.",
+          "Construcción de soluciones internas con herramientas del ecosistema Microsoft.",
         highlights: [
-          "Contexto inicial de frontend mantenido en segundo plano para preservar la narrativa mobile-first.",
+          "Entregué mejoras de flujo en PowerApps para uso interno.",
+          "Colaboré con equipos multifuncionales para impulsar entregas funcionales.",
         ],
       },
     ],
@@ -393,7 +444,7 @@ const rawSiteContent = {
       {
         name: "InkScroller",
         description:
-          "Lector mobile de manga full-stack construido con Flutter, FastAPI, PostgreSQL, Firebase Auth, Cloud Run, Riverpod y GitHub Actions.",
+          "Lector móvil de manga full-stack en Flutter con FastAPI, PostgreSQL, Firebase Auth, Railway y GitHub Actions.",
         featured: true,
         links: [
           {
@@ -409,21 +460,27 @@ const rawSiteContent = {
         ],
       },
       {
-        name: "La Mercè 2024",
+        name: "DevDigi Portfolio Web",
         description:
-          "App Flutter publicada en producción para un evento cultural de Barcelona, desarrollada como parte de entrega mobile real.",
+          "Sitio de marca personal para destacar experiencia móvil y trabajos de crecimiento técnico.",
         links: [],
       },
       {
-        name: "Barcelona a la Butxaca",
+        name: "Android Expense Tracker",
         description:
-          "App mobile pública donde contribuí a la funcionalidad de calidad del aire y al mantenimiento/evolución del producto.",
+          "Proyecto personal con Kotlin, Jetpack Compose, Room y Koin para control de gastos básicos.",
         links: [],
       },
       {
-        name: "Portfolio Web",
+        name: "iOS Expense Tracker · UIKit",
         description:
-          "Landing estática en Astro, diseñada como portfolio MVP pequeño, accesible y desplegable con Vercel.",
+          "Proyecto personal iOS con UIKit y Storyboards para consolidar fundamentos de desarrollo nativo.",
+        links: [],
+      },
+      {
+        name: "iOS Expense Tracker · SwiftUI",
+        description:
+          "Proyecto personal con SwiftUI y enfoque en UI declarativa para flujos simples de gasto.",
         links: [],
       },
     ],
@@ -434,26 +491,19 @@ const rawSiteContent = {
       },
       {
         title: "Máster en Desarrollo de IA",
-        meta: "BIG School · en curso",
+        meta: "BIG School · En curso",
       },
       {
-        title: "Inglés B2",
-        meta: "EOI Vall d’Hebron · español y catalán nativos",
+        title: "Inglés: B2",
+        meta: "EOI Vall d’Hebron · Español y catalán nativos",
       },
     ],
   },
-} satisfies Record<Locale, SiteContent>;
-
-export const locales = ["en", "es"] as const;
-export const defaultLocale: Locale = "en";
-
-export const isLocale = (locale: string | undefined): locale is Locale =>
-  locales.includes(locale as Locale);
+};
 
 const isValidLinkHref = (href: string) => {
   try {
     const parsed = new URL(href);
-
     return allowedProtocols.has(parsed.protocol);
   } catch {
     return false;
@@ -466,7 +516,6 @@ const isValidLink = (link: LinkItem) =>
 const externalFromHref = (href: string) => {
   try {
     const parsed = new URL(href);
-
     return parsed.protocol === "https:" || parsed.protocol === "http:";
   } catch {
     return false;
@@ -485,23 +534,26 @@ const validateLinks = (
   links: LinkItem[],
   context: Omit<InvalidLink, "locale" | "label" | "href">,
 ): { links: LinkItem[]; invalidLinks: InvalidLink[] } => {
+  const isLinkItem = (link: LinkItem | null): link is LinkItem => link !== null;
+
   const invalidLinks: InvalidLink[] = [];
-  const validLinks = links.flatMap((link) => {
-    const normalized = normalizeLink(link);
+  const validLinks = links
+    .map((link) => {
+      const normalized = normalizeLink(link);
+      if (isValidLink(normalized)) {
+        return normalized;
+      }
 
-    if (isValidLink(normalized)) {
-      return [normalized];
-    }
+      invalidLinks.push({
+        locale,
+        ...context,
+        label: link.label,
+        href: link.href,
+      });
 
-    invalidLinks.push({
-      locale,
-      ...context,
-      label: link.label,
-      href: link.href,
-    });
-
-    return [];
-  });
+      return null;
+    })
+    .filter(isLinkItem);
 
   return { links: validLinks, invalidLinks };
 };
@@ -520,9 +572,11 @@ const validateSiteContent = (content: SiteContent) => {
     }),
   }));
 
-  const projects = projectResults.map(
-    ({ invalidLinks: _invalidLinks, ...project }) => project,
-  );
+  const projects = projectResults.map(({ invalidLinks, ...project }) => {
+    void invalidLinks;
+
+    return project;
+  });
   const invalidLinks = [
     ...contacts.invalidLinks,
     ...projectResults.flatMap((project) => project.invalidLinks),
@@ -544,6 +598,12 @@ const validateSiteContent = (content: SiteContent) => {
   };
 };
 
+export const locales = ["en", "es"] as const;
+export const defaultLocale: Locale = "en";
+
+export const isLocale = (locale: string | undefined): locale is Locale =>
+  locales.includes(locale as Locale);
+
 const validatedContentEntries = locales.map(
   (locale) =>
     [locale, validateSiteContent(rawSiteContent[locale]).content] as const,
@@ -553,8 +613,8 @@ export const siteContentByLocale = Object.fromEntries(
   validatedContentEntries,
 ) as Record<Locale, SiteContent>;
 
+export const siteContent = siteContentByLocale[defaultLocale];
+
 export const invalidLinks = locales.flatMap(
   (locale) => validateSiteContent(rawSiteContent[locale]).invalidLinks,
 );
-
-export const siteContent = siteContentByLocale[defaultLocale];
