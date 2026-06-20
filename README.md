@@ -35,6 +35,7 @@ npm run typecheck
 npm run lint
 npm run format:check
 npm run build
+npm audit --audit-level=high
 ```
 
 Useful local commands:
@@ -48,7 +49,7 @@ npm run preview
 
 ## Vercel settings
 
-Use these settings when importing the GitLab repo into Vercel:
+Use these settings when importing the GitHub repo into Vercel:
 
 | Setting | Value |
 |---|---|
