@@ -23,16 +23,14 @@ export default function Projects({ projects, section }: ProjectsProps) {
           </h2>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_24rem]">
-          <div className="grid gap-6">
-            {projects.map((project) => (
-              <ProjectCard
-                key={project.name}
-                project={project}
-                linksLabel={section.linksLabel}
-              />
-            ))}
-          </div>
+        <div className="mt-8 grid gap-6">
+          {projects.map((project) => (
+            <ProjectCard
+              key={project.name}
+              project={project}
+              linksLabel={section.linksLabel}
+            />
+          ))}
         </div>
       </div>
     </section>

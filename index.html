@@ -125,11 +125,19 @@
     </div>
     <script>
       (function () {
-        const storedTheme = localStorage.getItem("devdigi-theme");
+        let storedTheme = null;
+
+        try {
+          storedTheme = localStorage.getItem("devdigi-theme");
+        } catch (_error) {
+          // localStorage access may fail in restricted contexts.
+          storedTheme = null;
+        }
+
         const resolvedTheme =
           storedTheme === "light" || storedTheme === "dark"
             ? storedTheme
-            : window.matchMedia?.("(prefers-color-scheme: light)").matches
+            : window.matchMedia?.("(prefers-color-scheme: light)")?.matches
               ? "light"
               : "dark";
 

@@ -48,17 +48,11 @@
   --shadow-glow:
     0 0 0 1px oklch(78% 0.14 195 / 0.2),
     0 20px 60px -20px oklch(78% 0.14 195 / 0.35);
-
-  --gradient-text: linear-gradient(
-    90deg,
-    oklch(84% 0.11 185) 0%,
-    oklch(82% 0.13 197) 40%,
-    oklch(74% 0.11 232) 100%
-  );
-
-  color: var(--foreground);
-  background: var(--background);
-  background-image:
+  --section-title-color: oklch(97% 0.01 240);
+  --section-eyebrow-color: oklch(74% 0.13 190);
+  --hero-summary-color: oklch(90% 0.03 220);
+  --cta-foreground: oklch(98% 0.01 245);
+  --body-gradient:
     radial-gradient(
       1200px 600px at 50% -10%,
       oklch(30% 0.08 220 / 0.34),
@@ -75,6 +69,17 @@
       oklch(12% 0.02 250) 35%,
       oklch(10% 0.02 250) 100%
     );
+
+  --gradient-text: linear-gradient(
+    90deg,
+    oklch(84% 0.11 185) 0%,
+    oklch(82% 0.13 197) 40%,
+    oklch(74% 0.11 232) 100%
+  );
+
+  color: var(--foreground);
+  background: var(--background);
+  background-image: var(--body-gradient);
 }
 
 .light {
@@ -107,17 +112,11 @@
   --shadow-glow:
     0 0 0 1px oklch(70% 0.15 195 / 0.2),
     0 14px 45px -22px oklch(20% 0.2 210 / 0.2);
-
-  --gradient-text: linear-gradient(
-    90deg,
-    oklch(45% 0.15 190) 0%,
-    oklch(35% 0.13 225) 60%,
-    oklch(42% 0.14 250) 100%
-  );
-
-  color: var(--foreground);
-  background: var(--background);
-  background-image:
+  --section-title-color: oklch(18% 0.01 245);
+  --section-eyebrow-color: oklch(42% 0.02 245);
+  --hero-summary-color: oklch(24% 0.02 245);
+  --cta-foreground: oklch(14% 0.01 245);
+  --body-gradient:
     radial-gradient(
       1200px 600px at 50% -10%,
       oklch(76% 0.2 210 / 0.2),
@@ -134,6 +133,17 @@
       oklch(99% 0.01 245) 45%,
       oklch(95% 0.01 245) 100%
     );
+
+  --gradient-text: linear-gradient(
+    90deg,
+    oklch(45% 0.15 190) 0%,
+    oklch(35% 0.13 225) 60%,
+    oklch(42% 0.14 250) 100%
+  );
+
+  color: var(--foreground);
+  background: var(--background);
+  background-image: var(--body-gradient);
 }
 
 html {
@@ -152,23 +162,7 @@ body {
   margin: 0;
   color: var(--foreground);
   background: var(--background);
-  background-image:
-    radial-gradient(
-      1200px 600px at 50% -10%,
-      oklch(30% 0.08 220 / 0.34),
-      transparent 60%
-    ),
-    radial-gradient(
-      900px 500px at 100% 20%,
-      oklch(28% 0.1 195 / 0.16),
-      transparent 60%
-    ),
-    linear-gradient(
-      180deg,
-      oklch(16% 0.02 250) 0%,
-      oklch(12% 0.02 250) 35%,
-      oklch(10% 0.02 250) 100%
-    );
+  background-image: var(--body-gradient);
   font-family: var(--font-sans);
   font-feature-settings: "cv11", "ss01", "ss03";
   -webkit-font-smoothing: antialiased;
@@ -223,7 +217,7 @@ h4 {
   letter-spacing: -0.02em;
   font-weight: 800;
   font-size: clamp(1.9rem, 2vw + 1rem, 2.75rem);
-  color: oklch(97% 0.01 240);
+  color: var(--section-title-color);
   text-wrap: balance;
 }
 
@@ -242,12 +236,12 @@ h4 {
   letter-spacing: 0.24em;
   text-transform: uppercase;
   font-weight: 800;
-  color: oklch(74% 0.13 190);
+  color: var(--section-eyebrow-color);
 }
 
 .hero-summary {
   max-width: 55ch;
-  color: oklch(90% 0.03 220);
+  color: var(--hero-summary-color);
   font-weight: 600;
   font-size: clamp(1rem, 1vw + 0.95rem, 1.36rem);
 }
@@ -255,6 +249,30 @@ h4 {
 .hero-copy {
   margin: 0;
   color: color-mix(in oklab, var(--foreground) 88%, oklch(75% 0.05 220) 12%);
+}
+
+.hero-title {
+  color: var(--section-title-color);
+}
+
+.experience-period {
+  color: color-mix(in oklab, var(--foreground) 76%, var(--accent-teal) 24%);
+}
+
+.case-study-label {
+  color: color-mix(in oklab, var(--foreground) 28%, var(--accent-teal) 72%);
+}
+
+.case-study-scope {
+  color: color-mix(in oklab, var(--foreground) 40%, var(--accent-blue) 60%);
+}
+
+.project-card-title {
+  color: color-mix(in oklab, var(--foreground) 92%, transparent);
+}
+
+.project-card-description {
+  color: color-mix(in oklab, var(--foreground) 78%, var(--card) 22%);
 }
 
 .text-gradient {
@@ -773,7 +791,7 @@ h4 {
   border: 1px solid color-mix(in oklab, #67e8f9 60%, transparent);
   background: linear-gradient(90deg, #0ea5e9, #14b8a6);
   padding: 0.56rem 1.2rem;
-  color: #fff;
+  color: var(--cta-foreground);
   font-weight: 800;
   letter-spacing: 0.01em;
 }
@@ -788,6 +806,7 @@ h4 {
   border: 1px solid color-mix(in oklab, #2dd4bf 50%, transparent);
   background: color-mix(in oklab, #0b2d48 56%, transparent);
   padding: 0.58rem 1rem;
+  color: var(--foreground);
 }
 
 .site-footer {

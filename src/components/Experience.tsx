@@ -28,10 +28,10 @@ export default function Experience({ experience, section }: ExperienceProps) {
         <div className="mt-8 grid gap-6 md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_24rem]">
           {primaryExperience && (
             <article className="card-surface">
-              <p className="text-sm font-bold text-teal-100">
+              <p className="experience-period text-sm font-bold">
                 {primaryExperience.period}
               </p>
-              <h3 className="mt-3 text-2xl font-extrabold text-white">
+              <h3 className="section-title mt-3 text-2xl font-extrabold">
                 {primaryExperience.company} · {primaryExperience.role}
               </h3>
               <p className="hero-copy mt-4 text-base leading-7">
@@ -58,8 +58,10 @@ export default function Experience({ experience, section }: ExperienceProps) {
                 key={item.company + item.period}
                 className="section-card"
               >
-                <p className="text-sm font-bold text-cyan-200">{item.period}</p>
-                <h3 className="mt-3 text-xl font-extrabold text-white">
+                <p className="experience-period text-sm font-bold">
+                  {item.period}
+                </p>
+                <h3 className="section-title mt-3 text-xl font-extrabold">
                   {item.company} · {item.role}
                 </h3>
                 <p className="hero-copy mt-4 text-sm leading-6">

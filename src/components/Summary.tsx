@@ -37,7 +37,7 @@ export default function Summary({ summary }: SummaryProps) {
               ]
           ).map((card) => (
             <div key={card.title} className="mt-4 first:mt-0">
-              <h3 className="text-2xl font-extrabold text-white">
+              <h3 className="section-title text-2xl font-extrabold">
                 {card.title}
               </h3>
               <p className="hero-copy mt-3 text-sm leading-6">{card.body}</p>

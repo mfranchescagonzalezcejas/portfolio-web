@@ -36,6 +36,12 @@ export type SectionHeading = {
   title: string;
 };
 
+export type CaseStudySectionHeading = SectionHeading & {
+  challengeLabel: string;
+  approachLabel: string;
+  outcomeLabel: string;
+};
+
 export type HeroContent = {
   shortName: string;
   name: string;
@@ -48,6 +54,7 @@ export type HeroContent = {
   profileLinksLabel: string;
   panelAriaLabel: string;
   ctaLabel: string;
+  cvLabel: string;
   quickCtaLabel: string;
   quickCtaHref: string;
   skills: string[];
@@ -94,6 +101,10 @@ export type SiteContent = {
   languageSwitcher: {
     label: string;
     options: Record<Locale, string>;
+    hint?: {
+      en: string;
+      es: string;
+    };
   };
   header: {
     ariaLabel: string;
@@ -112,7 +123,7 @@ export type SiteContent = {
     title: string;
     linksLabel: string;
   };
-  caseStudiesSection: SectionHeading;
+  caseStudiesSection: CaseStudySectionHeading;
   educationSection: SectionHeading;
   contactSection: ContactSection;
   footerText: string;
@@ -171,6 +182,10 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     languageSwitcher: {
       label: "Change language",
       options: { en: "EN", es: "ES" },
+      hint: {
+        en: "Switch to English",
+        es: "Switch to Spanish",
+      },
     },
     header: {
       ariaLabel: "Primary",
@@ -193,6 +208,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       quickCtaLabel: "View projects",
       quickCtaHref: "#projects",
       panelAriaLabel: "Professional focus",
+      cvLabel: "Download CV",
       skills: [
         "Flutter",
         "Dart",
@@ -262,6 +278,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     caseStudiesSection: {
       eyebrow: "Case studies",
       title: "Selected case studies",
+      challengeLabel: "Challenge:",
+      approachLabel: "Approach:",
+      outcomeLabel: "Outcome:",
     },
     educationSection: {
       eyebrow: "Education",
@@ -391,12 +410,16 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Sobre mí", href: "#about" },
       { label: "Experiencia", href: "#experience" },
       { label: "Proyectos", href: "#projects" },
-      { label: "Skills", href: "#skills" },
+      { label: "Habilidades", href: "#skills" },
       { label: "Contacto", href: "#contact" },
     ],
     languageSwitcher: {
       label: "Cambiar idioma",
       options: { en: "EN", es: "ES" },
+      hint: {
+        en: "Cambiar a inglés",
+        es: "Cambiar a español",
+      },
     },
     header: {
       ariaLabel: "Principal",
@@ -420,6 +443,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       quickCtaLabel: "Ver proyectos",
       quickCtaHref: "#projects",
       panelAriaLabel: "Foco profesional",
+      cvLabel: "Descargar CV",
       skills: [
         "Flutter",
         "Dart",
@@ -489,6 +513,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     caseStudiesSection: {
       eyebrow: "Casos",
       title: "Casos seleccionados",
+      challengeLabel: "Reto:",
+      approachLabel: "Enfoque:",
+      outcomeLabel: "Resultado:",
     },
     educationSection: {
       eyebrow: "Educación",

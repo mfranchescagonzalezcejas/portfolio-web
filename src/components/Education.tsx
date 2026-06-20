@@ -22,8 +22,11 @@ export default function Education({ education, section }: EducationProps) {
 
         <div className="grid gap-4">
           {education.map((item) => (
-            <article key={item.title} className="section-card">
-              <h3 className="text-lg font-extrabold text-[#ECFEFF]">
+            <article
+              key={`${item.title}-${item.meta}`}
+              className="section-card"
+            >
+              <h3 className="section-title text-lg font-extrabold">
                 {item.title}
               </h3>
               <p className="hero-copy mt-2 text-sm font-semibold">

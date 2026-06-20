@@ -107,7 +107,7 @@ function getThemeMode(): ThemeMode {
 
   if (
     typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-color-scheme: light)").matches
+    window.matchMedia?.("(prefers-color-scheme: light)")?.matches
   ) {
     return "light";
   }
@@ -121,6 +121,7 @@ type SiteHeaderProps = {
   languageSwitcher: {
     label: string;
     options: Record<Locale, string>;
+    hint?: Record<Locale, string>;
   };
   header: {
     ariaLabel: string;
@@ -160,10 +161,10 @@ export default function SiteHeader({
   const nextLocale = isEnglishLocale ? "es" : "en";
   const nextLocaleHref = nextLocale === "en" ? "/en" : `/${nextLocale}`;
 
-  const currentLocaleLabel = currentLocale.toUpperCase();
-  const localeAriaHint = isEnglishLocale
-    ? "Switch to Spanish"
-    : "Switch to English";
+  const nextLocaleLabel = languageSwitcher.options[nextLocale];
+  const localeAriaHint =
+    languageSwitcher.hint?.[nextLocale] ??
+    (isEnglishLocale ? "Switch to Spanish" : "Switch to English");
 
   const themeAriaLabel =
     themeMode === "dark" ? "Switch to light mode" : "Switch to dark mode";
@@ -218,11 +219,11 @@ export default function SiteHeader({
             <a
               href={nextLocaleHref}
               className="header-lang-toggle"
-              aria-label={`${currentLocaleLabel}. ${localeAriaHint}`}
-              title={languageSwitcher.options[nextLocale]}
+              aria-label={`${nextLocaleLabel}. ${localeAriaHint}`}
+              title={localeAriaHint}
             >
               <LanguagesIcon className="header-icon-sm" />
-              {currentLocaleLabel}
+              {nextLocaleLabel}
             </a>
           </div>
 

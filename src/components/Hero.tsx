@@ -125,14 +125,14 @@ export default function Hero({ hero, links }: HeroProps) {
           <p className="hero-status">{hero.eyebrow}</p>
           <h1
             id="hero-title"
-            className="font-display text-4xl leading-[1.05] font-bold tracking-tight text-white sm:text-5xl lg:text-6xl"
+            className="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl"
           >
             Hi, I&apos;m {firstName}.<br />I build polished{" "}
             <span className="text-gradient">mobile apps</span> for real users.
             <span className="sr-only">{hero.tagline}</span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
+          <p className="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">
             {hero.summary}
           </p>
 
@@ -142,7 +142,7 @@ export default function Hero({ hero, links }: HeroProps) {
             </a>
 
             <a href="/cv.pdf" className="cta-outline">
-              Download CV
+              {hero.cvLabel}
             </a>
 
             {fallbackLinks.map((link) => (

@@ -9,7 +9,7 @@ export default function ContactLinks({ links, section }: ContactLinksProps) {
   return (
     <section
       id="contact"
-      className="section-shell"
+      className="section-shell scroll-mt-32"
       aria-labelledby="contact-title"
     >
       <div className="section-inner card-surface flex flex-col gap-8 rounded-[1.8rem] lg:flex-row lg:items-center lg:justify-between">

@@ -2,7 +2,11 @@ import type { CaseStudy, SectionHeading } from "../data/site";
 
 type CaseStudiesProps = {
   caseStudies: CaseStudy[];
-  section: SectionHeading;
+  section: SectionHeading & {
+    challengeLabel: string;
+    approachLabel: string;
+    outcomeLabel: string;
+  };
 };
 
 export default function CaseStudies({
@@ -27,20 +31,29 @@ export default function CaseStudies({
           {caseStudies.map((caseStudy) => (
             <article key={caseStudy.title} className="card-surface">
               <div className="grid gap-2">
-                <h3 className="text-2xl font-extrabold text-white">
+                <h3 className="section-title text-2xl font-extrabold">
                   {caseStudy.title}
                 </h3>
-                <p className="text-xs font-semibold tracking-[0.16em] text-sky-200/90 uppercase">
+                <p className="case-study-scope text-xs font-semibold tracking-[0.16em] uppercase">
                   {caseStudy.scope}
                 </p>
                 <p className="hero-copy text-sm">{caseStudy.summary}</p>
-                <p className="hero-copy text-sm">{caseStudy.challenge}</p>
                 <p className="hero-copy text-sm">
-                  <span className="font-semibold text-teal-100">Approach:</span>{" "}
+                  <span className="case-study-label font-semibold">
+                    {section.challengeLabel}
+                  </span>{" "}
+                  {caseStudy.challenge}
+                </p>
+                <p className="hero-copy text-sm">
+                  <span className="case-study-label font-semibold">
+                    {section.approachLabel}
+                  </span>{" "}
                   {caseStudy.approach}
                 </p>
                 <p className="hero-copy text-sm">
-                  <span className="font-semibold text-teal-100">Outcome:</span>{" "}
+                  <span className="case-study-label font-semibold">
+                    {section.outcomeLabel}
+                  </span>{" "}
                   {caseStudy.outcome}
                 </p>
 

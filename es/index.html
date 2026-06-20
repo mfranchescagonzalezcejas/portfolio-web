@@ -12,6 +12,12 @@
     <link rel="alternate" href="https://devdigi.dev/en" hreflang="en" />
     <link rel="alternate" href="https://devdigi.dev/es" hreflang="es" />
     <link rel="alternate" href="https://devdigi.dev/en" hreflang="x-default" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
   </head>
   <body>
     <div id="root">
@@ -24,7 +30,7 @@
           <a href="#about">Sobre mí</a>
           <a href="#experience">Experiencia</a>
           <a href="#projects">Proyectos</a>
-          <a href="#skills">Competencias</a>
+          <a href="#skills">Habilidades</a>
           <a href="#education">Educación</a>
           <a href="#contact">Contacto</a>
           <a href="/en">EN</a>
@@ -120,6 +126,34 @@
         </p>
       </footer>
     </div>
+    <script>
+      (function () {
+        let storedTheme = null;
+
+        try {
+          storedTheme = localStorage.getItem("devdigi-theme");
+        } catch (_error) {
+          // localStorage access may fail in restricted contexts.
+          storedTheme = null;
+        }
+
+        const resolvedTheme =
+          storedTheme === "light" || storedTheme === "dark"
+            ? storedTheme
+            : window.matchMedia?.("(prefers-color-scheme: light)")?.matches
+              ? "light"
+              : "dark";
+
+        document.documentElement.classList.remove("light", "dark");
+        document.documentElement.classList.add(resolvedTheme);
+
+        try {
+          localStorage.setItem("devdigi-theme", resolvedTheme);
+        } catch (_error) {
+          // localStorage is unavailable in some privacy-restricted contexts.
+        }
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

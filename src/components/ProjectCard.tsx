@@ -21,7 +21,7 @@ export default function ProjectCard({
     >
       <div className="flex flex-wrap items-center gap-3">
         <h3
-          className={`font-extrabold text-white ${
+          className={`project-card-title font-extrabold ${
             featured ? "text-3xl" : "text-2xl"
           }`}
         >
@@ -35,7 +35,7 @@ export default function ProjectCard({
 
       <p
         className={`mt-4 leading-7 ${
-          featured ? "text-base text-sky-100" : "hero-copy text-sm"
+          featured ? "project-card-description text-base" : "hero-copy text-sm"
         }`}
       >
         {project.description}
