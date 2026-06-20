@@ -15,31 +15,27 @@ export default function ProjectCard({
 }: ProjectCardProps) {
   return (
     <article
-      className={`rounded-3xl border p-6 shadow-xl shadow-slate-950/20 ${
-        featured
-          ? "border-[#38BDF8] bg-[#082F49] sm:p-8"
-          : "border-[#134E4A] bg-[#0B1B2A]"
+      className={`card-surface p-6 ${
+        featured ? "project-featured sm:p-8" : "project-card"
       }`}
     >
       <div className="flex flex-wrap items-center gap-3">
         <h3
-          className={`font-extrabold text-white ${
-            featured ? "text-3xl" : "text-xl"
+          className={`project-card-title font-extrabold ${
+            featured ? "text-3xl" : "text-2xl"
           }`}
         >
           {project.name}
         </h3>
 
         {featured && featuredLabel && (
-          <span className="rounded-full bg-teal-300/15 px-3 py-1 text-xs font-extrabold tracking-wide text-teal-100 ring-1 ring-teal-300/25">
-            {featuredLabel}
-          </span>
+          <span className="pill">{featuredLabel}</span>
         )}
       </div>
 
       <p
         className={`mt-4 leading-7 ${
-          featured ? "text-base text-[#DBEAFE]" : "text-sm text-[#B6E7E1]"
+          featured ? "project-card-description text-base" : "hero-copy text-sm"
         }`}
       >
         {project.description}
@@ -53,7 +49,7 @@ export default function ProjectCard({
           {project.links.map((link) => (
             <li key={link.href}>
               <a
-                className="inline-flex rounded-full border border-[#38BDF8] bg-[#082F49] px-4 py-2 text-sm font-bold text-[#BAE6FD] transition hover:bg-cyan-300/10 hover:text-white"
+                className="cta-outline"
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}

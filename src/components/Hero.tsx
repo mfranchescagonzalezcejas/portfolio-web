@@ -5,105 +5,169 @@ type HeroProps = {
   links: LinkItem[];
 };
 
-const linkStyles = [
-  "bg-[#14B8A6] text-[#042F2E] hover:bg-teal-300",
-  "border border-[#38BDF8] bg-[#082F49] text-[#BAE6FD] hover:bg-sky-900",
-  "border border-[#2DD4BF] bg-[#0F172A] text-[#CCFBF1] hover:bg-slate-800",
-];
+function HeroVisual() {
+  return (
+    <aside className="hero-visual" aria-label="Product demo mockup">
+      <div className="hero-phone-glow" aria-hidden="true" />
 
-const skillChips = [
-  "bg-[#0F766E] text-white",
-  "bg-[#075985] text-white",
-  "bg-[#115E59] text-white",
-  "bg-[#1E3A8A] text-white",
-  "bg-[#0E7490] text-white",
-  "bg-[#0F766E] text-white",
-];
+      <div className="hero-phone">
+        <span className="hero-phone-notch" aria-hidden="true" />
+
+        <div className="hero-phone-screen">
+          <div className="hero-phone-status" aria-label="Header status row">
+            <span>9:41</span>
+            <span>InkScroller</span>
+          </div>
+
+          <div className="hero-reading-card">
+            <p className="text-[0.62rem] font-bold tracking-[0.22em] text-cyan-200/80 uppercase">
+              Reading now
+            </p>
+            <p className="mt-1 text-sm font-semibold text-white">Chapter 47</p>
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+              <div className="h-full w-2/3 rounded-full bg-gradient-to-r from-cyan-300 to-teal-300" />
+            </div>
+          </div>
+
+          <div className="hero-library-list" aria-label="Library rows">
+            {[1, 2, 3, 4].map((row) => (
+              <div className="hero-library-row" key={row}>
+                <div className="hero-cover" />
+                <div className="flex-1 space-y-1.5">
+                  <div className="h-2 w-3/4 rounded bg-white/15" />
+                  <div className="h-1.5 w-1/2 rounded bg-white/10" />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hero-phone-bottom" aria-label="Bottom quick actions">
+            {["■", "❤", "↓", "☰"].map((item) => (
+              <span key={item}>{item}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="hero-code-overlay" aria-hidden="true">
+        <div className="mb-2 flex items-center gap-1.5">
+          <span className="h-2 w-2 rounded-full bg-red-400/70" />
+          <span className="h-2 w-2 rounded-full bg-yellow-400/70" />
+          <span className="h-2 w-2 rounded-full bg-green-400/70" />
+          <span className="ml-2 font-mono text-[0.62rem] text-slate-400">
+            main.dart
+          </span>
+        </div>
+        <pre className="m-0 overflow-hidden font-mono text-[0.62rem] leading-relaxed text-cyan-50/85">{`class Library extends
+  ConsumerWidget {
+  build(ctx, ref) {
+    final manga = ref
+      .watch(libraryProvider);
+    return manga.when(
+      data: (m) => Grid(m),
+    );
+  }
+}`}</pre>
+      </div>
+
+      <div className="hero-stack-pill hero-stack-pill-top" aria-hidden="true">
+        <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_#67e8f9]" />
+        <span>Flutter · Riverpod</span>
+      </div>
+
+      <div className="hero-delivery-card" aria-hidden="true">
+        <div className="hero-delivery-icon">↗</div>
+        <div>
+          <p className="m-0 text-[0.68rem] font-semibold text-white">
+            Production-ready
+          </p>
+          <p className="m-0 font-mono text-[0.62rem] text-slate-400">
+            mobile delivery
+          </p>
+        </div>
+      </div>
+
+      <div className="hero-architecture-card" aria-hidden="true">
+        <div className="hero-delivery-icon">◎</div>
+        <div>
+          <p className="m-0 text-[0.68rem] font-semibold text-white">
+            Clean Architecture
+          </p>
+          <p className="m-0 font-mono text-[0.62rem] text-slate-400">
+            Repository Pattern
+          </p>
+        </div>
+      </div>
+    </aside>
+  );
+}
 
 export default function Hero({ hero, links }: HeroProps) {
-  const profileLinks = links.slice(0, 3);
+  const profileLinks = links
+    .filter((link) => {
+      const normalized = link.label.toLowerCase();
+      return normalized.includes("github") || normalized.includes("linkedin");
+    })
+    .slice(0, 2);
+
+  const fallbackLinks =
+    profileLinks.length > 0 ? profileLinks : links.slice(0, 2);
+  const firstName = hero.name.split(" ")[0] || hero.name;
+
+  const heroTechStack = hero.skills;
 
   return (
-    <section
-      className="px-6 pt-8 pb-12 sm:pt-12 lg:px-8"
-      aria-labelledby="hero-title"
-    >
-      <div className="mx-auto max-w-6xl rounded-[2rem] border border-[#155E75] bg-[linear-gradient(135deg,#0F2A3A_0%,#06111F_54%,#042F2E_100%)] p-6 shadow-2xl shadow-cyan-950/30 sm:p-10 md:grid md:grid-cols-[1fr_20rem] md:gap-10 lg:grid-cols-[1fr_24rem] lg:gap-12 lg:p-16">
-        <div>
-          <p className="mb-3 text-sm font-extrabold text-teal-100">
-            {hero.shortName}
-          </p>
-          <p className="mb-5 text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase">
-            {hero.eyebrow}
-          </p>
+    <section id="top" className="hero-section" aria-labelledby="hero-title">
+      <div className="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
+
+      <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-8">
+        <div className="space-y-5">
+          <p className="hero-status">{hero.eyebrow}</p>
           <h1
             id="hero-title"
-            className="text-4xl leading-tight font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl"
+            className="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl"
           >
-            {hero.name}
+            Hi, I&apos;m {firstName}.<br />I build polished{" "}
+            <span className="text-gradient">mobile apps</span> for real users.
+            <span className="sr-only">{hero.tagline}</span>
           </h1>
-          <p className="mt-6 max-w-3xl text-xl leading-8 font-semibold text-[#C8F7F0] lg:text-2xl lg:leading-9">
-            {hero.tagline}
-          </p>
-          <p className="mt-5 max-w-2xl text-lg leading-8 text-[#C8F7F0]/85">
+
+          <p className="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">
             {hero.summary}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a
-              href="#contact"
-              className="inline-flex rounded-full bg-[#0F766E] px-5 py-3 text-sm font-extrabold text-white transition hover:bg-[#0E7490]"
-            >
-              {hero.ctaLabel}
+            <a href={hero.quickCtaHref} className="cta-button">
+              {hero.quickCtaLabel}
             </a>
+
+            <a href="/cv.pdf" className="cta-outline">
+              {hero.cvLabel}
+            </a>
+
+            {fallbackLinks.map((link) => (
+              <a
+                key={link.href}
+                className="cta-outline"
+                href={link.href}
+                target={link.external ? "_blank" : undefined}
+                rel={link.external ? "noopener noreferrer" : undefined}
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
 
-          <ul
-            className="mt-4 flex flex-wrap gap-3"
-            aria-label={hero.profileLinksLabel}
-          >
-            {profileLinks.map((link, index) => (
-              <li key={link.href}>
-                <a
-                  className={`inline-flex rounded-full px-5 py-3 text-sm font-extrabold transition focus-visible:outline-teal-300 ${
-                    linkStyles[index % linkStyles.length]
-                  }`}
-                  href={link.href}
-                  target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noopener noreferrer" : undefined}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <aside
-          className="mt-10 rounded-3xl border border-[#164E63] bg-[#071827] p-6 md:mt-0 lg:p-7"
-          aria-label={hero.panelAriaLabel}
-        >
-          <p className="text-xs font-extrabold tracking-[0.28em] text-cyan-300 uppercase">
-            {hero.panelLabel}
-          </p>
-          <h2 className="mt-4 text-xl leading-7 font-extrabold text-white lg:text-2xl lg:leading-8">
-            {hero.panelTitle}
-          </h2>
-          <p className="mt-4 text-base leading-7 text-[#A7F3D0]">
-            {hero.panelText}
-          </p>
-
-          <div className="mt-6 flex flex-wrap gap-2">
-            {hero.skills.map((skill, index) => (
-              <span
-                key={skill}
-                className={`rounded-full px-3 py-1 text-xs font-bold ${skillChips[index % skillChips.length]}`}
-              >
-                {skill}
+          <div className="mt-3 flex flex-wrap gap-2">
+            {heroTechStack.map((tech) => (
+              <span key={tech} className="pill">
+                {tech}
               </span>
             ))}
           </div>
-        </aside>
+        </div>
+
+        <HeroVisual />
       </div>
     </section>
   );

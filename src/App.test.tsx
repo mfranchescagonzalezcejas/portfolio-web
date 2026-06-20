@@ -108,9 +108,9 @@ describe("navigation anchors", () => {
     expect(
       screen.getByRole("group", { name: "Change language" }),
     ).toBeInTheDocument();
-    expect(
-      screen.getAllByRole("navigation", { name: "Primary navigation" }),
-    ).toHaveLength(1);
+    expect(screen.getAllByRole("navigation", { name: "Primary" })).toHaveLength(
+      1,
+    );
   });
 
   it("includes a valid Skills anchor and target section", () => {

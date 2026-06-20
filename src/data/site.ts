@@ -36,6 +36,12 @@ export type SectionHeading = {
   title: string;
 };
 
+export type CaseStudySectionHeading = SectionHeading & {
+  challengeLabel: string;
+  approachLabel: string;
+  outcomeLabel: string;
+};
+
 export type HeroContent = {
   shortName: string;
   name: string;
@@ -48,6 +54,9 @@ export type HeroContent = {
   profileLinksLabel: string;
   panelAriaLabel: string;
   ctaLabel: string;
+  cvLabel: string;
+  quickCtaLabel: string;
+  quickCtaHref: string;
   skills: string[];
 };
 
@@ -55,6 +64,7 @@ export type SummaryContent = {
   eyebrow: string;
   title: string;
   body: string;
+  cards?: { title: string; body: string }[];
   workingStyleLabel: string;
   cleanArchitectureTitle: string;
   cleanArchitectureBody: string;
@@ -70,6 +80,16 @@ export type ContactSection = {
   ariaLabel: string;
 };
 
+export type CaseStudy = {
+  title: string;
+  scope: string;
+  summary: string;
+  challenge: string;
+  approach: string;
+  outcome: string;
+  stack: string[];
+};
+
 export type SiteContent = {
   locale: Locale;
   meta: {
@@ -81,25 +101,35 @@ export type SiteContent = {
   languageSwitcher: {
     label: string;
     options: Record<Locale, string>;
+    hint?: {
+      en: string;
+      es: string;
+    };
   };
   header: {
     ariaLabel: string;
     homeLabel: string;
+    ctaLabel: string;
   };
   hero: HeroContent;
   summary: SummaryContent;
   experienceSection: SectionHeading;
-  projectsSection: {
-    eyebrow: string;
-    title: string;
+  featuredSection: SectionHeading & {
     featuredLabel: string;
     linksLabel: string;
   };
+  allProjectsSection: {
+    eyebrow: string;
+    title: string;
+    linksLabel: string;
+  };
+  caseStudiesSection: CaseStudySectionHeading;
   educationSection: SectionHeading;
   contactSection: ContactSection;
   footerText: string;
   experience: Experience[];
   projects: Project[];
+  caseStudies: CaseStudy[];
   education: Education[];
   skillsSection: SectionHeading;
   contacts: LinkItem[];
@@ -147,16 +177,20 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Experience", href: "#experience" },
       { label: "Projects", href: "#projects" },
       { label: "Skills", href: "#skills" },
-      { label: "Education", href: "#education" },
       { label: "Contact", href: "#contact" },
     ],
     languageSwitcher: {
       label: "Change language",
       options: { en: "EN", es: "ES" },
+      hint: {
+        en: "Switch to English",
+        es: "Switch to Spanish",
+      },
     },
     header: {
-      ariaLabel: "Primary navigation",
-      homeLabel: "DevDigi home",
+      ariaLabel: "Primary",
+      homeLabel: "DevDigi — back to top",
+      ctaLabel: "Contact me",
     },
     hero: {
       shortName: "Mercy",
@@ -164,14 +198,17 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       eyebrow: "Open to mobile roles · Barcelona / Remote",
       tagline: "I build polished mobile apps for real users.",
       summary:
-        "Mobile-focused engineer with hands-on experience shipping production-ready applications, maintaining clean architecture and reliable release workflows.",
+        "Mobile Developer focused on Flutter, Android and iOS. I build maintainable, production-ready applications with clean architecture, REST API integration, CI/CD awareness and a strong product quality mindset.",
       panelLabel: "Signal",
       panelTitle: "Production-ready mobile delivery",
       panelText:
         "DevDigi combines Flutter, Android, iOS, API integration, and QA-minded engineering so teams can move quickly without losing maintainability.",
       profileLinksLabel: "Primary profile links",
       ctaLabel: "Contact me",
+      quickCtaLabel: "View projects",
+      quickCtaHref: "#projects",
       panelAriaLabel: "Professional focus",
+      cvLabel: "Download CV",
       skills: [
         "Flutter",
         "Dart",
@@ -186,6 +223,24 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       eyebrow: "About",
       title: "I am a Mobile Developer focused on production-ready mobile apps.",
       body: "DevDigi is my personal developer brand. I am a software engineer focused on practical mobile engineering, mainly Flutter, Android/Kotlin, and iOS/Swift. I care about clean architecture, maintainability, API integration, and release confidence.",
+      cards: [
+        {
+          title: "Production mobile apps",
+          body: "I deliver real mobile products from concept to release with maintainable architecture, predictable rollout windows, and reliable handoffs.",
+        },
+        {
+          title: "Clean architecture",
+          body: "I design layered codebases with clear domain boundaries so teams can evolve features without rewriting core foundations.",
+        },
+        {
+          title: "Release & CI/CD workflows",
+          body: "I collaborate on pipeline setups and release flows that reduce friction between development, testing, and production validation.",
+        },
+        {
+          title: "QA and product validation",
+          body: "I support QA planning and release validation to protect stability and quality during launch windows.",
+        },
+      ],
       workingStyleLabel: "Working style",
       cleanArchitectureTitle: "Clean architecture",
       cleanArchitectureBody:
@@ -209,11 +264,23 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       eyebrow: "Experience",
       title: "Experience building real mobile apps",
     },
-    projectsSection: {
-      eyebrow: "Projects",
+    featuredSection: {
+      eyebrow: "Featured",
       title: "Selected proof of work",
       featuredLabel: "Featured",
       linksLabel: "Project links",
+    },
+    allProjectsSection: {
+      eyebrow: "Projects",
+      title: "More projects",
+      linksLabel: "Project links",
+    },
+    caseStudiesSection: {
+      eyebrow: "Case studies",
+      title: "Selected case studies",
+      challengeLabel: "Challenge:",
+      approachLabel: "Approach:",
+      outcomeLabel: "Outcome:",
     },
     educationSection: {
       eyebrow: "Education",
@@ -230,6 +297,21 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       ariaLabel: "Contact and social links",
     },
     footerText: "Built with care in Barcelona",
+    caseStudies: [
+      {
+        title: "La Mercè event app delivery",
+        scope: "Public product for Barcelona cultural event",
+        summary:
+          "Led the engineering handoff for a highly visible mobile application used by event visitors with strict operational windows.",
+        challenge:
+          "Coordinate multi-platform releases across Flutter and Android with stable updates on short cycles.",
+        approach:
+          "Mapped responsibilities into clear release steps, validated data consistency across CI environments, and maintained clean boundaries across modules.",
+        outcome:
+          "Improved rollout confidence by reducing release regressions during the operational period.",
+        stack: ["Flutter", "Android", "Clean Architecture", "CI/CD"],
+      },
+    ],
     contacts: sharedContacts,
     experience: [
       {
@@ -328,17 +410,21 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Sobre mí", href: "#about" },
       { label: "Experiencia", href: "#experience" },
       { label: "Proyectos", href: "#projects" },
-      { label: "Competencias", href: "#skills" },
-      { label: "Educación", href: "#education" },
+      { label: "Habilidades", href: "#skills" },
       { label: "Contacto", href: "#contact" },
     ],
     languageSwitcher: {
       label: "Cambiar idioma",
       options: { en: "EN", es: "ES" },
+      hint: {
+        en: "Cambiar a inglés",
+        es: "Cambiar a español",
+      },
     },
     header: {
-      ariaLabel: "Navegación principal",
-      homeLabel: "Inicio de DevDigi",
+      ariaLabel: "Principal",
+      homeLabel: "DevDigi — volver arriba",
+      ctaLabel: "Contáctame",
     },
     hero: {
       shortName: "Mercy",
@@ -347,14 +433,17 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       tagline:
         "Diseño y desarrollo apps móviles de calidad para usuarios reales.",
       summary:
-        "Ingeniera de software con experiencia en productos móviles en producción, centrada en arquitectura limpia y entregas fiables.",
+        "Mobile Developer enfocada en Flutter, Android e iOS. Construyo aplicaciones mantenibles y listas para producción con arquitectura limpia, integración REST API, criterio de CI/CD y una mentalidad fuerte de calidad de producto.",
       panelLabel: "Señal",
       panelTitle: "Entrega móvil en producción",
       panelText:
         "En DevDigi combino Flutter, Android, iOS, integración de APIs y QA para que los productos puedan escalar sin perder mantenibilidad.",
       profileLinksLabel: "Enlaces principales del perfil",
       ctaLabel: "Contáctame",
+      quickCtaLabel: "Ver proyectos",
+      quickCtaHref: "#projects",
       panelAriaLabel: "Foco profesional",
+      cvLabel: "Descargar CV",
       skills: [
         "Flutter",
         "Dart",
@@ -369,6 +458,24 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       eyebrow: "Sobre mí",
       title: "Ingeniera móvil enfocada en apps robustas para uso real.",
       body: "DevDigi es mi marca personal. Trabajo principalmente con Flutter, Android/Kotlin e iOS/Swift, combinando buenas prácticas de arquitectura y enfoque de producto.",
+      cards: [
+        {
+          title: "Apps móviles de producción",
+          body: "Entrego productos móviles completos, desde la idea hasta el despliegue, con arquitectura mantenible y entregas predecibles.",
+        },
+        {
+          title: "Arquitectura limpia",
+          body: "Diseño código por capas con límites de responsabilidad claros para que los equipos evolucionen sin rehacer el núcleo.",
+        },
+        {
+          title: "Flujos de release y CI/CD",
+          body: "Colaboro en pipelines y procesos de entrega para reducir riesgos entre desarrollo, QA y despliegue.",
+        },
+        {
+          title: "QA y validación de producto",
+          body: "Aporto QA manual y criterios de validación de release para mejorar estabilidad en ventanas de lanzamiento.",
+        },
+      ],
       workingStyleLabel: "Forma de trabajar",
       cleanArchitectureTitle: "Arquitectura limpia",
       cleanArchitectureBody:
@@ -392,11 +499,23 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       eyebrow: "Experiencia",
       title: "Experiencia construyendo apps móviles reales",
     },
-    projectsSection: {
-      eyebrow: "Proyectos",
+    featuredSection: {
+      eyebrow: "Destacado",
       title: "Trabajos seleccionados",
       featuredLabel: "Destacado",
       linksLabel: "Enlaces del proyecto",
+    },
+    allProjectsSection: {
+      eyebrow: "Proyectos",
+      title: "Más proyectos",
+      linksLabel: "Enlaces del proyecto",
+    },
+    caseStudiesSection: {
+      eyebrow: "Casos",
+      title: "Casos seleccionados",
+      challengeLabel: "Reto:",
+      approachLabel: "Enfoque:",
+      outcomeLabel: "Resultado:",
     },
     educationSection: {
       eyebrow: "Educación",
@@ -413,6 +532,21 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       ariaLabel: "Enlaces de contacto",
     },
     footerText: "Desarrollado con cariño en Barcelona",
+    caseStudies: [
+      {
+        title: "Entrega del evento La Mercè",
+        scope: "Producto público para evento cultural de Barcelona",
+        summary:
+          "Coordiné la entrega de una app móvil con gran visibilidad y ventanas de despliegue estrictas.",
+        challenge:
+          "Gestionar releases multi-plataforma bajo presión de tiempo y estabilidad.",
+        approach:
+          "Organicé la coordinación de entregas por capas, mejorando trazabilidad entre Flutter/Android y validaciones de integración.",
+        outcome:
+          "Se redujeron incidencias en despliegues durante el periodo operativo del evento.",
+        stack: ["Flutter", "Android", "Arquitectura limpia", "CI/CD"],
+      },
+    ],
     contacts: sharedContacts,
     experience: [
       {
