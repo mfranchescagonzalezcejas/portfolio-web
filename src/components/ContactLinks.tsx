@@ -14,13 +14,8 @@ export default function ContactLinks({ links, section }: ContactLinksProps) {
     >
       <div className="section-inner card-surface flex flex-col gap-8 rounded-[1.8rem] lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-2xl">
-          <p className="eyebrow">
-            {section.eyebrow}
-          </p>
-          <h2
-            id="contact-title"
-            className="section-title"
-          >
+          <p className="eyebrow">{section.eyebrow}</p>
+          <h2 id="contact-title" className="section-title">
             {section.title}
           </h2>
           <p className="hero-copy mt-3 max-w-2xl text-base leading-7">

@@ -14,7 +14,11 @@ export default function FeaturedProject({
   section,
 }: FeaturedProjectProps) {
   return (
-    <section id="featured" className="section-shell scroll-mt-32" aria-labelledby="featured-title">
+    <section
+      id="featured"
+      className="section-shell scroll-mt-32"
+      aria-labelledby="featured-title"
+    >
       <div className="section-inner">
         <div className="max-w-3xl">
           <p className="eyebrow">{section.eyebrow}</p>

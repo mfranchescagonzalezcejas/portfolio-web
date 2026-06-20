@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 
 type ThemeMode = "light" | "dark";
 
-function LanguagesIcon() {
+function LanguagesIcon({ className = "header-icon" }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"
-      className="header-icon"
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -25,11 +25,11 @@ function LanguagesIcon() {
   );
 }
 
-function SunIcon() {
+function SunIcon({ className = "header-icon" }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"
-      className="header-icon"
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -50,11 +50,11 @@ function SunIcon() {
   );
 }
 
-function MoonIcon() {
+function MoonIcon({ className = "header-icon" }: { className?: string }) {
   return (
     <svg
       aria-hidden="true"
-      className="header-icon"
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -67,11 +67,15 @@ function MoonIcon() {
   );
 }
 
-function ArrowUpRightIcon() {
+function ArrowUpRightIcon({
+  className = "header-icon",
+}: {
+  className?: string;
+}) {
   return (
     <svg
       aria-hidden="true"
-      className="header-icon"
+      className={className}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -101,7 +105,10 @@ function getThemeMode(): ThemeMode {
     return storedTheme;
   }
 
-  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+  if (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-color-scheme: light)").matches
+  ) {
     return "light";
   }
 
@@ -180,57 +187,58 @@ export default function SiteHeader({
   };
 
   return (
-    <header className="site-header fixed inset-x-0 top-0 z-50 px-4 pt-4">
-      <div
-        className="site-nav mx-auto flex max-w-6xl items-center justify-between rounded-full glass px-4 py-2.5 sm:px-6"
-      >
+    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+      <div className="header-shell glass mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 py-2.5 sm:px-6">
         <a
           className="flex items-center gap-2"
           href="#top"
           aria-label={header.homeLabel}
         >
-          <span className="brand-mark" aria-hidden="true">
+          <span className="header-brand-mark" aria-hidden="true">
             D
           </span>
-          <span className="brand-text">
-            Dev<span className="brand-mark-text">Digi</span>
+          <span className="header-brand-text">
+            Dev<span className="header-brand-accent">Digi</span>
           </span>
         </a>
 
-        <nav aria-label={header.ariaLabel} className="site-nav-links">
-            {primaryNav.map((item) => (
-                <a key={item.href} className="nav-link" href={item.href}>
-                  {item.label}
-                </a>
-            ))}
+        <nav
+          aria-label={header.ariaLabel}
+          className="header-primary-nav flex items-center gap-1"
+        >
+          {primaryNav.map((item) => (
+            <a key={item.href} className="header-nav-link" href={item.href}>
+              {item.label}
+            </a>
+          ))}
         </nav>
 
-        <div className="header-controls">
-          <div className="lang-switch" role="group" aria-label={languageSwitcher.label}>
+        <div className="header-action-row flex items-center gap-2">
+          <div role="group" aria-label={languageSwitcher.label}>
             <a
               href={nextLocaleHref}
-              className="lang-switch-pill"
+              className="header-lang-toggle"
               aria-label={`${currentLocaleLabel}. ${localeAriaHint}`}
               title={languageSwitcher.options[nextLocale]}
             >
-              <LanguagesIcon />
-              <span className="lang-switch-label">{currentLocaleLabel}</span>
+              <LanguagesIcon className="header-icon-sm" />
+              {currentLocaleLabel}
             </a>
           </div>
 
           <button
             onClick={onThemeToggle}
             type="button"
-            className="theme-pill"
+            className="header-theme-toggle"
             aria-label={themeAriaLabel}
             title={themeAriaLabel}
           >
             {themeMode === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          <a className="contact-nav-pill" href="#contact">
+          <a className="header-contact-cta" href="#contact">
             {header.ctaLabel}
-            <ArrowUpRightIcon />
+            <ArrowUpRightIcon className="header-icon-sm" />
           </a>
         </div>
       </div>

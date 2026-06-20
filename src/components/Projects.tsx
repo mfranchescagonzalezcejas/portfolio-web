@@ -17,9 +17,7 @@ export default function Projects({ projects, section }: ProjectsProps) {
     >
       <div className="section-inner">
         <div className="max-w-3xl">
-          <p className="eyebrow">
-            {section.eyebrow}
-          </p>
+          <p className="eyebrow">{section.eyebrow}</p>
           <h2 id="projects-title" className="section-title">
             {section.title}
           </h2>

@@ -38,10 +38,13 @@ export default function Experience({ experience, section }: ExperienceProps) {
                 {primaryExperience.description}
               </p>
 
-              <ul className="mt-6 space-y-3 text-base leading-7 hero-copy">
+              <ul className="hero-copy mt-6 space-y-3 text-base leading-7">
                 {primaryExperience.highlights.map((highlight) => (
                   <li className="flex gap-3" key={highlight}>
-                    <span className="mt-3 h-1.5 w-1.5 rounded-full bg-teal-300" aria-hidden="true" />
+                    <span
+                      className="mt-3 h-1.5 w-1.5 rounded-full bg-teal-300"
+                      aria-hidden="true"
+                    />
                     <span>{highlight}</span>
                   </li>
                 ))}
@@ -51,7 +54,10 @@ export default function Experience({ experience, section }: ExperienceProps) {
 
           <div className="grid gap-6">
             {secondaryExperience.map((item) => (
-              <article key={item.company + item.period} className="section-card">
+              <article
+                key={item.company + item.period}
+                className="section-card"
+              >
                 <p className="text-sm font-bold text-cyan-200">{item.period}</p>
                 <h3 className="mt-3 text-xl font-extrabold text-white">
                   {item.company} · {item.role}

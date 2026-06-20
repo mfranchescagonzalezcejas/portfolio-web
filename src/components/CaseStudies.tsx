@@ -5,7 +5,10 @@ type CaseStudiesProps = {
   section: SectionHeading;
 };
 
-export default function CaseStudies({ caseStudies, section }: CaseStudiesProps) {
+export default function CaseStudies({
+  caseStudies,
+  section,
+}: CaseStudiesProps) {
   return (
     <section
       id="case-studies"
@@ -24,8 +27,10 @@ export default function CaseStudies({ caseStudies, section }: CaseStudiesProps) 
           {caseStudies.map((caseStudy) => (
             <article key={caseStudy.title} className="card-surface">
               <div className="grid gap-2">
-                <h3 className="text-2xl font-extrabold text-white">{caseStudy.title}</h3>
-                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-sky-200/90">
+                <h3 className="text-2xl font-extrabold text-white">
+                  {caseStudy.title}
+                </h3>
+                <p className="text-xs font-semibold tracking-[0.16em] text-sky-200/90 uppercase">
                   {caseStudy.scope}
                 </p>
                 <p className="hero-copy text-sm">{caseStudy.summary}</p>

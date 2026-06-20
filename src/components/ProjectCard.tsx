@@ -29,15 +29,13 @@ export default function ProjectCard({
         </h3>
 
         {featured && featuredLabel && (
-          <span className="pill">
-            {featuredLabel}
-          </span>
+          <span className="pill">{featuredLabel}</span>
         )}
       </div>
 
       <p
         className={`mt-4 leading-7 ${
-          featured ? "text-base text-sky-100" : "text-sm hero-copy"
+          featured ? "text-base text-sky-100" : "hero-copy text-sm"
         }`}
       >
         {project.description}

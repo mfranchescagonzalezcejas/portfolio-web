@@ -33,7 +33,9 @@ export default function App() {
   const locale = resolveLocale(window.location.pathname);
   const site = siteContentByLocale[locale];
   const currentYear = new Date().getFullYear();
-  const featuredProjectIndex = site.projects.findIndex((project) => project.featured);
+  const featuredProjectIndex = site.projects.findIndex(
+    (project) => project.featured,
+  );
   const featuredProject =
     featuredProjectIndex >= 0 ? site.projects[featuredProjectIndex] : null;
   const otherProjects = site.projects.filter(
@@ -52,10 +54,7 @@ export default function App() {
 
   return (
     <div className="portfolio-shell min-h-screen">
-      <a
-        className="sr-only skip-link focus:not-sr-only"
-        href="#main-content"
-      >
+      <a className="skip-link sr-only focus:not-sr-only" href="#main-content">
         {site.skipLink}
       </a>
 

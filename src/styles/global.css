@@ -22,7 +22,11 @@
   --muted-foreground: oklch(76% 0.02 240);
 
   --secondary: color-mix(in oklab, var(--surface-elevated) 96%, transparent);
-  --secondary-foreground: color-mix(in oklab, var(--foreground) 86%, transparent);
+  --secondary-foreground: color-mix(
+    in oklab,
+    var(--foreground) 86%,
+    transparent
+  );
 
   --border: color-mix(in oklab, var(--foreground) 14%, transparent);
   --input: color-mix(in oklab, var(--surface) 86%, transparent);
@@ -41,7 +45,8 @@
 
   --shadow-card: 0 12px 42px -25px oklch(12% 0.03 250 / 0.55);
   --shadow-elevated: 0 26px 48px -24px oklch(10% 0.03 250 / 0.65);
-  --shadow-glow: 0 0 0 1px oklch(78% 0.14 195 / 0.2),
+  --shadow-glow:
+    0 0 0 1px oklch(78% 0.14 195 / 0.2),
     0 20px 60px -20px oklch(78% 0.14 195 / 0.35);
 
   --gradient-text: linear-gradient(
@@ -64,7 +69,12 @@
       oklch(28% 0.1 195 / 0.16),
       transparent 60%
     ),
-    linear-gradient(180deg, oklch(16% 0.02 250) 0%, oklch(12% 0.02 250) 35%, oklch(10% 0.02 250) 100%);
+    linear-gradient(
+      180deg,
+      oklch(16% 0.02 250) 0%,
+      oklch(12% 0.02 250) 35%,
+      oklch(10% 0.02 250) 100%
+    );
 }
 
 .light {
@@ -94,7 +104,8 @@
 
   --shadow-card: 0 12px 42px -25px oklch(20% 0.02 250 / 0.08);
   --shadow-elevated: 0 20px 40px -24px oklch(20% 0.02 245 / 0.1);
-  --shadow-glow: 0 0 0 1px oklch(70% 0.15 195 / 0.2),
+  --shadow-glow:
+    0 0 0 1px oklch(70% 0.15 195 / 0.2),
     0 14px 45px -22px oklch(20% 0.2 210 / 0.2);
 
   --gradient-text: linear-gradient(
@@ -152,7 +163,12 @@ body {
       oklch(28% 0.1 195 / 0.16),
       transparent 60%
     ),
-    linear-gradient(180deg, oklch(16% 0.02 250) 0%, oklch(12% 0.02 250) 35%, oklch(10% 0.02 250) 100%);
+    linear-gradient(
+      180deg,
+      oklch(16% 0.02 250) 0%,
+      oklch(12% 0.02 250) 35%,
+      oklch(10% 0.02 250) 100%
+    );
   font-family: var(--font-sans);
   font-feature-settings: "cv11", "ss01", "ss03";
   -webkit-font-smoothing: antialiased;
@@ -263,10 +279,25 @@ h4 {
   pointer-events: none;
   --grid-size: 60px;
   background-image:
-    linear-gradient(to right, color-mix(in oklab, #4ed9ff 22%, transparent) 1px, transparent 1px),
-    linear-gradient(to bottom, color-mix(in oklab, #5eead4 24%, transparent) 1px, transparent 1px),
-    linear-gradient(150deg, transparent 56%, color-mix(in oklab, #9bf6ff 14%, transparent) 77%);
-  background-size: var(--grid-size) var(--grid-size), var(--grid-size) var(--grid-size), 100% 100%;
+    linear-gradient(
+      to right,
+      color-mix(in oklab, #4ed9ff 22%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in oklab, #5eead4 24%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      150deg,
+      transparent 56%,
+      color-mix(in oklab, #9bf6ff 14%, transparent) 77%
+    );
+  background-size:
+    var(--grid-size) var(--grid-size),
+    var(--grid-size) var(--grid-size),
+    100% 100%;
   opacity: 0.13;
 }
 
@@ -285,7 +316,11 @@ h4 {
   position: relative;
   border-radius: 1.35rem;
   border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
-  background: linear-gradient(170deg, color-mix(in oklab, var(--surface-elevated) 76%, transparent), var(--card));
+  background: linear-gradient(
+    170deg,
+    color-mix(in oklab, var(--surface-elevated) 76%, transparent),
+    var(--card)
+  );
   box-shadow: var(--shadow-card);
   padding: 1.45rem;
 }
@@ -297,7 +332,11 @@ h4 {
 .project-card {
   border-radius: 1.45rem;
   border: 1px solid color-mix(in oklab, var(--accent-cyan) 28%, transparent);
-  background: linear-gradient(145deg, oklch(19% 0.028 245), oklch(22% 0.028 245));
+  background: linear-gradient(
+    145deg,
+    oklch(19% 0.028 245),
+    oklch(22% 0.028 245)
+  );
   box-shadow: var(--shadow-card);
 }
 
@@ -318,128 +357,71 @@ h4 {
   box-shadow: var(--shadow-glow);
 }
 
-.site-header {
-  position: fixed;
-  inset-inline: 0;
-  top: 0;
-  z-index: 50;
-  padding-inline: 1rem;
-  padding-top: 1rem;
-}
-
-.site-nav {
-  margin-inline: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-
-@media (min-width: 640px) {
-  .site-nav {
-    padding-inline: 1.5rem;
-  }
-}
-
-.site-nav .brand-mark {
+.header-brand-mark {
   display: inline-grid;
   width: 1.75rem;
   height: 1.75rem;
   place-items: center;
-  border-radius: 0.5rem;
+  border-radius: var(--radius);
   background: linear-gradient(135deg, var(--primary), var(--accent-blue));
   color: var(--primary-foreground);
   font-size: 0.6875rem;
   font-weight: 800;
 }
 
-.site-nav .brand-text {
+.header-brand-text {
   font-family: var(--font-display);
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
-.site-nav .brand-mark-text {
+.header-brand-accent {
   color: var(--primary);
 }
 
-.site-nav .brand-mark,
-.site-nav a {
-  transition: color 140ms ease, background-color 140ms ease, border-color 140ms ease;
+.header-nav-link {
+  color: var(--muted-foreground);
+  font-weight: 400;
+  font-size: 0.875rem;
+  border-radius: 9999px;
+  padding: 0.375rem 0.75rem;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
 }
 
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-}
-
-.header-controls::-webkit-scrollbar {
-  display: none;
-}
-
-.site-nav-links {
-  display: none;
-  align-items: center;
-  flex-wrap: nowrap;
-  gap: 0.25rem;
-  white-space: nowrap;
+.header-nav-link:hover,
+.header-nav-link:focus-visible {
+  color: var(--foreground);
+  background: color-mix(in oklab, white 5%, transparent);
 }
 
 @media (max-width: 767px) {
-  .site-nav {
+  .header-shell {
     flex-wrap: wrap;
     border-radius: 1.5rem;
   }
 
-  .site-nav-links {
-    display: flex;
+  .header-primary-nav {
     width: 100%;
     overflow-x: auto;
     padding-top: 0.25rem;
     scrollbar-width: none;
   }
 
-  .site-nav-links::-webkit-scrollbar {
+  .header-primary-nav::-webkit-scrollbar {
     display: none;
   }
-}
 
-.site-nav .nav-link {
-  color: var(--muted-foreground);
-  font-weight: 400;
-  font-size: 0.875rem;
-  border-radius: 9999px;
-  padding: 0.375rem 0.75rem;
-}
-
-.site-nav .nav-link:hover,
-.site-nav .nav-link:focus-visible {
-  color: var(--foreground);
-  background: color-mix(in oklab, white 5%, transparent);
-}
-
-@media (min-width: 768px) {
-  .site-nav-links {
-    display: flex;
-  }
-
-  .site-nav .nav-link {
-    font-size: 0.875rem;
-    padding: 0.375rem 0.75rem;
+  .header-action-row {
+    width: 100%;
+    justify-content: flex-start;
+    padding-top: 0.25rem;
   }
 }
 
-.lang-switch {
-  display: inline-flex;
-  align-items: center;
-}
-
-.lang-switch-pill {
+.header-lang-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
@@ -451,8 +433,11 @@ h4 {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--foreground);
-  line-height: 1;
+  color: color-mix(in oklab, var(--foreground) 80%, transparent);
+  line-height: 1rem;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
 }
 
 .header-icon {
@@ -461,29 +446,21 @@ h4 {
   flex: none;
 }
 
-.lang-switch-label,
-.lang-switch-next {
-  line-height: 1;
+.header-icon-sm {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex: none;
 }
 
-.lang-switch-label {
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.lang-switch-next {
-  color: var(--muted-foreground);
-}
-
-.lang-switch-pill:hover,
-.lang-switch-pill:focus-visible {
+.header-lang-toggle:hover,
+.header-lang-toggle:focus-visible {
+  color: var(--foreground);
   background: oklch(1 0 0 / 0.08);
 }
 
-.theme-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+.header-theme-toggle {
+  display: grid;
+  place-items: center;
   width: 2rem;
   height: 2rem;
   border-radius: 999px;
@@ -492,15 +469,18 @@ h4 {
   color: color-mix(in oklab, var(--foreground) 80%, transparent);
   cursor: pointer;
   user-select: none;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
 }
 
-.theme-pill:hover,
-.theme-pill:focus-visible {
+.header-theme-toggle:hover,
+.header-theme-toggle:focus-visible {
   color: var(--foreground);
   background: oklch(1 0 0 / 0.08);
 }
 
-.contact-nav-pill {
+.header-contact-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
@@ -510,10 +490,11 @@ h4 {
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.375rem 0.875rem;
+  transition: background-color 150ms ease;
 }
 
-.contact-nav-pill:hover,
-.contact-nav-pill:focus-visible {
+.header-contact-cta:hover,
+.header-contact-cta:focus-visible {
   background: color-mix(in oklab, var(--primary) 90%, transparent);
 }
 
@@ -582,7 +563,9 @@ h4 {
   display: flex;
   justify-content: space-between;
   padding: 2rem 1.25rem 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    monospace;
   font-size: 0.625rem;
   color: rgba(255, 255, 255, 0.6);
 }
@@ -590,7 +573,11 @@ h4 {
 .hero-reading-card {
   margin: 1rem 1rem 0;
   border-radius: 1rem;
-  background: linear-gradient(135deg, rgba(103, 232, 249, 0.3), rgba(56, 189, 248, 0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(103, 232, 249, 0.3),
+    rgba(56, 189, 248, 0.2)
+  );
   padding: 1rem;
 }
 
@@ -614,7 +601,11 @@ h4 {
   width: 2rem;
   height: 2.5rem;
   border-radius: 0.375rem;
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.4), rgba(103, 232, 249, 0.3));
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.4),
+    rgba(103, 232, 249, 0.3)
+  );
 }
 
 .hero-phone-bottom {
@@ -662,7 +653,9 @@ h4 {
   top: 3rem;
   border-radius: 999px;
   padding: 0.375rem 0.75rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    monospace;
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.78);
 }
@@ -704,8 +697,9 @@ h4 {
   color: #9ee7ff;
   font-size: 0.77rem;
   line-height: 1.35;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
 .hero-code p {
