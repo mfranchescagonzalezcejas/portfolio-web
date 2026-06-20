@@ -45,6 +45,7 @@ export type CaseStudySectionHeading = SectionHeading & {
 export type HeroContent = {
   shortName: string;
   name: string;
+  greeting: string;
   eyebrow: string;
   tagline: string;
   summary: string;
@@ -195,6 +196,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     hero: {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
+      greeting: "Hi, I'm",
       eyebrow: "Open to mobile roles · Barcelona / Remote",
       tagline: "I build polished mobile apps for real users.",
       summary:
@@ -205,7 +207,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         "DevDigi combines Flutter, Android, iOS, API integration, and QA-minded engineering so teams can move quickly without losing maintainability.",
       profileLinksLabel: "Primary profile links",
       ctaLabel: "Contact me",
-      quickCtaLabel: "View projects",
+      quickCtaLabel: "View Projects",
       quickCtaHref: "#projects",
       panelAriaLabel: "Professional focus",
       cvLabel: "Download CV",
@@ -214,6 +216,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         "Dart",
         "Kotlin",
         "Swift",
+        "Firebase",
         "REST APIs",
         "CI/CD",
         "QA",
@@ -429,9 +432,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     hero: {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
-      eyebrow: "Abierta a roles móviles · Barcelona / Remoto",
-      tagline:
-        "Diseño y desarrollo apps móviles de calidad para usuarios reales.",
+      greeting: "Hola, soy",
+      eyebrow: "Disponible para roles mobile · Barcelona / Remoto",
+      tagline: "Construyo apps móviles pulidas para usuarios reales.",
       summary:
         "Mobile Developer enfocada en Flutter, Android e iOS. Construyo aplicaciones mantenibles y listas para producción con arquitectura limpia, integración REST API, criterio de CI/CD y una mentalidad fuerte de calidad de producto.",
       panelLabel: "Señal",
@@ -449,7 +452,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         "Dart",
         "Kotlin",
         "Swift",
-        "REST APIs",
+        "Firebase",
+        "APIs REST",
         "CI/CD",
         "QA",
       ],

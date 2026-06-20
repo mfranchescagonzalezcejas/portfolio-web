@@ -1,5 +1,102 @@
 import type { HeroContent, LinkItem } from "../data/site";
 
+type IconProps = {
+  className?: string;
+};
+
+function ArrowUpRightIcon({ className = "h-4 w-4" }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M7 7h10v10" />
+      <path d="M7 17 17 7" />
+    </svg>
+  );
+}
+
+function DownloadIcon({ className = "h-4 w-4" }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 3v9" />
+      <path d="m8 11 4 4 4-4" />
+      <path d="M4 19h16" />
+    </svg>
+  );
+}
+
+function GitHubIcon({ className = "h-4 w-4" }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 22v-2.87a3.26 3.26 0 0 0-.94-2.37c3.14-.35 6.44-1.54 6.44-6.97a5.6 5.6 0 0 0-1.5-3.89 5.2 5.2 0 0 0-.09-3.9s-1.15-.37-3.8 1.5a13.16 13.16 0 0 0-7 0c-2.65-1.87-3.8-1.5-3.8-1.5a5.2 5.2 0 0 0-.09 3.9 5.6 5.6 0 0 0-1.5 3.89c0 5.41 3.3 6.62 6.44 6.97a3.26 3.26 0 0 0-.94 2.37V22" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ className = "h-4 w-4" }: IconProps) {
+  return (
+    <svg
+      aria-hidden="true"
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z" />
+      <rect x="2" y="9" width="4" height="12" />
+      <circle cx="4" cy="4" r="2" />
+    </svg>
+  );
+}
+
+function splitHeadlineWithAccent(tagline: string) {
+  const match =
+    tagline.match(/^(.*?)(mobile apps|apps m\u00f3viles|apps mobiles)(.*)$/i) ??
+    tagline.match(
+      /^(.*?)(mobile applications|aplicaciones m\u00f3viles)(.*)$/i,
+    );
+
+  if (!match) {
+    return { lead: "", highlight: "", tail: tagline };
+  }
+
+  const [, lead, highlight, tail] = match;
+
+  return {
+    lead: lead.trim(),
+    highlight: highlight,
+    tail: tail.trim(),
+  };
+}
+
 type HeroProps = {
   hero: HeroContent;
   links: LinkItem[];
@@ -8,9 +105,9 @@ type HeroProps = {
 function HeroVisual() {
   return (
     <aside className="hero-visual" aria-label="Product demo mockup">
-      <div className="hero-phone-glow" aria-hidden="true" />
+      <div className="hero-phone-glow hero-float-glow" aria-hidden="true" />
 
-      <div className="hero-phone">
+      <div className="hero-phone" aria-hidden="true">
         <span className="hero-phone-notch" aria-hidden="true" />
 
         <div className="hero-phone-screen">
@@ -49,7 +146,7 @@ function HeroVisual() {
         </div>
       </div>
 
-      <div className="hero-code-overlay" aria-hidden="true">
+      <div className="hero-code-overlay hero-code" aria-hidden="true">
         <div className="mb-2 flex items-center gap-1.5">
           <span className="h-2 w-2 rounded-full bg-red-400/70" />
           <span className="h-2 w-2 rounded-full bg-yellow-400/70" />
@@ -70,7 +167,7 @@ function HeroVisual() {
 }`}</pre>
       </div>
 
-      <div className="hero-stack-pill hero-stack-pill-top" aria-hidden="true">
+      <div className="hero-stack-pill" aria-hidden="true">
         <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_10px_#67e8f9]" />
         <span>Flutter · Riverpod</span>
       </div>
@@ -113,6 +210,17 @@ export default function Hero({ hero, links }: HeroProps) {
   const fallbackLinks =
     profileLinks.length > 0 ? profileLinks : links.slice(0, 2);
   const firstName = hero.name.split(" ")[0] || hero.name;
+  const parsedTagline = splitHeadlineWithAccent(hero.tagline);
+
+  const headlineLine = parsedTagline.highlight ? (
+    <>
+      {parsedTagline.lead ? `${parsedTagline.lead} ` : ""}
+      <span className="text-gradient">{parsedTagline.highlight}</span>
+      {parsedTagline.tail ? ` ${parsedTagline.tail}` : ""}
+    </>
+  ) : (
+    <span className="text-gradient">{hero.tagline}</span>
+  );
 
   const heroTechStack = hero.skills;
 
@@ -122,14 +230,22 @@ export default function Hero({ hero, links }: HeroProps) {
 
       <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-8">
         <div className="space-y-5">
-          <p className="hero-status">{hero.eyebrow}</p>
+          <p className="hero-status">
+            <span className="hero-status-dot" aria-hidden="true">
+              <span className="hero-status-dot-ping" />
+              <span className="hero-status-dot-core" />
+            </span>
+            {hero.eyebrow}
+          </p>
           <h1
             id="hero-title"
             className="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl"
           >
-            Hi, I&apos;m {firstName}.<br />I build polished{" "}
-            <span className="text-gradient">mobile apps</span> for real users.
-            <span className="sr-only">{hero.tagline}</span>
+            <span>
+              {hero.greeting} {firstName}.
+            </span>
+            <br />
+            <span>{headlineLine}</span>
           </h1>
 
           <p className="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">
@@ -137,30 +253,37 @@ export default function Hero({ hero, links }: HeroProps) {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href={hero.quickCtaHref} className="cta-button">
-              {hero.quickCtaLabel}
+            <a href={hero.quickCtaHref} className="cta-button hero-cta-primary">
+              <span>{hero.quickCtaLabel}</span>
+              <ArrowUpRightIcon className="hero-cta-icon" />
             </a>
 
-            <a href="/cv.pdf" className="cta-outline">
-              {hero.cvLabel}
+            <a href="/cv.pdf" className="cta-outline hero-cta-secondary">
+              <DownloadIcon className="hero-cta-icon" />
+              <span>{hero.cvLabel}</span>
             </a>
 
             {fallbackLinks.map((link) => (
               <a
                 key={link.href}
-                className="cta-outline"
+                className="cta-outline hero-cta-secondary"
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
               >
-                {link.label}
+                {link.label.toLowerCase().includes("github") ? (
+                  <GitHubIcon className="hero-cta-icon" />
+                ) : link.label.toLowerCase().includes("linkedin") ? (
+                  <LinkedInIcon className="hero-cta-icon" />
+                ) : null}
+                <span>{link.label}</span>
               </a>
             ))}
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-8 flex flex-wrap gap-2">
             {heroTechStack.map((tech) => (
-              <span key={tech} className="pill">
+              <span key={tech} className="hero-tech-pill">
                 {tech}
               </span>
             ))}

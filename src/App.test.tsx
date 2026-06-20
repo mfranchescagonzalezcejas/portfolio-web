@@ -34,7 +34,8 @@ describe("locale routing behavior", () => {
       path: "/",
       lang: "en",
       tagline: "I build polished mobile apps for real users.",
-      cta: "Contact me",
+      headerCta: "Contact me",
+      heroPrimaryCta: "View Projects",
       footer: "Built with care in Barcelona",
       description:
         "DevDigi is my personal developer brand. Mobile Developer focused",
@@ -44,7 +45,8 @@ describe("locale routing behavior", () => {
       path: "/en",
       lang: "en",
       tagline: "I build polished mobile apps for real users.",
-      cta: "Contact me",
+      headerCta: "Contact me",
+      heroPrimaryCta: "View Projects",
       footer: "Built with care in Barcelona",
       description:
         "DevDigi is my personal developer brand. Mobile Developer focused",
@@ -53,9 +55,9 @@ describe("locale routing behavior", () => {
     {
       path: "/es",
       lang: "es",
-      tagline:
-        "Diseño y desarrollo apps móviles de calidad para usuarios reales.",
-      cta: "Contáctame",
+      tagline: "Construyo apps móviles pulidas para usuarios reales.",
+      headerCta: "Contáctame",
+      heroPrimaryCta: "Ver proyectos",
       footer: "Desarrollado con cariño en Barcelona",
       description:
         "DevDigi es la marca personal de Mercedes; Ingeniería móvil con foco en Flutter",
@@ -63,16 +65,41 @@ describe("locale routing behavior", () => {
     },
   ])(
     "renders $lang locale for $path",
-    async ({ path, lang, tagline, cta, footer, description, titleMeta }) => {
+    async ({
+      path,
+      lang,
+      tagline,
+      headerCta,
+      heroPrimaryCta,
+      footer,
+      description,
+      titleMeta,
+    }) => {
       renderAtPath(path);
 
       await waitFor(() => {
         expect(document.documentElement).toHaveAttribute("lang", lang);
       });
 
-      expect(screen.getByText(tagline)).toBeInTheDocument();
-      const ctaLink = screen.getByRole("link", { name: cta });
-      expect(ctaLink).toHaveAttribute("href", "#contact");
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        tagline,
+      );
+      const header = screen.getByRole("banner");
+      const headerCtaLink = within(header).getByRole("link", {
+        name: headerCta,
+      });
+      expect(headerCtaLink).toHaveAttribute("href", "#contact");
+
+      const heroSection = document.getElementById("top");
+      expect(heroSection).not.toBeNull();
+      const heroPrimaryCtaLink = within(heroSection as HTMLElement).getByRole(
+        "link",
+        {
+          name: heroPrimaryCta,
+        },
+      );
+      expect(heroPrimaryCtaLink).toHaveAttribute("href", "#projects");
+
       expect(
         screen.getByText((content) => content.includes(footer)),
       ).toBeInTheDocument();
