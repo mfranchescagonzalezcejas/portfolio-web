@@ -109,7 +109,7 @@ describe("navigation anchors", () => {
       screen.getByRole("group", { name: "Change language" }),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByRole("navigation", { name: "Primary navigation" }),
+      screen.getAllByRole("navigation", { name: "Primary" }),
     ).toHaveLength(1);
   });
 

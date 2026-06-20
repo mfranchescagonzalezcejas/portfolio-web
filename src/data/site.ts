@@ -173,8 +173,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       options: { en: "EN", es: "ES" },
     },
     header: {
-      ariaLabel: "Primary navigation",
-      homeLabel: "DevDigi home",
+      ariaLabel: "Primary",
+      homeLabel: "DevDigi — back to top",
       ctaLabel: "Contact me",
     },
     hero: {
@@ -399,8 +399,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       options: { en: "EN", es: "ES" },
     },
     header: {
-      ariaLabel: "Navegación principal",
-      homeLabel: "Inicio de DevDigi",
+      ariaLabel: "Principal",
+      homeLabel: "DevDigi — volver arriba",
       ctaLabel: "Contáctame",
     },
     hero: {

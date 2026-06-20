@@ -86,14 +86,22 @@ function ArrowUpRightIcon() {
 }
 
 function getThemeMode(): ThemeMode {
-  const storedTheme =
-    typeof window !== "undefined" ? window.localStorage.getItem("devdigi-theme") : null;
+  let storedTheme: string | null = null;
+
+  try {
+    storedTheme =
+      typeof window !== "undefined"
+        ? window.localStorage.getItem("devdigi-theme")
+        : null;
+  } catch {
+    storedTheme = null;
+  }
 
   if (storedTheme === "light" || storedTheme === "dark") {
     return storedTheme;
   }
 
-  if (window.matchMedia?.("(prefers-color-scheme: light)").matches) {
+  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: light)").matches) {
     return "light";
   }
 
@@ -173,13 +181,12 @@ export default function SiteHeader({
 
   return (
     <header className="site-header fixed inset-x-0 top-0 z-50 px-4 pt-4">
-      <nav
+      <div
         className="site-nav mx-auto flex max-w-6xl items-center justify-between rounded-full glass px-4 py-2.5 sm:px-6"
-        aria-label={header.ariaLabel}
       >
         <a
-          className="flex items-center gap-2 text-sm font-semibold"
-          href="#main-content"
+          className="flex items-center gap-2"
+          href="#top"
           aria-label={header.homeLabel}
         >
           <span className="brand-mark" aria-hidden="true">
@@ -190,22 +197,20 @@ export default function SiteHeader({
           </span>
         </a>
 
-        <div className="header-controls">
-          <ul className="site-nav-links">
+        <nav aria-label={header.ariaLabel} className="site-nav-links">
             {primaryNav.map((item) => (
-              <li key={item.href}>
-                <a className="nav-link" href={item.href}>
+                <a key={item.href} className="nav-link" href={item.href}>
                   {item.label}
                 </a>
-              </li>
             ))}
-          </ul>
+        </nav>
 
+        <div className="header-controls">
           <div className="lang-switch" role="group" aria-label={languageSwitcher.label}>
             <a
               href={nextLocaleHref}
               className="lang-switch-pill"
-              aria-label={`${localeAriaHint}. Current locale: ${languageSwitcher.options[currentLocale]}`}
+              aria-label={`${currentLocaleLabel}. ${localeAriaHint}`}
               title={languageSwitcher.options[nextLocale]}
             >
               <LanguagesIcon />
@@ -228,7 +233,7 @@ export default function SiteHeader({
             <ArrowUpRightIcon />
           </a>
         </div>
-      </nav>
+      </div>
     </header>
   );
 }
