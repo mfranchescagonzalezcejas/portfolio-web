@@ -14,42 +14,34 @@ export default function Experience({ experience, section }: ExperienceProps) {
   return (
     <section
       id="experience"
-      className="scroll-mt-32 px-6 py-12 lg:px-8"
+      className="section-shell scroll-mt-32"
       aria-labelledby="experience-title"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="section-inner">
         <div className="max-w-3xl">
-          <p className="text-xs font-extrabold tracking-[0.32em] text-teal-300 uppercase">
-            {section.eyebrow}
-          </p>
-          <h2
-            id="experience-title"
-            className="mt-4 text-3xl font-extrabold text-white sm:text-4xl"
-          >
+          <p className="eyebrow">{section.eyebrow}</p>
+          <h2 id="experience-title" className="section-title">
             {section.title}
           </h2>
         </div>
 
         <div className="mt-8 grid gap-6 md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_24rem]">
           {primaryExperience && (
-            <article className="rounded-3xl border border-[#5EEAD4] bg-[linear-gradient(135deg,#0F766E_0%,#0B1B2A_100%)] p-8 shadow-2xl shadow-teal-950/25">
+            <article className="card-surface">
               <p className="text-sm font-bold text-teal-100">
                 {primaryExperience.period}
               </p>
               <h3 className="mt-3 text-2xl font-extrabold text-white">
                 {primaryExperience.company} · {primaryExperience.role}
               </h3>
-              <p className="mt-4 text-base leading-7 text-[#D1FAE5]">
+              <p className="hero-copy mt-4 text-base leading-7">
                 {primaryExperience.description}
               </p>
 
-              <ul className="mt-6 space-y-3 text-base leading-7 text-[#D1FAE5]">
+              <ul className="mt-6 space-y-3 text-base leading-7 hero-copy">
                 {primaryExperience.highlights.map((highlight) => (
                   <li className="flex gap-3" key={highlight}>
-                    <span
-                      className="mt-3 h-1.5 w-1.5 rounded-full bg-teal-300"
-                      aria-hidden="true"
-                    />
+                    <span className="mt-3 h-1.5 w-1.5 rounded-full bg-teal-300" aria-hidden="true" />
                     <span>{highlight}</span>
                   </li>
                 ))}
@@ -59,15 +51,12 @@ export default function Experience({ experience, section }: ExperienceProps) {
 
           <div className="grid gap-6">
             {secondaryExperience.map((item) => (
-              <article
-                key={item.company + item.period}
-                className="rounded-3xl border border-[#164E63] bg-[#0B1B2A] p-7"
-              >
+              <article key={item.company + item.period} className="section-card">
                 <p className="text-sm font-bold text-cyan-200">{item.period}</p>
                 <h3 className="mt-3 text-xl font-extrabold text-white">
                   {item.company} · {item.role}
                 </h3>
-                <p className="mt-4 text-sm leading-6 text-[#B6E7E1]">
+                <p className="hero-copy mt-4 text-sm leading-6">
                   {item.description}
                 </p>
               </article>
