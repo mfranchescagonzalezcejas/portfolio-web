@@ -214,7 +214,10 @@ describe("navigation anchors", () => {
       name: "Cambiar a modo claro",
     });
     expect(themeToggle).toHaveAttribute("title", "Cambiar a modo claro");
-    expect(themeToggle).not.toHaveAttribute("aria-label", "Switch to light mode");
+    expect(themeToggle).not.toHaveAttribute(
+      "aria-label",
+      "Switch to light mode",
+    );
     expect(themeToggle).not.toHaveAttribute("title", "Switch to light mode");
   });
 

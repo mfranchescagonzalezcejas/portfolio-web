@@ -48,11 +48,9 @@
   --hero-mockup-text: oklch(97% 0.01 240 / 0.86);
 
   --shadow-card:
-    0 1px 0 0 oklch(1 0 0 / 0.04) inset,
-    0 20px 40px -24px oklch(0 0 0 / 0.6);
+    0 1px 0 0 oklch(1 0 0 / 0.04) inset, 0 20px 40px -24px oklch(0 0 0 / 0.6);
   --shadow-elevated:
-    0 1px 0 0 oklch(1 0 0 / 0.06) inset,
-    0 30px 80px -30px oklch(0 0 0 / 0.7);
+    0 1px 0 0 oklch(1 0 0 / 0.06) inset, 0 30px 80px -30px oklch(0 0 0 / 0.7);
   --shadow-glow:
     0 0 0 1px oklch(78% 0.14 195 / 0.2),
     0 20px 60px -20px oklch(78% 0.14 195 / 0.35);
@@ -300,16 +298,8 @@ h4 {
   pointer-events: none;
   --grid-size: 48px;
   background-image:
-    linear-gradient(
-      to right,
-      var(--grid-line) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      to bottom,
-      var(--grid-line) 1px,
-      transparent 1px
-    );
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size:
     var(--grid-size) var(--grid-size),
     var(--grid-size) var(--grid-size);

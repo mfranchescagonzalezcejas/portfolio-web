@@ -36,7 +36,11 @@ export type SectionHeading = {
   title: string;
 };
 
-export type ValueIconName = "smartphone" | "layers" | "git-branch" | "check-circle";
+export type ValueIconName =
+  | "smartphone"
+  | "layers"
+  | "git-branch"
+  | "check-circle";
 
 export type ValueCard = {
   title: string;
