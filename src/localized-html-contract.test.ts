@@ -111,7 +111,7 @@ const staticContracts: Record<
     skipLabel: "Saltar al contenido",
     sectionHeadings: [
       "Sobre mí",
-      "Lo que aporto como mobile developer",
+      "Lo que aporto como desarrolladora móvil",
       "Experiencia",
       "Trabajos seleccionados",
       "Herramientas y stack de ingeniería",
@@ -155,9 +155,9 @@ const assertNoJsContract = (
     body.querySelector(`nav[aria-label="${contract.navLabel}"]`),
   ).not.toBeNull();
   expect(
-    body.querySelector(
-      `nav[aria-label="${contract.navLabel}"] a[href="#skills"]`,
-    )?.textContent,
+    body
+      .querySelector(`nav[aria-label="${contract.navLabel}"] a[href="#skills"]`)
+      ?.textContent?.trim(),
   ).toBe(contract.skillsNavLabel);
 
   for (const sectionId of sectionIds) {

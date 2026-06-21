@@ -550,7 +550,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     },
     values: {
       eyebrow: "Qué hago",
-      title: "Lo que aporto como mobile developer",
+      title: "Lo que aporto como desarrolladora móvil",
       description:
         "Ingeniería práctica que se traduce en productos móviles entregados y mantenibles.",
       cards: [

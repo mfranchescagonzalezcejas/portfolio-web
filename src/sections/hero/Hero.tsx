@@ -26,7 +26,7 @@ const Linkedin = createLucideIcon("Linkedin", [
 
 function splitHeadlineWithAccent(tagline: string) {
   const match =
-    tagline.match(/^(.*?)(mobile apps|apps m\u00f3viles|apps mobiles)(.*)$/i) ??
+    tagline.match(/^(.*?)(mobile apps|apps m\u00f3viles)(.*)$/i) ??
     tagline.match(
       /^(.*?)(mobile applications|aplicaciones m\u00f3viles)(.*)$/i,
     );

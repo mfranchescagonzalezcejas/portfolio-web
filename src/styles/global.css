@@ -57,6 +57,9 @@
   --glass-border: 1px solid oklch(1 0 0 / 0.06);
   --glass-background: color-mix(in oklab, var(--surface) 65%, transparent);
   --glass-backdrop: blur(14px) saturate(140%);
+  --glass-text: color-mix(in oklab, var(--foreground) 78%, transparent);
+  --glass-text-strong: var(--foreground);
+  --glass-text-muted: var(--muted-foreground);
   --section-title-color: oklch(97% 0.01 240);
   --section-eyebrow-color: oklch(74% 0.13 190);
   --cta-foreground: oklch(98% 0.01 245);
@@ -888,7 +891,7 @@ h4 {
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     monospace;
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.78);
+  color: var(--glass-text);
 }
 
 .hero-delivery-card {
@@ -953,12 +956,12 @@ h4 {
 .hero-code .text-slate-400,
 .hero-delivery-card .text-slate-400,
 .hero-architecture-card .text-slate-400 {
-  color: var(--muted-foreground);
+  color: var(--glass-text-muted);
 }
 
 .hero-delivery-card .text-white,
 .hero-architecture-card .text-white {
-  color: var(--foreground);
+  color: var(--glass-text-strong);
 }
 
 .hero-code p {
