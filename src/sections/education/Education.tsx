@@ -1,4 +1,7 @@
-import type { Education as EducationData, SectionHeading } from "../data/site";
+import type {
+  Education as EducationData,
+  SectionHeading,
+} from "../../content/site";
 
 type EducationProps = {
   education: EducationData[];

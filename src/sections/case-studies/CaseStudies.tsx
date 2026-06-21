@@ -1,4 +1,4 @@
-import type { CaseStudy, SectionHeading } from "../data/site";
+import type { CaseStudy, SectionHeading } from "../../content/site";
 
 type CaseStudiesProps = {
   caseStudies: CaseStudy[];

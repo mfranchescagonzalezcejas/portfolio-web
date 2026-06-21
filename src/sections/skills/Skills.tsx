@@ -1,4 +1,4 @@
-import type { SectionHeading } from "../data/site";
+import type { SectionHeading } from "../../content/site";
 
 type SkillsProps = {
   skills: string[];
@@ -23,7 +23,7 @@ export default function Skills({ skills, section }: SkillsProps) {
             <span
               key={skill}
               className={`pill ${
-                index % 2 === 0 ? "bg-teal-300/25" : "bg-cyan-300/18"
+                index % 2 === 0 ? "pill-accent-teal" : "pill-accent-cyan"
               }`}
             >
               {skill}

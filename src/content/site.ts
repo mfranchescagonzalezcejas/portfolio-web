@@ -36,6 +36,34 @@ export type SectionHeading = {
   title: string;
 };
 
+export type ValueIconName =
+  | "smartphone"
+  | "layers"
+  | "git-branch"
+  | "check-circle";
+
+export type ValueCard = {
+  title: string;
+  body: string;
+  icon: ValueIconName;
+};
+
+export type ValuesContent = SectionHeading & {
+  description: string;
+  cards: ValueCard[];
+};
+
+export type HeroVisualContent = {
+  ariaLabel: string;
+  readingEyebrow: string;
+  readingTitle: string;
+  stackLabel: string;
+  deliveryTitle: string;
+  deliverySubtitle: string;
+  architectureTitle: string;
+  architectureSubtitle: string;
+};
+
 export type CaseStudySectionHeading = SectionHeading & {
   challengeLabel: string;
   approachLabel: string;
@@ -45,6 +73,7 @@ export type CaseStudySectionHeading = SectionHeading & {
 export type HeroContent = {
   shortName: string;
   name: string;
+  greeting: string;
   eyebrow: string;
   tagline: string;
   summary: string;
@@ -58,6 +87,7 @@ export type HeroContent = {
   quickCtaLabel: string;
   quickCtaHref: string;
   skills: string[];
+  visual: HeroVisualContent;
 };
 
 export type SummaryContent = {
@@ -110,8 +140,13 @@ export type SiteContent = {
     ariaLabel: string;
     homeLabel: string;
     ctaLabel: string;
+    themeToggle: {
+      switchToLight: string;
+      switchToDark: string;
+    };
   };
   hero: HeroContent;
+  values: ValuesContent;
   summary: SummaryContent;
   experienceSection: SectionHeading;
   featuredSection: SectionHeading & {
@@ -191,10 +226,15 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       ariaLabel: "Primary",
       homeLabel: "DevDigi — back to top",
       ctaLabel: "Contact me",
+      themeToggle: {
+        switchToLight: "Switch to light mode",
+        switchToDark: "Switch to dark mode",
+      },
     },
     hero: {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
+      greeting: "Hi, I'm",
       eyebrow: "Open to mobile roles · Barcelona / Remote",
       tagline: "I build polished mobile apps for real users.",
       summary:
@@ -205,18 +245,57 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         "DevDigi combines Flutter, Android, iOS, API integration, and QA-minded engineering so teams can move quickly without losing maintainability.",
       profileLinksLabel: "Primary profile links",
       ctaLabel: "Contact me",
-      quickCtaLabel: "View projects",
+      quickCtaLabel: "View Projects",
       quickCtaHref: "#projects",
       panelAriaLabel: "Professional focus",
       cvLabel: "Download CV",
+      visual: {
+        ariaLabel: "Product demo mockup",
+        readingEyebrow: "Reading now",
+        readingTitle: "Chapter 47",
+        stackLabel: "Flutter · Riverpod",
+        deliveryTitle: "Production-ready",
+        deliverySubtitle: "mobile delivery",
+        architectureTitle: "Clean Architecture",
+        architectureSubtitle: "Repository Pattern",
+      },
       skills: [
         "Flutter",
         "Dart",
         "Kotlin",
         "Swift",
+        "Firebase",
         "REST APIs",
         "CI/CD",
         "QA",
+      ],
+    },
+    values: {
+      eyebrow: "What I do",
+      title: "What I bring as a mobile developer",
+      description:
+        "Practical engineering that turns into shipped, maintainable mobile products.",
+      cards: [
+        {
+          title: "Production mobile apps",
+          body: "Experience contributing to live apps on Google Play and the App Store, from feature work to release validation.",
+          icon: "smartphone",
+        },
+        {
+          title: "Clean architecture",
+          body: "Layered codebases, repository pattern and dependency injection across Flutter, Kotlin and Swift projects.",
+          icon: "layers",
+        },
+        {
+          title: "Release & CI/CD workflows",
+          body: "Comfortable with Jenkins pipelines, GitLab release tags and GitHub Actions to ship safely and repeatably.",
+          icon: "git-branch",
+        },
+        {
+          title: "QA & product validation",
+          body: "Strong debugging mindset, attention to edge cases and collaboration with QA and product to ensure quality.",
+          icon: "check-circle",
+        },
       ],
     },
     summary: {
@@ -410,7 +489,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Sobre mí", href: "#about" },
       { label: "Experiencia", href: "#experience" },
       { label: "Proyectos", href: "#projects" },
-      { label: "Habilidades", href: "#skills" },
+      { label: "Competencias", href: "#skills" },
       { label: "Contacto", href: "#contact" },
     ],
     languageSwitcher: {
@@ -425,13 +504,17 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       ariaLabel: "Principal",
       homeLabel: "DevDigi — volver arriba",
       ctaLabel: "Contáctame",
+      themeToggle: {
+        switchToLight: "Cambiar a modo claro",
+        switchToDark: "Cambiar a modo oscuro",
+      },
     },
     hero: {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
-      eyebrow: "Abierta a roles móviles · Barcelona / Remoto",
-      tagline:
-        "Diseño y desarrollo apps móviles de calidad para usuarios reales.",
+      greeting: "Hola, soy",
+      eyebrow: "Disponible para roles mobile · Barcelona / Remoto",
+      tagline: "Construyo apps móviles pulidas para usuarios reales.",
       summary:
         "Mobile Developer enfocada en Flutter, Android e iOS. Construyo aplicaciones mantenibles y listas para producción con arquitectura limpia, integración REST API, criterio de CI/CD y una mentalidad fuerte de calidad de producto.",
       panelLabel: "Señal",
@@ -444,14 +527,53 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       quickCtaHref: "#projects",
       panelAriaLabel: "Foco profesional",
       cvLabel: "Descargar CV",
+      visual: {
+        ariaLabel: "Mockup de demo del producto",
+        readingEyebrow: "Reading now",
+        readingTitle: "Chapter 47",
+        stackLabel: "Flutter · Riverpod",
+        deliveryTitle: "Listo para producción",
+        deliverySubtitle: "entrega mobile",
+        architectureTitle: "Arquitectura limpia",
+        architectureSubtitle: "Patrón Repository",
+      },
       skills: [
         "Flutter",
         "Dart",
         "Kotlin",
         "Swift",
-        "REST APIs",
+        "Firebase",
+        "APIs REST",
         "CI/CD",
         "QA",
+      ],
+    },
+    values: {
+      eyebrow: "Qué hago",
+      title: "Lo que aporto como desarrolladora móvil",
+      description:
+        "Ingeniería práctica que se traduce en productos móviles entregados y mantenibles.",
+      cards: [
+        {
+          title: "Apps móviles en producción",
+          body: "Experiencia contribuyendo a apps activas en Google Play y la App Store, desde features hasta validación de releases.",
+          icon: "smartphone",
+        },
+        {
+          title: "Arquitectura limpia",
+          body: "Bases de código por capas, patrón repository e inyección de dependencias en proyectos de Flutter, Kotlin y Swift.",
+          icon: "layers",
+        },
+        {
+          title: "Releases y CI/CD",
+          body: "Cómoda con pipelines de Jenkins, tags de release en GitLab y GitHub Actions para entregar de forma segura y repetible.",
+          icon: "git-branch",
+        },
+        {
+          title: "QA y validación de producto",
+          body: "Mentalidad fuerte de debugging, atención a casos límite y colaboración con QA y producto para asegurar calidad.",
+          icon: "check-circle",
+        },
       ],
     },
     summary: {

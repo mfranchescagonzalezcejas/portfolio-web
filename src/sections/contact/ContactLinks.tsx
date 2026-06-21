@@ -1,4 +1,4 @@
-import type { LinkItem, ContactSection } from "../data/site";
+import type { LinkItem, ContactSection } from "../../content/site";
 
 type ContactLinksProps = {
   links: LinkItem[];

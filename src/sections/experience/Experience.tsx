@@ -1,7 +1,7 @@
 import type {
   Experience as ExperienceContent,
   SectionHeading,
-} from "../data/site";
+} from "../../content/site";
 
 type ExperienceProps = {
   experience: ExperienceContent[];

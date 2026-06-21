@@ -6,7 +6,7 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import App from "./App";
+import App from "./app/App";
 
 const renderAtPath = (path: string) => {
   window.history.pushState({}, "", path);
@@ -34,49 +34,118 @@ describe("locale routing behavior", () => {
       path: "/",
       lang: "en",
       tagline: "I build polished mobile apps for real users.",
-      cta: "Contact me",
+      headerCta: "Contact me",
+      heroPrimaryCta: "View Projects",
       footer: "Built with care in Barcelona",
       description:
         "DevDigi is my personal developer brand. Mobile Developer focused",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
+      languageSwitcherLabel: "Change language",
+      currentLocaleName: "EN",
+      nextLocaleHref: "/es",
+      nextLocaleHint: "Switch to Spanish",
+      skillsNavLabel: "Skills",
+      themeToggleLabel: "Switch to light mode",
     },
     {
       path: "/en",
       lang: "en",
       tagline: "I build polished mobile apps for real users.",
-      cta: "Contact me",
+      headerCta: "Contact me",
+      heroPrimaryCta: "View Projects",
       footer: "Built with care in Barcelona",
       description:
         "DevDigi is my personal developer brand. Mobile Developer focused",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
+      languageSwitcherLabel: "Change language",
+      currentLocaleName: "EN",
+      nextLocaleHref: "/es",
+      nextLocaleHint: "Switch to Spanish",
+      skillsNavLabel: "Skills",
+      themeToggleLabel: "Switch to light mode",
     },
     {
       path: "/es",
       lang: "es",
-      tagline:
-        "Diseño y desarrollo apps móviles de calidad para usuarios reales.",
-      cta: "Contáctame",
+      tagline: "Construyo apps móviles pulidas para usuarios reales.",
+      headerCta: "Contáctame",
+      heroPrimaryCta: "Ver proyectos",
       footer: "Desarrollado con cariño en Barcelona",
       description:
         "DevDigi es la marca personal de Mercedes; Ingeniería móvil con foco en Flutter",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
+      languageSwitcherLabel: "Cambiar idioma",
+      currentLocaleName: "ES",
+      nextLocaleHref: "/en",
+      nextLocaleHint: "Cambiar a inglés",
+      skillsNavLabel: "Competencias",
+      themeToggleLabel: "Cambiar a modo claro",
     },
   ])(
     "renders $lang locale for $path",
-    async ({ path, lang, tagline, cta, footer, description, titleMeta }) => {
+    async ({
+      path,
+      lang,
+      tagline,
+      headerCta,
+      heroPrimaryCta,
+      footer,
+      description,
+      titleMeta,
+      languageSwitcherLabel,
+      currentLocaleName,
+      nextLocaleHref,
+      nextLocaleHint,
+      skillsNavLabel,
+      themeToggleLabel,
+    }) => {
       renderAtPath(path);
 
       await waitFor(() => {
         expect(document.documentElement).toHaveAttribute("lang", lang);
       });
 
-      expect(screen.getByText(tagline)).toBeInTheDocument();
-      const ctaLink = screen.getByRole("link", { name: cta });
-      expect(ctaLink).toHaveAttribute("href", "#contact");
+      expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+        tagline,
+      );
+      const header = screen.getByRole("banner");
+      const headerCtaLink = within(header).getByRole("link", {
+        name: headerCta,
+      });
+      expect(headerCtaLink).toHaveAttribute("href", "#contact");
+
+      const heroSection = document.getElementById("top");
+      expect(heroSection).not.toBeNull();
+      const heroPrimaryCtaLink = within(heroSection as HTMLElement).getByRole(
+        "link",
+        {
+          name: heroPrimaryCta,
+        },
+      );
+      expect(heroPrimaryCtaLink).toHaveAttribute("href", "#projects");
+
       expect(
         screen.getByText((content) => content.includes(footer)),
       ).toBeInTheDocument();
       expect(document.title).toBe(titleMeta);
+
+      expect(
+        within(header).getByRole("group", { name: languageSwitcherLabel }),
+      ).toBeInTheDocument();
+      const languageLink = within(header).getByRole("link", {
+        name: `${currentLocaleName}. ${nextLocaleHint}`,
+      });
+      expect(languageLink).toHaveTextContent(currentLocaleName);
+      expect(languageLink).toHaveAttribute("href", nextLocaleHref);
+      expect(languageLink).toHaveAttribute("title", nextLocaleHint);
+
+      expect(
+        within(header).getByRole("link", { name: skillsNavLabel }),
+      ).toHaveAttribute("href", "#skills");
+      const themeToggle = within(header).getByRole("button", {
+        name: themeToggleLabel,
+      });
+      expect(themeToggle).toHaveAttribute("title", themeToggleLabel);
 
       const descriptionMeta = document.querySelector(
         "meta[name='description']",
@@ -128,6 +197,28 @@ describe("navigation anchors", () => {
     ).toBeInTheDocument();
 
     expect(skillsSection).toHaveClass("scroll-mt-32");
+  });
+
+  it("localizes Spanish skills navigation and theme toggle labels", () => {
+    renderAtPath("/es");
+
+    const header = screen.getByRole("banner");
+    expect(
+      within(header).getByRole("link", { name: "Competencias" }),
+    ).toHaveAttribute("href", "#skills");
+    expect(
+      within(header).queryByRole("link", { name: "Skills" }),
+    ).not.toBeInTheDocument();
+
+    const themeToggle = within(header).getByRole("button", {
+      name: "Cambiar a modo claro",
+    });
+    expect(themeToggle).toHaveAttribute("title", "Cambiar a modo claro");
+    expect(themeToggle).not.toHaveAttribute(
+      "aria-label",
+      "Switch to light mode",
+    );
+    expect(themeToggle).not.toHaveAttribute("title", "Switch to light mode");
   });
 
   it("uses a valid heading id for the Contact section", () => {

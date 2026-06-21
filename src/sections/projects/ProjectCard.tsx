@@ -1,4 +1,4 @@
-import type { Project } from "../data/site";
+import type { Project } from "../../content/site";
 
 type ProjectCardProps = {
   project: Project;

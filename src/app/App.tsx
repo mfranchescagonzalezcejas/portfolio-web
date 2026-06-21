@@ -1,33 +1,17 @@
 import { useEffect } from "react";
-import {
-  defaultLocale,
-  isLocale,
-  siteContentByLocale,
-  type Locale,
-} from "./data/site";
-import SiteHeader from "./components/SiteHeader";
-import Hero from "./components/Hero";
-import Summary from "./components/Summary";
-import Experience from "./components/Experience";
-import FeaturedProject from "./components/FeaturedProject";
-import Projects from "./components/Projects";
-import Education from "./components/Education";
-import Skills from "./components/Skills";
-import ContactLinks from "./components/ContactLinks";
-import CaseStudies from "./components/CaseStudies";
-
-const resolveLocale = (path: string): Locale => {
-  if (!path || path === "/") {
-    return defaultLocale;
-  }
-
-  const [, localeSegment] = path.split("/");
-  if (isLocale(localeSegment)) {
-    return localeSegment;
-  }
-
-  return defaultLocale;
-};
+import { siteContentByLocale } from "../content/site";
+import { resolveLocale } from "./locale";
+import SiteHeader from "../sections/header/SiteHeader";
+import Hero from "../sections/hero/Hero";
+import Values from "../sections/values/Values";
+import Summary from "../sections/summary/Summary";
+import Experience from "../sections/experience/Experience";
+import FeaturedProject from "../sections/projects/FeaturedProject";
+import Projects from "../sections/projects/Projects";
+import Education from "../sections/education/Education";
+import Skills from "../sections/skills/Skills";
+import ContactLinks from "../sections/contact/ContactLinks";
+import CaseStudies from "../sections/case-studies/CaseStudies";
 
 export default function App() {
   const locale = resolveLocale(window.location.pathname);
@@ -67,6 +51,7 @@ export default function App() {
 
       <main id="main-content" className="relative z-10">
         <Hero hero={site.hero} links={site.contacts} />
+        <Values values={site.values} />
         <Summary summary={site.summary} />
         <Experience
           experience={site.experience}
