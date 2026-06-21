@@ -1,4 +1,4 @@
-import type { SummaryContent } from "../data/site";
+import type { SummaryContent } from "../../content/site";
 
 type SummaryProps = {
   summary: SummaryContent;

@@ -6,7 +6,7 @@ import {
   waitFor,
   within,
 } from "@testing-library/react";
-import App from "./App";
+import App from "./app/App";
 
 const renderAtPath = (path: string) => {
   window.history.pushState({}, "", path);
@@ -40,6 +40,12 @@ describe("locale routing behavior", () => {
       description:
         "DevDigi is my personal developer brand. Mobile Developer focused",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
+      languageSwitcherLabel: "Change language",
+      currentLocaleName: "EN",
+      nextLocaleHref: "/es",
+      nextLocaleHint: "Switch to Spanish",
+      skillsNavLabel: "Skills",
+      themeToggleLabel: "Switch to light mode",
     },
     {
       path: "/en",
@@ -51,6 +57,12 @@ describe("locale routing behavior", () => {
       description:
         "DevDigi is my personal developer brand. Mobile Developer focused",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
+      languageSwitcherLabel: "Change language",
+      currentLocaleName: "EN",
+      nextLocaleHref: "/es",
+      nextLocaleHint: "Switch to Spanish",
+      skillsNavLabel: "Skills",
+      themeToggleLabel: "Switch to light mode",
     },
     {
       path: "/es",
@@ -62,6 +74,12 @@ describe("locale routing behavior", () => {
       description:
         "DevDigi es la marca personal de Mercedes; Ingeniería móvil con foco en Flutter",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
+      languageSwitcherLabel: "Cambiar idioma",
+      currentLocaleName: "ES",
+      nextLocaleHref: "/en",
+      nextLocaleHint: "Cambiar a inglés",
+      skillsNavLabel: "Competencias",
+      themeToggleLabel: "Cambiar a modo claro",
     },
   ])(
     "renders $lang locale for $path",
@@ -74,6 +92,12 @@ describe("locale routing behavior", () => {
       footer,
       description,
       titleMeta,
+      languageSwitcherLabel,
+      currentLocaleName,
+      nextLocaleHref,
+      nextLocaleHint,
+      skillsNavLabel,
+      themeToggleLabel,
     }) => {
       renderAtPath(path);
 
@@ -104,6 +128,24 @@ describe("locale routing behavior", () => {
         screen.getByText((content) => content.includes(footer)),
       ).toBeInTheDocument();
       expect(document.title).toBe(titleMeta);
+
+      expect(
+        within(header).getByRole("group", { name: languageSwitcherLabel }),
+      ).toBeInTheDocument();
+      const languageLink = within(header).getByRole("link", {
+        name: `${currentLocaleName}. ${nextLocaleHint}`,
+      });
+      expect(languageLink).toHaveTextContent(currentLocaleName);
+      expect(languageLink).toHaveAttribute("href", nextLocaleHref);
+      expect(languageLink).toHaveAttribute("title", nextLocaleHint);
+
+      expect(
+        within(header).getByRole("link", { name: skillsNavLabel }),
+      ).toHaveAttribute("href", "#skills");
+      const themeToggle = within(header).getByRole("button", {
+        name: themeToggleLabel,
+      });
+      expect(themeToggle).toHaveAttribute("title", themeToggleLabel);
 
       const descriptionMeta = document.querySelector(
         "meta[name='description']",
@@ -155,6 +197,25 @@ describe("navigation anchors", () => {
     ).toBeInTheDocument();
 
     expect(skillsSection).toHaveClass("scroll-mt-32");
+  });
+
+  it("localizes Spanish skills navigation and theme toggle labels", () => {
+    renderAtPath("/es");
+
+    const header = screen.getByRole("banner");
+    expect(
+      within(header).getByRole("link", { name: "Competencias" }),
+    ).toHaveAttribute("href", "#skills");
+    expect(
+      within(header).queryByRole("link", { name: "Skills" }),
+    ).not.toBeInTheDocument();
+
+    const themeToggle = within(header).getByRole("button", {
+      name: "Cambiar a modo claro",
+    });
+    expect(themeToggle).toHaveAttribute("title", "Cambiar a modo claro");
+    expect(themeToggle).not.toHaveAttribute("aria-label", "Switch to light mode");
+    expect(themeToggle).not.toHaveAttribute("title", "Switch to light mode");
   });
 
   it("uses a valid heading id for the Contact section", () => {

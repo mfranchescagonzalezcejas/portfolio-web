@@ -1,4 +1,4 @@
-import type { Locale, NavItem } from "../data/site";
+import type { Locale, NavItem } from "../../content/site";
 import { useEffect, useState } from "react";
 
 type ThemeMode = "light" | "dark";
@@ -127,6 +127,10 @@ type SiteHeaderProps = {
     ariaLabel: string;
     homeLabel: string;
     ctaLabel: string;
+    themeToggle: {
+      switchToLight: string;
+      switchToDark: string;
+    };
   };
 };
 
@@ -161,13 +165,15 @@ export default function SiteHeader({
   const nextLocale = isEnglishLocale ? "es" : "en";
   const nextLocaleHref = nextLocale === "en" ? "/en" : `/${nextLocale}`;
 
-  const nextLocaleLabel = languageSwitcher.options[nextLocale];
+  const currentLocaleLabel = languageSwitcher.options[currentLocale];
   const localeAriaHint =
     languageSwitcher.hint?.[nextLocale] ??
     (isEnglishLocale ? "Switch to Spanish" : "Switch to English");
 
   const themeAriaLabel =
-    themeMode === "dark" ? "Switch to light mode" : "Switch to dark mode";
+    themeMode === "dark"
+      ? header.themeToggle.switchToLight
+      : header.themeToggle.switchToDark;
 
   const onThemeToggle = () => {
     setThemeMode((previousTheme) => {
@@ -219,11 +225,11 @@ export default function SiteHeader({
             <a
               href={nextLocaleHref}
               className="header-lang-toggle"
-              aria-label={`${nextLocaleLabel}. ${localeAriaHint}`}
+              aria-label={`${currentLocaleLabel}. ${localeAriaHint}`}
               title={localeAriaHint}
             >
               <LanguagesIcon className="header-icon-sm" />
-              {nextLocaleLabel}
+              {currentLocaleLabel}
             </a>
           </div>
 

@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { siteContentByLocale } from "./data/site";
+import { siteContentByLocale } from "./content/site";
 
 type LocaleEntrypoint = {
   path: string;
@@ -23,11 +23,14 @@ const productionSiteUrl = "https://devdigi.dev";
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
+  valuesSnippet: string;
+  valuesItems: string[];
   summarySnippet: string;
   cta: string;
   portfolioItems: string[];
   footerText: string;
   navLabel: string;
+  skillsNavLabel: string;
 };
 
 const entrypoints: LocaleEntrypoint[] = [
@@ -65,6 +68,7 @@ const seoContracts: Record<string, SeoContract> = {
 
 const sectionIds = [
   "about",
+  "values",
   "experience",
   "projects",
   "skills",
@@ -80,11 +84,20 @@ const staticContracts: Record<
     skipLabel: "Skip to content",
     sectionHeadings: [
       "About",
+      "What I bring as a mobile developer",
       "Experience",
       "Selected proof of work",
       "Tools and engineering stack",
       "Education",
       "Contact",
+    ],
+    valuesSnippet:
+      "Practical engineering that turns into shipped, maintainable mobile products.",
+    valuesItems: [
+      "Production mobile apps",
+      "Clean architecture",
+      "Release & CI/CD workflows",
+      "QA & product validation",
     ],
     summarySnippet:
       "Mobile-focused engineer with hands-on experience shipping production-ready applications",
@@ -92,16 +105,26 @@ const staticContracts: Record<
     portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
     footerText: "Built with care in Barcelona",
     navLabel: "Primary navigation",
+    skillsNavLabel: "Skills",
   },
   es: {
     skipLabel: "Saltar al contenido",
     sectionHeadings: [
       "Sobre mí",
+      "Lo que aporto como mobile developer",
       "Experiencia",
       "Trabajos seleccionados",
       "Herramientas y stack de ingeniería",
       "Educación",
       "Contacto",
+    ],
+    valuesSnippet:
+      "Ingeniería práctica que se traduce en productos móviles entregados y mantenibles.",
+    valuesItems: [
+      "Apps móviles en producción",
+      "Arquitectura limpia",
+      "Releases y CI/CD",
+      "QA y validación de producto",
     ],
     summarySnippet:
       "Ingeniera de software con experiencia en productos móviles en producción",
@@ -109,6 +132,7 @@ const staticContracts: Record<
     portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
     footerText: "Desarrollado con cariño en Barcelona",
     navLabel: "Navegación principal",
+    skillsNavLabel: "Competencias",
   },
 };
 
@@ -130,6 +154,11 @@ const assertNoJsContract = (
   expect(
     body.querySelector(`nav[aria-label="${contract.navLabel}"]`),
   ).not.toBeNull();
+  expect(
+    body.querySelector(
+      `nav[aria-label="${contract.navLabel}"] a[href="#skills"]`,
+    )?.textContent,
+  ).toBe(contract.skillsNavLabel);
 
   for (const sectionId of sectionIds) {
     const section = body.querySelector(`section#${sectionId}`);
@@ -143,6 +172,12 @@ const assertNoJsContract = (
 
   for (const projectName of contract.portfolioItems) {
     expect(bodyText).toContain(projectName);
+  }
+
+  expect(bodyText).toContain(contract.valuesSnippet);
+
+  for (const valueItem of contract.valuesItems) {
+    expect(bodyText).toContain(valueItem);
   }
 
   expect(bodyText).toContain(contract.summarySnippet);

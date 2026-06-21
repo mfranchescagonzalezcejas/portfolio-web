@@ -93,7 +93,7 @@ Out of scope for this MVP:
 The editable site content lives in:
 
 ```text
-src/data/site.ts
+src/content/site.ts
 ```
 
 Before a real public launch, confirm or replace the remaining content values for:

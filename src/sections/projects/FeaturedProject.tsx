@@ -1,4 +1,4 @@
-import type { Project, SectionHeading } from "../data/site";
+import type { Project, SectionHeading } from "../../content/site";
 import ProjectCard from "./ProjectCard";
 
 type FeaturedProjectProps = {
