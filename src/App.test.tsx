@@ -324,12 +324,92 @@ describe("navigation anchors", () => {
     expect(skillsSection).toBeInTheDocument();
     expect(
       within(skillsSection as HTMLElement).getByRole("heading", {
-        name: /Tools and engineering stack/i,
+        name: /Technical toolbox/i,
       }),
     ).toBeInTheDocument();
 
     expect(skillsSection).toHaveClass("scroll-mt-32");
   });
+
+  it.each([
+    {
+      path: "/",
+      heading: "Technical toolbox",
+      category: "Mobile",
+      groupLabel: "Skills in Mobile",
+      architecture: "Architecture",
+      architectureSkill: "Repository Pattern",
+      delivery: "Delivery & Quality",
+      deliverySkill: "GitHub Actions",
+      omittedSkill: "Remote collaboration",
+    },
+    {
+      path: "/es",
+      heading: "Caja de herramientas técnicas",
+      category: "Mobile",
+      groupLabel: "Competencias en Mobile",
+      architecture: "Arquitectura",
+      architectureSkill: "Patrón Repository",
+      delivery: "Entrega y calidad",
+      deliverySkill: "Validación QA",
+      omittedSkill: "Colaboración remota",
+    },
+  ])(
+    "renders localized Skills category cards for $path",
+    ({
+      path,
+      heading,
+      category,
+      groupLabel,
+      architecture,
+      architectureSkill,
+      delivery,
+      deliverySkill,
+      omittedSkill,
+    }) => {
+      renderAtPath(path);
+
+      const skillsSection = document.getElementById("skills");
+      expect(skillsSection).toBeInTheDocument();
+      expect(
+        within(skillsSection as HTMLElement).getByRole("heading", {
+          level: 2,
+          name: heading,
+        }),
+      ).toBeInTheDocument();
+
+      const cards = within(skillsSection as HTMLElement).getAllByRole(
+        "article",
+      );
+      expect(cards).toHaveLength(5);
+      expect(
+        within(skillsSection as HTMLElement).getByRole("heading", {
+          level: 3,
+          name: category,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        within(skillsSection as HTMLElement).getByRole("list", {
+          name: groupLabel,
+        }),
+      ).toHaveTextContent("Flutter");
+      expect(
+        within(skillsSection as HTMLElement).getByRole("heading", {
+          level: 3,
+          name: architecture,
+        }),
+      ).toBeInTheDocument();
+      expect(skillsSection as HTMLElement).toHaveTextContent(architectureSkill);
+      expect(
+        within(skillsSection as HTMLElement).getByRole("heading", {
+          level: 3,
+          name: delivery,
+        }),
+      ).toBeInTheDocument();
+      expect(skillsSection as HTMLElement).toHaveTextContent(deliverySkill);
+      expect(skillsSection as HTMLElement).not.toHaveTextContent(omittedSkill);
+    },
+  );
 
   it("keeps the Projects anchor on the projects grid after the featured showcase", () => {
     renderAtPath("/");

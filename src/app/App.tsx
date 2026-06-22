@@ -67,7 +67,7 @@ export default function App() {
             section={site.caseStudiesSection}
           />
         ) : null}
-        <Skills skills={site.summary.skills} section={site.skillsSection} />
+        <Skills section={site.skillsSection} />
         <Education education={site.education} section={site.educationSection} />
         <ContactLinks links={site.contacts} section={site.contactSection} />
       </main>

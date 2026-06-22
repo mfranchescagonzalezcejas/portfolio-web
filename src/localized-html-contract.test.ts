@@ -39,6 +39,10 @@ type StaticContract = {
   summaryBrandSnippet: string;
   cta: string;
   portfolioItems: string[];
+  skillsHeading: string;
+  skillCategories: string[];
+  skillItems: string[];
+  omittedSkills: string[];
   footerText: string;
   navLabel: string;
   skillsNavLabel: string;
@@ -103,7 +107,8 @@ const staticContracts: Record<
       "• Featured project",
       "Inkscroller",
       "Selected work",
-      "Tools and engineering stack",
+      "• Skills",
+      "Technical toolbox",
       "Education",
       "Contact",
     ],
@@ -128,6 +133,24 @@ const staticContracts: Record<
       "AppUIKit",
       "AppAndroid",
     ],
+    skillsHeading: "Technical toolbox",
+    skillCategories: [
+      "Mobile",
+      "Architecture",
+      "Backend & APIs",
+      "Delivery & Quality",
+      "Ways of working",
+    ],
+    skillItems: [
+      "Flutter",
+      "Jetpack Compose",
+      "Repository Pattern",
+      "FastAPI",
+      "GitHub Actions",
+      "QA validation",
+      "Agile/Scrum",
+    ],
+    omittedSkills: ["Remote collaboration"],
     footerText: "Built with care in Barcelona",
     navLabel: "Primary navigation",
     skillsNavLabel: "Skills",
@@ -141,7 +164,8 @@ const staticContracts: Record<
       "• Proyecto destacado",
       "Inkscroller",
       "Trabajos seleccionados",
-      "Herramientas y stack de ingeniería",
+      "• Competencias",
+      "Caja de herramientas técnicas",
       "Educación",
       "Contacto",
     ],
@@ -166,6 +190,24 @@ const staticContracts: Record<
       "AppUIKit",
       "AppAndroid",
     ],
+    skillsHeading: "Caja de herramientas técnicas",
+    skillCategories: [
+      "Mobile",
+      "Arquitectura",
+      "Backend y APIs",
+      "Entrega y calidad",
+      "Formas de trabajo",
+    ],
+    skillItems: [
+      "Flutter",
+      "Jetpack Compose",
+      "Patrón Repository",
+      "FastAPI",
+      "GitHub Actions",
+      "Validación QA",
+      "Agile/Scrum",
+    ],
+    omittedSkills: ["Colaboración remota"],
     footerText: "Desarrollado con cariño en Barcelona",
     navLabel: "Navegación principal",
     skillsNavLabel: "Competencias",
@@ -235,6 +277,28 @@ const assertNoJsContract = (
 
   for (const projectName of contract.portfolioItems) {
     expect(bodyText).toContain(projectName);
+  }
+
+  const skillsSection = body.querySelector("section#skills");
+  expect(skillsSection).not.toBeNull();
+  expect(skillsSection?.querySelector("h2")?.textContent?.trim()).toBe(
+    contract.skillsHeading,
+  );
+
+  const skillCards = Array.from(
+    skillsSection?.querySelectorAll("article") ?? [],
+  );
+  expect(skillCards).toHaveLength(5);
+  expect(
+    skillCards.map((card) => card.querySelector("h3")?.textContent?.trim()),
+  ).toEqual(contract.skillCategories.map((category) => `/${category}`));
+
+  for (const skillItem of contract.skillItems) {
+    expect(skillsSection?.textContent).toContain(skillItem);
+  }
+
+  for (const omittedSkill of contract.omittedSkills) {
+    expect(skillsSection?.textContent).not.toContain(omittedSkill);
   }
 
   expect(bodyText).not.toContain("Expense Tracker");
