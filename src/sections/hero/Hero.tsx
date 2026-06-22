@@ -93,10 +93,7 @@ export default function Hero({ hero, links }: HeroProps) {
             </a>
 
             {fallbackLinks.map((link) => {
-              const Icon =
-                link.kind === "github" || link.kind === "linkedin"
-                  ? getContactIcon(link.kind)
-                  : null;
+              const Icon = getContactIcon(link.kind);
 
               return (
                 <a

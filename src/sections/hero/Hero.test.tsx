@@ -89,4 +89,51 @@ describe("Hero", () => {
       linkedinLink.querySelector('svg[data-contact-icon="linkedin"]'),
     ).toBeInTheDocument();
   });
+
+  it("falls back to the first two links when no social profile links are present", () => {
+    const links: ContactLinkItem[] = [
+      {
+        kind: "email",
+        variant: "secondary",
+        label: "Email",
+        href: "mailto:test@example.com",
+      },
+      {
+        kind: "cv",
+        variant: "secondary",
+        label: "Download CV",
+        href: "/cv.pdf",
+      },
+      {
+        kind: "email",
+        variant: "secondary",
+        label: "Alternate email",
+        href: "mailto:alternate@example.com",
+      },
+    ];
+
+    render(<Hero hero={hero} links={links} />);
+
+    const heroSection = screen.getByRole("region", {
+      name: /hi, i'm mercedes/i,
+    });
+
+    const emailLink = within(heroSection).getByRole("link", { name: "Email" });
+    expect(emailLink).toHaveAttribute("href", "mailto:test@example.com");
+    expect(
+      emailLink.querySelector('svg[data-contact-icon="email"]'),
+    ).toBeInTheDocument();
+
+    const cvLinks = within(heroSection).getAllByRole("link", {
+      name: "Download CV",
+    });
+    const fallbackCvLink = cvLinks.find((link) =>
+      link.querySelector('svg[data-contact-icon="cv"]'),
+    );
+    expect(fallbackCvLink).toHaveAttribute("href", "/cv.pdf");
+
+    expect(
+      within(heroSection).queryByRole("link", { name: "Alternate email" }),
+    ).not.toBeInTheDocument();
+  });
 });
