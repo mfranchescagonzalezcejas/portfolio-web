@@ -4,13 +4,19 @@ export type LinkItem = {
   label: string;
   href: string;
   external?: boolean;
+  ctaLabel?: string;
 };
 
 export type Project = {
   name: string;
   description: string;
+  shortDescription: string;
+  stack: string[];
+  demonstrates: string;
   featured?: boolean;
   links: LinkItem[];
+  mockupLabels?: string[];
+  mockupStatus?: string;
 };
 
 export type Experience = {
@@ -157,13 +163,24 @@ export type SiteContent = {
   summary: SummaryContent;
   experienceSection: ExperienceSectionHeading;
   featuredSection: SectionHeading & {
-    featuredLabel: string;
+    kicker: string;
     linksLabel: string;
+    stackLabel: string;
+    linkAriaLabel: string;
+    primaryCtaLabel: string;
+    secondaryCtaLabel: string;
+    caseStudyCtaLabel: string;
   };
   allProjectsSection: {
     eyebrow: string;
     title: string;
+    description: string;
     linksLabel: string;
+    stackLabel: string;
+    proofLabel: string;
+    repositoryLabel: string;
+    repositoryAriaLabel: string;
+    mockupFallback: string;
   };
   caseStudiesSection: CaseStudySectionHeading;
   educationSection: SectionHeading;
@@ -369,15 +386,27 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       linksLabel: "Public links for {role} at {company}",
     },
     featuredSection: {
-      eyebrow: "Featured",
-      title: "Selected proof of work",
-      featuredLabel: "Featured",
+      eyebrow: "• Featured project",
+      title: "Inkscroller",
+      kicker: "Full-stack manga reader app",
       linksLabel: "Project links",
+      stackLabel: "{project} technology stack",
+      linkAriaLabel: "{label} for {project}",
+      primaryCtaLabel: "Frontend repo",
+      secondaryCtaLabel: "Backend repo",
+      caseStudyCtaLabel: "Case study",
     },
     allProjectsSection: {
-      eyebrow: "Projects",
-      title: "More projects",
+      eyebrow: "• Projects",
+      title: "Selected work",
+      description:
+        "A mix of full-stack mobile, native Android and iOS, and web — each one focused on craft.",
       linksLabel: "Project links",
+      stackLabel: "{project} technology stack",
+      proofLabel: "Demonstrates",
+      repositoryLabel: "View repo",
+      repositoryAriaLabel: "{repository}: {link} for {project}",
+      mockupFallback: "App\nscreenshots\ncoming soon",
     },
     caseStudiesSection: {
       eyebrow: "Case studies",
@@ -469,8 +498,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         period: "Barcelona · Apr 2023 – Apr 2024",
         highlights: [
           "Completed mobile technical training across Android, iOS, Flutter, testing, and validation workflows.",
-          "Built an Android expense tracker with Kotlin, Jetpack Compose, Room, and Koin.",
-          "Created UIKit and SwiftUI iOS versions to practice native app patterns.",
+          "Built an Android practice app for income, spending, and savings with Kotlin, Jetpack Compose, Koin, and encrypted local preferences.",
+          "Created UIKit and SwiftUI character browser apps to compare native iOS patterns with the Jikan API.",
           "Built a Flutter bridge app to connect mobile concepts across platforms.",
           "Practiced testing, validation, incident resolution, and Jira-based tracking in delivery workflows.",
         ],
@@ -478,7 +507,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "Android",
           "Kotlin",
           "Jetpack Compose",
-          "Room",
+          "EncryptedSharedPreferences",
           "Koin",
           "iOS",
           "UIKit",
@@ -503,46 +532,157 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     ],
     projects: [
       {
-        name: "InkScroller",
+        name: "Inkscroller",
         description:
-          "Full-stack mobile manga reader built with Flutter, FastAPI, PostgreSQL, Firebase Auth, Railway, and GitHub Actions.",
+          "Full-stack manga reader composed of a Flutter frontend and a FastAPI backend for catalogue discovery, reader flows, and authenticated preferences.",
+        shortDescription:
+          "Full-stack manga reader with Flutter frontend and FastAPI backend.",
+        stack: [
+          "Flutter",
+          "Dart",
+          "FastAPI",
+          "Python",
+          "PostgreSQL",
+          "Firebase Auth",
+          "Railway",
+          "Riverpod",
+          "Jikan API",
+          "MangaDex",
+        ],
+        demonstrates:
+          "End-to-end mobile product structure across a Flutter app, REST API, external manga data sources, and authenticated preferences.",
         featured: true,
+        mockupLabels: ["Library", "Manga detail", "Reader"],
+        mockupStatus: "Screenshot\ncoming soon",
         links: [
           {
             label: "Frontend",
+            ctaLabel: "Frontend repo",
             href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
             external: true,
           },
           {
             label: "Backend",
+            ctaLabel: "Backend repo",
             href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
             external: true,
           },
         ],
       },
       {
-        name: "DevDigi Portfolio Web",
+        name: "Inkscroller Frontend",
         description:
-          "Personal developer brand and portfolio website focused on mobile engineering and technical growth.",
-        links: [],
+          "Flutter frontend for Inkscroller, a manga reading experience focused on discoverability, personalized reading preferences, and an adaptive reader workflow.",
+        shortDescription:
+          "Flutter frontend for a manga reading experience with personalized reading preferences.",
+        stack: [
+          "Flutter",
+          "Dart",
+          "Riverpod",
+          "get_it",
+          "Dio",
+          "GoRouter",
+          "Firebase Auth",
+          "Firebase Analytics",
+        ],
+        demonstrates:
+          "Public-ready Flutter codebase, Clean Architecture, Screaming Architecture and Firebase-backed app setup.",
+        links: [
+          {
+            label: "Repository",
+            href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+            external: true,
+          },
+        ],
       },
       {
-        name: "Android Expense Tracker",
+        name: "Inkscroller Backend",
         description:
-          "Personal mobile sample project with Kotlin, Jetpack Compose, Room, and Koin to track expense categories and validation flows.",
-        links: [],
+          "FastAPI REST API backend for Inkscroller that aggregates MangaDex and Jikan data and provides authenticated reading preferences with Firebase Auth.",
+        shortDescription:
+          "FastAPI backend for Inkscroller with MangaDex/Jikan integration, Firebase Auth, and persistence.",
+        stack: [
+          "FastAPI",
+          "Python",
+          "httpx",
+          "Pydantic",
+          "Firebase Auth",
+          "PostgreSQL",
+          "Railway",
+        ],
+        demonstrates:
+          "API design, authenticated endpoints, external API aggregation, caching, and Railway deployment.",
+        links: [
+          {
+            label: "Repository",
+            href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+            external: true,
+          },
+        ],
       },
       {
-        name: "iOS Expense Tracker · UIKit",
+        name: "AppSwiftUI",
         description:
-          "Mobile sample project in Swift/UIKit exploring native iOS architecture and UI patterns.",
-        links: [],
+          "SwiftUI character browser that consumes the Jikan API and displays manga/anime character data in a native declarative interface.",
+        shortDescription:
+          "SwiftUI character browser using the Jikan API, native navigation, and reactive state.",
+        stack: [
+          "Swift",
+          "SwiftUI",
+          "URLSession",
+          "Jikan API",
+          "ObservableObject",
+        ],
+        demonstrates:
+          "Native iOS fundamentals with SwiftUI, list-to-detail navigation, API mapping, and state handling.",
+        links: [
+          {
+            label: "Repository",
+            href: "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
+            external: true,
+          },
+        ],
       },
       {
-        name: "iOS Expense Tracker · SwiftUI",
+        name: "AppUIKit",
         description:
-          "Mobile sample project in SwiftUI focused on declarative UI and maintainable state flow.",
-        links: [],
+          "UIKit character browser that consumes the Jikan API and displays manga/anime character data in a native iOS interface.",
+        shortDescription:
+          "UIKit character browser using URLSession, custom cells, and list-to-detail navigation.",
+        stack: ["Swift", "UIKit", "URLSession", "Jikan API"],
+        demonstrates:
+          "Native iOS fundamentals with UIKit, MVC-style structure, networking, and asynchronous image handling.",
+        links: [
+          {
+            label: "Repository",
+            href: "https://github.com/mfranchescagonzalezcejas/AppUIKit",
+            external: true,
+          },
+        ],
+      },
+      {
+        name: "AppAndroid",
+        description:
+          "Android practice app for managing income, spending, and savings with Kotlin, Jetpack Compose, Koin, and encrypted local preferences.",
+        shortDescription:
+          "Android practice app for income, spending, and savings with Jetpack Compose and local persistence.",
+        stack: [
+          "Kotlin",
+          "Jetpack Compose",
+          "Material 3",
+          "Navigation Compose",
+          "Koin",
+          "EncryptedSharedPreferences",
+        ],
+        demonstrates:
+          "Modern Android fundamentals, Compose navigation, ViewModels, dependency injection, and layered UI/domain/data structure.",
+        links: [
+          {
+            label: "Repository",
+            href: "https://github.com/mfranchescagonzalezcejas/AppAndroid",
+            external: true,
+          },
+        ],
       },
     ],
     education: [
@@ -723,15 +863,27 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       linksLabel: "Enlaces públicos de {role} en {company}",
     },
     featuredSection: {
-      eyebrow: "Destacado",
-      title: "Trabajos seleccionados",
-      featuredLabel: "Destacado",
+      eyebrow: "• Proyecto destacado",
+      title: "Inkscroller",
+      kicker: "App lectora de manga full-stack",
       linksLabel: "Enlaces del proyecto",
+      stackLabel: "Tecnologías de {project}",
+      linkAriaLabel: "{label} de {project}",
+      primaryCtaLabel: "Repo frontend",
+      secondaryCtaLabel: "Repo backend",
+      caseStudyCtaLabel: "Caso de estudio",
     },
     allProjectsSection: {
-      eyebrow: "Proyectos",
-      title: "Más proyectos",
+      eyebrow: "• Proyectos",
+      title: "Trabajos seleccionados",
+      description:
+        "Una mezcla de mobile full-stack, Android e iOS nativos y web — cada uno enfocado en el oficio.",
       linksLabel: "Enlaces del proyecto",
+      stackLabel: "Tecnologías de {project}",
+      proofLabel: "Demuestra",
+      repositoryLabel: "Ver repo",
+      repositoryAriaLabel: "{repository}: {link} de {project}",
+      mockupFallback: "Capturas\nde la app\npróximamente",
     },
     caseStudiesSection: {
       eyebrow: "Casos",
@@ -823,8 +975,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         period: "Barcelona · Abr 2023 – Abr 2024",
         highlights: [
           "Completé formación técnica mobile en Android, iOS, Flutter, testing y flujos de validación.",
-          "Construí un gestor de gastos Android con Kotlin, Jetpack Compose, Room y Koin.",
-          "Creé versiones iOS con UIKit y SwiftUI para practicar patrones de apps nativas.",
+          "Construí una app Android de práctica para ingresos, gastos y ahorros con Kotlin, Jetpack Compose, Koin y preferencias locales cifradas.",
+          "Creé apps iOS de personajes con UIKit y SwiftUI para comparar patrones nativos usando la API de Jikan.",
           "Construí una app puente en Flutter para conectar conceptos mobile entre plataformas.",
           "Practiqué testing, validación, resolución de incidencias y seguimiento con Jira en flujos de entrega.",
         ],
@@ -832,7 +984,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "Android",
           "Kotlin",
           "Jetpack Compose",
-          "Room",
+          "EncryptedSharedPreferences",
           "Koin",
           "iOS",
           "UIKit",
@@ -857,46 +1009,157 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     ],
     projects: [
       {
-        name: "InkScroller",
+        name: "Inkscroller",
         description:
-          "Lector móvil de manga full-stack en Flutter con FastAPI, PostgreSQL, Firebase Auth, Railway y GitHub Actions.",
+          "Lector de manga full-stack compuesto por frontend Flutter y backend FastAPI para descubrimiento de catálogo, flujos de lectura y preferencias autenticadas.",
+        shortDescription:
+          "Lector de manga full-stack con frontend Flutter y backend FastAPI.",
+        stack: [
+          "Flutter",
+          "Dart",
+          "FastAPI",
+          "Python",
+          "PostgreSQL",
+          "Firebase Auth",
+          "Railway",
+          "Riverpod",
+          "Jikan API",
+          "MangaDex",
+        ],
+        demonstrates:
+          "Estructura de producto móvil end-to-end con app Flutter, REST API, fuentes externas de manga y preferencias autenticadas.",
         featured: true,
+        mockupLabels: ["Biblioteca", "Detalle manga", "Lector"],
+        mockupStatus: "Captura\npróximamente",
         links: [
           {
             label: "Frontend",
+            ctaLabel: "Repo frontend",
             href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
             external: true,
           },
           {
             label: "Backend",
+            ctaLabel: "Repo backend",
             href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
             external: true,
           },
         ],
       },
       {
-        name: "DevDigi Portfolio Web",
+        name: "Inkscroller Frontend",
         description:
-          "Sitio de marca personal para destacar experiencia móvil y trabajos de crecimiento técnico.",
-        links: [],
+          "Frontend Flutter de Inkscroller, una experiencia de lectura de manga centrada en descubrimiento, preferencias personalizadas y flujo de lectura adaptativo.",
+        shortDescription:
+          "Frontend Flutter para una experiencia de lectura de manga con preferencias personalizadas.",
+        stack: [
+          "Flutter",
+          "Dart",
+          "Riverpod",
+          "get_it",
+          "Dio",
+          "GoRouter",
+          "Firebase Auth",
+          "Firebase Analytics",
+        ],
+        demonstrates:
+          "Base Flutter preparada para visibilidad pública, Clean Architecture, Screaming Architecture y configuración con Firebase.",
+        links: [
+          {
+            label: "Repositorio",
+            href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+            external: true,
+          },
+        ],
       },
       {
-        name: "Android Expense Tracker",
+        name: "Inkscroller Backend",
         description:
-          "Proyecto personal con Kotlin, Jetpack Compose, Room y Koin para control de gastos básicos.",
-        links: [],
+          "Backend REST API en FastAPI para Inkscroller que agrega datos de MangaDex y Jikan y ofrece preferencias de lectura autenticadas con Firebase Auth.",
+        shortDescription:
+          "Backend FastAPI para Inkscroller con integración MangaDex/Jikan, Firebase Auth y persistencia.",
+        stack: [
+          "FastAPI",
+          "Python",
+          "httpx",
+          "Pydantic",
+          "Firebase Auth",
+          "PostgreSQL",
+          "Railway",
+        ],
+        demonstrates:
+          "Diseño de API, endpoints autenticados, agregación de APIs externas, caché y despliegue en Railway.",
+        links: [
+          {
+            label: "Repositorio",
+            href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+            external: true,
+          },
+        ],
       },
       {
-        name: "iOS Expense Tracker · UIKit",
+        name: "AppSwiftUI",
         description:
-          "Proyecto personal iOS con UIKit y Storyboards para consolidar fundamentos de desarrollo nativo.",
-        links: [],
+          "Explorador de personajes en SwiftUI que consume la API de Jikan y muestra datos de personajes de manga/anime en una interfaz nativa declarativa.",
+        shortDescription:
+          "Explorador de personajes en SwiftUI con API de Jikan, navegación nativa y estado reactivo.",
+        stack: [
+          "Swift",
+          "SwiftUI",
+          "URLSession",
+          "Jikan API",
+          "ObservableObject",
+        ],
+        demonstrates:
+          "Fundamentos de iOS nativo con SwiftUI, navegación lista-detalle, mapeo de API y gestión de estado.",
+        links: [
+          {
+            label: "Repositorio",
+            href: "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
+            external: true,
+          },
+        ],
       },
       {
-        name: "iOS Expense Tracker · SwiftUI",
+        name: "AppUIKit",
         description:
-          "Proyecto personal con SwiftUI y enfoque en UI declarativa para flujos simples de gasto.",
-        links: [],
+          "Explorador de personajes en UIKit que consume la API de Jikan y muestra datos de personajes de manga/anime en una interfaz iOS nativa.",
+        shortDescription:
+          "Explorador de personajes en UIKit con URLSession, celdas personalizadas y navegación lista-detalle.",
+        stack: ["Swift", "UIKit", "URLSession", "Jikan API"],
+        demonstrates:
+          "Fundamentos de iOS nativo con UIKit, estructura MVC, networking y carga asíncrona de imágenes.",
+        links: [
+          {
+            label: "Repositorio",
+            href: "https://github.com/mfranchescagonzalezcejas/AppUIKit",
+            external: true,
+          },
+        ],
+      },
+      {
+        name: "AppAndroid",
+        description:
+          "App Android de práctica para gestionar ingresos, gastos y ahorros con Kotlin, Jetpack Compose, Koin y preferencias locales cifradas.",
+        shortDescription:
+          "App Android de práctica para ingresos, gastos y ahorros con Jetpack Compose y persistencia local.",
+        stack: [
+          "Kotlin",
+          "Jetpack Compose",
+          "Material 3",
+          "Navigation Compose",
+          "Koin",
+          "EncryptedSharedPreferences",
+        ],
+        demonstrates:
+          "Fundamentos modernos de Android, navegación Compose, ViewModels, inyección de dependencias y estructura por capas UI/domain/data.",
+        links: [
+          {
+            label: "Repositorio",
+            href: "https://github.com/mfranchescagonzalezcejas/AppAndroid",
+            external: true,
+          },
+        ],
       },
     ],
     education: [

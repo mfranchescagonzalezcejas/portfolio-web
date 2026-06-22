@@ -22,10 +22,7 @@ export default function App() {
   );
   const featuredProject =
     featuredProjectIndex >= 0 ? site.projects[featuredProjectIndex] : null;
-  const otherProjects = site.projects.filter(
-    (_, index) => index !== featuredProjectIndex,
-  );
-
+  const projectCards = site.projects.filter((project) => !project.featured);
   useEffect(() => {
     document.documentElement.lang = site.locale;
     document.title = site.meta.title;
@@ -63,7 +60,7 @@ export default function App() {
             section={site.featuredSection}
           />
         ) : null}
-        <Projects projects={otherProjects} section={site.allProjectsSection} />
+        <Projects projects={projectCards} section={site.allProjectsSection} />
         {site.caseStudies.length > 0 ? (
           <CaseStudies
             caseStudies={site.caseStudies}

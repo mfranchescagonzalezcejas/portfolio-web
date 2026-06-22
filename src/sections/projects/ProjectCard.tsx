@@ -1,65 +1,100 @@
+import { Code2, GitBranch, Smartphone, Sparkles } from "lucide-react";
 import type { Project } from "../../content/site";
 
 type ProjectCardProps = {
   project: Project;
-  featured?: boolean;
-  featuredLabel?: string;
   linksLabel?: string;
+  stackLabel: string;
+  proofLabel: string;
+  repositoryLabel: string;
+  repositoryAriaLabel: string;
+  mockupFallback: string;
 };
+
+const formatProjectLabel = (template: string, values: Record<string, string>) =>
+  Object.entries(values).reduce(
+    (label, [key, value]) => label.replaceAll(`{${key}}`, value),
+    template,
+  );
 
 export default function ProjectCard({
   project,
-  featured = false,
-  featuredLabel,
   linksLabel,
+  stackLabel,
+  proofLabel,
+  repositoryLabel,
+  repositoryAriaLabel,
+  mockupFallback,
 }: ProjectCardProps) {
   return (
-    <article
-      className={`card-surface p-6 ${
-        featured ? "project-featured sm:p-8" : "project-card"
-      }`}
-    >
-      <div className="flex flex-wrap items-center gap-3">
-        <h3
-          className={`project-card-title font-extrabold ${
-            featured ? "text-3xl" : "text-2xl"
-          }`}
-        >
-          {project.name}
-        </h3>
-
-        {featured && featuredLabel && (
-          <span className="pill">{featuredLabel}</span>
-        )}
+    <article className="project-card card-surface">
+      <div aria-hidden="true" className="project-card-visual">
+        <div className="grid-bg" />
+        <div className="project-card-device">
+          <div className="project-card-device-notch" />
+          <div className="project-card-device-screen">
+            <Smartphone
+              aria-hidden="true"
+              className="project-card-phone-icon"
+            />
+            <span>{project.mockupStatus ?? mockupFallback}</span>
+          </div>
+        </div>
+        <div className="project-card-code-icon">
+          <Code2 aria-hidden="true" />
+        </div>
       </div>
 
-      <p
-        className={`mt-4 leading-7 ${
-          featured ? "project-card-description text-base" : "hero-copy text-sm"
-        }`}
-      >
-        {project.description}
-      </p>
+      <div className="project-card-content">
+        <h3 className="project-card-title font-display">{project.name}</h3>
 
-      {project.links.length > 0 && (
+        <p className="project-card-description">{project.shortDescription}</p>
+
         <ul
-          className="mt-6 flex flex-wrap gap-3"
-          aria-label={`${project.name} · ${linksLabel ?? "Project links"}`}
+          className="project-stack-list project-card-stack"
+          aria-label={formatProjectLabel(stackLabel, { project: project.name })}
         >
-          {project.links.map((link) => (
-            <li key={link.href}>
-              <a
-                className="cta-outline"
-                href={link.href}
-                target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noopener noreferrer" : undefined}
-              >
-                {link.label}
-              </a>
+          {project.stack.map((stackItem) => (
+            <li key={stackItem} className="project-tech-badge">
+              {stackItem}
             </li>
           ))}
         </ul>
-      )}
+
+        <div className="project-proof-box">
+          <Sparkles aria-hidden="true" />
+          <p>
+            <span>{proofLabel}: </span>
+            {project.demonstrates}
+          </p>
+        </div>
+
+        {project.links.length > 0 && (
+          <ul
+            className="project-card-links"
+            aria-label={`${project.name} · ${linksLabel ?? "Project links"}`}
+          >
+            {project.links.map((link) => (
+              <li key={link.href}>
+                <a
+                  className="cta-outline"
+                  href={link.href}
+                  target={link.external ? "_blank" : undefined}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                  aria-label={formatProjectLabel(repositoryAriaLabel, {
+                    repository: repositoryLabel,
+                    link: link.label,
+                    project: project.name,
+                  })}
+                >
+                  <GitBranch aria-hidden="true" className="project-link-icon" />
+                  {repositoryLabel}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </article>
   );
 }
