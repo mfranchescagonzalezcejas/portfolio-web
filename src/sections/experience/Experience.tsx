@@ -20,9 +20,18 @@ export default function Experience({ experience, section }: ExperienceProps) {
       aria-labelledby="experience-title"
     >
       <div className="section-inner">
-        <div className="mx-auto max-w-3xl text-center">
-          <p className="eyebrow">{section.eyebrow}</p>
-          <h2 id="experience-title" className="section-title">
+        <div className="mx-auto max-w-5xl text-center">
+          <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-teal-300/20 bg-teal-300/[0.06] px-3 py-1 font-mono text-[11px] font-semibold tracking-[0.18em] text-teal-300 uppercase">
+            <span
+              className="h-1 w-1 rounded-full bg-teal-300"
+              aria-hidden="true"
+            />
+            {section.eyebrow}
+          </p>
+          <h2
+            id="experience-title"
+            className="section-title text-gradient mx-auto max-w-full sm:whitespace-nowrap"
+          >
             {section.title}
           </h2>
         </div>
@@ -46,13 +55,13 @@ export default function Experience({ experience, section }: ExperienceProps) {
                   <Briefcase className="h-2.5 w-2.5 text-teal-300" />
                 </div>
 
-                <article className="card-surface rounded-2xl p-6">
+                <article className="card-surface rounded-[1.65rem] p-6 sm:p-8">
                   <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
                     <div className="min-w-0">
                       <h3 className="font-display truncate text-lg font-semibold">
                         {item.company}
                       </h3>
-                      <p className="experience-period text-sm font-bold">
+                      <p className="text-sm font-semibold text-teal-300">
                         {item.role}
                       </p>
                     </div>
@@ -62,11 +71,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                     </span>
                   </div>
 
-                  <p className="hero-copy mt-4 text-sm leading-7">
-                    {item.description}
-                  </p>
-
-                  <ul className="hero-copy mt-4 space-y-2 text-sm leading-7">
+                  <ul className="hero-copy mt-6 space-y-3 text-sm leading-7">
                     {item.highlights.map((highlight) => (
                       <li className="flex gap-2.5" key={highlight}>
                         <span
@@ -83,7 +88,10 @@ export default function Experience({ experience, section }: ExperienceProps) {
                     aria-label={labelForExperience(section.stackLabel, item)}
                   >
                     {item.stack.map((stackItem) => (
-                      <li className="hero-tech-pill" key={stackItem}>
+                      <li
+                        className="inline-flex items-center rounded-full border border-teal-300/20 bg-teal-300/[0.08] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-teal-300"
+                        key={stackItem}
+                      >
                         {stackItem}
                       </li>
                     ))}
@@ -97,7 +105,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                       {item.links.map((link) => (
                         <li key={link.href}>
                           <a
-                            className="cta-outline inline-flex items-center gap-2"
+                            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-[color:var(--foreground)] transition-colors hover:bg-white/[0.08] focus-visible:bg-white/[0.08]"
                             href={link.href}
                             target={link.external ? "_blank" : undefined}
                             rel={

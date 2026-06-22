@@ -17,7 +17,6 @@ export type Experience = {
   company: string;
   role: string;
   period: string;
-  description: string;
   highlights: string[];
   stack: string[];
   links?: LinkItem[];
@@ -423,8 +422,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         company: "Worldline Global Services",
         role: "Native Apps Developer",
         period: "Barcelona · Apr 2024 – Jan 2026",
-        description:
-          "Contributed to production mobile applications across Flutter, Android, and iOS in a real delivery context.",
         highlights: [
           "Contributed to production mobile applications across Flutter, Android and iOS.",
           "Worked on La Mercè, a public Flutter app released to production for a major Barcelona cultural event.",
@@ -470,8 +467,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         company: "Worldline Global Services",
         role: "Native Apps Developer Intern",
         period: "Barcelona · Apr 2023 – Apr 2024",
-        description:
-          "Completed mobile technical training and built proof-of-concept apps across Android, iOS, and Flutter.",
         highlights: [
           "Completed mobile technical training across Android, iOS, Flutter, testing, and validation workflows.",
           "Built an Android expense tracker with Kotlin, Jetpack Compose, Room, and Koin.",
@@ -499,8 +494,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         company: "Avanade",
         role: "Front-End Developer Intern",
         period: "Barcelona · Oct 2021 – Apr 2022",
-        description:
-          "Built and customized internal solutions with Microsoft ecosystem tools.",
         highlights: [
           "Built and customized internal solutions using PowerApps and tools from the Microsoft ecosystem.",
           "Collaborated with cross-functional teams to deliver front-end features for business workflows.",
@@ -783,8 +776,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         company: "Worldline Global Services",
         role: "Desarrolladora de apps nativas",
         period: "Barcelona · Abr 2024 – Ene 2026",
-        description:
-          "Contribuí al desarrollo de aplicaciones móviles en producción con Flutter, Android e iOS.",
         highlights: [
           "Contribuí a aplicaciones móviles en producción con Flutter, Android e iOS.",
           "Trabajé en La Mercè, app pública en Flutter lanzada a producción para un gran evento cultural de Barcelona.",
@@ -830,8 +821,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         company: "Worldline Global Services",
         role: "Becaria Native Apps Developer",
         period: "Barcelona · Abr 2023 – Abr 2024",
-        description:
-          "Completé formación técnica mobile y construí pruebas de concepto en Android, iOS y Flutter.",
         highlights: [
           "Completé formación técnica mobile en Android, iOS, Flutter, testing y flujos de validación.",
           "Construí un gestor de gastos Android con Kotlin, Jetpack Compose, Room y Koin.",
@@ -859,8 +848,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         company: "Avanade",
         role: "Becaria Front-End Developer",
         period: "Barcelona · Oct 2021 – Abr 2022",
-        description:
-          "Construcción de soluciones internas con herramientas del ecosistema Microsoft.",
         highlights: [
           "Construí y personalicé soluciones internas usando PowerApps y herramientas del ecosistema Microsoft.",
           "Colaboré con equipos multidisciplinares para entregar funcionalidades front-end en flujos de negocio.",
