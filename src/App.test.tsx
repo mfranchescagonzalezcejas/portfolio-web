@@ -233,6 +233,92 @@ describe("About summary behavior", () => {
   );
 });
 
+describe("Experience behavior", () => {
+  it.each([
+    {
+      path: "/",
+      stackLabel:
+        "Technology stack for Native Apps Developer at Worldline Global Services",
+      linksLabel:
+        "Public links for Native Apps Developer at Worldline Global Services",
+      description:
+        "Contributed to production mobile applications across Flutter, Android, and iOS in a real delivery context.",
+      internRole: "Native Apps Developer Intern",
+      internPeriod: "Barcelona · Apr 2023 – Apr 2024",
+      internDescription:
+        "Completed mobile technical training and built proof-of-concept apps across Android, iOS, and Flutter.",
+      internStackLabel:
+        "Technology stack for Native Apps Developer Intern at Worldline Global Services",
+      internStackItem: "Jetpack Compose",
+    },
+    {
+      path: "/es",
+      stackLabel:
+        "Tecnologías de Desarrolladora de apps nativas en Worldline Global Services",
+      linksLabel:
+        "Enlaces públicos de Desarrolladora de apps nativas en Worldline Global Services",
+      description:
+        "Contribuí al desarrollo de aplicaciones móviles en producción con Flutter, Android e iOS.",
+      internRole: "Becaria Native Apps Developer",
+      internPeriod: "Barcelona · Abr 2023 – Abr 2024",
+      internDescription:
+        "Completé formación técnica mobile y construí pruebas de concepto en Android, iOS y Flutter.",
+      internStackLabel:
+        "Tecnologías de Becaria Native Apps Developer en Worldline Global Services",
+      internStackItem: "Jetpack Compose",
+    },
+  ])(
+    "renders localized labels and descriptions for $path",
+    ({
+      path,
+      stackLabel,
+      linksLabel,
+      description,
+      internRole,
+      internPeriod,
+      internDescription,
+      internStackLabel,
+      internStackItem,
+    }) => {
+      renderAtPath(path);
+
+      const experienceSection = document.getElementById("experience");
+      expect(experienceSection).toBeInTheDocument();
+
+      expect(
+        within(experienceSection as HTMLElement).getByText(description),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByRole("list", {
+          name: stackLabel,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByRole("list", {
+          name: linksLabel,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByText(internRole),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByText(internPeriod),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByText(internDescription),
+      ).toBeInTheDocument();
+
+      const internStack = within(experienceSection as HTMLElement).getByRole(
+        "list",
+        { name: internStackLabel },
+      );
+      expect(
+        within(internStack).getByText(internStackItem),
+      ).toBeInTheDocument();
+    },
+  );
+});
+
 describe("navigation anchors", () => {
   it("uses a non-navigation group for the language switcher", () => {
     renderAtPath("/");
