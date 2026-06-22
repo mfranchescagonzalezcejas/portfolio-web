@@ -410,6 +410,7 @@ h4 {
 }
 
 .skills-card {
+  position: relative;
   overflow: hidden;
 }
 
