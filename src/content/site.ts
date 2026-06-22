@@ -17,8 +17,9 @@ export type Experience = {
   company: string;
   role: string;
   period: string;
-  description: string;
   highlights: string[];
+  stack: string[];
+  links?: LinkItem[];
 };
 
 export type Education = {
@@ -34,6 +35,11 @@ export type NavItem = {
 export type SectionHeading = {
   eyebrow: string;
   title: string;
+};
+
+export type ExperienceSectionHeading = SectionHeading & {
+  stackLabel: string;
+  linksLabel: string;
 };
 
 export type ValueIconName =
@@ -149,7 +155,7 @@ export type SiteContent = {
   hero: HeroContent;
   values: ValuesContent;
   summary: SummaryContent;
-  experienceSection: SectionHeading;
+  experienceSection: ExperienceSectionHeading;
   featuredSection: SectionHeading & {
     featuredLabel: string;
     linksLabel: string;
@@ -173,7 +179,7 @@ export type SiteContent = {
 
 export type InvalidLink = {
   locale: Locale;
-  area: "contact" | "project";
+  area: "contact" | "project" | "experience";
   owner: string;
   label: string;
   href: string;
@@ -359,6 +365,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     experienceSection: {
       eyebrow: "Experience",
       title: "Experience building real mobile apps",
+      stackLabel: "Technology stack for {role} at {company}",
+      linksLabel: "Public links for {role} at {company}",
     },
     featuredSection: {
       eyebrow: "Featured",
@@ -413,26 +421,84 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       {
         company: "Worldline Global Services",
         role: "Native Apps Developer",
-        period: "Apr 2024 – Jan 2026 · Barcelona",
-        description:
-          "Contributed to production mobile applications across Flutter, Android, and iOS in a real delivery context.",
+        period: "Barcelona · Apr 2024 – Jan 2026",
         highlights: [
-          "Contributed to La Mercè, a public Flutter app used in a major Barcelona cultural event.",
-          "Built and shipped the air quality feature for Barcelona a la Butxaca.",
-          "Supported QA validation for Nescafé Dolce Gusto using Jira, manual test plans, and reconnection test cases.",
-          "Participated in CI/CD and release validation flows for production deliveries.",
+          "Contributed to production mobile applications across Flutter, Android and iOS.",
+          "Worked on La Mercè, a public Flutter app released to production for a major Barcelona cultural event.",
+          "Implemented the air quality feature for Barcelona a la Butxaca, a live public app.",
+          "Supported Jenkins-based CI/CD workflows, GitLab release tags, Google Play and App Store release validation.",
+          "Supported manual QA for Nescafé Dolce Gusto, using Jira, structured test plans and test cases to validate reconnection and brew flows with NEO1 and NEO2 machines.",
+          "Participated in QA validation, debugging, Jira-based workflows and Agile/Scrum delivery cycles.",
+        ],
+        stack: [
+          "Flutter",
+          "Dart",
+          "Android",
+          "Kotlin",
+          "iOS",
+          "Swift",
+          "Jenkins",
+          "GitLab",
+          "Jira",
+          "Google Play",
+          "App Store",
+          "QA",
+          "Test Plans",
+        ],
+        links: [
+          {
+            label: "La Mercè · Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+            external: true,
+          },
+          {
+            label: "Barcelona a la Butxaca · Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+            external: true,
+          },
+          {
+            label: "Nescafé Dolce Gusto · Google Play",
+            href: "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
+            external: true,
+          },
+        ],
+      },
+      {
+        company: "Worldline Global Services",
+        role: "Native Apps Developer Intern",
+        period: "Barcelona · Apr 2023 – Apr 2024",
+        highlights: [
+          "Completed mobile technical training across Android, iOS, Flutter, testing, and validation workflows.",
+          "Built an Android expense tracker with Kotlin, Jetpack Compose, Room, and Koin.",
+          "Created UIKit and SwiftUI iOS versions to practice native app patterns.",
+          "Built a Flutter bridge app to connect mobile concepts across platforms.",
+          "Practiced testing, validation, incident resolution, and Jira-based tracking in delivery workflows.",
+        ],
+        stack: [
+          "Android",
+          "Kotlin",
+          "Jetpack Compose",
+          "Room",
+          "Koin",
+          "iOS",
+          "UIKit",
+          "SwiftUI",
+          "Flutter",
+          "Dart",
+          "Testing",
+          "Validation",
+          "Jira",
         ],
       },
       {
         company: "Avanade",
         role: "Front-End Developer Intern",
-        period: "Oct 2021 – Apr 2022 · Barcelona",
-        description:
-          "Built and customized internal solutions with Microsoft ecosystem tools.",
+        period: "Barcelona · Oct 2021 – Apr 2022",
         highlights: [
-          "Delivered client-facing workflow features using PowerApps.",
-          "Worked in cross-functional collaboration to improve internal team productivity.",
+          "Built and customized internal solutions using PowerApps and tools from the Microsoft ecosystem.",
+          "Collaborated with cross-functional teams to deliver front-end features for business workflows.",
         ],
+        stack: ["PowerApps", "Microsoft 365", "Power Platform"],
       },
     ],
     projects: [
@@ -653,6 +719,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     experienceSection: {
       eyebrow: "Experiencia",
       title: "Experiencia construyendo apps móviles reales",
+      stackLabel: "Tecnologías de {role} en {company}",
+      linksLabel: "Enlaces públicos de {role} en {company}",
     },
     featuredSection: {
       eyebrow: "Destacado",
@@ -706,27 +774,85 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     experience: [
       {
         company: "Worldline Global Services",
-        role: "Native Apps Developer",
-        period: "Abr 2024 – Ene 2026 · Barcelona",
-        description:
-          "Contribuí al desarrollo de aplicaciones móviles en producción con Flutter, Android e iOS.",
+        role: "Desarrolladora de apps nativas",
+        period: "Barcelona · Abr 2024 – Ene 2026",
         highlights: [
-          "Contribuí a La Mercè, una app Flutter pública para un gran evento cultural de Barcelona.",
-          "Implementé la funcionalidad de calidad del aire en Barcelona a la Butxaca.",
-          "Apoyé QA manual para Nescafé Dolce Gusto con Jira, planes de prueba y validación de flujos.",
-          "Participé en flujos de CI/CD y validación de release para entornos de producción.",
+          "Contribuí a aplicaciones móviles en producción con Flutter, Android e iOS.",
+          "Trabajé en La Mercè, app pública en Flutter lanzada a producción para un gran evento cultural de Barcelona.",
+          "Implementé la funcionalidad de calidad del aire para Barcelona a la Butxaca, app pública en activo.",
+          "Apoyé flujos de CI/CD basados en Jenkins, tags de release en GitLab y validación de releases en Google Play y App Store.",
+          "Apoyé QA manual para Nescafé Dolce Gusto, usando Jira, planes de prueba estructurados y casos de prueba para validar flujos de reconexión y preparación con máquinas NEO1 y NEO2.",
+          "Participé en validación QA, debugging, flujos basados en Jira y ciclos de entrega Agile/Scrum.",
+        ],
+        stack: [
+          "Flutter",
+          "Dart",
+          "Android",
+          "Kotlin",
+          "iOS",
+          "Swift",
+          "Jenkins",
+          "GitLab",
+          "Jira",
+          "Google Play",
+          "App Store",
+          "QA",
+          "Planes de prueba",
+        ],
+        links: [
+          {
+            label: "La Mercè · Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+            external: true,
+          },
+          {
+            label: "Barcelona a la Butxaca · Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+            external: true,
+          },
+          {
+            label: "Nescafé Dolce Gusto · Google Play",
+            href: "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
+            external: true,
+          },
+        ],
+      },
+      {
+        company: "Worldline Global Services",
+        role: "Becaria Native Apps Developer",
+        period: "Barcelona · Abr 2023 – Abr 2024",
+        highlights: [
+          "Completé formación técnica mobile en Android, iOS, Flutter, testing y flujos de validación.",
+          "Construí un gestor de gastos Android con Kotlin, Jetpack Compose, Room y Koin.",
+          "Creé versiones iOS con UIKit y SwiftUI para practicar patrones de apps nativas.",
+          "Construí una app puente en Flutter para conectar conceptos mobile entre plataformas.",
+          "Practiqué testing, validación, resolución de incidencias y seguimiento con Jira en flujos de entrega.",
+        ],
+        stack: [
+          "Android",
+          "Kotlin",
+          "Jetpack Compose",
+          "Room",
+          "Koin",
+          "iOS",
+          "UIKit",
+          "SwiftUI",
+          "Flutter",
+          "Dart",
+          "Testing",
+          "Validación",
+          "Jira",
         ],
       },
       {
         company: "Avanade",
-        role: "Front-End Developer Intern",
-        period: "Oct 2021 – Abr 2022 · Barcelona",
-        description:
-          "Construcción de soluciones internas con herramientas del ecosistema Microsoft.",
+        role: "Becaria Front-End Developer",
+        period: "Barcelona · Oct 2021 – Abr 2022",
         highlights: [
-          "Entregué mejoras de flujo en PowerApps para uso interno.",
-          "Colaboré con equipos multifuncionales para impulsar entregas funcionales.",
+          "Construí y personalicé soluciones internas usando PowerApps y herramientas del ecosistema Microsoft.",
+          "Colaboré con equipos multidisciplinares para entregar funcionalidades front-end en flujos de negocio.",
         ],
+        stack: ["PowerApps", "Microsoft 365", "Power Platform"],
       },
     ],
     projects: [
@@ -847,28 +973,50 @@ const validateLinks = (
   return { links: validLinks, invalidLinks };
 };
 
-const validateSiteContent = (content: SiteContent) => {
+export const validateSiteContent = (content: SiteContent) => {
   const contacts = validateLinks(content.locale, content.contacts, {
     area: "contact",
     owner: "contacts",
   });
 
-  const projectResults = content.projects.map((project) => ({
-    ...project,
-    ...validateLinks(content.locale, project.links, {
+  const projectResults = content.projects.map((project) => {
+    const result = validateLinks(content.locale, project.links, {
       area: "project",
       owner: project.name,
-    }),
-  }));
+    });
 
-  const projects = projectResults.map(({ invalidLinks, ...project }) => {
-    void invalidLinks;
-
-    return project;
+    return {
+      project: {
+        ...project,
+        links: result.links,
+      },
+      invalidLinks: result.invalidLinks,
+    };
   });
+
+  const experienceResults = content.experience.map((experience) => {
+    const result = validateLinks(content.locale, experience.links ?? [], {
+      area: "experience",
+      owner: `${experience.company} — ${experience.role}`,
+    });
+
+    return {
+      experience: {
+        ...experience,
+        ...(experience.links ? { links: result.links } : {}),
+      },
+      invalidLinks: result.invalidLinks,
+    };
+  });
+
+  const projects = projectResults.map((result) => result.project);
+
+  const experience = experienceResults.map((result) => result.experience);
+
   const invalidLinks = [
     ...contacts.invalidLinks,
     ...projectResults.flatMap((project) => project.invalidLinks),
+    ...experienceResults.flatMap((experience) => experience.invalidLinks),
   ];
 
   if (invalidLinks.length > 0) {
@@ -881,6 +1029,7 @@ const validateSiteContent = (content: SiteContent) => {
     content: {
       ...content,
       contacts: contacts.links,
+      experience,
       projects,
     },
     invalidLinks,

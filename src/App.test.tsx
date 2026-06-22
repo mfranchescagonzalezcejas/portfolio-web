@@ -233,6 +233,75 @@ describe("About summary behavior", () => {
   );
 });
 
+describe("Experience behavior", () => {
+  it.each([
+    {
+      path: "/",
+      stackLabel:
+        "Technology stack for Native Apps Developer at Worldline Global Services",
+      linksLabel:
+        "Public links for Native Apps Developer at Worldline Global Services",
+      internRole: "Native Apps Developer Intern",
+      internPeriod: "Barcelona · Apr 2023 – Apr 2024",
+      internStackLabel:
+        "Technology stack for Native Apps Developer Intern at Worldline Global Services",
+      internStackItem: "Jetpack Compose",
+    },
+    {
+      path: "/es",
+      stackLabel:
+        "Tecnologías de Desarrolladora de apps nativas en Worldline Global Services",
+      linksLabel:
+        "Enlaces públicos de Desarrolladora de apps nativas en Worldline Global Services",
+      internRole: "Becaria Native Apps Developer",
+      internPeriod: "Barcelona · Abr 2023 – Abr 2024",
+      internStackLabel:
+        "Tecnologías de Becaria Native Apps Developer en Worldline Global Services",
+      internStackItem: "Jetpack Compose",
+    },
+  ])(
+    "renders localized labels and timeline content for $path",
+    ({
+      path,
+      stackLabel,
+      linksLabel,
+      internRole,
+      internPeriod,
+      internStackLabel,
+      internStackItem,
+    }) => {
+      renderAtPath(path);
+
+      const experienceSection = document.getElementById("experience");
+      expect(experienceSection).toBeInTheDocument();
+
+      expect(
+        within(experienceSection as HTMLElement).getByRole("list", {
+          name: stackLabel,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByRole("list", {
+          name: linksLabel,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByText(internRole),
+      ).toBeInTheDocument();
+      expect(
+        within(experienceSection as HTMLElement).getByText(internPeriod),
+      ).toBeInTheDocument();
+      const internStack = within(experienceSection as HTMLElement).getByRole(
+        "list",
+        { name: internStackLabel },
+      );
+      expect(
+        within(internStack).getByText(internStackItem),
+      ).toBeInTheDocument();
+    },
+  );
+});
+
 describe("navigation anchors", () => {
   it("uses a non-navigation group for the language switcher", () => {
     renderAtPath("/");
