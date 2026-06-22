@@ -23,6 +23,7 @@ const productionSiteUrl = "https://devdigi.dev";
 const requiredProjectRepoUrls = [
   "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
   "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+  "https://github.com/mfranchescagonzalezcejas/portfolio-web",
   "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
   "https://github.com/mfranchescagonzalezcejas/AppUIKit",
   "https://github.com/mfranchescagonzalezcejas/AppAndroid",
@@ -33,6 +34,12 @@ const requiredContactUrls = [
   "https://github.com/mfranchescagonzalezcejas",
   "/cv.pdf",
   "mailto:mercedesgon03@gmail.com",
+];
+
+const requiredCaseStudyUrls = [
+  "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+  "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+  "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
 ];
 
 type StaticContract = {
@@ -46,6 +53,8 @@ type StaticContract = {
   summaryBrandSnippet: string;
   cta: string;
   portfolioItems: string[];
+  caseStudyItems: string[];
+  caseStudySnippets: string[];
   skillsHeading: string;
   skillCategories: string[];
   skillItems: string[];
@@ -144,9 +153,22 @@ const staticContracts: Record<
     portfolioItems: [
       "Inkscroller Frontend",
       "Inkscroller Backend",
+      "DevDigi Portfolio Web",
       "AppSwiftUI",
       "AppUIKit",
       "AppAndroid",
+    ],
+    caseStudyItems: [
+      "La Mercè production release",
+      "Barcelona a la Butxaca air quality",
+      "Nescafé Dolce Gusto QA validation",
+    ],
+    caseStudySnippets: [
+      "Professional work shown with public app references only",
+      "My role",
+      "release validation",
+      "air quality feature",
+      "reconnection and brew flow validation",
     ],
     skillsHeading: "Technical toolbox",
     skillCategories: [
@@ -213,9 +235,22 @@ const staticContracts: Record<
     portfolioItems: [
       "Inkscroller Frontend",
       "Inkscroller Backend",
+      "Web Portfolio DevDigi",
       "AppSwiftUI",
       "AppUIKit",
       "AppAndroid",
+    ],
+    caseStudyItems: [
+      "Release en producción de La Mercè",
+      "Barcelona a la Butxaca calidad del aire",
+      "Nescafé Dolce Gusto validación QA",
+    ],
+    caseStudySnippets: [
+      "Trabajo profesional mostrado solo con referencias públicas",
+      "Mi rol",
+      "validación de release",
+      "calidad del aire",
+      "validación de flujos de reconexión y preparación",
     ],
     skillsHeading: "Caja de herramientas técnicas",
     skillCategories: [
@@ -326,6 +361,16 @@ const assertNoJsContract = (
     expect(bodyText).toContain(projectName);
   }
 
+  const caseStudiesSection = body.querySelector("section#case-studies");
+  expect(caseStudiesSection).not.toBeNull();
+  expect(caseStudiesSection?.querySelectorAll("article")).toHaveLength(3);
+  for (const caseStudyItem of contract.caseStudyItems) {
+    expect(bodyText).toContain(caseStudyItem);
+  }
+  for (const caseStudySnippet of contract.caseStudySnippets) {
+    expect(bodyText).toContain(caseStudySnippet);
+  }
+
   const skillsSection = body.querySelector("section#skills");
   expect(skillsSection).not.toBeNull();
   expect(skillsSection?.querySelector("h2")?.textContent?.trim()).toBe(
@@ -372,6 +417,17 @@ const assertNoJsContract = (
       expect(contactLink?.getAttribute("target")).toBeNull();
       expect(contactLink?.getAttribute("rel")).toBeNull();
     }
+  }
+
+  for (const href of requiredCaseStudyUrls) {
+    const caseStudyLink = Array.from(
+      caseStudiesSection?.querySelectorAll("a") ?? [],
+    ).find((link) => link.getAttribute("href") === href);
+    expect(caseStudyLink).not.toBeNull();
+    expect(caseStudyLink?.getAttribute("target")).toBe("_blank");
+    expect(caseStudyLink?.getAttribute("rel")?.split(/\s+/)).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
   }
 
   const experienceCards = Array.from(
@@ -579,6 +635,54 @@ describe("Localized static entrypoints", () => {
             area: "project",
             owner: "Inkscroller",
             label: "Broken repo",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 1 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("validates and normalizes Case Study links before render", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const source = siteContentByLocale.en;
+      const [currentCaseStudy, ...remainingCaseStudies] = source.caseStudies;
+
+      const result = validateSiteContent({
+        ...source,
+        caseStudies: [
+          {
+            ...currentCaseStudy,
+            links: [
+              {
+                label: " Public case study ",
+                href: " https://example.com/case-study ",
+              },
+              { label: "Unsafe case study", href: "javascript:alert(1)" },
+            ],
+          },
+          ...remainingCaseStudies,
+        ],
+      });
+
+      expect(result.content.caseStudies[0].links).toEqual([
+        {
+          label: "Public case study",
+          href: "https://example.com/case-study",
+          external: true,
+        },
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "caseStudy",
+            owner: "La Mercè production release",
+            label: "Unsafe case study",
             href: "javascript:alert(1)",
           }),
         ]),

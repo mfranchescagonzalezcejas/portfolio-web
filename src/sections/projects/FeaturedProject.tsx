@@ -11,7 +11,6 @@ type FeaturedProjectProps = {
     linkAriaLabel: string;
     primaryCtaLabel: string;
     secondaryCtaLabel: string;
-    caseStudyCtaLabel: string;
   };
 };
 
@@ -119,18 +118,6 @@ export default function FeaturedProject({
                       </a>
                     </li>
                   ) : null}
-                  <li>
-                    <a
-                      className="cta-outline featured-project-link-tertiary"
-                      href="#case-studies"
-                      aria-label={formatProjectLabel(section.linkAriaLabel, {
-                        label: section.caseStudyCtaLabel,
-                        project: project.name,
-                      })}
-                    >
-                      {section.caseStudyCtaLabel}
-                    </a>
-                  </li>
                 </ul>
               )}
             </div>

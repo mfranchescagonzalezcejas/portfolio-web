@@ -1,12 +1,9 @@
-import type { CaseStudy, SectionHeading } from "../../content/site";
+import { ArrowUpRight, Rocket } from "lucide-react";
+import type { CaseStudy, CaseStudySectionHeading } from "../../content/site";
 
 type CaseStudiesProps = {
   caseStudies: CaseStudy[];
-  section: SectionHeading & {
-    challengeLabel: string;
-    approachLabel: string;
-    outcomeLabel: string;
-  };
+  section: CaseStudySectionHeading;
 };
 
 export default function CaseStudies({
@@ -20,50 +17,81 @@ export default function CaseStudies({
       aria-labelledby="case-studies-title"
     >
       <div className="section-inner">
-        <div className="max-w-3xl">
+        <div className="case-studies-header">
           <p className="eyebrow">{section.eyebrow}</p>
-          <h2 id="case-studies-title" className="section-title">
+          <h2 id="case-studies-title" className="section-title text-gradient">
             {section.title}
           </h2>
+          <p className="case-studies-description">{section.description}</p>
         </div>
 
-        <div className="mt-8 grid gap-6">
+        <div className="case-studies-grid">
           {caseStudies.map((caseStudy) => (
-            <article key={caseStudy.title} className="card-surface">
-              <div className="grid gap-2">
-                <h3 className="section-title text-2xl font-extrabold">
+            <article
+              key={caseStudy.title}
+              className="card-surface case-study-card"
+            >
+              <div className="case-study-icon" aria-hidden="true">
+                <Rocket className="h-4 w-4" />
+              </div>
+
+              <div className="grid gap-4">
+                <h3 className="case-study-title font-display">
                   {caseStudy.title}
                 </h3>
-                <p className="case-study-scope text-xs font-semibold tracking-[0.16em] uppercase">
-                  {caseStudy.scope}
-                </p>
-                <p className="hero-copy text-sm">{caseStudy.summary}</p>
-                <p className="hero-copy text-sm">
-                  <span className="case-study-label font-semibold">
-                    {section.challengeLabel}
-                  </span>{" "}
-                  {caseStudy.challenge}
-                </p>
-                <p className="hero-copy text-sm">
-                  <span className="case-study-label font-semibold">
-                    {section.approachLabel}
-                  </span>{" "}
-                  {caseStudy.approach}
-                </p>
-                <p className="hero-copy text-sm">
-                  <span className="case-study-label font-semibold">
-                    {section.outcomeLabel}
-                  </span>{" "}
-                  {caseStudy.outcome}
-                </p>
 
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {caseStudy.stack.map((item) => (
-                    <span key={item} className="pill">
-                      {item}
-                    </span>
-                  ))}
-                </div>
+                <dl className="case-study-details">
+                  <div>
+                    <dt>{section.contextLabel}</dt>
+                    <dd>{caseStudy.context}</dd>
+                  </div>
+                  <div>
+                    <dt>{section.roleLabel}</dt>
+                    <dd>{caseStudy.role}</dd>
+                  </div>
+                  <div>
+                    <dt>{section.stackLabel}</dt>
+                    <dd>
+                      <ul
+                        className="project-stack-list mt-1"
+                        aria-label={`${caseStudy.title} ${section.stackLabel}`}
+                      >
+                        {caseStudy.stack.map((item) => (
+                          <li key={item} className="project-tech-badge">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                  <div>
+                    <dt>{section.demonstratesLabel}</dt>
+                    <dd>{caseStudy.demonstrates}</dd>
+                  </div>
+                </dl>
+
+                {caseStudy.links && caseStudy.links.length > 0 ? (
+                  <div className="case-study-links">
+                    {caseStudy.links.map((link) => (
+                      <a
+                        key={`${caseStudy.title}-${link.href}`}
+                        href={link.href}
+                        className="case-study-link"
+                        {...(link.external
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                      >
+                        {link.external ? (
+                          <ArrowUpRight
+                            aria-hidden="true"
+                            className="h-3.5 w-3.5"
+                          />
+                        ) : null}
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             </article>
           ))}

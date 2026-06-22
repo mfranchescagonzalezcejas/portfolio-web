@@ -106,9 +106,11 @@ export type HeroVisualContent = {
 };
 
 export type CaseStudySectionHeading = SectionHeading & {
-  challengeLabel: string;
-  approachLabel: string;
-  outcomeLabel: string;
+  description: string;
+  contextLabel: string;
+  roleLabel: string;
+  stackLabel: string;
+  demonstratesLabel: string;
 };
 
 export type HeroContent = {
@@ -155,12 +157,11 @@ export type ContactSection = {
 
 export type CaseStudy = {
   title: string;
-  scope: string;
-  summary: string;
-  challenge: string;
-  approach: string;
-  outcome: string;
+  context: string;
+  role: string;
   stack: string[];
+  demonstrates: string;
+  links?: LinkItem[];
 };
 
 export type SiteContent = {
@@ -199,7 +200,6 @@ export type SiteContent = {
     linkAriaLabel: string;
     primaryCtaLabel: string;
     secondaryCtaLabel: string;
-    caseStudyCtaLabel: string;
   };
   allProjectsSection: {
     eyebrow: string;
@@ -227,7 +227,7 @@ export type SiteContent = {
 
 export type InvalidLink = {
   locale: Locale;
-  area: "contact" | "project" | "experience";
+  area: "contact" | "project" | "experience" | "caseStudy";
   owner: string;
   label: string;
   href: string;
@@ -439,7 +439,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       linkAriaLabel: "{label} for {project}",
       primaryCtaLabel: "Frontend repo",
       secondaryCtaLabel: "Backend repo",
-      caseStudyCtaLabel: "Case study",
     },
     allProjectsSection: {
       eyebrow: "• Projects",
@@ -456,9 +455,12 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     caseStudiesSection: {
       eyebrow: "Case studies",
       title: "Selected case studies",
-      challengeLabel: "Challenge:",
-      approachLabel: "Approach:",
-      outcomeLabel: "Outcome:",
+      description:
+        "Professional work shown with public app references only. No confidential implementation details are included.",
+      contextLabel: "Context",
+      roleLabel: "My role",
+      stackLabel: "Stack",
+      demonstratesLabel: "Demonstrates",
     },
     educationSection: {
       eyebrow: "• Education and languages",
@@ -546,17 +548,58 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     footerText: "Built with care in Barcelona",
     caseStudies: [
       {
-        title: "La Mercè event app delivery",
-        scope: "Public product for Barcelona cultural event",
-        summary:
-          "Led the engineering handoff for a highly visible mobile application used by event visitors with strict operational windows.",
-        challenge:
-          "Coordinate multi-platform releases across Flutter and Android with stable updates on short cycles.",
-        approach:
-          "Mapped responsibilities into clear release steps, validated data consistency across CI environments, and maintained clean boundaries across modules.",
-        outcome:
-          "Improved rollout confidence by reducing release regressions during the operational period.",
-        stack: ["Flutter", "Android", "Clean Architecture", "CI/CD"],
+        title: "La Mercè production release",
+        context:
+          "Public Flutter app released to production for a major Barcelona cultural event.",
+        role: "Mobile developer contributing within delivery workflows and release validation support.",
+        stack: ["Flutter", "Jenkins", "GitLab", "Jira", "Google Play"],
+        demonstrates:
+          "Production delivery discipline, release validation, and collaboration on a public app with real users.",
+        links: [
+          {
+            label: "La Mercè on Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+            external: true,
+          },
+        ],
+      },
+      {
+        title: "Barcelona a la Butxaca air quality",
+        context:
+          "Air quality feature work inside a live public app for Barcelona citizens.",
+        role: "Mobile developer working on the air quality feature through API integration and product delivery practices.",
+        stack: ["Flutter", "REST APIs", "Jira", "Google Play"],
+        demonstrates:
+          "API integration, feature delivery, and maintenance work on a real citizen-facing production app.",
+        links: [
+          {
+            label: "Barcelona a la Butxaca on Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+            external: true,
+          },
+        ],
+      },
+      {
+        title: "Nescafé Dolce Gusto QA validation",
+        context:
+          "Structured QA support for a production mobile app connected to coffee machine flows.",
+        role: "Manual QA support using Jira, structured test plans, test cases, functional validation, and issue follow-up.",
+        stack: [
+          "Jira",
+          "Test plans",
+          "Test cases",
+          "Functional validation",
+          "Mobile QA",
+        ],
+        demonstrates:
+          "Product quality mindset, structured manual testing, and reconnection and brew flow validation on a public production app.",
+        links: [
+          {
+            label: "Nescafé Dolce Gusto on Google Play",
+            href: "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
+            external: true,
+          },
+        ],
       },
     ],
     contacts: createSharedContacts("Download CV"),
@@ -730,6 +773,24 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           {
             label: "Repository",
             href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+            external: true,
+          },
+        ],
+      },
+      {
+        name: "DevDigi Portfolio Web",
+        description:
+          "Personal portfolio website for DevDigi, built as the production home for my mobile development profile, selected projects, experience, and contact paths.",
+        shortDescription:
+          "Personal portfolio website for my mobile development profile and selected work.",
+        stack: ["Astro", "React", "Tailwind CSS", "TypeScript", "Vercel"],
+        demonstrates:
+          "Production portfolio delivery with localized content, accessible project sections, responsive UI, and automated validation.",
+        mockupStatus: "Portfolio\nwebsite",
+        links: [
+          {
+            label: "Repository",
+            href: "https://github.com/mfranchescagonzalezcejas/portfolio-web",
             external: true,
           },
         ],
@@ -987,7 +1048,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       linkAriaLabel: "{label} de {project}",
       primaryCtaLabel: "Repo frontend",
       secondaryCtaLabel: "Repo backend",
-      caseStudyCtaLabel: "Caso de estudio",
     },
     allProjectsSection: {
       eyebrow: "• Proyectos",
@@ -1002,11 +1062,14 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       mockupFallback: "Capturas\nde la app\npróximamente",
     },
     caseStudiesSection: {
-      eyebrow: "Casos",
-      title: "Casos seleccionados",
-      challengeLabel: "Reto:",
-      approachLabel: "Enfoque:",
-      outcomeLabel: "Resultado:",
+      eyebrow: "Casos de estudio",
+      title: "Casos de estudio seleccionados",
+      description:
+        "Trabajo profesional mostrado solo con referencias públicas de las apps. No se incluyen detalles confidenciales de implementación.",
+      contextLabel: "Contexto",
+      roleLabel: "Mi rol",
+      stackLabel: "Stack",
+      demonstratesLabel: "Demuestra",
     },
     educationSection: {
       eyebrow: "• Formación e idiomas",
@@ -1094,17 +1157,58 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     footerText: "Desarrollado con cariño en Barcelona",
     caseStudies: [
       {
-        title: "Entrega del evento La Mercè",
-        scope: "Producto público para evento cultural de Barcelona",
-        summary:
-          "Coordiné la entrega de una app móvil con gran visibilidad y ventanas de despliegue estrictas.",
-        challenge:
-          "Gestionar releases multi-plataforma bajo presión de tiempo y estabilidad.",
-        approach:
-          "Organicé la coordinación de entregas por capas, mejorando trazabilidad entre Flutter/Android y validaciones de integración.",
-        outcome:
-          "Se redujeron incidencias en despliegues durante el periodo operativo del evento.",
-        stack: ["Flutter", "Android", "Arquitectura limpia", "CI/CD"],
+        title: "Release en producción de La Mercè",
+        context:
+          "App pública en Flutter lanzada a producción para un gran evento cultural de Barcelona.",
+        role: "Desarrolladora mobile contribuyendo en flujos de entrega y apoyo a validación de releases.",
+        stack: ["Flutter", "Jenkins", "GitLab", "Jira", "Google Play"],
+        demonstrates:
+          "Disciplina de entrega en producción, validación de release y colaboración en una app pública con usuarios reales.",
+        links: [
+          {
+            label: "La Mercè en Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+            external: true,
+          },
+        ],
+      },
+      {
+        title: "Barcelona a la Butxaca calidad del aire",
+        context:
+          "Trabajo en la funcionalidad de calidad del aire dentro de una app pública activa para la ciudadanía de Barcelona.",
+        role: "Desarrolladora mobile trabajando en la funcionalidad de calidad del aire mediante integración de APIs y prácticas de entrega.",
+        stack: ["Flutter", "APIs REST", "Jira", "Google Play"],
+        demonstrates:
+          "Integración de APIs, entrega de features y mantenimiento en una app de producción ciudadana real.",
+        links: [
+          {
+            label: "Barcelona a la Butxaca en Google Play",
+            href: "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+            external: true,
+          },
+        ],
+      },
+      {
+        title: "Nescafé Dolce Gusto validación QA",
+        context:
+          "Soporte de QA estructurado para una app móvil en producción conectada a flujos de máquinas de café.",
+        role: "Soporte de QA manual usando Jira, planes de prueba estructurados, casos de prueba, validación funcional y seguimiento de incidencias.",
+        stack: [
+          "Jira",
+          "Planes de prueba",
+          "Casos de prueba",
+          "Validación funcional",
+          "QA mobile",
+        ],
+        demonstrates:
+          "Mentalidad de calidad de producto, testing manual estructurado y validación de flujos de reconexión y preparación en una app pública de producción.",
+        links: [
+          {
+            label: "Nescafé Dolce Gusto en Google Play",
+            href: "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
+            external: true,
+          },
+        ],
       },
     ],
     contacts: createSharedContacts("Descargar CV"),
@@ -1278,6 +1382,24 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           {
             label: "Repositorio",
             href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+            external: true,
+          },
+        ],
+      },
+      {
+        name: "Web Portfolio DevDigi",
+        description:
+          "Sitio web de portfolio personal para DevDigi, construido como presencia en producción para mi perfil mobile, proyectos seleccionados, experiencia y vías de contacto.",
+        shortDescription:
+          "Sitio web de portfolio personal para mi perfil mobile y trabajos seleccionados.",
+        stack: ["Astro", "React", "Tailwind CSS", "TypeScript", "Vercel"],
+        demonstrates:
+          "Entrega de portfolio en producción con contenido localizado, secciones de proyectos accesibles, UI responsive y validación automatizada.",
+        mockupStatus: "Sitio web\nportfolio",
+        links: [
+          {
+            label: "Repositorio",
+            href: "https://github.com/mfranchescagonzalezcejas/portfolio-web",
             external: true,
           },
         ],
@@ -1464,14 +1586,32 @@ export const validateSiteContent = (content: SiteContent) => {
     };
   });
 
+  const caseStudyResults = content.caseStudies.map((caseStudy) => {
+    const result = validateLinks(content.locale, caseStudy.links ?? [], {
+      area: "caseStudy",
+      owner: caseStudy.title,
+    });
+
+    return {
+      caseStudy: {
+        ...caseStudy,
+        ...(caseStudy.links ? { links: result.links } : {}),
+      },
+      invalidLinks: result.invalidLinks,
+    };
+  });
+
   const projects = projectResults.map((result) => result.project);
 
   const experience = experienceResults.map((result) => result.experience);
+
+  const caseStudies = caseStudyResults.map((result) => result.caseStudy);
 
   const invalidLinks = [
     ...contacts.invalidLinks,
     ...projectResults.flatMap((project) => project.invalidLinks),
     ...experienceResults.flatMap((experience) => experience.invalidLinks),
+    ...caseStudyResults.flatMap((caseStudy) => caseStudy.invalidLinks),
   ];
 
   if (invalidLinks.length > 0) {
@@ -1486,6 +1626,7 @@ export const validateSiteContent = (content: SiteContent) => {
       contacts: contacts.links,
       experience,
       projects,
+      caseStudies,
     },
     invalidLinks,
   };
