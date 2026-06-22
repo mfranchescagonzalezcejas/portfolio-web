@@ -63,13 +63,13 @@ type StaticContract = {
 };
 
 const entrypoints: LocaleEntrypoint[] = [
-  { path: "index.html", locale: "en" },
-  { path: "en/index.html", locale: "en" },
-  { path: "es/index.html", locale: "es" },
+  { path: "dist/index.html", locale: "en" },
+  { path: "dist/en/index.html", locale: "en" },
+  { path: "dist/es/index.html", locale: "es" },
 ];
 
 const seoContracts: Record<string, SeoContract> = {
-  "index.html": {
+  "dist/index.html": {
     canonical: `${productionSiteUrl}/en`,
     alternates: {
       en: `${productionSiteUrl}/en`,
@@ -77,7 +77,7 @@ const seoContracts: Record<string, SeoContract> = {
       "x-default": `${productionSiteUrl}/en`,
     },
   },
-  "en/index.html": {
+  "dist/en/index.html": {
     canonical: `${productionSiteUrl}/en`,
     alternates: {
       en: `${productionSiteUrl}/en`,
@@ -85,7 +85,7 @@ const seoContracts: Record<string, SeoContract> = {
       "x-default": `${productionSiteUrl}/en`,
     },
   },
-  "es/index.html": {
+  "dist/es/index.html": {
     canonical: `${productionSiteUrl}/es`,
     alternates: {
       en: `${productionSiteUrl}/en`,
@@ -167,8 +167,8 @@ const staticContracts: Record<
     ],
     omittedSkills: ["Remote collaboration"],
     footerText: "Built with care in Barcelona",
-    footerYearText: "© 2026 · Built with care in Barcelona",
-    navLabel: "Primary navigation",
+    footerYearText: `© ${new Date().getFullYear()} · Built with care in Barcelona`,
+    navLabel: "Primary",
     skillsNavLabel: "Skills",
     educationHeading: "Education and languages",
     educationCard: "Education",
@@ -236,8 +236,8 @@ const staticContracts: Record<
     ],
     omittedSkills: ["Colaboración remota"],
     footerText: "Desarrollado con cariño en Barcelona",
-    footerYearText: "© 2026 · Desarrollado con cariño en Barcelona",
-    navLabel: "Navegación principal",
+    footerYearText: `© ${new Date().getFullYear()} · Desarrollado con cariño en Barcelona`,
+    navLabel: "Principal",
     skillsNavLabel: "Competencias",
     educationHeading: "Formación e idiomas",
     educationCard: "Formación",
@@ -255,6 +255,9 @@ const staticContracts: Record<
 const readHtml = (relativePath: string): string =>
   readFileSync(resolve(process.cwd(), relativePath), "utf8");
 
+const normalizeReadableText = (text: string): string =>
+  text.replace(/\s+/g, " ").replace(/,(\S)/g, ", $1").trim();
+
 const assertNoJsContract = (
   html: string,
   locale: keyof typeof siteContentByLocale,
@@ -263,7 +266,7 @@ const assertNoJsContract = (
   const parser = new DOMParser();
   const document = parser.parseFromString(html, "text/html");
   const body = document.body;
-  const bodyText = (body.textContent ?? "").replace(/\s+/g, " ").trim();
+  const bodyText = normalizeReadableText(body.textContent ?? "");
   const sections = Array.from(body.querySelectorAll("section"));
   const sectionOrder = (sectionId: string) =>
     sections.findIndex((section) => section.id === sectionId);
@@ -371,10 +374,21 @@ const assertNoJsContract = (
     }
   }
 
-  for (const experience of siteContentByLocale[locale].experience) {
-    expect(bodyText).toContain(`${experience.company} — ${experience.role}`);
-    expect(bodyText).toContain(experience.period);
-  }
+  const experienceCards = Array.from(
+    body.querySelectorAll("section#experience article"),
+  );
+  expect(experienceCards).toHaveLength(
+    siteContentByLocale[locale].experience.length,
+  );
+  siteContentByLocale[locale].experience.forEach((experience, index) => {
+    const cardText = normalizeReadableText(
+      experienceCards[index]?.textContent ?? "",
+    );
+
+    expect(cardText).toContain(experience.company);
+    expect(cardText).toContain(experience.role);
+    expect(cardText).toContain(experience.period);
+  });
 
   expect(bodyText).toContain(contract.heroSnippet);
   expect(bodyText).toContain(contract.valuesSnippet);
@@ -419,9 +433,7 @@ describe("Localized static entrypoints", () => {
       expect(html).toContain(`<html lang="${locale}">`);
       expect(html).toContain(`<title>${site.meta.title}</title>`);
       expect(html).toContain(`content="${site.meta.description}"`);
-      expect(html).toContain(
-        `<script type="module" src="/src/main.tsx"></script>`,
-      );
+      expect(html).not.toContain(`/src/main.tsx`);
     },
   );
 
@@ -431,7 +443,7 @@ describe("Localized static entrypoints", () => {
       const html = readHtml(path);
 
       expect(html).toContain(`<html lang="${locale}">`);
-      expect(html).toContain('<main id="main-content">');
+      expect(html).toContain('<main id="main-content"');
       expect(html).toContain('href="#about"');
       expect(html).toContain('href="#experience"');
       expect(html).toContain('href="#projects"');
@@ -480,16 +492,13 @@ describe("Localized static entrypoints", () => {
   it("routes locale paths to localized static HTML in vercel config", () => {
     const vercelConfig = JSON.parse(
       readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"),
-    ) as { rewrites: { source: string; destination: string }[] };
+    ) as {
+      cleanUrls: boolean;
+      rewrites?: { source: string; destination: string }[];
+    };
 
-    expect(vercelConfig.rewrites).toEqual(
-      expect.arrayContaining([
-        { source: "/en", destination: "/en/index.html" },
-        { source: "/en/:path*", destination: "/en/index.html" },
-        { source: "/es", destination: "/es/index.html" },
-        { source: "/es/:path*", destination: "/es/index.html" },
-      ]),
-    );
+    expect(vercelConfig.cleanUrls).toBe(true);
+    expect(vercelConfig.rewrites).toBeUndefined();
   });
 
   it("validates and normalizes Experience links before render", () => {
