@@ -43,6 +43,16 @@ export type SectionHeading = {
   title: string;
 };
 
+export type SkillCategory = {
+  title: string;
+  skills: string[];
+};
+
+export type SkillsSectionContent = SectionHeading & {
+  categorySkillsLabel: string;
+  categories: SkillCategory[];
+};
+
 export type ExperienceSectionHeading = SectionHeading & {
   stackLabel: string;
   linksLabel: string;
@@ -190,7 +200,7 @@ export type SiteContent = {
   projects: Project[];
   caseStudies: CaseStudy[];
   education: Education[];
-  skillsSection: SectionHeading;
+  skillsSection: SkillsSectionContent;
   contacts: LinkItem[];
 };
 
@@ -420,8 +430,73 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       title: "Engineering foundation with current AI studies.",
     },
     skillsSection: {
-      eyebrow: "Skills",
-      title: "Tools and engineering stack",
+      eyebrow: "• Skills",
+      title: "Technical toolbox",
+      categorySkillsLabel: "Skills in {category}",
+      categories: [
+        {
+          title: "Mobile",
+          skills: [
+            "Flutter",
+            "Dart",
+            "Android",
+            "Kotlin",
+            "Jetpack Compose",
+            "iOS",
+            "Swift",
+            "SwiftUI",
+            "UIKit",
+          ],
+        },
+        {
+          title: "Architecture",
+          skills: [
+            "Clean Architecture",
+            "Layered Architecture",
+            "Repository Pattern",
+            "Dependency Injection",
+            "Screaming Architecture",
+          ],
+        },
+        {
+          title: "Backend & APIs",
+          skills: [
+            "REST APIs",
+            "FastAPI",
+            "Python",
+            "PostgreSQL",
+            "Firebase Auth",
+            "Railway",
+          ],
+        },
+        {
+          title: "Delivery & Quality",
+          skills: [
+            "GitHub Actions",
+            "Jenkins",
+            "GitLab",
+            "CI/CD",
+            "Google Play",
+            "App Store",
+            "Jira",
+            "QA validation",
+            "Manual QA",
+            "Test plans",
+            "Test cases",
+            "Debugging",
+            "Release validation",
+          ],
+        },
+        {
+          title: "Ways of working",
+          skills: [
+            "Agile/Scrum",
+            "Code review",
+            "Team coordination",
+            "Cross-functional collaboration",
+          ],
+        },
+      ],
     },
     contactSection: {
       eyebrow: "Contact",
@@ -897,8 +972,73 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       title: "Base de ingeniería y formación continuada en IA.",
     },
     skillsSection: {
-      eyebrow: "Competencias",
-      title: "Herramientas y stack de ingeniería",
+      eyebrow: "• Competencias",
+      title: "Caja de herramientas técnicas",
+      categorySkillsLabel: "Competencias en {category}",
+      categories: [
+        {
+          title: "Mobile",
+          skills: [
+            "Flutter",
+            "Dart",
+            "Android",
+            "Kotlin",
+            "Jetpack Compose",
+            "iOS",
+            "Swift",
+            "SwiftUI",
+            "UIKit",
+          ],
+        },
+        {
+          title: "Arquitectura",
+          skills: [
+            "Clean Architecture",
+            "Arquitectura por capas",
+            "Patrón Repository",
+            "Inyección de dependencias",
+            "Screaming Architecture",
+          ],
+        },
+        {
+          title: "Backend y APIs",
+          skills: [
+            "REST APIs",
+            "FastAPI",
+            "Python",
+            "PostgreSQL",
+            "Firebase Auth",
+            "Railway",
+          ],
+        },
+        {
+          title: "Entrega y calidad",
+          skills: [
+            "GitHub Actions",
+            "Jenkins",
+            "GitLab",
+            "CI/CD",
+            "Google Play",
+            "App Store",
+            "Jira",
+            "Validación QA",
+            "QA manual",
+            "Planes de prueba",
+            "Casos de prueba",
+            "Debugging",
+            "Validación de releases",
+          ],
+        },
+        {
+          title: "Formas de trabajo",
+          skills: [
+            "Agile/Scrum",
+            "Code review",
+            "Coordinación técnica",
+            "Colaboración multidisciplinar",
+          ],
+        },
+      ],
     },
     contactSection: {
       eyebrow: "Contacto",

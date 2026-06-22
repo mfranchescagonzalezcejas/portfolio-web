@@ -1,33 +1,49 @@
-import type { SectionHeading } from "../../content/site";
+import type { SkillsSectionContent } from "../../content/site";
 
 type SkillsProps = {
-  skills: string[];
-  section: SectionHeading;
+  section: SkillsSectionContent;
 };
 
-export default function Skills({ skills, section }: SkillsProps) {
+const formatCategoryLabel = (template: string, category: string) =>
+  template.replace("{category}", category);
+
+export default function Skills({ section }: SkillsProps) {
   return (
     <section
       id="skills"
-      className="section-shell scroll-mt-32"
+      className="skills-section section-shell scroll-mt-32"
       aria-labelledby="skills-title"
     >
       <div className="section-inner">
-        <p className="eyebrow">{section.eyebrow}</p>
-        <h2 id="skills-title" className="section-title">
-          {section.title}
-        </h2>
+        <div className="skills-header">
+          <p className="eyebrow">{section.eyebrow}</p>
+          <h2 id="skills-title" className="section-title text-gradient">
+            {section.title}
+          </h2>
+        </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {skills.map((skill, index) => (
-            <span
-              key={skill}
-              className={`pill ${
-                index % 2 === 0 ? "pill-accent-teal" : "pill-accent-cyan"
-              }`}
-            >
-              {skill}
-            </span>
+        <div className="skills-grid" aria-label={section.title}>
+          {section.categories.map((category) => (
+            <article className="skills-card section-card" key={category.title}>
+              <h3 className="skills-card-title">
+                <span aria-hidden="true">/</span>
+                {category.title}
+              </h3>
+
+              <ul
+                className="skills-chip-list"
+                aria-label={formatCategoryLabel(
+                  section.categorySkillsLabel,
+                  category.title,
+                )}
+              >
+                {category.skills.map((skill) => (
+                  <li key={skill}>
+                    <span className="pill pill-accent-teal">{skill}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
           ))}
         </div>
       </div>
