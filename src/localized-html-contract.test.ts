@@ -374,11 +374,21 @@ const assertNoJsContract = (
     }
   }
 
-  for (const experience of siteContentByLocale[locale].experience) {
-    expect(bodyText).toContain(experience.company);
-    expect(bodyText).toContain(experience.role);
-    expect(bodyText).toContain(experience.period);
-  }
+  const experienceCards = Array.from(
+    body.querySelectorAll("section#experience article"),
+  );
+  expect(experienceCards).toHaveLength(
+    siteContentByLocale[locale].experience.length,
+  );
+  siteContentByLocale[locale].experience.forEach((experience, index) => {
+    const cardText = normalizeReadableText(
+      experienceCards[index]?.textContent ?? "",
+    );
+
+    expect(cardText).toContain(experience.company);
+    expect(cardText).toContain(experience.role);
+    expect(cardText).toContain(experience.period);
+  });
 
   expect(bodyText).toContain(contract.heroSnippet);
   expect(bodyText).toContain(contract.valuesSnippet);
