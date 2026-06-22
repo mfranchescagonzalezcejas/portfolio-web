@@ -992,13 +992,20 @@ export const validateSiteContent = (content: SiteContent) => {
     owner: "contacts",
   });
 
-  const projectResults = content.projects.map((project) => ({
-    ...project,
-    ...validateLinks(content.locale, project.links, {
+  const projectResults = content.projects.map((project) => {
+    const result = validateLinks(content.locale, project.links, {
       area: "project",
       owner: project.name,
-    }),
-  }));
+    });
+
+    return {
+      project: {
+        ...project,
+        links: result.links,
+      },
+      invalidLinks: result.invalidLinks,
+    };
+  });
 
   const experienceResults = content.experience.map((experience) => {
     const result = validateLinks(content.locale, experience.links ?? [], {
@@ -1007,23 +1014,17 @@ export const validateSiteContent = (content: SiteContent) => {
     });
 
     return {
-      ...experience,
-      ...(experience.links ? { links: result.links } : {}),
+      experience: {
+        ...experience,
+        ...(experience.links ? { links: result.links } : {}),
+      },
       invalidLinks: result.invalidLinks,
     };
   });
 
-  const projects = projectResults.map(({ invalidLinks, ...project }) => {
-    void invalidLinks;
+  const projects = projectResults.map((result) => result.project);
 
-    return project;
-  });
-
-  const experience = experienceResults.map(({ invalidLinks, ...item }) => {
-    void invalidLinks;
-
-    return item;
-  });
+  const experience = experienceResults.map((result) => result.experience);
 
   const invalidLinks = [
     ...contacts.invalidLinks,

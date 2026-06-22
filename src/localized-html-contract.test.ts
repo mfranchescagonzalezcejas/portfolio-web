@@ -305,43 +305,46 @@ describe("Localized static entrypoints", () => {
 
   it("validates and normalizes Experience links before render", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
-    const source = siteContentByLocale.en;
-    const [currentExperience, ...remainingExperience] = source.experience;
+    try {
+      const source = siteContentByLocale.en;
+      const [currentExperience, ...remainingExperience] = source.experience;
 
-    const result = validateSiteContent({
-      ...source,
-      experience: [
+      const result = validateSiteContent({
+        ...source,
+        experience: [
+          {
+            ...currentExperience,
+            links: [
+              { label: " Public app ", href: " https://example.com/app " },
+              { label: "Broken app", href: "javascript:alert(1)" },
+            ],
+          },
+          ...remainingExperience,
+        ],
+      });
+
+      expect(result.content.experience[0].links).toEqual([
         {
-          ...currentExperience,
-          links: [
-            { label: " Public app ", href: " https://example.com/app " },
-            { label: "Broken app", href: "javascript:alert(1)" },
-          ],
+          label: "Public app",
+          href: "https://example.com/app",
+          external: true,
         },
-        ...remainingExperience,
-      ],
-    });
-
-    expect(result.content.experience[0].links).toEqual([
-      {
-        label: "Public app",
-        href: "https://example.com/app",
-        external: true,
-      },
-    ]);
-    expect(result.invalidLinks).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          area: "experience",
-          owner: "Worldline Global Services — Native Apps Developer",
-          label: "Broken app",
-          href: "javascript:alert(1)",
-        }),
-      ]),
-    );
-    expect(warn).toHaveBeenCalledWith(
-      "Dropped 1 invalid configured link(s) from en site content before render.",
-    );
-    warn.mockRestore();
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "experience",
+            owner: "Worldline Global Services — Native Apps Developer",
+            label: "Broken app",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 1 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
   });
 });
