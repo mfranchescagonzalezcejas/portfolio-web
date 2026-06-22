@@ -15,7 +15,11 @@ const valueIcons: Record<ValueIconName, LucideIcon> = {
 
 export default function Values({ values }: ValuesProps) {
   return (
-    <section className="values-section" aria-labelledby="values-title">
+    <section
+      id="values"
+      className="values-section"
+      aria-labelledby="values-title"
+    >
       <div className="section-inner">
         <div className="values-header">
           <p className="values-eyebrow">

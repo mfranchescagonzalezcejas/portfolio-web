@@ -610,10 +610,17 @@ h4 {
 
 .values-description {
   margin: 1rem auto 0;
-  max-width: 38rem;
+  max-width: 52rem;
   color: var(--muted-foreground);
   font-size: 1rem;
   line-height: 1.7;
+}
+
+@media (min-width: 1024px) {
+  .values-header .section-title,
+  .values-description {
+    white-space: nowrap;
+  }
 }
 
 .values-grid {
@@ -692,6 +699,103 @@ h4 {
   color: var(--muted-foreground);
   font-size: 0.875rem;
   line-height: 1.65;
+}
+
+.summary-layout {
+  display: grid;
+  gap: 3rem;
+}
+
+.summary-eyebrow {
+  margin-bottom: 0.75rem;
+}
+
+.summary-title {
+  font-size: clamp(1.875rem, 2vw + 1rem, 2.25rem);
+}
+
+.summary-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  border-radius: 1rem;
+  padding: 1.25rem;
+}
+
+.summary-profile-avatar {
+  display: grid;
+  width: 3rem;
+  height: 3rem;
+  place-items: center;
+  flex: none;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--primary), var(--accent-blue));
+  color: var(--primary-foreground);
+  font-weight: 800;
+}
+
+.summary-profile-name {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.summary-profile-location {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin-top: 0.125rem;
+  color: var(--muted-foreground);
+  font-size: 0.75rem;
+}
+
+.summary-profile-location svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: none;
+}
+
+.summary-copy {
+  display: grid;
+  gap: 1.25rem;
+  color: var(--muted-foreground);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.summary-copy p {
+  margin: 0;
+}
+
+.summary-copy-strong {
+  color: var(--foreground);
+}
+
+.summary-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.summary-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 0.375rem;
+  border: 1px solid color-mix(in oklab, var(--primary) 20%, transparent);
+  background: color-mix(in oklab, var(--primary) 8%, transparent);
+  padding: 0.125rem 0.5rem;
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+@media (min-width: 1024px) {
+  .summary-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+    gap: 4rem;
+  }
 }
 
 @keyframes hero-dot-pulse {
