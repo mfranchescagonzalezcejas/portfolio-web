@@ -103,13 +103,11 @@ export default function Hero({ hero, links }: HeroProps) {
                   target={link.external ? "_blank" : undefined}
                   rel={link.external ? "noopener noreferrer" : undefined}
                 >
-                  {Icon ? (
-                    <Icon
-                      className="hero-cta-icon"
-                      aria-hidden="true"
-                      data-contact-icon={link.kind}
-                    />
-                  ) : null}
+                  <Icon
+                    className="hero-cta-icon"
+                    aria-hidden="true"
+                    data-contact-icon={link.kind}
+                  />
                   <span>{link.label}</span>
                 </a>
               );
