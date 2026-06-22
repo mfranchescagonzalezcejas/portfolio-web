@@ -40,7 +40,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                 className="relative pl-12 sm:pl-16"
               >
                 <div
-                  className="absolute top-6 left-2 grid h-5 w-5 place-items-center rounded-full bg-[var(--background)] ring-2 ring-teal-300/60 sm:left-4"
+                  className="absolute top-6 left-1.5 grid h-5 w-5 place-items-center rounded-full bg-[var(--background)] ring-2 ring-teal-300/60 sm:left-3.5"
                   aria-hidden="true"
                 >
                   <Briefcase className="h-2.5 w-2.5 text-teal-300" />

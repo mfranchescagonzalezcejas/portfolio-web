@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { siteContentByLocale } from "./content/site";
+import { siteContentByLocale, validateSiteContent } from "./content/site";
 
 type LocaleEntrypoint = {
   path: string;
@@ -199,6 +199,11 @@ const assertNoJsContract = (
     expect(bodyText).toContain(projectName);
   }
 
+  for (const experience of siteContentByLocale[locale].experience) {
+    expect(bodyText).toContain(`${experience.company} — ${experience.role}`);
+    expect(bodyText).toContain(experience.period);
+  }
+
   expect(bodyText).toContain(contract.heroSnippet);
   expect(bodyText).toContain(contract.valuesSnippet);
 
@@ -296,5 +301,47 @@ describe("Localized static entrypoints", () => {
         { source: "/es/:path*", destination: "/es/index.html" },
       ]),
     );
+  });
+
+  it("validates and normalizes Experience links before render", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const source = siteContentByLocale.en;
+    const [currentExperience, ...remainingExperience] = source.experience;
+
+    const result = validateSiteContent({
+      ...source,
+      experience: [
+        {
+          ...currentExperience,
+          links: [
+            { label: " Public app ", href: " https://example.com/app " },
+            { label: "Broken app", href: "javascript:alert(1)" },
+          ],
+        },
+        ...remainingExperience,
+      ],
+    });
+
+    expect(result.content.experience[0].links).toEqual([
+      {
+        label: "Public app",
+        href: "https://example.com/app",
+        external: true,
+      },
+    ]);
+    expect(result.invalidLinks).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          area: "experience",
+          owner: "Worldline Global Services — Native Apps Developer",
+          label: "Broken app",
+          href: "javascript:alert(1)",
+        }),
+      ]),
+    );
+    expect(warn).toHaveBeenCalledWith(
+      "Dropped 1 invalid configured link(s) from en site content before render.",
+    );
+    warn.mockRestore();
   });
 });
