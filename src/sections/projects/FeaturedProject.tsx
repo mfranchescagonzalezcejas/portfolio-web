@@ -1,5 +1,6 @@
 import { GitBranch, Smartphone } from "lucide-react";
 import type { Project, SectionHeading } from "../../content/site";
+import { formatProjectLabel } from "./projectLabel";
 
 type FeaturedProjectProps = {
   project: Project;
@@ -13,12 +14,6 @@ type FeaturedProjectProps = {
     caseStudyCtaLabel: string;
   };
 };
-
-const formatProjectLabel = (template: string, values: Record<string, string>) =>
-  Object.entries(values).reduce(
-    (label, [key, value]) => label.replaceAll(`{${key}}`, value),
-    template,
-  );
 
 export default function FeaturedProject({
   project,

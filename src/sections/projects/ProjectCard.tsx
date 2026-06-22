@@ -1,21 +1,16 @@
 import { Code2, GitBranch, Smartphone, Sparkles } from "lucide-react";
 import type { Project } from "../../content/site";
+import { formatProjectLabel } from "./projectLabel";
 
 type ProjectCardProps = {
   project: Project;
-  linksLabel?: string;
+  linksLabel: string;
   stackLabel: string;
   proofLabel: string;
   repositoryLabel: string;
   repositoryAriaLabel: string;
   mockupFallback: string;
 };
-
-const formatProjectLabel = (template: string, values: Record<string, string>) =>
-  Object.entries(values).reduce(
-    (label, [key, value]) => label.replaceAll(`{${key}}`, value),
-    template,
-  );
 
 export default function ProjectCard({
   project,
@@ -72,7 +67,7 @@ export default function ProjectCard({
         {project.links.length > 0 && (
           <ul
             className="project-card-links"
-            aria-label={`${project.name} · ${linksLabel ?? "Project links"}`}
+            aria-label={`${project.name} · ${linksLabel}`}
           >
             {project.links.map((link) => (
               <li key={link.href}>

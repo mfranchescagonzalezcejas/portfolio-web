@@ -84,6 +84,7 @@ const sectionIds = [
   "experience",
   "featured",
   "projects",
+  "case-studies",
   "skills",
   "education",
   "contact",
@@ -192,6 +193,8 @@ const assertNoJsContract = (
   const experienceIndex = sectionOrder("experience");
   const featuredIndex = sectionOrder("featured");
   const projectsIndex = sectionOrder("projects");
+  const caseStudiesIndex = sectionOrder("case-studies");
+  const skillsIndex = sectionOrder("skills");
 
   expect(bodyText).toContain(contract.skipLabel);
   expect(body.querySelector("main#main-content")).not.toBeNull();
@@ -216,11 +219,15 @@ const assertNoJsContract = (
   expect(experienceIndex).toBeGreaterThanOrEqual(0);
   expect(featuredIndex).toBeGreaterThanOrEqual(0);
   expect(projectsIndex).toBeGreaterThanOrEqual(0);
+  expect(caseStudiesIndex).toBeGreaterThanOrEqual(0);
+  expect(skillsIndex).toBeGreaterThanOrEqual(0);
   expect(topIndex).toBeLessThan(valuesIndex);
   expect(valuesIndex).toBeLessThan(aboutIndex);
   expect(aboutIndex).toBeLessThan(experienceIndex);
   expect(experienceIndex).toBeLessThan(featuredIndex);
   expect(featuredIndex).toBeLessThan(projectsIndex);
+  expect(projectsIndex).toBeLessThan(caseStudiesIndex);
+  expect(caseStudiesIndex).toBeLessThan(skillsIndex);
 
   for (const heading of contract.sectionHeadings) {
     expect(bodyText).toContain(heading);

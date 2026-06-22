@@ -113,6 +113,11 @@ describe("ProjectCard", () => {
       screen.getByRole("list", { name: "Tecnologías de Sample Project" }),
     ).toBeInTheDocument();
     expect(
+      screen.getByRole("list", {
+        name: "Sample Project · Enlaces del proyecto",
+      }),
+    ).toBeInTheDocument();
+    expect(
       screen.getByRole("link", {
         name: "Ver repo: Repositorio de Sample Project",
       }),
