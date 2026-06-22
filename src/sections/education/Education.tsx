@@ -1,42 +1,65 @@
 import type {
   Education as EducationData,
-  SectionHeading,
+  EducationSectionContent,
+  Language,
 } from "../../content/site";
 
 type EducationProps = {
   education: EducationData[];
-  section: SectionHeading;
+  languages: Language[];
+  section: EducationSectionContent;
 };
 
-export default function Education({ education, section }: EducationProps) {
+export default function Education({
+  education,
+  languages,
+  section,
+}: EducationProps) {
   return (
     <section
       id="education"
-      className="section-shell scroll-mt-32"
+      className="education-section section-shell scroll-mt-32"
       aria-labelledby="education-title"
     >
-      <div className="section-inner grid gap-6 md:grid-cols-[1fr_24rem] lg:grid-cols-[1fr_32rem]">
-        <div className="card-surface">
+      <div className="section-inner">
+        <div className="education-header values-header">
           <p className="eyebrow">{section.eyebrow}</p>
           <h2 id="education-title" className="section-title">
             {section.title}
           </h2>
         </div>
 
-        <div className="grid gap-4">
-          {education.map((item) => (
-            <article
-              key={`${item.title}-${item.meta}`}
-              className="section-card"
+        <div className="education-grid">
+          <article className="education-card section-card">
+            <h3 className="education-card-title">{section.educationTitle}</h3>
+            <div className="education-list">
+              {education.map((item) => (
+                <section
+                  key={`${item.title}-${item.meta}`}
+                  className="education-entry"
+                  aria-label={`${item.title}, ${item.meta}`}
+                >
+                  <h4>{item.title}</h4>
+                  <p>{item.meta}</p>
+                </section>
+              ))}
+            </div>
+          </article>
+
+          <article className="education-card section-card">
+            <h3 className="education-card-title">{section.languagesTitle}</h3>
+            <dl
+              className="language-list"
+              aria-label={section.languagesAriaLabel}
             >
-              <h3 className="section-title text-lg font-extrabold">
-                {item.title}
-              </h3>
-              <p className="hero-copy mt-2 text-sm font-semibold">
-                {item.meta}
-              </p>
-            </article>
-          ))}
+              {languages.map((language) => (
+                <div key={language.name} className="language-row">
+                  <dt>{language.name}</dt>
+                  <dd>{language.level}</dd>
+                </div>
+              ))}
+            </dl>
+          </article>
         </div>
       </div>
     </section>

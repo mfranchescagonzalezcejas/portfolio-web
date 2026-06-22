@@ -403,6 +403,221 @@ h4 {
   margin: 0.9rem auto 0;
 }
 
+.education-section {
+  padding-top: 5rem;
+}
+
+.education-header .eyebrow,
+.contact-pill {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.38rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--primary) 24%, transparent);
+  background: color-mix(in oklab, var(--primary) 7%, transparent);
+  padding: 0.42rem 0.82rem;
+  color: color-mix(in oklab, var(--primary) 88%, var(--foreground));
+}
+
+.contact-pill {
+  padding: 0.34rem 0.68rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+}
+
+.contact-pill::before {
+  content: "•";
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.education-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.education-card {
+  overflow: hidden;
+}
+
+.education-card-title {
+  margin: 0;
+  color: var(--section-title-color);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.education-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.education-entry {
+  border-radius: 1rem;
+  border: 1px solid color-mix(in oklab, var(--foreground) 9%, transparent);
+  background: color-mix(in oklab, var(--surface-elevated) 58%, transparent);
+  padding: 1rem;
+}
+
+.education-entry h4 {
+  margin: 0;
+  color: var(--section-title-color);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.education-entry p {
+  margin: 0.4rem 0 0;
+  color: var(--muted-foreground);
+  font-size: 0.925rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.language-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0;
+}
+
+.language-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid
+    color-mix(in oklab, var(--foreground) 9%, transparent);
+  padding-bottom: 0.75rem;
+}
+
+.language-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.language-row dt {
+  color: var(--section-title-color);
+  font-weight: 800;
+}
+
+.language-row dd {
+  margin: 0;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--primary) 20%, transparent);
+  background: color-mix(in oklab, var(--primary) 7%, transparent);
+  padding: 0.35rem 0.7rem;
+  color: color-mix(in oklab, var(--primary) 88%, var(--foreground));
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.contact-section {
+  padding-top: 2rem;
+}
+
+.contact-cta-card {
+  isolation: isolate;
+  overflow: hidden;
+  max-width: 58rem;
+  margin-inline: auto;
+  border-color: color-mix(in oklab, var(--primary) 16%, transparent);
+  border-radius: 2rem;
+  padding: clamp(2.25rem, 4.5vw, 3.75rem) clamp(1.25rem, 5vw, 3rem);
+  text-align: center;
+}
+
+.contact-cta-card::before,
+.contact-cta-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.contact-cta-card::before {
+  z-index: 0;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at 88% 12%,
+    color-mix(in oklab, var(--accent-teal) 32%, transparent),
+    transparent min(17rem, 48vw)
+  );
+  opacity: 0.9;
+}
+
+.contact-cta-card::after {
+  z-index: 0;
+  inset: auto auto -24% -12%;
+  width: min(20rem, 44vw);
+  height: min(20rem, 44vw);
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--accent-blue) 16%, transparent),
+    transparent 68%
+  );
+}
+
+.contact-title {
+  position: relative;
+  z-index: 1;
+  max-width: 52rem;
+  margin-inline: auto;
+  font-size: clamp(1.85rem, 2vw + 0.9rem, 2.45rem);
+  overflow-wrap: normal;
+}
+
+.contact-title .text-gradient {
+  color: transparent;
+  background-image: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.contact-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 42rem;
+  margin: 1rem auto 0;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.contact-link-list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 2rem 0 0;
+  list-style: none;
+}
+
+.contact-cta-link {
+  min-width: 8.5rem;
+  justify-content: center;
+}
+
+.contact-cta-link-secondary {
+  border-color: color-mix(in oklab, var(--foreground) 13%, transparent);
+  background: color-mix(in oklab, var(--surface-elevated) 54%, transparent);
+}
+
+.contact-cta-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
 .skills-grid {
   display: grid;
   gap: 1rem;
@@ -1760,10 +1975,24 @@ h4 {
 .site-footer {
   position: relative;
   z-index: 1;
-  text-align: center;
   color: #9fc6eb;
   font-size: 0.875rem;
   padding: 2rem 1rem;
+}
+
+.site-footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 72rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
 }
 
 .skip-link {
@@ -1808,6 +2037,15 @@ a {
   .values-header {
     margin-bottom: 3rem;
   }
+
+  .education-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+  }
+
+  .site-footer-inner {
+    flex-direction: row;
+    text-align: left;
+  }
 }
 
 @media (min-width: 1024px) {
@@ -1822,5 +2060,9 @@ a {
   .hero-layout {
     grid-template-columns: 1.1fr 1fr;
     gap: 2.5rem;
+  }
+
+  .contact-title {
+    white-space: nowrap;
   }
 }

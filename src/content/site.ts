@@ -7,6 +7,14 @@ export type LinkItem = {
   ctaLabel?: string;
 };
 
+export type ContactLinkKind = "linkedin" | "github" | "cv" | "email";
+export type ContactLinkVariant = "primary" | "secondary";
+
+export type ContactLinkItem = LinkItem & {
+  kind: ContactLinkKind;
+  variant: ContactLinkVariant;
+};
+
 export type Project = {
   name: string;
   description: string;
@@ -33,6 +41,11 @@ export type Education = {
   meta: string;
 };
 
+export type Language = {
+  name: string;
+  level: string;
+};
+
 export type NavItem = {
   label: string;
   href: string;
@@ -41,6 +54,12 @@ export type NavItem = {
 export type SectionHeading = {
   eyebrow: string;
   title: string;
+};
+
+export type EducationSectionContent = SectionHeading & {
+  educationTitle: string;
+  languagesTitle: string;
+  languagesAriaLabel: string;
 };
 
 export type SkillCategory = {
@@ -128,7 +147,8 @@ export type SummaryContent = {
 
 export type ContactSection = {
   eyebrow: string;
-  title: string;
+  titlePrefix: string;
+  titleHighlight: string;
   body: string;
   ariaLabel: string;
 };
@@ -193,15 +213,16 @@ export type SiteContent = {
     mockupFallback: string;
   };
   caseStudiesSection: CaseStudySectionHeading;
-  educationSection: SectionHeading;
+  educationSection: EducationSectionContent;
   contactSection: ContactSection;
   footerText: string;
   experience: Experience[];
   projects: Project[];
   caseStudies: CaseStudy[];
   education: Education[];
+  languages: Language[];
   skillsSection: SkillsSectionContent;
-  contacts: LinkItem[];
+  contacts: ContactLinkItem[];
 };
 
 export type InvalidLink = {
@@ -212,23 +233,36 @@ export type InvalidLink = {
   href: string;
 };
 
-const allowedProtocols = new Set(["https:", "http:"]);
+const allowedProtocols = new Set(["https:", "mailto:"]);
 
-const sharedContacts: LinkItem[] = [
+const contactEmail = "mercedesgon03@gmail.com";
+
+const createSharedContacts = (cvLabel: string): ContactLinkItem[] => [
   {
-    label: "GitLab",
-    href: "https://gitlab.com/mfranchescagonzalezcejas/",
+    kind: "linkedin",
+    variant: "primary",
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/mercedes-franchesca-gonzalez-cejas-7555a7177",
     external: true,
   },
   {
+    kind: "github",
+    variant: "secondary",
     label: "GitHub",
     href: "https://github.com/mfranchescagonzalezcejas",
     external: true,
   },
   {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/mercedes-franchesca-gonzalez-cejas-7555a7177",
-    external: true,
+    kind: "cv",
+    variant: "secondary",
+    label: cvLabel,
+    href: "/cv.pdf",
+  },
+  {
+    kind: "email",
+    variant: "secondary",
+    label: "Email",
+    href: `mailto:${contactEmail}`,
   },
 ];
 
@@ -246,6 +280,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Experience", href: "#experience" },
       { label: "Projects", href: "#projects" },
       { label: "Skills", href: "#skills" },
+      { label: "Education", href: "#education" },
       { label: "Contact", href: "#contact" },
     ],
     languageSwitcher: {
@@ -426,8 +461,11 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       outcomeLabel: "Outcome:",
     },
     educationSection: {
-      eyebrow: "Education",
-      title: "Engineering foundation with current AI studies.",
+      eyebrow: "• Education and languages",
+      title: "Education and languages",
+      educationTitle: "Education",
+      languagesTitle: "Languages",
+      languagesAriaLabel: "Language proficiency",
     },
     skillsSection: {
       eyebrow: "• Skills",
@@ -500,8 +538,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     },
     contactSection: {
       eyebrow: "Contact",
-      title: "Let’s build great mobile products.",
-      body: "Open to Mobile Developer, Flutter Developer, and Android Developer opportunities in Barcelona, hybrid, or remote.",
+      titlePrefix: "Let’s build great",
+      titleHighlight: "mobile products.",
+      body: "Available for Mobile Developer, Flutter Developer, and Android Developer opportunities in Barcelona, hybrid, or remote.",
       ariaLabel: "Contact and social links",
     },
     footerText: "Built with care in Barcelona",
@@ -520,7 +559,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         stack: ["Flutter", "Android", "Clean Architecture", "CI/CD"],
       },
     ],
-    contacts: sharedContacts,
+    contacts: createSharedContacts("Download CV"),
     experience: [
       {
         company: "Worldline Global Services",
@@ -766,13 +805,14 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         meta: "Universitat Pompeu Fabra · Barcelona",
       },
       {
-        title: "AI Development Master",
+        title: "Master's in AI Development",
         meta: "BIG School · In progress",
       },
-      {
-        title: "English: B2",
-        meta: "EOI Vall d’Hebron · Spanish and Catalan native",
-      },
+    ],
+    languages: [
+      { name: "Spanish", level: "Native" },
+      { name: "Catalan", level: "Native" },
+      { name: "English", level: "B2" },
     ],
   },
   es: {
@@ -788,6 +828,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Experiencia", href: "#experience" },
       { label: "Proyectos", href: "#projects" },
       { label: "Competencias", href: "#skills" },
+      { label: "Educación", href: "#education" },
       { label: "Contacto", href: "#contact" },
     ],
     languageSwitcher: {
@@ -968,8 +1009,11 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       outcomeLabel: "Resultado:",
     },
     educationSection: {
-      eyebrow: "Educación",
-      title: "Base de ingeniería y formación continuada en IA.",
+      eyebrow: "• Formación e idiomas",
+      title: "Formación e idiomas",
+      educationTitle: "Formación",
+      languagesTitle: "Idiomas",
+      languagesAriaLabel: "Nivel de idiomas",
     },
     skillsSection: {
       eyebrow: "• Competencias",
@@ -1042,8 +1086,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     },
     contactSection: {
       eyebrow: "Contacto",
-      title: "Construyamos productos móviles excelentes.",
-      body: "Abierta a roles como Mobile Developer, Flutter Developer y Android Developer en Barcelona, híbrido o remoto.",
+      titlePrefix: "Construyamos grandes",
+      titleHighlight: "productos móviles.",
+      body: "Disponible para oportunidades de Mobile Developer, Flutter Developer y Android Developer en Barcelona, híbrido o remoto.",
       ariaLabel: "Enlaces de contacto",
     },
     footerText: "Desarrollado con cariño en Barcelona",
@@ -1062,7 +1107,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         stack: ["Flutter", "Android", "Arquitectura limpia", "CI/CD"],
       },
     ],
-    contacts: sharedContacts,
+    contacts: createSharedContacts("Descargar CV"),
     experience: [
       {
         company: "Worldline Global Services",
@@ -1311,17 +1356,24 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         title: "Máster en Desarrollo de IA",
         meta: "BIG School · En curso",
       },
-      {
-        title: "Inglés: B2",
-        meta: "EOI Vall d’Hebron · Español y catalán nativos",
-      },
+    ],
+    languages: [
+      { name: "Español", level: "Nativo" },
+      { name: "Catalán", level: "Nativo" },
+      { name: "Inglés", level: "B2" },
     ],
   },
 };
 
 const isValidLinkHref = (href: string) => {
+  const trimmedHref = href.trim();
+
+  if (trimmedHref.startsWith("/") && !trimmedHref.startsWith("//")) {
+    return trimmedHref.length > 1;
+  }
+
   try {
-    const parsed = new URL(href);
+    const parsed = new URL(trimmedHref);
     return allowedProtocols.has(parsed.protocol);
   } catch {
     return false;
@@ -1334,25 +1386,25 @@ const isValidLink = (link: LinkItem) =>
 const externalFromHref = (href: string) => {
   try {
     const parsed = new URL(href);
-    return parsed.protocol === "https:" || parsed.protocol === "http:";
+    return parsed.protocol === "https:";
   } catch {
     return false;
   }
 };
 
-const normalizeLink = (link: LinkItem): LinkItem => ({
+const normalizeLink = <T extends LinkItem>(link: T): T => ({
   ...link,
   label: link.label.trim(),
   href: link.href.trim(),
   external: link.external ?? externalFromHref(link.href.trim()),
 });
 
-const validateLinks = (
+const validateLinks = <T extends LinkItem>(
   locale: Locale,
-  links: LinkItem[],
+  links: T[],
   context: Omit<InvalidLink, "locale" | "label" | "href">,
-): { links: LinkItem[]; invalidLinks: InvalidLink[] } => {
-  const isLinkItem = (link: LinkItem | null): link is LinkItem => link !== null;
+): { links: T[]; invalidLinks: InvalidLink[] } => {
+  const isLinkItem = (link: T | null): link is T => link !== null;
 
   const invalidLinks: InvalidLink[] = [];
   const validLinks = links

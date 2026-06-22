@@ -68,14 +68,21 @@ export default function App() {
           />
         ) : null}
         <Skills section={site.skillsSection} />
-        <Education education={site.education} section={site.educationSection} />
+        <Education
+          education={site.education}
+          languages={site.languages}
+          section={site.educationSection}
+        />
         <ContactLinks links={site.contacts} section={site.contactSection} />
       </main>
 
       <footer className="site-footer">
-        <p>
-          DevDigi by Mercedes Gonzalez • © {currentYear} · {site.footerText}
-        </p>
+        <div className="site-footer-inner">
+          <p>DevDigi by Mercedes Gonzalez</p>
+          <p>
+            © {currentYear} · {site.footerText}
+          </p>
+        </div>
       </footer>
     </div>
   );
