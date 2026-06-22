@@ -23,9 +23,12 @@ const productionSiteUrl = "https://devdigi.dev";
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
+  heroSnippet: string;
   valuesSnippet: string;
   valuesItems: string[];
+  summaryHeading: string;
   summarySnippet: string;
+  summaryBrandSnippet: string;
   cta: string;
   portfolioItems: string[];
   footerText: string;
@@ -67,8 +70,9 @@ const seoContracts: Record<string, SeoContract> = {
 };
 
 const sectionIds = [
-  "about",
+  "top",
   "values",
+  "about",
   "experience",
   "projects",
   "skills",
@@ -91,6 +95,7 @@ const staticContracts: Record<
       "Education",
       "Contact",
     ],
+    heroSnippet: "I build polished mobile apps for real users.",
     valuesSnippet:
       "Practical engineering that turns into shipped, maintainable mobile products.",
     valuesItems: [
@@ -99,8 +104,10 @@ const staticContracts: Record<
       "Release & CI/CD workflows",
       "QA & product validation",
     ],
-    summarySnippet:
-      "Mobile-focused engineer with hands-on experience shipping production-ready applications",
+    summaryHeading: "Software engineer, mobile by craft.",
+    summarySnippet: "Software Engineer specialized in mobile development",
+    summaryBrandSnippet:
+      "where I showcase my mobile work, projects and technical growth",
     cta: "Contact me",
     portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
     footerText: "Built with care in Barcelona",
@@ -118,6 +125,7 @@ const staticContracts: Record<
       "Educación",
       "Contacto",
     ],
+    heroSnippet: "Construyo apps móviles pulidas para usuarios reales.",
     valuesSnippet:
       "Ingeniería práctica que se traduce en productos móviles entregados y mantenibles.",
     valuesItems: [
@@ -126,8 +134,10 @@ const staticContracts: Record<
       "Releases y CI/CD",
       "QA y validación de producto",
     ],
-    summarySnippet:
-      "Ingeniera de software con experiencia en productos móviles en producción",
+    summaryHeading: "Ingeniera de software, mobile por oficio.",
+    summarySnippet: "Ingeniera de Software especializada en desarrollo móvil",
+    summaryBrandSnippet:
+      "donde muestro mi trabajo mobile, proyectos y crecimiento técnico",
     cta: "Contáctame",
     portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
     footerText: "Desarrollado con cariño en Barcelona",
@@ -148,6 +158,13 @@ const assertNoJsContract = (
   const document = parser.parseFromString(html, "text/html");
   const body = document.body;
   const bodyText = (body.textContent ?? "").replace(/\s+/g, " ").trim();
+  const sections = Array.from(body.querySelectorAll("section"));
+  const sectionOrder = (sectionId: string) =>
+    sections.findIndex((section) => section.id === sectionId);
+  const topIndex = sectionOrder("top");
+  const valuesIndex = sectionOrder("values");
+  const aboutIndex = sectionOrder("about");
+  const experienceIndex = sectionOrder("experience");
 
   expect(bodyText).toContain(contract.skipLabel);
   expect(body.querySelector("main#main-content")).not.toBeNull();
@@ -166,6 +183,14 @@ const assertNoJsContract = (
     expect(section?.getAttribute("aria-labelledby")).toBeTruthy();
   }
 
+  expect(topIndex).toBeGreaterThanOrEqual(0);
+  expect(valuesIndex).toBeGreaterThanOrEqual(0);
+  expect(aboutIndex).toBeGreaterThanOrEqual(0);
+  expect(experienceIndex).toBeGreaterThanOrEqual(0);
+  expect(topIndex).toBeLessThan(valuesIndex);
+  expect(valuesIndex).toBeLessThan(aboutIndex);
+  expect(aboutIndex).toBeLessThan(experienceIndex);
+
   for (const heading of contract.sectionHeadings) {
     expect(bodyText).toContain(heading);
   }
@@ -174,13 +199,16 @@ const assertNoJsContract = (
     expect(bodyText).toContain(projectName);
   }
 
+  expect(bodyText).toContain(contract.heroSnippet);
   expect(bodyText).toContain(contract.valuesSnippet);
 
   for (const valueItem of contract.valuesItems) {
     expect(bodyText).toContain(valueItem);
   }
 
+  expect(bodyText).toContain(contract.summaryHeading);
   expect(bodyText).toContain(contract.summarySnippet);
+  expect(bodyText).toContain(contract.summaryBrandSnippet);
   expect(bodyText).toContain(contract.cta);
   expect(bodyText).toContain(contract.footerText);
   expect(bodyText).not.toMatch(/\u00A9\s*20\d{2}/);

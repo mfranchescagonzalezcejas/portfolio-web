@@ -92,14 +92,15 @@ export type HeroContent = {
 
 export type SummaryContent = {
   eyebrow: string;
-  title: string;
-  body: string;
-  cards?: { title: string; body: string }[];
-  workingStyleLabel: string;
-  cleanArchitectureTitle: string;
-  cleanArchitectureBody: string;
-  qualityMindsetTitle: string;
-  qualityMindsetBody: string;
+  titleLines: [string, string];
+  profile: {
+    initials: string;
+    name: string;
+    location: string;
+  };
+  paragraphs: { text: string; emphasis?: boolean }[][];
+  badgesLabel: string;
+  badges: string[];
   skills: string[];
 };
 
@@ -300,33 +301,49 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     },
     summary: {
       eyebrow: "About",
-      title: "I am a Mobile Developer focused on production-ready mobile apps.",
-      body: "DevDigi is my personal developer brand. I am a software engineer focused on practical mobile engineering, mainly Flutter, Android/Kotlin, and iOS/Swift. I care about clean architecture, maintainability, API integration, and release confidence.",
-      cards: [
-        {
-          title: "Production mobile apps",
-          body: "I deliver real mobile products from concept to release with maintainable architecture, predictable rollout windows, and reliable handoffs.",
-        },
-        {
-          title: "Clean architecture",
-          body: "I design layered codebases with clear domain boundaries so teams can evolve features without rewriting core foundations.",
-        },
-        {
-          title: "Release & CI/CD workflows",
-          body: "I collaborate on pipeline setups and release flows that reduce friction between development, testing, and production validation.",
-        },
-        {
-          title: "QA and product validation",
-          body: "I support QA planning and release validation to protect stability and quality during launch windows.",
-        },
+      titleLines: ["Software engineer,", "mobile by craft."],
+      profile: {
+        initials: "MG",
+        name: "Mercedes F. Gonzalez Cejas",
+        location: "Barcelona, Spain",
+      },
+      paragraphs: [
+        [
+          {
+            text: "Software Engineer specialized in mobile development",
+            emphasis: true,
+          },
+          {
+            text: ", with experience maintaining and delivering production mobile applications used by real users.",
+          },
+        ],
+        [
+          { text: "I work mainly with " },
+          { text: "Flutter", emphasis: true },
+          { text: ", " },
+          { text: "Android / Kotlin", emphasis: true },
+          { text: " and " },
+          { text: "iOS / Swift", emphasis: true },
+          {
+            text: ", and I care deeply about clean architecture, maintainability, API integration, debugging and product quality.",
+          },
+        ],
+        [
+          { text: "DevDigi", emphasis: true },
+          {
+            text: " is my personal developer brand, where I showcase my mobile work, projects and technical growth — not an agency, just my craft as a mobile engineer.",
+          },
+        ],
       ],
-      workingStyleLabel: "Working style",
-      cleanArchitectureTitle: "Clean architecture",
-      cleanArchitectureBody:
-        "Layered codebases, repository pattern, and clear boundaries for long-lived feature ownership.",
-      qualityMindsetTitle: "Quality mindset",
-      qualityMindsetBody:
-        "Testing awareness, structured manual QA support, release validation, and clear team communication.",
+      badgesLabel: "Mobile stack and delivery strengths",
+      badges: [
+        "Flutter",
+        "Kotlin",
+        "Swift",
+        "Clean Architecture",
+        "REST APIs",
+        "CI/CD",
+      ],
       skills: [
         "Flutter",
         "Dart",
@@ -578,33 +595,49 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     },
     summary: {
       eyebrow: "Sobre mí",
-      title: "Ingeniera móvil enfocada en apps robustas para uso real.",
-      body: "DevDigi es mi marca personal. Trabajo principalmente con Flutter, Android/Kotlin e iOS/Swift, combinando buenas prácticas de arquitectura y enfoque de producto.",
-      cards: [
-        {
-          title: "Apps móviles de producción",
-          body: "Entrego productos móviles completos, desde la idea hasta el despliegue, con arquitectura mantenible y entregas predecibles.",
-        },
-        {
-          title: "Arquitectura limpia",
-          body: "Diseño código por capas con límites de responsabilidad claros para que los equipos evolucionen sin rehacer el núcleo.",
-        },
-        {
-          title: "Flujos de release y CI/CD",
-          body: "Colaboro en pipelines y procesos de entrega para reducir riesgos entre desarrollo, QA y despliegue.",
-        },
-        {
-          title: "QA y validación de producto",
-          body: "Aporto QA manual y criterios de validación de release para mejorar estabilidad en ventanas de lanzamiento.",
-        },
+      titleLines: ["Ingeniera de software,", "mobile por oficio."],
+      profile: {
+        initials: "MG",
+        name: "Mercedes F. Gonzalez Cejas",
+        location: "Barcelona, España",
+      },
+      paragraphs: [
+        [
+          {
+            text: "Ingeniera de Software especializada en desarrollo móvil",
+            emphasis: true,
+          },
+          {
+            text: ", con experiencia manteniendo y entregando aplicaciones móviles en producción usadas por personas reales.",
+          },
+        ],
+        [
+          { text: "Trabajo principalmente con " },
+          { text: "Flutter", emphasis: true },
+          { text: ", " },
+          { text: "Android / Kotlin", emphasis: true },
+          { text: " e " },
+          { text: "iOS / Swift", emphasis: true },
+          {
+            text: ", y me importa profundamente la arquitectura limpia, la mantenibilidad, la integración con APIs, el debugging y la calidad de producto.",
+          },
+        ],
+        [
+          { text: "DevDigi", emphasis: true },
+          {
+            text: " es mi marca personal como desarrolladora, donde muestro mi trabajo mobile, proyectos y crecimiento técnico — no una agencia, solo mi oficio como ingeniera móvil.",
+          },
+        ],
       ],
-      workingStyleLabel: "Forma de trabajar",
-      cleanArchitectureTitle: "Arquitectura limpia",
-      cleanArchitectureBody:
-        "Estructuras por capas, repository pattern y límites claros para mantener código mantenible.",
-      qualityMindsetTitle: "Mentalidad de calidad",
-      qualityMindsetBody:
-        "Conciencia de testing, soporte de QA manual, validación de releases y comunicación clara con equipos.",
+      badgesLabel: "Stack mobile y fortalezas de entrega",
+      badges: [
+        "Flutter",
+        "Kotlin",
+        "Swift",
+        "Clean Architecture",
+        "REST APIs",
+        "CI/CD",
+      ],
       skills: [
         "Flutter",
         "Dart",

@@ -170,6 +170,69 @@ describe("locale routing behavior", () => {
   });
 });
 
+describe("About summary behavior", () => {
+  it.each([
+    {
+      path: "/",
+      heading: /Software engineer,\s*mobile by craft\./i,
+      location: "Barcelona, Spain",
+      brandSnippet: /where I showcase my mobile work/i,
+      badgesLabel: "Mobile stack and delivery strengths",
+    },
+    {
+      path: "/es",
+      heading: /Ingeniera de software,\s*mobile por oficio\./i,
+      location: "Barcelona, España",
+      brandSnippet: /donde muestro mi trabajo mobile/i,
+      badgesLabel: "Stack mobile y fortalezas de entrega",
+    },
+  ])(
+    "renders the About heading, profile card, and delivery badges for $path",
+    ({ path, heading, location, brandSnippet, badgesLabel }) => {
+      renderAtPath(path);
+
+      const aboutSection = document.getElementById("about");
+      expect(aboutSection).toBeInTheDocument();
+
+      expect(
+        within(aboutSection as HTMLElement).getByRole("heading", {
+          level: 2,
+          name: heading,
+        }),
+      ).toBeInTheDocument();
+
+      expect(
+        within(aboutSection as HTMLElement).getByText("MG"),
+      ).toBeInTheDocument();
+      expect(
+        within(aboutSection as HTMLElement).getByText(
+          "Mercedes F. Gonzalez Cejas",
+        ),
+      ).toBeInTheDocument();
+      expect(
+        within(aboutSection as HTMLElement).getByText(location),
+      ).toBeInTheDocument();
+      expect(
+        within(aboutSection as HTMLElement).getByText(brandSnippet),
+      ).toBeInTheDocument();
+
+      const badges = within(aboutSection as HTMLElement).getByLabelText(
+        badgesLabel,
+      );
+      for (const badge of [
+        "Flutter",
+        "Kotlin",
+        "Swift",
+        "Clean Architecture",
+        "REST APIs",
+        "CI/CD",
+      ]) {
+        expect(within(badges).getByText(badge)).toBeInTheDocument();
+      }
+    },
+  );
+});
+
 describe("navigation anchors", () => {
   it("uses a non-navigation group for the language switcher", () => {
     renderAtPath("/");
@@ -197,6 +260,18 @@ describe("navigation anchors", () => {
     ).toBeInTheDocument();
 
     expect(skillsSection).toHaveClass("scroll-mt-32");
+  });
+
+  it("keeps the hydrated Values section available as a deep-link target", () => {
+    renderAtPath("/");
+
+    const valuesSection = document.getElementById("values");
+    expect(valuesSection).toBeInTheDocument();
+    expect(
+      within(valuesSection as HTMLElement).getByRole("heading", {
+        name: /What I bring as a mobile developer/i,
+      }),
+    ).toBeInTheDocument();
   });
 
   it("localizes Spanish skills navigation and theme toggle labels", () => {

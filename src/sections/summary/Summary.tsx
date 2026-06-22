@@ -1,3 +1,4 @@
+import { MapPin } from "lucide-react";
 import type { SummaryContent } from "../../content/site";
 
 type SummaryProps = {
@@ -8,42 +9,59 @@ export default function Summary({ summary }: SummaryProps) {
   return (
     <section
       id="about"
-      className="section-shell scroll-mt-32"
+      className="summary-section section-shell scroll-mt-32"
       aria-labelledby="summary-title"
     >
-      <div className="section-inner grid gap-6 md:grid-cols-[1fr_20rem] lg:grid-cols-[1fr_24rem]">
-        <div className="card-surface">
-          <p className="eyebrow">{summary.eyebrow}</p>
-          <h2 id="summary-title" className="section-title">
-            {summary.title}
+      <div className="section-inner summary-layout">
+        <div>
+          <div className="values-eyebrow summary-eyebrow">
+            <span aria-hidden="true" />
+            {summary.eyebrow}
+          </div>
+
+          <h2 id="summary-title" className="section-title summary-title">
+            <span className="text-gradient">{summary.titleLines[0]}</span>
+            <br />
+            {summary.titleLines[1]}
           </h2>
-          <p className="hero-copy mt-5">{summary.body}</p>
+
+          <div className="card-surface summary-profile-card">
+            <div className="summary-profile-avatar" aria-hidden="true">
+              {summary.profile.initials}
+            </div>
+            <div>
+              <div className="summary-profile-name">{summary.profile.name}</div>
+              <div className="summary-profile-location">
+                <MapPin aria-hidden="true" />
+                {summary.profile.location}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <aside className="section-card" aria-label={summary.workingStyleLabel}>
-          <p className="eyebrow">{summary.workingStyleLabel}</p>
-
-          {(summary.cards?.length
-            ? summary.cards
-            : [
-                {
-                  title: summary.cleanArchitectureTitle,
-                  body: summary.cleanArchitectureBody,
-                },
-                {
-                  title: summary.qualityMindsetTitle,
-                  body: summary.qualityMindsetBody,
-                },
-              ]
-          ).map((card) => (
-            <div key={card.title} className="mt-4 first:mt-0">
-              <h3 className="section-title text-2xl font-extrabold">
-                {card.title}
-              </h3>
-              <p className="hero-copy mt-3 text-sm leading-6">{card.body}</p>
-            </div>
+        <div className="summary-copy">
+          {summary.paragraphs.map((paragraph, paragraphIndex) => (
+            <p key={paragraphIndex}>
+              {paragraph.map((segment, segmentIndex) =>
+                segment.emphasis ? (
+                  <span key={segmentIndex} className="summary-copy-strong">
+                    {segment.text}
+                  </span>
+                ) : (
+                  segment.text
+                ),
+              )}
+            </p>
           ))}
-        </aside>
+
+          <div className="summary-badges" aria-label={summary.badgesLabel}>
+            {summary.badges.map((badge) => (
+              <span key={badge} className="summary-badge">
+                {badge}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
