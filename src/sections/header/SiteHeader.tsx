@@ -157,9 +157,14 @@ export default function SiteHeader({
   }, []);
 
   const primaryNav = navItems.filter((item) =>
-    ["#about", "#experience", "#projects", "#skills", "#contact"].includes(
-      item.href,
-    ),
+    [
+      "#about",
+      "#experience",
+      "#projects",
+      "#skills",
+      "#education",
+      "#contact",
+    ].includes(item.href),
   );
   const isEnglishLocale = currentLocale === "en";
   const nextLocale = isEnglishLocale ? "es" : "en";

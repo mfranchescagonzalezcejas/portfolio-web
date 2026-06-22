@@ -1,44 +1,75 @@
-import type { LinkItem, ContactSection } from "../../content/site";
+import type { ContactLinkItem, ContactSection } from "../../content/site";
+import { getContactIcon } from "./contactIcons";
 
 type ContactLinksProps = {
-  links: LinkItem[];
+  links: ContactLinkItem[];
   section: ContactSection;
 };
 
+function getContactLinkClass(link: ContactLinkItem) {
+  const variant =
+    link.variant === "primary"
+      ? "contact-cta-link-primary cta-button"
+      : "contact-cta-link-secondary cta-outline";
+
+  return `contact-cta-link ${variant}`;
+}
+
+function getContactHeading(section: ContactSection) {
+  return `${section.titlePrefix} ${section.titleHighlight}`;
+}
+
 export default function ContactLinks({ links, section }: ContactLinksProps) {
+  const heading = getContactHeading(section);
+
   return (
     <section
       id="contact"
-      className="section-shell scroll-mt-32"
+      className="contact-section section-shell scroll-mt-32"
       aria-labelledby="contact-title"
     >
-      <div className="section-inner card-surface flex flex-col gap-8 rounded-[1.8rem] lg:flex-row lg:items-center lg:justify-between">
-        <div className="max-w-2xl">
-          <p className="eyebrow">{section.eyebrow}</p>
-          <h2 id="contact-title" className="section-title">
-            {section.title}
+      <div className="section-inner">
+        <div className="contact-cta-card card-surface">
+          <p className="contact-pill eyebrow">{section.eyebrow}</p>
+          <h2
+            id="contact-title"
+            className="contact-title section-title"
+            aria-label={heading}
+          >
+            {section.titlePrefix}{" "}
+            <span className="text-gradient" aria-hidden="true">
+              {section.titleHighlight}
+            </span>
           </h2>
-          <p className="hero-copy mt-3 max-w-2xl text-base leading-7">
-            {section.body}
-          </p>
-        </div>
+          <p className="hero-copy contact-copy">{section.body}</p>
 
-        <nav id="contact-links" aria-label={section.ariaLabel}>
-          <ul className="flex flex-wrap gap-3">
-            {links.map((link) => (
-              <li key={link.href}>
-                <a
-                  className="cta-button"
-                  href={link.href}
-                  target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noopener noreferrer" : undefined}
-                >
-                  {link.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <nav id="contact-links" aria-label={section.ariaLabel}>
+            <ul className="contact-link-list">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <a
+                    className={getContactLinkClass(link)}
+                    href={link.href}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener noreferrer" : undefined}
+                  >
+                    {(() => {
+                      const Icon = getContactIcon(link.kind);
+                      return (
+                        <Icon
+                          className="contact-cta-icon"
+                          aria-hidden="true"
+                          data-contact-icon={link.kind}
+                        />
+                      );
+                    })()}
+                    <span>{link.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </div>
     </section>
   );

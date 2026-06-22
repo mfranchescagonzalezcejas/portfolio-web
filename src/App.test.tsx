@@ -45,6 +45,7 @@ describe("locale routing behavior", () => {
       nextLocaleHref: "/es",
       nextLocaleHint: "Switch to Spanish",
       skillsNavLabel: "Skills",
+      educationNavLabel: "Education",
       themeToggleLabel: "Switch to light mode",
     },
     {
@@ -62,6 +63,7 @@ describe("locale routing behavior", () => {
       nextLocaleHref: "/es",
       nextLocaleHint: "Switch to Spanish",
       skillsNavLabel: "Skills",
+      educationNavLabel: "Education",
       themeToggleLabel: "Switch to light mode",
     },
     {
@@ -79,6 +81,7 @@ describe("locale routing behavior", () => {
       nextLocaleHref: "/en",
       nextLocaleHint: "Cambiar a inglés",
       skillsNavLabel: "Competencias",
+      educationNavLabel: "Educación",
       themeToggleLabel: "Cambiar a modo claro",
     },
   ])(
@@ -97,6 +100,7 @@ describe("locale routing behavior", () => {
       nextLocaleHref,
       nextLocaleHint,
       skillsNavLabel,
+      educationNavLabel,
       themeToggleLabel,
     }) => {
       renderAtPath(path);
@@ -142,6 +146,9 @@ describe("locale routing behavior", () => {
       expect(
         within(header).getByRole("link", { name: skillsNavLabel }),
       ).toHaveAttribute("href", "#skills");
+      expect(
+        within(header).getByRole("link", { name: educationNavLabel }),
+      ).toHaveAttribute("href", "#education");
       const themeToggle = within(header).getByRole("button", {
         name: themeToggleLabel,
       });
@@ -651,6 +658,149 @@ describe("navigation anchors", () => {
     const contactSection = document.getElementById("contact");
     expect(contactSection).toHaveAttribute("aria-labelledby", "contact-title");
     expect(document.getElementById("contact-title")).not.toBeNull();
+  });
+
+  it.each([
+    {
+      path: "/",
+      educationHeading: "Education and languages",
+      educationCard: "Education",
+      educationItem: "Telecommunications Engineering",
+      masterItem: "Master's in AI Development",
+      languageCard: "Languages",
+      languageLabel: "Language proficiency",
+      nativeLanguage: "Spanish",
+      nativeLevel: "Native",
+      contactHeading: "Let’s build great mobile products.",
+      contactBody:
+        /Available for Mobile Developer, Flutter Developer, and Android Developer/i,
+      cvLabel: "Download CV",
+      footerText: "Built with care in Barcelona",
+    },
+    {
+      path: "/es",
+      educationHeading: "Formación e idiomas",
+      educationCard: "Formación",
+      educationItem: "Ingeniería de Telecomunicaciones",
+      masterItem: "Máster en Desarrollo de IA",
+      languageCard: "Idiomas",
+      languageLabel: "Nivel de idiomas",
+      nativeLanguage: "Español",
+      nativeLevel: "Nativo",
+      contactHeading: "Construyamos grandes productos móviles.",
+      contactBody:
+        /Disponible para oportunidades de Mobile Developer, Flutter Developer y Android Developer/i,
+      cvLabel: "Descargar CV",
+      footerText: "Desarrollado con cariño en Barcelona",
+    },
+  ])(
+    "renders localized Education/Languages, Contact CTA, and Footer for $path",
+    ({
+      path,
+      educationHeading,
+      educationCard,
+      educationItem,
+      masterItem,
+      languageCard,
+      languageLabel,
+      nativeLanguage,
+      nativeLevel,
+      contactHeading,
+      contactBody,
+      cvLabel,
+      footerText,
+    }) => {
+      renderAtPath(path);
+
+      const educationSection = document.getElementById("education");
+      expect(educationSection).toBeInTheDocument();
+      expect(
+        within(educationSection as HTMLElement).getByRole("heading", {
+          level: 2,
+          name: educationHeading,
+        }),
+      ).toBeInTheDocument();
+      expect(
+        within(educationSection as HTMLElement).getByRole("heading", {
+          level: 3,
+          name: educationCard,
+        }),
+      ).toBeInTheDocument();
+      expect(educationSection as HTMLElement).toHaveTextContent(educationItem);
+      expect(educationSection as HTMLElement).toHaveTextContent(masterItem);
+      expect(
+        within(educationSection as HTMLElement).getByRole("heading", {
+          level: 3,
+          name: languageCard,
+        }),
+      ).toBeInTheDocument();
+      const languageList = within(
+        educationSection as HTMLElement,
+      ).getByLabelText(languageLabel);
+      expect(languageList).toHaveTextContent(nativeLanguage);
+      expect(languageList).toHaveTextContent(nativeLevel);
+
+      const contactSection = document.getElementById("contact");
+      expect(contactSection).toBeInTheDocument();
+      expect(
+        within(contactSection as HTMLElement).getByRole("heading", {
+          level: 2,
+          name: contactHeading,
+        }),
+      ).toBeInTheDocument();
+      expect(contactSection as HTMLElement).toHaveTextContent(contactBody);
+      expect(
+        within(contactSection as HTMLElement).getByRole("link", {
+          name: cvLabel,
+        }),
+      ).toHaveAttribute("href", "/cv.pdf");
+
+      const footer = screen.getByRole("contentinfo");
+      expect(footer).toHaveTextContent("DevDigi by Mercedes Gonzalez");
+      expect(footer).toHaveTextContent(footerText);
+    },
+  );
+
+  it("renders safe Contact CTA links for external, CV, and email targets", () => {
+    renderAtPath("/");
+
+    const contactSection = document.getElementById("contact");
+    expect(contactSection).toBeInTheDocument();
+
+    const linkedInLink = within(contactSection as HTMLElement).getByRole(
+      "link",
+      { name: "LinkedIn" },
+    );
+    expect(linkedInLink).toHaveAttribute("target", "_blank");
+    expect(linkedInLink.getAttribute("rel")?.split(/\s+/)).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
+
+    const githubLink = within(contactSection as HTMLElement).getByRole("link", {
+      name: "GitHub",
+    });
+    expect(githubLink).toHaveAttribute(
+      "href",
+      "https://github.com/mfranchescagonzalezcejas",
+    );
+    expect(githubLink).toHaveAttribute("target", "_blank");
+    expect(githubLink.getAttribute("rel")?.split(/\s+/)).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
+
+    const cvLink = within(contactSection as HTMLElement).getByRole("link", {
+      name: "Download CV",
+    });
+    expect(cvLink).toHaveAttribute("href", "/cv.pdf");
+    expect(cvLink).not.toHaveAttribute("target");
+    expect(cvLink).not.toHaveAttribute("rel");
+
+    const emailLink = within(contactSection as HTMLElement).getByRole("link", {
+      name: "Email",
+    });
+    expect(emailLink).toHaveAttribute("href", "mailto:mercedesgon03@gmail.com");
+    expect(emailLink).not.toHaveAttribute("target");
+    expect(emailLink).not.toHaveAttribute("rel");
   });
 
   it("protects external links opened in new tabs", () => {

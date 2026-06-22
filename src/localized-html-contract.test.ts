@@ -28,6 +28,13 @@ const requiredProjectRepoUrls = [
   "https://github.com/mfranchescagonzalezcejas/AppAndroid",
 ];
 
+const requiredContactUrls = [
+  "https://www.linkedin.com/in/mercedes-franchesca-gonzalez-cejas-7555a7177",
+  "https://github.com/mfranchescagonzalezcejas",
+  "/cv.pdf",
+  "mailto:mercedesgon03@gmail.com",
+];
+
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
@@ -44,8 +51,15 @@ type StaticContract = {
   skillItems: string[];
   omittedSkills: string[];
   footerText: string;
+  footerYearText: string;
   navLabel: string;
   skillsNavLabel: string;
+  educationHeading: string;
+  educationCard: string;
+  languagesCard: string;
+  languageItems: [string, string][];
+  contactHeading: string;
+  cvLabel: string;
 };
 
 const entrypoints: LocaleEntrypoint[] = [
@@ -109,8 +123,9 @@ const staticContracts: Record<
       "Selected work",
       "• Skills",
       "Technical toolbox",
-      "Education",
-      "Contact",
+      "• Education and languages",
+      "Education and languages",
+      "Let’s build great mobile products.",
     ],
     heroSnippet: "I build polished mobile apps for real users.",
     valuesSnippet:
@@ -152,8 +167,19 @@ const staticContracts: Record<
     ],
     omittedSkills: ["Remote collaboration"],
     footerText: "Built with care in Barcelona",
+    footerYearText: "© 2026 · Built with care in Barcelona",
     navLabel: "Primary navigation",
     skillsNavLabel: "Skills",
+    educationHeading: "Education and languages",
+    educationCard: "Education",
+    languagesCard: "Languages",
+    languageItems: [
+      ["Spanish", "Native"],
+      ["Catalan", "Native"],
+      ["English", "B2"],
+    ],
+    contactHeading: "Let’s build great mobile products.",
+    cvLabel: "Download CV",
   },
   es: {
     skipLabel: "Saltar al contenido",
@@ -166,8 +192,9 @@ const staticContracts: Record<
       "Trabajos seleccionados",
       "• Competencias",
       "Caja de herramientas técnicas",
-      "Educación",
-      "Contacto",
+      "• Formación e idiomas",
+      "Formación e idiomas",
+      "Construyamos grandes productos móviles.",
     ],
     heroSnippet: "Construyo apps móviles pulidas para usuarios reales.",
     valuesSnippet:
@@ -209,8 +236,19 @@ const staticContracts: Record<
     ],
     omittedSkills: ["Colaboración remota"],
     footerText: "Desarrollado con cariño en Barcelona",
+    footerYearText: "© 2026 · Desarrollado con cariño en Barcelona",
     navLabel: "Navegación principal",
     skillsNavLabel: "Competencias",
+    educationHeading: "Formación e idiomas",
+    educationCard: "Formación",
+    languagesCard: "Idiomas",
+    languageItems: [
+      ["Español", "Nativo"],
+      ["Catalán", "Nativo"],
+      ["Inglés", "B2"],
+    ],
+    contactHeading: "Construyamos grandes productos móviles.",
+    cvLabel: "Descargar CV",
   },
 };
 
@@ -237,6 +275,8 @@ const assertNoJsContract = (
   const projectsIndex = sectionOrder("projects");
   const caseStudiesIndex = sectionOrder("case-studies");
   const skillsIndex = sectionOrder("skills");
+  const educationIndex = sectionOrder("education");
+  const contactIndex = sectionOrder("contact");
 
   expect(bodyText).toContain(contract.skipLabel);
   expect(body.querySelector("main#main-content")).not.toBeNull();
@@ -263,6 +303,8 @@ const assertNoJsContract = (
   expect(projectsIndex).toBeGreaterThanOrEqual(0);
   expect(caseStudiesIndex).toBeGreaterThanOrEqual(0);
   expect(skillsIndex).toBeGreaterThanOrEqual(0);
+  expect(educationIndex).toBeGreaterThanOrEqual(0);
+  expect(contactIndex).toBeGreaterThanOrEqual(0);
   expect(topIndex).toBeLessThan(valuesIndex);
   expect(valuesIndex).toBeLessThan(aboutIndex);
   expect(aboutIndex).toBeLessThan(experienceIndex);
@@ -270,6 +312,8 @@ const assertNoJsContract = (
   expect(featuredIndex).toBeLessThan(projectsIndex);
   expect(projectsIndex).toBeLessThan(caseStudiesIndex);
   expect(caseStudiesIndex).toBeLessThan(skillsIndex);
+  expect(skillsIndex).toBeLessThan(educationIndex);
+  expect(educationIndex).toBeLessThan(contactIndex);
 
   for (const heading of contract.sectionHeadings) {
     expect(bodyText).toContain(heading);
@@ -313,6 +357,20 @@ const assertNoJsContract = (
     );
   }
 
+  for (const href of requiredContactUrls) {
+    const contactLink = body.querySelector(`section#contact a[href="${href}"]`);
+    expect(contactLink).not.toBeNull();
+    if (href.startsWith("https://")) {
+      expect(contactLink?.getAttribute("target")).toBe("_blank");
+      expect(contactLink?.getAttribute("rel")?.split(/\s+/)).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    } else {
+      expect(contactLink?.getAttribute("target")).toBeNull();
+      expect(contactLink?.getAttribute("rel")).toBeNull();
+    }
+  }
+
   for (const experience of siteContentByLocale[locale].experience) {
     expect(bodyText).toContain(`${experience.company} — ${experience.role}`);
     expect(bodyText).toContain(experience.period);
@@ -329,8 +387,25 @@ const assertNoJsContract = (
   expect(bodyText).toContain(contract.summarySnippet);
   expect(bodyText).toContain(contract.summaryBrandSnippet);
   expect(bodyText).toContain(contract.cta);
+  const educationSection = body.querySelector("section#education");
+  expect(educationSection?.querySelector("h2")?.textContent?.trim()).toBe(
+    contract.educationHeading,
+  );
+  expect(educationSection?.textContent).toContain(contract.educationCard);
+  expect(educationSection?.textContent).toContain(contract.languagesCard);
+  for (const [languageName, languageLevel] of contract.languageItems) {
+    expect(educationSection?.textContent).toContain(languageName);
+    expect(educationSection?.textContent).toContain(languageLevel);
+  }
+
+  const contactSection = body.querySelector("section#contact");
+  expect(contactSection?.querySelector("h2")?.textContent?.trim()).toBe(
+    contract.contactHeading,
+  );
+  expect(contactSection?.textContent).toContain(contract.cvLabel);
+  expect(contactSection?.textContent).toContain("Email");
   expect(bodyText).toContain(contract.footerText);
-  expect(bodyText).not.toMatch(/\u00A9\s*20\d{2}/);
+  expect(bodyText).toContain(contract.footerYearText);
   expect(bodyText.trim().length).toBeGreaterThan(400);
 };
 
@@ -501,6 +576,106 @@ describe("Localized static entrypoints", () => {
       );
       expect(warn).toHaveBeenCalledWith(
         "Dropped 1 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("validates and normalizes Contact links including mailto and CV targets", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const source = siteContentByLocale.en;
+
+      const result = validateSiteContent({
+        ...source,
+        contacts: [
+          {
+            kind: "email",
+            variant: "secondary",
+            label: " Email ",
+            href: " mailto:test@example.com ",
+          },
+          {
+            kind: "cv",
+            variant: "secondary",
+            label: " CV ",
+            href: " /cv.pdf ",
+          },
+          {
+            kind: "linkedin",
+            variant: "primary",
+            label: " Site ",
+            href: " https://example.com/profile ",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
+            label: "Plain HTTP",
+            href: "http://example.com/profile",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
+            label: "Protocol relative",
+            href: "//example.com",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
+            label: "Broken",
+            href: "javascript:alert(1)",
+          },
+        ],
+      });
+
+      expect(result.content.contacts).toEqual([
+        {
+          kind: "email",
+          variant: "secondary",
+          label: "Email",
+          href: "mailto:test@example.com",
+          external: false,
+        },
+        {
+          kind: "cv",
+          variant: "secondary",
+          label: "CV",
+          href: "/cv.pdf",
+          external: false,
+        },
+        {
+          kind: "linkedin",
+          variant: "primary",
+          label: "Site",
+          href: "https://example.com/profile",
+          external: true,
+        },
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Protocol relative",
+            href: "//example.com",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Plain HTTP",
+            href: "http://example.com/profile",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Broken",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 3 invalid configured link(s) from en site content before render.",
       );
     } finally {
       warn.mockRestore();
