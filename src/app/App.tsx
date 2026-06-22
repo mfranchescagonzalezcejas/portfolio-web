@@ -1,5 +1,8 @@
 import { useEffect } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { siteContentByLocale } from "../content/site";
+import type { Locale } from "../content/site";
 import { resolveLocale } from "./locale";
 import SiteHeader from "../sections/header/SiteHeader";
 import Hero from "../sections/hero/Hero";
@@ -13,10 +16,23 @@ import Skills from "../sections/skills/Skills";
 import ContactLinks from "../sections/contact/ContactLinks";
 import CaseStudies from "../sections/case-studies/CaseStudies";
 
-export default function App() {
-  const locale = resolveLocale(window.location.pathname);
-  const site = siteContentByLocale[locale];
-  const currentYear = new Date().getFullYear();
+type AppProps = {
+  locale?: Locale;
+  currentYear?: number;
+};
+
+const getBrowserLocale = () => {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  return resolveLocale(window.location.pathname);
+};
+
+export default function App({ locale, currentYear }: AppProps) {
+  const resolvedLocale = locale ?? getBrowserLocale() ?? "en";
+  const resolvedYear = currentYear ?? new Date().getFullYear();
+  const site = siteContentByLocale[resolvedLocale];
   const featuredProjectIndex = site.projects.findIndex(
     (project) => project.featured,
   );
@@ -35,6 +51,8 @@ export default function App() {
 
   return (
     <div className="portfolio-shell min-h-screen">
+      <Analytics />
+      <SpeedInsights />
       <a className="skip-link sr-only focus:not-sr-only" href="#main-content">
         {site.skipLink}
       </a>
@@ -80,7 +98,7 @@ export default function App() {
         <div className="site-footer-inner">
           <p>DevDigi by Mercedes Gonzalez</p>
           <p>
-            © {currentYear} · {site.footerText}
+            © {resolvedYear} · {site.footerText}
           </p>
         </div>
       </footer>

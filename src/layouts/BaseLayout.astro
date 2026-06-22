@@ -1,0 +1,37 @@
+---
+import "../styles/global.css";
+import type { Locale, SiteContent } from "../content/site";
+
+const productionSiteUrl = "https://devdigi.dev";
+
+type Props = {
+  locale: Locale;
+  site: SiteContent;
+};
+
+const { locale, site } = Astro.props;
+const canonicalPath = locale === "en" ? "/en" : "/es";
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{site.meta.title}</title>
+    <meta name="description" content={site.meta.description} />
+    <link rel="canonical" href={`${productionSiteUrl}${canonicalPath}`} />
+    <link rel="alternate" href={`${productionSiteUrl}/en`} hreflang="en" />
+    <link rel="alternate" href={`${productionSiteUrl}/es`} hreflang="es" />
+    <link rel="alternate" href={`${productionSiteUrl}/en`} hreflang="x-default" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
