@@ -54,7 +54,11 @@ export default function Summary({ summary }: SummaryProps) {
             </p>
           ))}
 
-          <div className="summary-badges" aria-label={summary.badgesLabel}>
+          <div
+            className="summary-badges"
+            role="group"
+            aria-label={summary.badgesLabel}
+          >
             {summary.badges.map((badge) => (
               <span key={badge} className="summary-badge">
                 {badge}

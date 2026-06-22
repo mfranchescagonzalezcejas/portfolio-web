@@ -216,9 +216,9 @@ describe("About summary behavior", () => {
         within(aboutSection as HTMLElement).getByText(brandSnippet),
       ).toBeInTheDocument();
 
-      const badges = within(aboutSection as HTMLElement).getByLabelText(
-        badgesLabel,
-      );
+      const badges = within(aboutSection as HTMLElement).getByRole("group", {
+        name: badgesLabel,
+      });
       for (const badge of [
         "Flutter",
         "Kotlin",
