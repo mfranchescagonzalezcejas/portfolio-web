@@ -17,7 +17,7 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
           <div className="hero-phone-screen">
             <div className="hero-phone-status" aria-label="Header status row">
               <span>9:41</span>
-              <span>InkScroller</span>
+              <span>Inkscroller</span>
             </div>
 
             <div className="hero-reading-card">

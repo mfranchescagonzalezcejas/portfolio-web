@@ -20,6 +20,14 @@ type SeoContract = {
 
 const productionSiteUrl = "https://devdigi.dev";
 
+const requiredProjectRepoUrls = [
+  "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+  "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+  "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
+  "https://github.com/mfranchescagonzalezcejas/AppUIKit",
+  "https://github.com/mfranchescagonzalezcejas/AppAndroid",
+];
+
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
@@ -74,7 +82,9 @@ const sectionIds = [
   "values",
   "about",
   "experience",
+  "featured",
   "projects",
+  "case-studies",
   "skills",
   "education",
   "contact",
@@ -90,7 +100,9 @@ const staticContracts: Record<
       "About",
       "What I bring as a mobile developer",
       "Experience",
-      "Selected proof of work",
+      "• Featured project",
+      "Inkscroller",
+      "Selected work",
       "Tools and engineering stack",
       "Education",
       "Contact",
@@ -109,7 +121,13 @@ const staticContracts: Record<
     summaryBrandSnippet:
       "where I showcase my mobile work, projects and technical growth",
     cta: "Contact me",
-    portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
+    portfolioItems: [
+      "Inkscroller Frontend",
+      "Inkscroller Backend",
+      "AppSwiftUI",
+      "AppUIKit",
+      "AppAndroid",
+    ],
     footerText: "Built with care in Barcelona",
     navLabel: "Primary navigation",
     skillsNavLabel: "Skills",
@@ -120,6 +138,8 @@ const staticContracts: Record<
       "Sobre mí",
       "Lo que aporto como desarrolladora móvil",
       "Experiencia",
+      "• Proyecto destacado",
+      "Inkscroller",
       "Trabajos seleccionados",
       "Herramientas y stack de ingeniería",
       "Educación",
@@ -139,7 +159,13 @@ const staticContracts: Record<
     summaryBrandSnippet:
       "donde muestro mi trabajo mobile, proyectos y crecimiento técnico",
     cta: "Contáctame",
-    portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
+    portfolioItems: [
+      "Inkscroller Frontend",
+      "Inkscroller Backend",
+      "AppSwiftUI",
+      "AppUIKit",
+      "AppAndroid",
+    ],
     footerText: "Desarrollado con cariño en Barcelona",
     navLabel: "Navegación principal",
     skillsNavLabel: "Competencias",
@@ -165,6 +191,10 @@ const assertNoJsContract = (
   const valuesIndex = sectionOrder("values");
   const aboutIndex = sectionOrder("about");
   const experienceIndex = sectionOrder("experience");
+  const featuredIndex = sectionOrder("featured");
+  const projectsIndex = sectionOrder("projects");
+  const caseStudiesIndex = sectionOrder("case-studies");
+  const skillsIndex = sectionOrder("skills");
 
   expect(bodyText).toContain(contract.skipLabel);
   expect(body.querySelector("main#main-content")).not.toBeNull();
@@ -187,9 +217,17 @@ const assertNoJsContract = (
   expect(valuesIndex).toBeGreaterThanOrEqual(0);
   expect(aboutIndex).toBeGreaterThanOrEqual(0);
   expect(experienceIndex).toBeGreaterThanOrEqual(0);
+  expect(featuredIndex).toBeGreaterThanOrEqual(0);
+  expect(projectsIndex).toBeGreaterThanOrEqual(0);
+  expect(caseStudiesIndex).toBeGreaterThanOrEqual(0);
+  expect(skillsIndex).toBeGreaterThanOrEqual(0);
   expect(topIndex).toBeLessThan(valuesIndex);
   expect(valuesIndex).toBeLessThan(aboutIndex);
   expect(aboutIndex).toBeLessThan(experienceIndex);
+  expect(experienceIndex).toBeLessThan(featuredIndex);
+  expect(featuredIndex).toBeLessThan(projectsIndex);
+  expect(projectsIndex).toBeLessThan(caseStudiesIndex);
+  expect(caseStudiesIndex).toBeLessThan(skillsIndex);
 
   for (const heading of contract.sectionHeadings) {
     expect(bodyText).toContain(heading);
@@ -197,6 +235,18 @@ const assertNoJsContract = (
 
   for (const projectName of contract.portfolioItems) {
     expect(bodyText).toContain(projectName);
+  }
+
+  expect(bodyText).not.toContain("Expense Tracker");
+  expect(bodyText).not.toContain("storyboards");
+
+  for (const href of requiredProjectRepoUrls) {
+    const repoLink = body.querySelector(`a[href="${href}"]`);
+    expect(repoLink).not.toBeNull();
+    expect(repoLink?.getAttribute("target")).toBe("_blank");
+    expect(repoLink?.getAttribute("rel")?.split(/\s+/)).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
   }
 
   for (const experience of siteContentByLocale[locale].experience) {
@@ -336,6 +386,51 @@ describe("Localized static entrypoints", () => {
             area: "experience",
             owner: "Worldline Global Services — Native Apps Developer",
             label: "Broken app",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 1 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("validates and normalizes Project links before render", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const source = siteContentByLocale.en;
+      const [currentProject, ...remainingProjects] = source.projects;
+
+      const result = validateSiteContent({
+        ...source,
+        projects: [
+          {
+            ...currentProject,
+            links: [
+              { label: " Frontend ", href: " https://example.com/front " },
+              { label: "Broken repo", href: "javascript:alert(1)" },
+            ],
+          },
+          ...remainingProjects,
+        ],
+      });
+
+      expect(result.content.projects[0].links).toEqual([
+        {
+          label: "Frontend",
+          href: "https://example.com/front",
+          external: true,
+        },
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "project",
+            owner: "Inkscroller",
+            label: "Broken repo",
             href: "javascript:alert(1)",
           }),
         ]),

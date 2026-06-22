@@ -331,6 +331,206 @@ describe("navigation anchors", () => {
     expect(skillsSection).toHaveClass("scroll-mt-32");
   });
 
+  it("keeps the Projects anchor on the projects grid after the featured showcase", () => {
+    renderAtPath("/");
+
+    const featuredSection = document.getElementById("featured");
+    const projectsSection = document.getElementById("projects");
+
+    expect(featuredSection).toBeInTheDocument();
+    expect(projectsSection).toBeInTheDocument();
+    expect(
+      featuredSection?.compareDocumentPosition(projectsSection as Node),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+
+    const header = screen.getByRole("banner");
+    expect(
+      within(header).getByRole("link", { name: "Projects" }),
+    ).toHaveAttribute("href", "#projects");
+    expect(
+      within(projectsSection as HTMLElement).getByRole("heading", {
+        name: /Selected work/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(projectsSection as HTMLElement).queryByRole("heading", {
+        name: "Inkscroller Frontend",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("renders the richer featured project showcase with real repository links", () => {
+    renderAtPath("/");
+
+    const featuredSection = document.getElementById("featured");
+    expect(featuredSection).toBeInTheDocument();
+    expect(
+      within(featuredSection as HTMLElement).getByText(
+        "Full-stack manga reader app",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(featuredSection as HTMLElement).getByRole("list", {
+        name: "Inkscroller technology stack",
+      }),
+    ).toHaveTextContent("Firebase Auth");
+
+    for (const { accessibleName, href } of [
+      {
+        accessibleName: "Frontend repo for Inkscroller",
+        href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+      },
+      {
+        accessibleName: "Backend repo for Inkscroller",
+        href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+      },
+    ]) {
+      const repositoryLink = within(featuredSection as HTMLElement).getByRole(
+        "link",
+        { name: accessibleName },
+      );
+      expect(repositoryLink).toHaveAttribute("href", href);
+      expect(repositoryLink).toHaveAttribute("target", "_blank");
+      expect(repositoryLink.getAttribute("rel")?.split(/\s+/)).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    }
+
+    expect(
+      within(featuredSection as HTMLElement).getByRole("link", {
+        name: "Case study for Inkscroller",
+      }),
+    ).toHaveAttribute("href", "#case-studies");
+
+    expect(
+      within(featuredSection as HTMLElement).queryByRole("link", {
+        name: /https:\/\/github.com\//i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("renders truthful project titles with real repository links", () => {
+    renderAtPath("/");
+
+    const projectsSection = document.getElementById("projects");
+    expect(projectsSection).toBeInTheDocument();
+
+    for (const { name, href } of [
+      {
+        name: "Inkscroller Frontend",
+        href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+      },
+      {
+        name: "Inkscroller Backend",
+        href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+      },
+      {
+        name: "AppSwiftUI",
+        href: "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
+      },
+      {
+        name: "AppUIKit",
+        href: "https://github.com/mfranchescagonzalezcejas/AppUIKit",
+      },
+      {
+        name: "AppAndroid",
+        href: "https://github.com/mfranchescagonzalezcejas/AppAndroid",
+      },
+    ]) {
+      expect(
+        within(projectsSection as HTMLElement).getByRole("heading", { name }),
+      ).toBeInTheDocument();
+
+      const repositoryLink = within(projectsSection as HTMLElement).getByRole(
+        "link",
+        { name: `View repo: Repository for ${name}` },
+      );
+      expect(repositoryLink).toHaveAttribute("href", href);
+      expect(repositoryLink).toHaveAttribute("target", "_blank");
+      expect(repositoryLink.getAttribute("rel")?.split(/\s+/)).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    }
+
+    expect(projectsSection as HTMLElement).not.toHaveTextContent(
+      "Expense Tracker",
+    );
+    expect(projectsSection as HTMLElement).not.toHaveTextContent("storyboards");
+  });
+
+  it("hydrates Spanish Projects and Featured labels without mixed English a11y copy", () => {
+    renderAtPath("/es");
+
+    const featuredSection = document.getElementById("featured");
+    const projectsSection = document.getElementById("projects");
+    expect(featuredSection).toBeInTheDocument();
+    expect(projectsSection).toBeInTheDocument();
+
+    expect(
+      within(featuredSection as HTMLElement).getByRole("list", {
+        name: "Tecnologías de Inkscroller",
+      }),
+    ).toHaveTextContent("Firebase Auth");
+    expect(
+      within(featuredSection as HTMLElement).getByRole("link", {
+        name: "Repo frontend de Inkscroller",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+    );
+    expect(
+      within(featuredSection as HTMLElement).getByRole("link", {
+        name: "Repo backend de Inkscroller",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+    );
+    expect(
+      within(featuredSection as HTMLElement).getByRole("link", {
+        name: "Caso de estudio de Inkscroller",
+      }),
+    ).toHaveAttribute("href", "#case-studies");
+    expect(featuredSection as HTMLElement).toHaveTextContent(
+      "Captura próximamente",
+    );
+
+    expect(
+      within(projectsSection as HTMLElement).getByRole("list", {
+        name: "Tecnologías de AppAndroid",
+      }),
+    ).toHaveTextContent("Jetpack Compose");
+    expect(
+      within(projectsSection as HTMLElement).getByRole("link", {
+        name: "Ver repo: Repositorio de AppAndroid",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/mfranchescagonzalezcejas/AppAndroid",
+    );
+    expect(projectsSection as HTMLElement).toHaveTextContent(
+      "Capturas de la app próximamente",
+    );
+
+    expect(
+      within(featuredSection as HTMLElement).queryByRole("list", {
+        name: /technology stack/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(projectsSection as HTMLElement).queryByRole("link", {
+        name: / for /i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(featuredSection as HTMLElement).not.toHaveTextContent(
+      "Screenshot coming soon",
+    );
+    expect(projectsSection as HTMLElement).not.toHaveTextContent(
+      "App screenshots coming soon",
+    );
+  });
+
   it("keeps the hydrated Values section available as a deep-link target", () => {
     renderAtPath("/");
 
