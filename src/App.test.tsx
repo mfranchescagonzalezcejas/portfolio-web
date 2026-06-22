@@ -484,10 +484,10 @@ describe("navigation anchors", () => {
     }
 
     expect(
-      within(featuredSection as HTMLElement).getByRole("link", {
+      within(featuredSection as HTMLElement).queryByRole("link", {
         name: "Case study for Inkscroller",
       }),
-    ).toHaveAttribute("href", "#case-studies");
+    ).not.toBeInTheDocument();
 
     expect(
       within(featuredSection as HTMLElement).queryByRole("link", {
@@ -510,6 +510,10 @@ describe("navigation anchors", () => {
       {
         name: "Inkscroller Backend",
         href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+      },
+      {
+        name: "DevDigi Portfolio Web",
+        href: "https://github.com/mfranchescagonzalezcejas/portfolio-web",
       },
       {
         name: "AppSwiftUI",
@@ -545,6 +549,82 @@ describe("navigation anchors", () => {
     expect(projectsSection as HTMLElement).not.toHaveTextContent("storyboards");
   });
 
+  it("renders compact English professional case studies with verified public links", () => {
+    renderAtPath("/");
+
+    const caseStudiesSection = document.getElementById("case-studies");
+    expect(caseStudiesSection).toBeInTheDocument();
+    expect(
+      within(caseStudiesSection as HTMLElement).getByRole("heading", {
+        name: "Selected case studies",
+        level: 2,
+      }),
+    ).toBeInTheDocument();
+
+    for (const title of [
+      "La Mercè production release",
+      "Barcelona a la Butxaca air quality",
+      "Nescafé Dolce Gusto QA validation",
+    ]) {
+      expect(
+        within(caseStudiesSection as HTMLElement).getByRole("heading", {
+          name: title,
+        }),
+      ).toBeInTheDocument();
+    }
+
+    expect(
+      within(caseStudiesSection as HTMLElement).queryByRole("heading", {
+        name: "Inkscroller architecture",
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(caseStudiesSection as HTMLElement).getAllByRole("article"),
+    ).toHaveLength(3);
+
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "Professional work shown with public app references only",
+    );
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("Context");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("My role");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("Stack");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("Demonstrates");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "release validation",
+    );
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "air quality feature",
+    );
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "reconnection and brew flow validation",
+    );
+
+    for (const { name, href } of [
+      {
+        name: "La Mercè on Google Play",
+        href: "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+      },
+      {
+        name: "Barcelona a la Butxaca on Google Play",
+        href: "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+      },
+      {
+        name: "Nescafé Dolce Gusto on Google Play",
+        href: "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
+      },
+    ]) {
+      const publicLink = within(caseStudiesSection as HTMLElement)
+        .getAllByRole("link", { name })
+        .find((link) => link.getAttribute("href") === href);
+
+      expect(publicLink).toBeDefined();
+      expect(publicLink).toHaveAttribute("target", "_blank");
+      expect(publicLink?.getAttribute("rel")?.split(/\s+/)).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    }
+  });
+
   it("hydrates Spanish Projects and Featured labels without mixed English a11y copy", () => {
     renderAtPath("/es");
 
@@ -575,10 +655,10 @@ describe("navigation anchors", () => {
       "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
     );
     expect(
-      within(featuredSection as HTMLElement).getByRole("link", {
+      within(featuredSection as HTMLElement).queryByRole("link", {
         name: "Caso de estudio de Inkscroller",
       }),
-    ).toHaveAttribute("href", "#case-studies");
+    ).not.toBeInTheDocument();
     expect(featuredSection as HTMLElement).toHaveTextContent(
       "Captura próximamente",
     );
@@ -595,6 +675,19 @@ describe("navigation anchors", () => {
     ).toHaveAttribute(
       "href",
       "https://github.com/mfranchescagonzalezcejas/AppAndroid",
+    );
+    expect(
+      within(projectsSection as HTMLElement).getByRole("heading", {
+        name: "Web Portfolio DevDigi",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(projectsSection as HTMLElement).getByRole("link", {
+        name: "Ver repo: Repositorio de Web Portfolio DevDigi",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/mfranchescagonzalezcejas/portfolio-web",
     );
     expect(projectsSection as HTMLElement).toHaveTextContent(
       "Capturas de la app próximamente",
@@ -616,6 +709,87 @@ describe("navigation anchors", () => {
     expect(projectsSection as HTMLElement).not.toHaveTextContent(
       "App screenshots coming soon",
     );
+  });
+
+  it("renders compact Spanish professional case studies without mixed English public link labels", () => {
+    renderAtPath("/es");
+
+    const caseStudiesSection = document.getElementById("case-studies");
+    expect(caseStudiesSection).toBeInTheDocument();
+    expect(
+      within(caseStudiesSection as HTMLElement).getByRole("heading", {
+        name: "Casos de estudio seleccionados",
+        level: 2,
+      }),
+    ).toBeInTheDocument();
+
+    for (const title of [
+      "Release en producción de La Mercè",
+      "Barcelona a la Butxaca calidad del aire",
+      "Nescafé Dolce Gusto validación QA",
+    ]) {
+      expect(
+        within(caseStudiesSection as HTMLElement).getByRole("heading", {
+          name: title,
+        }),
+      ).toBeInTheDocument();
+    }
+
+    expect(
+      within(caseStudiesSection as HTMLElement).queryByRole("heading", {
+        name: "Arquitectura de Inkscroller",
+      }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(caseStudiesSection as HTMLElement).getAllByRole("article"),
+    ).toHaveLength(3);
+
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "Trabajo profesional mostrado solo con referencias públicas",
+    );
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("Contexto");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("Mi rol");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("Stack");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent("Demuestra");
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "validación de release",
+    );
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "calidad del aire",
+    );
+    expect(caseStudiesSection as HTMLElement).toHaveTextContent(
+      "validación de flujos de reconexión y preparación",
+    );
+
+    expect(
+      within(caseStudiesSection as HTMLElement).getByRole("link", {
+        name: "La Mercè en Google Play",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+    );
+    expect(
+      within(caseStudiesSection as HTMLElement).getByRole("link", {
+        name: "Barcelona a la Butxaca en Google Play",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+    );
+    expect(
+      within(caseStudiesSection as HTMLElement).getByRole("link", {
+        name: "Nescafé Dolce Gusto en Google Play",
+      }),
+    ).toHaveAttribute(
+      "href",
+      "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
+    );
+    expect(
+      within(caseStudiesSection as HTMLElement).queryByRole("link", {
+        name: "View on Google Play",
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps the hydrated Values section available as a deep-link target", () => {
