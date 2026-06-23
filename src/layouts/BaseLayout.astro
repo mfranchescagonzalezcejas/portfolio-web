@@ -11,6 +11,10 @@ type Props = {
 
 const { locale, site } = Astro.props;
 const canonicalPath = locale === "en" ? "/en" : "/es";
+const canonicalUrl = `${productionSiteUrl}${canonicalPath}`;
+const openGraphLocale = locale === "en" ? "en_US" : "es_ES";
+const alternateOpenGraphLocale = locale === "en" ? "es_ES" : "en_US";
+const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const themeBootScript = `
 (function () {
   var theme;
@@ -38,10 +42,26 @@ const themeBootScript = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{site.meta.title}</title>
     <meta name="description" content={site.meta.description} />
-    <link rel="canonical" href={`${productionSiteUrl}${canonicalPath}`} />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="alternate" href={`${productionSiteUrl}/en`} hreflang="en" />
     <link rel="alternate" href={`${productionSiteUrl}/es`} hreflang="es" />
     <link rel="alternate" href={`${productionSiteUrl}/en`} hreflang="x-default" />
+    <meta property="og:title" content={site.meta.title} />
+    <meta property="og:description" content={site.meta.description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content={openGraphLocale} />
+    <meta property="og:locale:alternate" content={alternateOpenGraphLocale} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:alt" content={site.meta.socialImageAlt} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={site.meta.title} />
+    <meta name="twitter:description" content={site.meta.description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={site.meta.socialImageAlt} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
