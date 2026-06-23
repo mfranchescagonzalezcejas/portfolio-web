@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import App from "../../app/App";
+import HomePage from "../../layouts/HomePage.astro";
 import { siteContentByLocale } from "../../content/site";
 
 const locale = "es";
@@ -9,5 +9,5 @@ const currentYear = new Date().getFullYear();
 ---
 
 <BaseLayout locale={locale} site={site}>
-  <App locale={locale} currentYear={currentYear} client:load />
+  <HomePage locale={locale} site={site} currentYear={currentYear} />
 </BaseLayout>

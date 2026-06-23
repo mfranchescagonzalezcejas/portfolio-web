@@ -551,6 +551,31 @@ describe("Localized static entrypoints", () => {
   );
 
   it.each(entrypoints)(
+    "hydrates only the header React island for $path",
+    ({ path }) => {
+      const html = readHtml(path);
+      const parser = new DOMParser();
+      const document = parser.parseFromString(html, "text/html");
+      const islands = Array.from(
+        document.body.querySelectorAll("astro-island"),
+      );
+      const main = document.body.querySelector("main#main-content");
+      const footer = document.body.querySelector("footer.site-footer");
+
+      expect(islands).toHaveLength(1);
+      expect(islands[0]?.getAttribute("client")).toBe("load");
+      expect(islands[0]?.getAttribute("component-url")).toMatch(/SiteHeader\./);
+      expect(islands[0]?.querySelector("header")).not.toBeNull();
+      expect(islands[0]?.querySelector("main, footer, section")).toBeNull();
+      expect(main).not.toBeNull();
+      expect(main?.closest("astro-island")).toBeNull();
+      expect(footer).not.toBeNull();
+      expect(footer?.closest("astro-island")).toBeNull();
+      expect(html).not.toContain('component-url="/_astro/App');
+    },
+  );
+
+  it.each(entrypoints)(
     "includes canonical and hreflang alternates for $path",
     ({ path }) => {
       const html = readHtml(path);

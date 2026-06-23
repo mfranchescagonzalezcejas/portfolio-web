@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import Analytics from "@vercel/analytics/astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
 import type { Locale, SiteContent } from "../content/site";
 
 const productionSiteUrl = "https://devdigi.dev";
@@ -72,5 +74,7 @@ const themeBootScript = `
   </head>
   <body>
     <slot />
+    <Analytics />
+    <SpeedInsights />
   </body>
 </html>
