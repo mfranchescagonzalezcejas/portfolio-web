@@ -545,6 +545,32 @@ describe("Localized static entrypoints", () => {
     },
   );
 
+  it.each(entrypoints)(
+    "emits the theme boot script before the body for $path",
+    ({ path }) => {
+      const html = readHtml(path);
+      const bootScriptIndex = html.indexOf("devdigi-theme");
+      const bodyIndex = html.indexOf("<body");
+
+      expect(bootScriptIndex).toBeGreaterThanOrEqual(0);
+      expect(bodyIndex).toBeGreaterThanOrEqual(0);
+      expect(bootScriptIndex).toBeLessThan(bodyIndex);
+      expect(html).toContain('classList.add(theme)');
+      expect(html).toContain('storedTheme === "light" || storedTheme === "dark"');
+      expect(html).toContain('catch (_) {}');
+      expect(html).toContain('if (!theme)');
+      expect(html.indexOf("localStorage.getItem")).toBeLessThan(
+        html.indexOf('catch (_) {}'),
+      );
+      expect(html.indexOf("matchMedia")).toBeGreaterThan(
+        html.indexOf('catch (_) {}'),
+      );
+      expect(html.indexOf('theme = "dark"')).toBeGreaterThan(
+        html.indexOf("matchMedia"),
+      );
+    },
+  );
+
   it("routes locale paths to localized static HTML in vercel config", () => {
     const vercelConfig = JSON.parse(
       readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"),
