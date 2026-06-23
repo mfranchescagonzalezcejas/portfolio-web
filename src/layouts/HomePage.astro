@@ -1,0 +1,77 @@
+---
+import type { Locale, SiteContent } from "../content/site";
+import SiteHeader from "../sections/header/SiteHeader";
+import Hero from "../sections/hero/Hero";
+import Values from "../sections/values/Values";
+import Summary from "../sections/summary/Summary";
+import Experience from "../sections/experience/Experience";
+import FeaturedProject from "../sections/projects/FeaturedProject";
+import Projects from "../sections/projects/Projects";
+import Education from "../sections/education/Education";
+import Skills from "../sections/skills/Skills";
+import ContactLinks from "../sections/contact/ContactLinks";
+import CaseStudies from "../sections/case-studies/CaseStudies";
+
+type Props = {
+  locale: Locale;
+  site: SiteContent;
+  currentYear: number;
+};
+
+const { locale, site, currentYear } = Astro.props;
+const featuredProjectIndex = site.projects.findIndex(
+  (project) => project.featured,
+);
+const featuredProject =
+  featuredProjectIndex >= 0 ? site.projects[featuredProjectIndex] : null;
+const projectCards = site.projects.filter((project) => !project.featured);
+---
+
+<div class="portfolio-shell min-h-screen">
+  <a class="skip-link sr-only focus:not-sr-only" href="#main-content">
+    {site.skipLink}
+  </a>
+
+  <SiteHeader
+    currentLocale={locale}
+    navItems={site.nav}
+    languageSwitcher={site.languageSwitcher}
+    header={site.header}
+    client:load
+  />
+
+  <main id="main-content" class="relative z-10">
+    <Hero hero={site.hero} links={site.contacts} />
+    <Values values={site.values} />
+    <Summary summary={site.summary} />
+    <Experience experience={site.experience} section={site.experienceSection} />
+    {
+      featuredProject ? (
+        <FeaturedProject project={featuredProject} section={site.featuredSection} />
+      ) : null
+    }
+    <Projects projects={projectCards} section={site.allProjectsSection} />
+    {
+      site.caseStudies.length > 0 ? (
+        <CaseStudies
+          caseStudies={site.caseStudies}
+          section={site.caseStudiesSection}
+        />
+      ) : null
+    }
+    <Skills section={site.skillsSection} />
+    <Education
+      education={site.education}
+      languages={site.languages}
+      section={site.educationSection}
+    />
+    <ContactLinks links={site.contacts} section={site.contactSection} />
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>DevDigi by Mercedes Gonzalez</p>
+      <p>© {currentYear} · {site.footerText}</p>
+    </div>
+  </footer>
+</div>
