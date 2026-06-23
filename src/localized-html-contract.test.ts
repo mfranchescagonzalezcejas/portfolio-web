@@ -555,15 +555,17 @@ describe("Localized static entrypoints", () => {
       expect(bootScriptIndex).toBeGreaterThanOrEqual(0);
       expect(bodyIndex).toBeGreaterThanOrEqual(0);
       expect(bootScriptIndex).toBeLessThan(bodyIndex);
-      expect(html).toContain('classList.add(theme)');
-      expect(html).toContain('storedTheme === "light" || storedTheme === "dark"');
-      expect(html).toContain('catch (_) {}');
-      expect(html).toContain('if (!theme)');
+      expect(html).toContain("classList.add(theme)");
+      expect(html).toContain(
+        'storedTheme === "light" || storedTheme === "dark"',
+      );
+      expect(html).toContain("catch (_) {}");
+      expect(html).toContain("if (!theme)");
       expect(html.indexOf("localStorage.getItem")).toBeLessThan(
-        html.indexOf('catch (_) {}'),
+        html.indexOf("catch (_) {}"),
       );
       expect(html.indexOf("matchMedia")).toBeGreaterThan(
-        html.indexOf('catch (_) {}'),
+        html.indexOf("catch (_) {}"),
       );
       expect(html.indexOf('theme = "dark"')).toBeGreaterThan(
         html.indexOf("matchMedia"),
