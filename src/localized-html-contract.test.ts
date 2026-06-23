@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
@@ -16,9 +16,19 @@ type SeoContract = {
     es: string;
     "x-default": string;
   };
+  openGraph: {
+    locale: string;
+    alternateLocale: string;
+    url: string;
+  };
 };
 
 const productionSiteUrl = "https://devdigi.dev";
+const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
+const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
+const pngSignature = Buffer.from([
+  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+]);
 
 const requiredProjectRepoUrls = [
   "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
@@ -85,6 +95,11 @@ const seoContracts: Record<string, SeoContract> = {
       es: `${productionSiteUrl}/es`,
       "x-default": `${productionSiteUrl}/en`,
     },
+    openGraph: {
+      locale: "en_US",
+      alternateLocale: "es_ES",
+      url: `${productionSiteUrl}/en`,
+    },
   },
   "dist/en/index.html": {
     canonical: `${productionSiteUrl}/en`,
@@ -93,6 +108,11 @@ const seoContracts: Record<string, SeoContract> = {
       es: `${productionSiteUrl}/es`,
       "x-default": `${productionSiteUrl}/en`,
     },
+    openGraph: {
+      locale: "en_US",
+      alternateLocale: "es_ES",
+      url: `${productionSiteUrl}/en`,
+    },
   },
   "dist/es/index.html": {
     canonical: `${productionSiteUrl}/es`,
@@ -100,6 +120,11 @@ const seoContracts: Record<string, SeoContract> = {
       en: `${productionSiteUrl}/en`,
       es: `${productionSiteUrl}/es`,
       "x-default": `${productionSiteUrl}/en`,
+    },
+    openGraph: {
+      locale: "es_ES",
+      alternateLocale: "en_US",
+      url: `${productionSiteUrl}/es`,
     },
   },
 };
@@ -480,6 +505,20 @@ const assertNoJsContract = (
 };
 
 describe("Localized static entrypoints", () => {
+  it("uses a valid social preview PNG asset", () => {
+    expect(existsSync(socialImagePath)).toBe(true);
+
+    const socialImage = readFileSync(socialImagePath);
+
+    expect(socialImage.length).toBeGreaterThanOrEqual(24);
+    expect(
+      socialImage.subarray(0, pngSignature.length).equals(pngSignature),
+    ).toBe(true);
+    expect(socialImage.toString("ascii", 12, 16)).toBe("IHDR");
+    expect(socialImage.readUInt32BE(16)).toBe(1200);
+    expect(socialImage.readUInt32BE(20)).toBe(630);
+  });
+
   it.each(entrypoints)(
     "uses locale-specific metadata for $path",
     ({ path, locale }) => {
@@ -542,6 +581,46 @@ describe("Localized static entrypoints", () => {
       expect(xDefaultAlternate?.getAttribute("href")).toBe(
         seo.alternates["x-default"],
       );
+    },
+  );
+
+  it.each(entrypoints)(
+    "includes localized social metadata for $path",
+    ({ path, locale }) => {
+      const html = readHtml(path);
+      const parser = new DOMParser();
+      const document = parser.parseFromString(html, "text/html");
+      const site = siteContentByLocale[locale];
+      const seo = seoContracts[path];
+
+      const propertyMeta = (property: string) =>
+        document.head
+          .querySelector(`meta[property="${property}"]`)
+          ?.getAttribute("content");
+      const nameMeta = (name: string) =>
+        document.head
+          .querySelector(`meta[name="${name}"]`)
+          ?.getAttribute("content");
+
+      expect(propertyMeta("og:title")).toBe(site.meta.title);
+      expect(propertyMeta("og:description")).toBe(site.meta.description);
+      expect(propertyMeta("og:url")).toBe(seo.openGraph.url);
+      expect(propertyMeta("og:locale")).toBe(seo.openGraph.locale);
+      expect(propertyMeta("og:locale:alternate")).toBe(
+        seo.openGraph.alternateLocale,
+      );
+      expect(propertyMeta("og:type")).toBe("website");
+      expect(propertyMeta("og:image")).toBe(socialImageUrl);
+      expect(propertyMeta("og:image:alt")).toBe(site.meta.socialImageAlt);
+      expect(propertyMeta("og:image:width")).toBe("1200");
+      expect(propertyMeta("og:image:height")).toBe("630");
+      expect(propertyMeta("og:image:type")).toBe("image/png");
+
+      expect(nameMeta("twitter:card")).toBe("summary_large_image");
+      expect(nameMeta("twitter:title")).toBe(site.meta.title);
+      expect(nameMeta("twitter:description")).toBe(site.meta.description);
+      expect(nameMeta("twitter:image")).toBe(socialImageUrl);
+      expect(nameMeta("twitter:image:alt")).toBe(site.meta.socialImageAlt);
     },
   );
 

@@ -169,6 +169,7 @@ export type SiteContent = {
   meta: {
     title: string;
     description: string;
+    socialImageAlt: string;
   };
   skipLink: string;
   nav: NavItem[];
@@ -273,6 +274,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       title: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       description:
         "DevDigi is my personal developer brand. Mobile Developer focused on Flutter, Android, and iOS delivery.",
+      socialImageAlt:
+        "DevDigi portfolio preview for Mercedes Franchesca Gonzalez Cejas, Mobile Developer.",
     },
     skipLink: "Skip to content",
     nav: [
@@ -882,6 +885,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       title: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       description:
         "DevDigi es la marca personal de Mercedes; Ingeniería móvil con foco en Flutter, Android e iOS.",
+      socialImageAlt:
+        "Vista previa del portfolio DevDigi de Mercedes Franchesca Gonzalez Cejas, desarrolladora mobile.",
     },
     skipLink: "Saltar al contenido",
     nav: [
