@@ -11,6 +11,24 @@ type Props = {
 
 const { locale, site } = Astro.props;
 const canonicalPath = locale === "en" ? "/en" : "/es";
+const themeBootScript = `
+(function () {
+  var theme;
+  try {
+    var storedTheme = window.localStorage.getItem("devdigi-theme");
+    if (storedTheme === "light" || storedTheme === "dark") theme = storedTheme;
+  } catch (_) {}
+  if (!theme) {
+    try {
+      theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    } catch (_) {
+      theme = "dark";
+    }
+  }
+  var root = document.documentElement;
+  root.classList.remove("light", "dark");
+  root.classList.add(theme);
+})();`;
 ---
 
 <!doctype html>
@@ -30,6 +48,7 @@ const canonicalPath = locale === "en" ? "/en" : "/es";
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
     />
+    <script is:inline set:html={themeBootScript}></script>
   </head>
   <body>
     <slot />
