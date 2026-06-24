@@ -434,7 +434,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       linksLabel: "Public links for {role} at {company}",
     },
     featuredSection: {
-      eyebrow: "• Featured project",
+      eyebrow: "Featured project",
       title: "Inkscroller",
       kicker: "Full-stack manga reader app",
       linksLabel: "Project links",
@@ -444,7 +444,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       secondaryCtaLabel: "Backend repo",
     },
     allProjectsSection: {
-      eyebrow: "• Projects",
+      eyebrow: "Projects",
       title: "Selected work",
       description:
         "A mix of full-stack mobile, native Android and iOS, and web — each one focused on craft.",
@@ -466,14 +466,14 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       demonstratesLabel: "Demonstrates",
     },
     educationSection: {
-      eyebrow: "• Education and languages",
+      eyebrow: "Education",
       title: "Education and languages",
       educationTitle: "Education",
       languagesTitle: "Languages",
       languagesAriaLabel: "Language proficiency",
     },
     skillsSection: {
-      eyebrow: "• Skills",
+      eyebrow: "Skills",
       title: "Technical toolbox",
       categorySkillsLabel: "Skills in {category}",
       categories: [
@@ -866,7 +866,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     education: [
       {
         title: "Telecommunications Engineering",
-        meta: "Universitat Pompeu Fabra · Barcelona",
+        meta: "Universitat Pompeu Fabra",
       },
       {
         title: "Master's in AI Development",
@@ -1045,7 +1045,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       linksLabel: "Enlaces públicos de {role} en {company}",
     },
     featuredSection: {
-      eyebrow: "• Proyecto destacado",
+      eyebrow: "Proyecto destacado",
       title: "Inkscroller",
       kicker: "App lectora de manga full-stack",
       linksLabel: "Enlaces del proyecto",
@@ -1055,7 +1055,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       secondaryCtaLabel: "Repo backend",
     },
     allProjectsSection: {
-      eyebrow: "• Proyectos",
+      eyebrow: "Proyectos",
       title: "Trabajos seleccionados",
       description:
         "Una mezcla de mobile full-stack, Android e iOS nativos y web — cada uno enfocado en el oficio.",
@@ -1077,14 +1077,14 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       demonstratesLabel: "Demuestra",
     },
     educationSection: {
-      eyebrow: "• Formación e idiomas",
+      eyebrow: "Formación",
       title: "Formación e idiomas",
       educationTitle: "Formación",
       languagesTitle: "Idiomas",
       languagesAriaLabel: "Nivel de idiomas",
     },
     skillsSection: {
-      eyebrow: "• Competencias",
+      eyebrow: "Competencias",
       title: "Caja de herramientas técnicas",
       categorySkillsLabel: "Competencias en {category}",
       categories: [
@@ -1477,7 +1477,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     education: [
       {
         title: "Ingeniería de Telecomunicaciones",
-        meta: "Universitat Pompeu Fabra · Barcelona",
+        meta: "Universitat Pompeu Fabra",
       },
       {
         title: "Máster en Desarrollo de IA",

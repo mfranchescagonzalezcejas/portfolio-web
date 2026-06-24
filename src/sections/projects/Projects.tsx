@@ -24,8 +24,8 @@ export default function Projects({ projects, section }: ProjectsProps) {
       <div className="section-inner">
         <div className="values-header">
           <p className="eyebrow">{section.eyebrow}</p>
-          <h2 id="projects-title" className="section-title text-gradient">
-            {section.title}
+          <h2 id="projects-title" className="section-title">
+            <span className="text-gradient">{section.title}</span>
           </h2>
           <p className="values-description">{section.description}</p>
         </div>

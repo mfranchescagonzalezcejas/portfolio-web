@@ -33,8 +33,8 @@ export default function FeaturedProject({
       <div className="section-inner">
         <div className="values-header featured-showcase-header">
           <p className="eyebrow">{section.eyebrow}</p>
-          <h2 id="featured-title" className="section-title text-gradient">
-            {section.title}
+          <h2 id="featured-title" className="section-title">
+            <span className="text-gradient">{section.title}</span>
           </h2>
         </div>
 
@@ -45,8 +45,8 @@ export default function FeaturedProject({
           <div className="featured-project-layout">
             <div className="featured-project-copy">
               <p className="featured-project-kicker">{section.kicker}</p>
-              <h3 className="featured-project-title text-gradient">
-                {project.name}
+              <h3 className="featured-project-title">
+                <span className="text-gradient">{project.name}</span>
               </h3>
               <p className="featured-project-description">
                 {project.description}

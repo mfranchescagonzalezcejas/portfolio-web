@@ -26,6 +26,8 @@ type SeoContract = {
 const productionSiteUrl = "https://devdigi.dev";
 const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
+const fontStylesheetUrl =
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
 const pngSignature = Buffer.from([
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
 ]);
@@ -152,12 +154,12 @@ const staticContracts: Record<
       "About",
       "What I bring as a mobile developer",
       "Experience",
-      "• Featured project",
+      "Featured project",
       "Inkscroller",
       "Selected work",
-      "• Skills",
+      "Skills",
       "Technical toolbox",
-      "• Education and languages",
+      "Education and languages",
       "Education and languages",
       "Let’s build great mobile products.",
     ],
@@ -234,12 +236,12 @@ const staticContracts: Record<
       "Sobre mí",
       "Lo que aporto como desarrolladora móvil",
       "Experiencia",
-      "• Proyecto destacado",
+      "Proyecto destacado",
       "Inkscroller",
       "Trabajos seleccionados",
-      "• Competencias",
+      "Competencias",
       "Caja de herramientas técnicas",
-      "• Formación e idiomas",
+      "Formación e idiomas",
       "Formación e idiomas",
       "Construyamos grandes productos móviles.",
     ],
@@ -529,6 +531,25 @@ describe("Localized static entrypoints", () => {
       expect(html).toContain(`<title>${site.meta.title}</title>`);
       expect(html).toContain(`content="${site.meta.description}"`);
       expect(html).not.toContain(`/src/main.tsx`);
+    },
+  );
+
+  it.each(entrypoints)(
+    "uses the Lovable font weight set for $path",
+    ({ path }) => {
+      const html = readHtml(path);
+      const parser = new DOMParser();
+      const document = parser.parseFromString(html, "text/html");
+
+      const stylesheetLinks = Array.from(
+        document.head.querySelectorAll('link[rel="stylesheet"]'),
+      );
+
+      expect(
+        stylesheetLinks.some(
+          (link) => link.getAttribute("href") === fontStylesheetUrl,
+        ),
+      ).toBe(true);
     },
   );
 
