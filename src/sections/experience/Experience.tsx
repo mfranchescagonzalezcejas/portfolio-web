@@ -20,25 +20,16 @@ export default function Experience({ experience, section }: ExperienceProps) {
       aria-labelledby="experience-title"
     >
       <div className="section-inner">
-        <div className="mx-auto max-w-5xl text-center">
-          <p className="mx-auto inline-flex items-center gap-2 rounded-full border border-teal-300/20 bg-teal-300/[0.06] px-3 py-1 font-mono text-[11px] font-semibold tracking-[0.18em] text-teal-300 uppercase">
-            <span
-              className="h-1 w-1 rounded-full bg-teal-300"
-              aria-hidden="true"
-            />
-            {section.eyebrow}
-          </p>
-          <h2
-            id="experience-title"
-            className="section-title text-gradient mx-auto max-w-full sm:whitespace-nowrap"
-          >
-            {section.title}
+        <div className="mx-auto mb-10 max-w-2xl text-center sm:mb-12">
+          <p className="eyebrow">{section.eyebrow}</p>
+          <h2 id="experience-title" className="section-title mx-auto max-w-2xl">
+            <span className="text-gradient">{section.title}</span>
           </h2>
         </div>
 
-        <div className="relative mt-10">
+        <div className="relative">
           <div
-            className="absolute top-2 bottom-2 left-4 w-px bg-gradient-to-b from-teal-300/40 via-white/10 to-transparent sm:left-6"
+            className="absolute top-2 bottom-2 left-4 w-px -translate-x-1/2 bg-gradient-to-b from-[color:var(--primary)]/40 via-white/10 to-transparent sm:left-6"
             aria-hidden="true"
           />
 
@@ -49,10 +40,10 @@ export default function Experience({ experience, section }: ExperienceProps) {
                 className="relative pl-12 sm:pl-16"
               >
                 <div
-                  className="absolute top-6 left-1.5 grid h-5 w-5 place-items-center rounded-full bg-(--background) ring-2 ring-teal-300/60 sm:left-3.5"
+                  className="absolute top-6 left-1.5 grid h-5 w-5 place-items-center rounded-full bg-(--background) ring-2 ring-[color:var(--primary)]/60 sm:left-3.5"
                   aria-hidden="true"
                 >
-                  <Briefcase className="h-2.5 w-2.5 text-teal-300" />
+                  <Briefcase className="h-2.5 w-2.5 text-[color:var(--primary)]" />
                 </div>
 
                 <article className="card-surface rounded-[1.65rem] p-6 sm:p-8">
@@ -61,7 +52,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                       <h3 className="font-display truncate text-lg font-semibold">
                         {item.company}
                       </h3>
-                      <p className="text-sm font-semibold text-teal-300">
+                      <p className="text-sm text-[color:var(--primary)]">
                         {item.role}
                       </p>
                     </div>
@@ -89,7 +80,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                   >
                     {item.stack.map((stackItem) => (
                       <li
-                        className="inline-flex items-center rounded-full border border-teal-300/20 bg-teal-300/[0.08] px-2.5 py-0.5 font-mono text-[11px] font-semibold text-teal-300"
+                        className="inline-flex items-center rounded-full border border-teal-300/20 bg-teal-300/[0.08] px-2.5 py-0.5 font-mono text-[11px] font-medium text-teal-300"
                         key={stackItem}
                       >
                         {stackItem}

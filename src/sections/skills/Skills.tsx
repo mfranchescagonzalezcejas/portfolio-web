@@ -17,8 +17,8 @@ export default function Skills({ section }: SkillsProps) {
       <div className="section-inner">
         <div className="skills-header">
           <p className="eyebrow">{section.eyebrow}</p>
-          <h2 id="skills-title" className="section-title text-gradient">
-            {section.title}
+          <h2 id="skills-title" className="section-title">
+            <span className="text-gradient">{section.title}</span>
           </h2>
         </div>
 

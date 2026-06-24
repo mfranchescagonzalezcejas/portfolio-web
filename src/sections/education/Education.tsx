@@ -1,3 +1,4 @@
+import { GraduationCap } from "lucide-react";
 import type {
   Education as EducationData,
   EducationSectionContent,
@@ -25,29 +26,38 @@ export default function Education({
         <div className="education-header values-header">
           <p className="eyebrow">{section.eyebrow}</p>
           <h2 id="education-title" className="section-title">
-            {section.title}
+            <span className="text-gradient">{section.title}</span>
           </h2>
         </div>
 
         <div className="education-grid">
           <article className="education-card section-card">
-            <h3 className="education-card-title">{section.educationTitle}</h3>
-            <div className="education-list">
+            <h3 className="education-card-title">
+              <GraduationCap aria-hidden="true" />
+              {section.educationTitle}
+            </h3>
+            <ul className="education-list">
               {education.map((item) => (
-                <section
+                <li
                   key={`${item.title}-${item.meta}`}
                   className="education-entry"
                   aria-label={`${item.title}, ${item.meta}`}
                 >
-                  <h4>{item.title}</h4>
-                  <p>{item.meta}</p>
-                </section>
+                  <span className="education-entry-dot" aria-hidden="true" />
+                  <div className="min-w-0">
+                    <h4>{item.title}</h4>
+                    <p>{item.meta}</p>
+                  </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </article>
 
           <article className="education-card section-card">
-            <h3 className="education-card-title">{section.languagesTitle}</h3>
+            <h3 className="education-card-title">
+              <span aria-hidden="true">/</span>
+              {section.languagesTitle}
+            </h3>
             <dl
               className="language-list"
               aria-label={section.languagesAriaLabel}

@@ -19,8 +19,8 @@ export default function CaseStudies({
       <div className="section-inner">
         <div className="case-studies-header">
           <p className="eyebrow">{section.eyebrow}</p>
-          <h2 id="case-studies-title" className="section-title text-gradient">
-            {section.title}
+          <h2 id="case-studies-title" className="section-title">
+            <span className="text-gradient">{section.title}</span>
           </h2>
           <p className="case-studies-description">{section.description}</p>
         </div>

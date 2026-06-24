@@ -14,10 +14,7 @@ export default function Summary({ summary }: SummaryProps) {
     >
       <div className="section-inner summary-layout">
         <div>
-          <div className="values-eyebrow summary-eyebrow">
-            <span aria-hidden="true" />
-            {summary.eyebrow}
-          </div>
+          <p className="eyebrow summary-eyebrow">{summary.eyebrow}</p>
 
           <h2 id="summary-title" className="section-title summary-title">
             <span className="text-gradient">{summary.titleLines[0]}</span>

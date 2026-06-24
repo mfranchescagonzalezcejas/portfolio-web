@@ -22,12 +22,9 @@ export default function Values({ values }: ValuesProps) {
     >
       <div className="section-inner">
         <div className="values-header">
-          <p className="values-eyebrow">
-            <span aria-hidden="true" />
-            {values.eyebrow}
-          </p>
-          <h2 id="values-title" className="section-title text-gradient">
-            {values.title}
+          <p className="eyebrow">{values.eyebrow}</p>
+          <h2 id="values-title" className="section-title">
+            <span className="text-gradient">{values.title}</span>
           </h2>
           <p className="values-description">{values.description}</p>
         </div>
