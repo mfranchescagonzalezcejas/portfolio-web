@@ -29,7 +29,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
 
         <div className="relative">
           <div
-            className="absolute top-2 bottom-2 left-4 w-px -translate-x-1/2 bg-gradient-to-b from-[color:var(--primary)]/40 via-white/10 to-transparent sm:left-6"
+            className="absolute top-2 bottom-2 left-4 w-px -translate-x-1/2 bg-gradient-to-b from-[color:var(--primary)]/40 via-[color:var(--overlay-border)] to-transparent sm:left-6"
             aria-hidden="true"
           />
 
@@ -47,7 +47,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                 </div>
 
                 <article className="card-surface rounded-[1.65rem] p-6 sm:p-8">
-                  <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
+                  <div className="flex min-w-0 flex-col items-start gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-4">
                     <div className="min-w-0">
                       <h3 className="font-display truncate text-lg font-semibold">
                         {item.company}
@@ -57,7 +57,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                       </p>
                     </div>
 
-                    <span className="shrink-0 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] text-[color:var(--muted-foreground)]">
+                    <span className="experience-period-badge max-w-full rounded-full border border-[color:var(--overlay-border)] bg-[color:var(--overlay-bg)] px-2.5 py-0.5 font-mono text-xs break-words whitespace-normal text-[color:var(--muted-foreground)] sm:shrink-0 sm:whitespace-nowrap">
                       {item.period}
                     </span>
                   </div>
@@ -66,7 +66,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                     {item.highlights.map((highlight) => (
                       <li className="flex gap-2.5" key={highlight}>
                         <span
-                          className="mt-3 h-1 w-1 shrink-0 rounded-full bg-teal-300/70"
+                          className="mt-3 h-1 w-1 shrink-0 rounded-full bg-[color:var(--primary)]/70"
                           aria-hidden="true"
                         />
                         <span>{highlight}</span>
@@ -80,7 +80,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                   >
                     {item.stack.map((stackItem) => (
                       <li
-                        className="inline-flex items-center rounded-full border border-teal-300/20 bg-teal-300/[0.08] px-2.5 py-0.5 font-mono text-[11px] font-medium text-teal-300"
+                        className="inline-flex items-center rounded-full border border-[color:var(--primary)]/20 bg-[color:var(--primary)]/[0.08] px-2.5 py-0.5 font-mono text-xs font-medium text-[color:var(--primary)]"
                         key={stackItem}
                       >
                         {stackItem}
@@ -96,7 +96,7 @@ export default function Experience({ experience, section }: ExperienceProps) {
                       {item.links.map((link) => (
                         <li key={link.href}>
                           <a
-                            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-[color:var(--foreground)] transition-colors hover:bg-white/[0.08] focus-visible:bg-white/[0.08]"
+                            className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--overlay-border)] bg-[color:var(--overlay-bg)] px-3 py-2 text-xs font-semibold text-[color:var(--foreground)] transition-colors hover:bg-[color:var(--overlay-bg-hover)] focus-visible:bg-[color:var(--overlay-bg-hover)]"
                             href={link.href}
                             target={link.external ? "_blank" : undefined}
                             rel={
