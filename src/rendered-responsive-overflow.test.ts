@@ -318,12 +318,57 @@ async function collectMetrics(
   }
 }
 
-function stopProcess(processToStop: ChildProcess | undefined): void {
-  if (!processToStop || processToStop.killed) {
+function delay(ms: number): Promise<void> {
+  return new Promise((resolveDelay) => setTimeout(resolveDelay, ms));
+}
+
+async function waitForProcessExit(
+  processToWaitFor: ChildProcess,
+  timeoutMs: number,
+): Promise<void> {
+  if (processToWaitFor.exitCode !== null || processToWaitFor.signalCode) {
+    return;
+  }
+
+  await new Promise<void>((resolveExit) => {
+    const timer = setTimeout(resolveExit, timeoutMs);
+
+    processToWaitFor.once("exit", () => {
+      clearTimeout(timer);
+      resolveExit();
+    });
+  });
+}
+
+async function stopProcess(
+  processToStop: ChildProcess | undefined,
+): Promise<void> {
+  if (!processToStop || processToStop.exitCode !== null) {
     return;
   }
 
   processToStop.kill("SIGTERM");
+  await waitForProcessExit(processToStop, 2_000);
+
+  if (processToStop.exitCode === null) {
+    processToStop.kill("SIGKILL");
+    await waitForProcessExit(processToStop, 2_000);
+  }
+}
+
+async function removeDirectoryWithRetry(path: string): Promise<void> {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      rmSync(path, { force: true, recursive: true });
+      return;
+    } catch (error) {
+      if (attempt === 4) {
+        throw error;
+      }
+
+      await delay(250 * (attempt + 1));
+    }
+  }
 }
 
 beforeAll(async () => {
@@ -379,14 +424,14 @@ beforeAll(async () => {
   ]);
 }, testTimeoutMs);
 
-afterAll(() => {
-  stopProcess(previewProcess);
-  stopProcess(chromeProcess);
+afterAll(async () => {
+  await stopProcess(previewProcess);
+  await stopProcess(chromeProcess);
 
   if (userDataDir) {
-    rmSync(userDataDir, { force: true, recursive: true });
+    await removeDirectoryWithRetry(userDataDir);
   }
-});
+}, testTimeoutMs);
 
 describe("rendered responsive overflow", () => {
   it(
