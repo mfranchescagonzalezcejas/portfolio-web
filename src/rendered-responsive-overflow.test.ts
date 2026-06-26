@@ -322,20 +322,24 @@ function delay(ms: number): Promise<void> {
   return new Promise((resolveDelay) => setTimeout(resolveDelay, ms));
 }
 
+function hasProcessExited(processToCheck: ChildProcess): boolean {
+  return processToCheck.exitCode !== null || processToCheck.signalCode !== null;
+}
+
 async function waitForProcessExit(
   processToWaitFor: ChildProcess,
   timeoutMs: number,
-): Promise<void> {
-  if (processToWaitFor.exitCode !== null || processToWaitFor.signalCode) {
-    return;
+): Promise<boolean> {
+  if (hasProcessExited(processToWaitFor)) {
+    return true;
   }
 
-  await new Promise<void>((resolveExit) => {
-    const timer = setTimeout(resolveExit, timeoutMs);
+  return new Promise<boolean>((resolveExit) => {
+    const timer = setTimeout(() => resolveExit(false), timeoutMs);
 
     processToWaitFor.once("exit", () => {
       clearTimeout(timer);
-      resolveExit();
+      resolveExit(true);
     });
   });
 }
@@ -343,16 +347,20 @@ async function waitForProcessExit(
 async function stopProcess(
   processToStop: ChildProcess | undefined,
 ): Promise<void> {
-  if (!processToStop || processToStop.exitCode !== null) {
+  if (!processToStop || hasProcessExited(processToStop)) {
     return;
   }
 
   processToStop.kill("SIGTERM");
-  await waitForProcessExit(processToStop, 2_000);
+  const exitedAfterSigterm = await waitForProcessExit(processToStop, 2_000);
 
-  if (processToStop.exitCode === null) {
+  if (!exitedAfterSigterm && !hasProcessExited(processToStop)) {
     processToStop.kill("SIGKILL");
-    await waitForProcessExit(processToStop, 2_000);
+    const exitedAfterSigkill = await waitForProcessExit(processToStop, 2_000);
+
+    if (!exitedAfterSigkill && !hasProcessExited(processToStop)) {
+      throw new Error("Process did not exit after SIGKILL");
+    }
   }
 }
 

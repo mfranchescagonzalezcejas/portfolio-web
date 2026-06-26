@@ -17,7 +17,6 @@ const mobileHeaderEnd = globalCss.indexOf(
   ".header-lang-toggle",
   mobileHeaderStart,
 );
-const mobileHeaderBlock = globalCss.slice(mobileHeaderStart, mobileHeaderEnd);
 
 describe("responsive CSS contract", () => {
   it("keeps root overflow clipped without invalid color-mix percentages", () => {
@@ -35,6 +34,20 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps mobile header containment and CTA hiding at the mobile breakpoint", () => {
+    expect(
+      mobileHeaderStart,
+      "mobile header media query start marker should exist",
+    ).toBeGreaterThanOrEqual(0);
+    expect(
+      mobileHeaderEnd,
+      "mobile header end marker should be found after the start marker",
+    ).toBeGreaterThan(mobileHeaderStart);
+
+    const mobileHeaderBlock = globalCss.slice(
+      mobileHeaderStart,
+      mobileHeaderEnd,
+    );
+
     expect(mobileHeaderBlock).toContain(".header-shell");
     expect(mobileHeaderBlock).toContain("flex-wrap: wrap;");
     expect(mobileHeaderBlock).toContain("max-width: calc(100vw - 2rem);");
