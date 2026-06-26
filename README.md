@@ -115,6 +115,14 @@ See the full maintainer guide:
 
 [Release process guide](docs/release-process.md)
 
+## Repository workflow
+
+| Guide | Purpose |
+|---|---|
+| [Contributing](CONTRIBUTING.md) | Issue-first PR workflow, quality gates, and contributor expectations. |
+| [Security](SECURITY.md) | Private vulnerability reporting and supported security scope. |
+| [Release process](docs/release-process.md) | Tag-driven Production release steps. |
+
 ## Vercel settings
 
 Use these settings when importing or validating the GitHub repo in Vercel:

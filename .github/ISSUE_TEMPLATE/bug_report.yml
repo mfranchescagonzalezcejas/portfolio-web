@@ -1,0 +1,73 @@
+name: Bug report
+description: Report a reproducible problem in the portfolio site or repository workflow.
+title: "fix: "
+labels:
+  - type:bug
+  - status:needs-review
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I searched existing issues and this is not a duplicate.
+          required: true
+        - label: I understand a maintainer must add `status:approved` before a PR can be opened.
+          required: true
+        - label: I am not reporting a sensitive security vulnerability in public.
+          required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug description
+      description: What is broken?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reproducible path.
+      placeholder: |
+        1. Go to ...
+        2. Run ...
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What happened? Include safe logs or screenshots if useful.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - Website UI/content
+        - Accessibility
+        - Build or dependencies
+        - CI/workflows
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser or environment
+      placeholder: "Chrome 126, Safari iOS, Node 22.12.0, etc."
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any safe details that help with triage.
