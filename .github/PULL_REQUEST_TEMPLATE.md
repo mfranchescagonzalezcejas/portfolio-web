@@ -1,6 +1,6 @@
 ## Linked issue
 
-Closes #
+Closes #<number>
 
 > The linked issue must have `status:approved` before this PR is ready for review.
 
