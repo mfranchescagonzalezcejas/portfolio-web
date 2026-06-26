@@ -113,9 +113,7 @@ Patch releases follow the protected PR flow:
 
 See the full maintainer guide:
 
-```text
-docs/release-process.md
-```
+[Release process guide](docs/release-process.md)
 
 ## Vercel settings
 
@@ -124,7 +122,7 @@ Use these settings when importing or validating the GitHub repo in Vercel:
 | Setting | Value |
 |---|---|
 | Framework preset | Astro |
-| Install command | `npm install` |
+| Install command | `npm ci` |
 | Build command | `npm run build` |
 | Output directory | `dist` |
 
