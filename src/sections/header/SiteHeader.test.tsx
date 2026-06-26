@@ -10,9 +10,9 @@ import {
 import { siteContentByLocale } from "../../content/site";
 import SiteHeader from "./SiteHeader";
 
-const renderHeader = () => {
-  const site = siteContentByLocale.en;
+const site = siteContentByLocale.en;
 
+const renderHeader = () => {
   return render(
     <SiteHeader
       currentLocale={site.locale}
@@ -48,12 +48,14 @@ afterEach(() => {
 
 describe("SiteHeader theme toggle", () => {
   it("toggles theme labels, root classes, and localStorage", async () => {
+    const { switchToDark, switchToLight } = site.header.themeToggle;
+
     window.localStorage.setItem("devdigi-theme", "dark");
 
     renderHeader();
 
     const toggleToLight = await screen.findByRole("button", {
-      name: "Switch to light mode",
+      name: switchToLight,
     });
 
     await waitFor(() => {
@@ -68,17 +70,18 @@ describe("SiteHeader theme toggle", () => {
     expect(window.localStorage.getItem("devdigi-theme")).toBe("light");
 
     const toggleToDark = screen.getByRole("button", {
-      name: "Switch to dark mode",
+      name: switchToDark,
     });
-    expect(toggleToDark).toHaveAttribute("title", "Switch to dark mode");
+    expect(toggleToDark).toHaveAttribute("title", switchToDark);
 
     fireEvent.click(toggleToDark);
 
     expect(document.documentElement).toHaveClass("dark");
     expect(document.documentElement).not.toHaveClass("light");
     expect(window.localStorage.getItem("devdigi-theme")).toBe("dark");
-    expect(
-      screen.getByRole("button", { name: "Switch to light mode" }),
-    ).toHaveAttribute("title", "Switch to light mode");
+    expect(screen.getByRole("button", { name: switchToLight })).toHaveAttribute(
+      "title",
+      switchToLight,
+    );
   });
 });
