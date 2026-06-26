@@ -1638,8 +1638,23 @@ h4 {
   overflow-x: clip;
 }
 
+.hero-visual::before {
+  content: "";
+  position: absolute;
+  inset: 1rem 0 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 45%,
+    color-mix(in oklab, var(--primary) 24%, transparent) 0%,
+    color-mix(in oklab, var(--accent-blue) 14%, transparent) 38%,
+    transparent 70%
+  );
+}
+
 .hero-visual-inner {
   position: relative;
+  z-index: 1;
   width: min(100%, 24rem);
   max-width: 100%;
   min-height: 34rem;
@@ -1648,24 +1663,6 @@ h4 {
 
 .hero-cta-row {
   max-width: 32rem;
-}
-
-.hero-phone-glow {
-  position: absolute;
-  inset: -2rem;
-  z-index: -1;
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    color-mix(in oklab, var(--primary) 20%, transparent),
-    color-mix(in oklab, var(--accent-blue) 10%, transparent) 45%,
-    transparent 70%
-  );
-  filter: blur(34px);
-}
-
-.hero-float-glow {
-  animation: hero-float 7s ease-in-out infinite;
 }
 
 .hero-phone {
