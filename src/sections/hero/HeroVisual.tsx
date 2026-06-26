@@ -24,10 +24,10 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
               <p className="hero-reading-eyebrow text-[0.62rem] font-bold tracking-[0.22em] uppercase">
                 {visual.readingEyebrow}
               </p>
-              <p className="mt-1 text-sm font-semibold text-white">
+              <p className="mt-1 text-sm font-semibold text-[color:var(--device-text-strong)]">
                 {visual.readingTitle}
               </p>
-              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+              <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[color:var(--device-line-muted)]">
                 <div className="hero-reading-progress" />
               </div>
             </div>
@@ -37,8 +37,8 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
                 <div className="hero-library-row" key={row}>
                   <div className="hero-cover" />
                   <div className="flex-1 space-y-1.5">
-                    <div className="h-2 w-3/4 rounded bg-white/15" />
-                    <div className="h-1.5 w-1/2 rounded bg-white/10" />
+                    <div className="h-2 w-3/4 rounded bg-[color:var(--device-line-strong)]" />
+                    <div className="h-1.5 w-1/2 rounded bg-[color:var(--device-line-muted)]" />
                   </div>
                 </div>
               ))}
@@ -60,7 +60,7 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
             <span className="h-2 w-2 rounded-full bg-red-400/70" />
             <span className="h-2 w-2 rounded-full bg-yellow-400/70" />
             <span className="h-2 w-2 rounded-full bg-green-400/70" />
-            <span className="ml-2 font-mono text-[0.62rem] text-slate-400">
+            <span className="ml-2 font-mono text-[0.62rem] text-[color:var(--glass-text-muted)]">
               main.dart
             </span>
           </div>
@@ -86,10 +86,10 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
             <Rocket className="hero-card-icon" aria-hidden="true" />
           </div>
           <div>
-            <p className="m-0 text-[0.68rem] font-semibold text-white">
+            <p className="m-0 text-[0.68rem] font-semibold text-[color:var(--glass-text-strong)]">
               {visual.deliveryTitle}
             </p>
-            <p className="m-0 font-mono text-[0.62rem] text-slate-400">
+            <p className="m-0 font-mono text-[0.62rem] text-[color:var(--glass-text-muted)]">
               {visual.deliverySubtitle}
             </p>
           </div>
@@ -100,10 +100,10 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
             <Layers className="hero-card-icon" aria-hidden="true" />
           </div>
           <div>
-            <p className="m-0 text-[0.68rem] font-semibold text-white">
+            <p className="m-0 text-[0.68rem] font-semibold text-[color:var(--glass-text-strong)]">
               {visual.architectureTitle}
             </p>
-            <p className="m-0 font-mono text-[0.62rem] text-slate-400">
+            <p className="m-0 font-mono text-[0.62rem] text-[color:var(--glass-text-muted)]">
               {visual.architectureSubtitle}
             </p>
           </div>
