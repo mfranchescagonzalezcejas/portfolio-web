@@ -273,7 +273,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     meta: {
       title: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       description:
-        "DevDigi is my personal developer brand. Mobile Developer focused on Flutter, Android, and iOS delivery.",
+        "Flutter / Mobile Developer in Barcelona focused on product-team delivery, QA, and release validation.",
       socialImageAlt:
         "DevDigi portfolio preview for Mercedes Franchesca Gonzalez Cejas, Mobile Developer.",
     },
@@ -307,14 +307,14 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
       greeting: "Hi, I'm",
-      eyebrow: "Open to mobile roles · Barcelona / Remote",
-      tagline: "I build polished mobile apps for real users.",
+      eyebrow: "Flutter / Mobile Developer · Barcelona · Hybrid / Remote",
+      tagline: "I help product teams ship reliable mobile apps.",
       summary:
-        "Mobile Developer focused on Flutter, Android and iOS. I build maintainable, production-ready applications with clean architecture, REST API integration, CI/CD awareness and a strong product quality mindset.",
+        "Flutter / Mobile Developer for product teams. I build maintainable mobile applications with clean architecture, REST API integration, QA validation, and release ownership across production delivery workflows.",
       panelLabel: "Signal",
-      panelTitle: "Production-ready mobile delivery",
+      panelTitle: "Product-team mobile delivery",
       panelText:
-        "DevDigi combines Flutter, Android, iOS, API integration, and QA-minded engineering so teams can move quickly without losing maintainability.",
+        "Best fit: Flutter and mobile roles where production delivery, QA/release validation, and maintainable architecture matter as much as feature work.",
       profileLinksLabel: "Primary profile links",
       ctaLabel: "Contact me",
       quickCtaLabel: "View Projects",
@@ -545,7 +545,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       eyebrow: "Contact",
       titlePrefix: "Let’s build great",
       titleHighlight: "mobile products.",
-      body: "Available for Mobile Developer, Flutter Developer, and Android Developer opportunities in Barcelona, hybrid, or remote.",
+      body: "Available for Flutter / Mobile Developer roles in product teams, especially where production delivery, QA/release validation, and Barcelona hybrid or remote collaboration matter.",
       ariaLabel: "Contact and social links",
     },
     footerText: "Built with care in Barcelona",
@@ -884,7 +884,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     meta: {
       title: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       description:
-        "DevDigi es la marca personal de Mercedes; Ingeniería móvil con foco en Flutter, Android e iOS.",
+        "Flutter / Mobile Developer en Barcelona con foco en equipos de producto, QA y validación de releases.",
       socialImageAlt:
         "Vista previa del portfolio DevDigi de Mercedes Franchesca Gonzalez Cejas, desarrolladora mobile.",
     },
@@ -918,14 +918,14 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       shortName: "Mercy",
       name: "Mercedes Franchesca Gonzalez Cejas",
       greeting: "Hola, soy",
-      eyebrow: "Disponible para roles mobile · Barcelona / Remoto",
-      tagline: "Construyo apps móviles pulidas para usuarios reales.",
+      eyebrow: "Flutter / Mobile Developer · Barcelona · Híbrido / Remoto",
+      tagline: "Ayudo a equipos de producto a entregar apps móviles fiables.",
       summary:
-        "Mobile Developer enfocada en Flutter, Android e iOS. Construyo aplicaciones mantenibles y listas para producción con arquitectura limpia, integración REST API, criterio de CI/CD y una mentalidad fuerte de calidad de producto.",
+        "Flutter / Mobile Developer para equipos de producto. Construyo aplicaciones móviles mantenibles con arquitectura limpia, integración REST API, validación QA y responsabilidad sobre releases dentro de flujos de entrega en producción.",
       panelLabel: "Señal",
-      panelTitle: "Entrega móvil en producción",
+      panelTitle: "Entrega mobile en equipos de producto",
       panelText:
-        "En DevDigi combino Flutter, Android, iOS, integración de APIs y QA para que los productos puedan escalar sin perder mantenibilidad.",
+        "Me encajan roles de Flutter y mobile donde la entrega en producción, la validación QA/release y la arquitectura mantenible importan tanto como el desarrollo de features.",
       profileLinksLabel: "Enlaces principales del perfil",
       ctaLabel: "Contáctame",
       quickCtaLabel: "Ver proyectos",
@@ -1156,7 +1156,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       eyebrow: "Contacto",
       titlePrefix: "Construyamos grandes",
       titleHighlight: "productos móviles.",
-      body: "Disponible para oportunidades de Mobile Developer, Flutter Developer y Android Developer en Barcelona, híbrido o remoto.",
+      body: "Disponible para roles de Flutter / Mobile Developer en equipos de producto, especialmente donde importen la entrega en producción, la validación QA/release y la colaboración híbrida en Barcelona o remota.",
       ariaLabel: "Enlaces de contacto",
     },
     footerText: "Desarrollado con cariño en Barcelona",

@@ -164,7 +164,7 @@ const staticContracts: Record<
       "Education and languages",
       "Let’s build great mobile products.",
     ],
-    heroSnippet: "I build polished mobile apps for real users.",
+    heroSnippet: "I help product teams ship reliable mobile apps.",
     heroVisualStrings: ["Reading now", "Chapter 47"],
     valuesSnippet:
       "Practical engineering that turns into shipped, maintainable mobile products.",
@@ -247,7 +247,7 @@ const staticContracts: Record<
       "Formación e idiomas",
       "Construyamos grandes productos móviles.",
     ],
-    heroSnippet: "Construyo apps móviles pulidas para usuarios reales.",
+    heroSnippet: "Ayudo a equipos de producto a entregar apps móviles fiables.",
     heroVisualStrings: ["Leyendo ahora", "Capítulo 47"],
     valuesSnippet:
       "Ingeniería práctica que se traduce en productos móviles entregados y mantenibles.",
