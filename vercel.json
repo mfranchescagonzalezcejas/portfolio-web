@@ -1,5 +1,13 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "framework": "astro",
+  "git": {
+    "deploymentEnabled": {
+      "**": false,
+      "develop": true
+    }
+  },
   "rewrites": [
     { "source": "/en", "destination": "/en/index.html" },
     { "source": "/en/:path*", "destination": "/en/index.html" },

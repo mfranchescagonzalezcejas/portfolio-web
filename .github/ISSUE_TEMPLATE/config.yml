@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://www.devdigi.dev
+    about: Please report sensitive security issues privately using the contact path on the live site.
