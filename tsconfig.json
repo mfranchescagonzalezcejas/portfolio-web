@@ -9,9 +9,9 @@
     "strict": true,
     "skipLibCheck": true,
     "noEmit": true,
-    "types": ["vite/client"],
+    "types": ["astro/client"],
     "lib": ["ES2022", "DOM", "DOM.Iterable"]
   },
-  "include": ["src/**/*", "index.html"],
+  "include": ["src/**/*", "astro.config.mjs"],
   "exclude": ["dist", "vite.config.ts", "src/localized-html-contract.test.ts"]
 }

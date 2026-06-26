@@ -6,7 +6,7 @@ import parser from "@typescript-eslint/parser";
 
 export default [
   {
-    ignores: ["dist/**", "node_modules/**", ".vercel/**"],
+    ignores: ["dist/**", "node_modules/**", ".vercel/**", ".astro/**"],
   },
   js.configs.recommended,
   {

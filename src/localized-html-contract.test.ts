@@ -1,8 +1,8 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
-import { siteContentByLocale } from "./data/site";
+import { siteContentByLocale, validateSiteContent } from "./content/site";
 
 type LocaleEntrypoint = {
   path: string;
@@ -16,57 +16,130 @@ type SeoContract = {
     es: string;
     "x-default": string;
   };
+  openGraph: {
+    locale: string;
+    alternateLocale: string;
+    url: string;
+  };
 };
 
 const productionSiteUrl = "https://devdigi.dev";
+const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
+const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
+const fontStylesheetUrl =
+  "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
+const pngSignature = Buffer.from([
+  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+]);
+
+const requiredProjectRepoUrls = [
+  "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
+  "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
+  "https://github.com/mfranchescagonzalezcejas/portfolio-web",
+  "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
+  "https://github.com/mfranchescagonzalezcejas/AppUIKit",
+  "https://github.com/mfranchescagonzalezcejas/AppAndroid",
+];
+
+const requiredContactUrls = [
+  "https://www.linkedin.com/in/mercedes-franchesca-gonzalez-cejas-7555a7177",
+  "https://github.com/mfranchescagonzalezcejas",
+  "/cv.pdf",
+  "mailto:mercedesgon03@gmail.com",
+];
+
+const requiredCaseStudyUrls = [
+  "https://play.google.com/store/apps/details?id=cat.bcn.festamerce&pcampaignid=web_share",
+  "https://play.google.com/store/apps/details?id=cat.bcn.butxaca&pcampaignid=web_share",
+  "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
+];
 
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
+  heroSnippet: string;
+  heroVisualStrings: string[];
+  valuesSnippet: string;
+  valuesItems: string[];
+  summaryHeading: string;
   summarySnippet: string;
+  summaryBrandSnippet: string;
   cta: string;
   portfolioItems: string[];
+  caseStudyItems: string[];
+  caseStudySnippets: string[];
+  skillsHeading: string;
+  skillCategories: string[];
+  skillItems: string[];
+  omittedSkills: string[];
   footerText: string;
+  footerYearText: string;
   navLabel: string;
+  skillsNavLabel: string;
+  educationHeading: string;
+  educationCard: string;
+  languagesCard: string;
+  languageItems: [string, string][];
+  contactHeading: string;
+  cvLabel: string;
 };
 
 const entrypoints: LocaleEntrypoint[] = [
-  { path: "index.html", locale: "en" },
-  { path: "en/index.html", locale: "en" },
-  { path: "es/index.html", locale: "es" },
+  { path: "dist/index.html", locale: "en" },
+  { path: "dist/en/index.html", locale: "en" },
+  { path: "dist/es/index.html", locale: "es" },
 ];
 
 const seoContracts: Record<string, SeoContract> = {
-  "index.html": {
+  "dist/index.html": {
     canonical: `${productionSiteUrl}/en`,
     alternates: {
       en: `${productionSiteUrl}/en`,
       es: `${productionSiteUrl}/es`,
       "x-default": `${productionSiteUrl}/en`,
     },
+    openGraph: {
+      locale: "en_US",
+      alternateLocale: "es_ES",
+      url: `${productionSiteUrl}/en`,
+    },
   },
-  "en/index.html": {
+  "dist/en/index.html": {
     canonical: `${productionSiteUrl}/en`,
     alternates: {
       en: `${productionSiteUrl}/en`,
       es: `${productionSiteUrl}/es`,
       "x-default": `${productionSiteUrl}/en`,
     },
+    openGraph: {
+      locale: "en_US",
+      alternateLocale: "es_ES",
+      url: `${productionSiteUrl}/en`,
+    },
   },
-  "es/index.html": {
+  "dist/es/index.html": {
     canonical: `${productionSiteUrl}/es`,
     alternates: {
       en: `${productionSiteUrl}/en`,
       es: `${productionSiteUrl}/es`,
       "x-default": `${productionSiteUrl}/en`,
     },
+    openGraph: {
+      locale: "es_ES",
+      alternateLocale: "en_US",
+      url: `${productionSiteUrl}/es`,
+    },
   },
 };
 
 const sectionIds = [
+  "top",
+  "values",
   "about",
   "experience",
+  "featured",
   "projects",
+  "case-studies",
   "skills",
   "education",
   "contact",
@@ -80,40 +153,175 @@ const staticContracts: Record<
     skipLabel: "Skip to content",
     sectionHeadings: [
       "About",
+      "What I bring as a mobile developer",
       "Experience",
-      "Selected proof of work",
-      "Tools and engineering stack",
-      "Education",
-      "Contact",
+      "Featured project",
+      "Inkscroller",
+      "Selected work",
+      "Skills",
+      "Technical toolbox",
+      "Education and languages",
+      "Education and languages",
+      "Let’s build great mobile products.",
     ],
-    summarySnippet:
-      "Mobile-focused engineer with hands-on experience shipping production-ready applications",
+    heroSnippet: "I build polished mobile apps for real users.",
+    heroVisualStrings: ["Reading now", "Chapter 47"],
+    valuesSnippet:
+      "Practical engineering that turns into shipped, maintainable mobile products.",
+    valuesItems: [
+      "Production mobile apps",
+      "Clean architecture",
+      "Release & CI/CD workflows",
+      "QA & product validation",
+    ],
+    summaryHeading: "Software engineer, mobile by craft.",
+    summarySnippet: "Software Engineer specialized in mobile development",
+    summaryBrandSnippet:
+      "where I showcase my mobile work, projects and technical growth",
     cta: "Contact me",
-    portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
+    portfolioItems: [
+      "Inkscroller Frontend",
+      "Inkscroller Backend",
+      "DevDigi Portfolio Web",
+      "AppSwiftUI",
+      "AppUIKit",
+      "AppAndroid",
+    ],
+    caseStudyItems: [
+      "La Mercè production release",
+      "Barcelona a la Butxaca air quality",
+      "Nescafé Dolce Gusto QA validation",
+    ],
+    caseStudySnippets: [
+      "Professional work shown with public app references only",
+      "My role",
+      "release validation",
+      "air quality feature",
+      "reconnection and brew flow validation",
+    ],
+    skillsHeading: "Technical toolbox",
+    skillCategories: [
+      "Mobile",
+      "Architecture",
+      "Backend & APIs",
+      "Delivery & Quality",
+      "Ways of working",
+    ],
+    skillItems: [
+      "Flutter",
+      "Jetpack Compose",
+      "Repository Pattern",
+      "FastAPI",
+      "GitHub Actions",
+      "QA validation",
+      "Agile/Scrum",
+    ],
+    omittedSkills: ["Remote collaboration"],
     footerText: "Built with care in Barcelona",
-    navLabel: "Primary navigation",
+    footerYearText: `© ${new Date().getFullYear()} · Built with care in Barcelona`,
+    navLabel: "Primary",
+    skillsNavLabel: "Skills",
+    educationHeading: "Education and languages",
+    educationCard: "Education",
+    languagesCard: "Languages",
+    languageItems: [
+      ["Spanish", "Native"],
+      ["Catalan", "Native"],
+      ["English", "B2"],
+    ],
+    contactHeading: "Let’s build great mobile products.",
+    cvLabel: "Download CV",
   },
   es: {
     skipLabel: "Saltar al contenido",
     sectionHeadings: [
       "Sobre mí",
+      "Lo que aporto como desarrolladora móvil",
       "Experiencia",
+      "Proyecto destacado",
+      "Inkscroller",
       "Trabajos seleccionados",
-      "Herramientas y stack de ingeniería",
-      "Educación",
-      "Contacto",
+      "Competencias",
+      "Caja de herramientas técnicas",
+      "Formación e idiomas",
+      "Formación e idiomas",
+      "Construyamos grandes productos móviles.",
     ],
-    summarySnippet:
-      "Ingeniera de software con experiencia en productos móviles en producción",
+    heroSnippet: "Construyo apps móviles pulidas para usuarios reales.",
+    heroVisualStrings: ["Leyendo ahora", "Capítulo 47"],
+    valuesSnippet:
+      "Ingeniería práctica que se traduce en productos móviles entregados y mantenibles.",
+    valuesItems: [
+      "Apps móviles en producción",
+      "Arquitectura limpia",
+      "Releases y CI/CD",
+      "QA y validación de producto",
+    ],
+    summaryHeading: "Ingeniera de software, mobile por oficio.",
+    summarySnippet: "Ingeniera de Software especializada en desarrollo móvil",
+    summaryBrandSnippet:
+      "donde muestro mi trabajo mobile, proyectos y crecimiento técnico",
     cta: "Contáctame",
-    portfolioItems: ["InkScroller", "DevDigi Portfolio Web"],
+    portfolioItems: [
+      "Inkscroller Frontend",
+      "Inkscroller Backend",
+      "Web Portfolio DevDigi",
+      "AppSwiftUI",
+      "AppUIKit",
+      "AppAndroid",
+    ],
+    caseStudyItems: [
+      "Release en producción de La Mercè",
+      "Barcelona a la Butxaca calidad del aire",
+      "Nescafé Dolce Gusto validación QA",
+    ],
+    caseStudySnippets: [
+      "Trabajo profesional mostrado solo con referencias públicas",
+      "Mi rol",
+      "validación de release",
+      "calidad del aire",
+      "validación de flujos de reconexión y preparación",
+    ],
+    skillsHeading: "Caja de herramientas técnicas",
+    skillCategories: [
+      "Mobile",
+      "Arquitectura",
+      "Backend y APIs",
+      "Entrega y calidad",
+      "Formas de trabajo",
+    ],
+    skillItems: [
+      "Flutter",
+      "Jetpack Compose",
+      "Patrón Repository",
+      "FastAPI",
+      "GitHub Actions",
+      "Validación QA",
+      "Agile/Scrum",
+    ],
+    omittedSkills: ["Colaboración remota"],
     footerText: "Desarrollado con cariño en Barcelona",
-    navLabel: "Navegación principal",
+    footerYearText: `© ${new Date().getFullYear()} · Desarrollado con cariño en Barcelona`,
+    navLabel: "Principal",
+    skillsNavLabel: "Competencias",
+    educationHeading: "Formación e idiomas",
+    educationCard: "Formación",
+    languagesCard: "Idiomas",
+    languageItems: [
+      ["Español", "Nativo"],
+      ["Catalán", "Nativo"],
+      ["Inglés", "B2"],
+    ],
+    contactHeading: "Construyamos grandes productos móviles.",
+    cvLabel: "Descargar CV",
   },
 };
 
 const readHtml = (relativePath: string): string =>
   readFileSync(resolve(process.cwd(), relativePath), "utf8");
+
+const normalizeReadableText = (text: string): string =>
+  text.replace(/\s+/g, " ").replace(/,(\S)/g, ", $1").trim();
 
 const assertNoJsContract = (
   html: string,
@@ -123,19 +331,57 @@ const assertNoJsContract = (
   const parser = new DOMParser();
   const document = parser.parseFromString(html, "text/html");
   const body = document.body;
-  const bodyText = (body.textContent ?? "").replace(/\s+/g, " ").trim();
+  const bodyText = normalizeReadableText(body.textContent ?? "");
+  const sections = Array.from(body.querySelectorAll("section"));
+  const sectionOrder = (sectionId: string) =>
+    sections.findIndex((section) => section.id === sectionId);
+  const topIndex = sectionOrder("top");
+  const valuesIndex = sectionOrder("values");
+  const aboutIndex = sectionOrder("about");
+  const experienceIndex = sectionOrder("experience");
+  const featuredIndex = sectionOrder("featured");
+  const projectsIndex = sectionOrder("projects");
+  const caseStudiesIndex = sectionOrder("case-studies");
+  const skillsIndex = sectionOrder("skills");
+  const educationIndex = sectionOrder("education");
+  const contactIndex = sectionOrder("contact");
 
   expect(bodyText).toContain(contract.skipLabel);
   expect(body.querySelector("main#main-content")).not.toBeNull();
   expect(
     body.querySelector(`nav[aria-label="${contract.navLabel}"]`),
   ).not.toBeNull();
+  expect(
+    body
+      .querySelector(`nav[aria-label="${contract.navLabel}"] a[href="#skills"]`)
+      ?.textContent?.trim(),
+  ).toBe(contract.skillsNavLabel);
 
   for (const sectionId of sectionIds) {
     const section = body.querySelector(`section#${sectionId}`);
     expect(section).not.toBeNull();
     expect(section?.getAttribute("aria-labelledby")).toBeTruthy();
   }
+
+  expect(topIndex).toBeGreaterThanOrEqual(0);
+  expect(valuesIndex).toBeGreaterThanOrEqual(0);
+  expect(aboutIndex).toBeGreaterThanOrEqual(0);
+  expect(experienceIndex).toBeGreaterThanOrEqual(0);
+  expect(featuredIndex).toBeGreaterThanOrEqual(0);
+  expect(projectsIndex).toBeGreaterThanOrEqual(0);
+  expect(caseStudiesIndex).toBeGreaterThanOrEqual(0);
+  expect(skillsIndex).toBeGreaterThanOrEqual(0);
+  expect(educationIndex).toBeGreaterThanOrEqual(0);
+  expect(contactIndex).toBeGreaterThanOrEqual(0);
+  expect(topIndex).toBeLessThan(valuesIndex);
+  expect(valuesIndex).toBeLessThan(aboutIndex);
+  expect(aboutIndex).toBeLessThan(experienceIndex);
+  expect(experienceIndex).toBeLessThan(featuredIndex);
+  expect(featuredIndex).toBeLessThan(projectsIndex);
+  expect(projectsIndex).toBeLessThan(caseStudiesIndex);
+  expect(caseStudiesIndex).toBeLessThan(skillsIndex);
+  expect(skillsIndex).toBeLessThan(educationIndex);
+  expect(educationIndex).toBeLessThan(contactIndex);
 
   for (const heading of contract.sectionHeadings) {
     expect(bodyText).toContain(heading);
@@ -145,14 +391,142 @@ const assertNoJsContract = (
     expect(bodyText).toContain(projectName);
   }
 
+  const caseStudiesSection = body.querySelector("section#case-studies");
+  expect(caseStudiesSection).not.toBeNull();
+  expect(caseStudiesSection?.querySelectorAll("article")).toHaveLength(3);
+  for (const caseStudyItem of contract.caseStudyItems) {
+    expect(bodyText).toContain(caseStudyItem);
+  }
+  for (const caseStudySnippet of contract.caseStudySnippets) {
+    expect(bodyText).toContain(caseStudySnippet);
+  }
+
+  const skillsSection = body.querySelector("section#skills");
+  expect(skillsSection).not.toBeNull();
+  expect(skillsSection?.querySelector("h2")?.textContent?.trim()).toBe(
+    contract.skillsHeading,
+  );
+
+  const skillCards = Array.from(
+    skillsSection?.querySelectorAll("article") ?? [],
+  );
+  expect(skillCards).toHaveLength(5);
+  expect(
+    skillCards.map((card) => card.querySelector("h3")?.textContent?.trim()),
+  ).toEqual(contract.skillCategories.map((category) => `/${category}`));
+
+  for (const skillItem of contract.skillItems) {
+    expect(skillsSection?.textContent).toContain(skillItem);
+  }
+
+  for (const omittedSkill of contract.omittedSkills) {
+    expect(skillsSection?.textContent).not.toContain(omittedSkill);
+  }
+
+  expect(bodyText).not.toContain("Expense Tracker");
+  expect(bodyText).not.toContain("storyboards");
+
+  for (const href of requiredProjectRepoUrls) {
+    const repoLink = body.querySelector(`a[href="${href}"]`);
+    expect(repoLink).not.toBeNull();
+    expect(repoLink?.getAttribute("target")).toBe("_blank");
+    expect(repoLink?.getAttribute("rel")?.split(/\s+/)).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
+  }
+
+  for (const href of requiredContactUrls) {
+    const contactLink = body.querySelector(`section#contact a[href="${href}"]`);
+    expect(contactLink).not.toBeNull();
+    if (href.startsWith("https://")) {
+      expect(contactLink?.getAttribute("target")).toBe("_blank");
+      expect(contactLink?.getAttribute("rel")?.split(/\s+/)).toEqual(
+        expect.arrayContaining(["noopener", "noreferrer"]),
+      );
+    } else {
+      expect(contactLink?.getAttribute("target")).toBeNull();
+      expect(contactLink?.getAttribute("rel")).toBeNull();
+    }
+  }
+
+  for (const href of requiredCaseStudyUrls) {
+    const caseStudyLink = Array.from(
+      caseStudiesSection?.querySelectorAll("a") ?? [],
+    ).find((link) => link.getAttribute("href") === href);
+    expect(caseStudyLink).not.toBeNull();
+    expect(caseStudyLink?.getAttribute("target")).toBe("_blank");
+    expect(caseStudyLink?.getAttribute("rel")?.split(/\s+/)).toEqual(
+      expect.arrayContaining(["noopener", "noreferrer"]),
+    );
+  }
+
+  const experienceCards = Array.from(
+    body.querySelectorAll("section#experience article"),
+  );
+  expect(experienceCards).toHaveLength(
+    siteContentByLocale[locale].experience.length,
+  );
+  siteContentByLocale[locale].experience.forEach((experience, index) => {
+    const cardText = normalizeReadableText(
+      experienceCards[index]?.textContent ?? "",
+    );
+
+    expect(cardText).toContain(experience.company);
+    expect(cardText).toContain(experience.role);
+    expect(cardText).toContain(experience.period);
+  });
+
+  expect(bodyText).toContain(contract.heroSnippet);
+  for (const heroVisualString of contract.heroVisualStrings) {
+    expect(bodyText).toContain(heroVisualString);
+  }
+  expect(bodyText).toContain(contract.valuesSnippet);
+
+  for (const valueItem of contract.valuesItems) {
+    expect(bodyText).toContain(valueItem);
+  }
+
+  expect(bodyText).toContain(contract.summaryHeading);
   expect(bodyText).toContain(contract.summarySnippet);
+  expect(bodyText).toContain(contract.summaryBrandSnippet);
   expect(bodyText).toContain(contract.cta);
+  const educationSection = body.querySelector("section#education");
+  expect(educationSection?.querySelector("h2")?.textContent?.trim()).toBe(
+    contract.educationHeading,
+  );
+  expect(educationSection?.textContent).toContain(contract.educationCard);
+  expect(educationSection?.textContent).toContain(contract.languagesCard);
+  for (const [languageName, languageLevel] of contract.languageItems) {
+    expect(educationSection?.textContent).toContain(languageName);
+    expect(educationSection?.textContent).toContain(languageLevel);
+  }
+
+  const contactSection = body.querySelector("section#contact");
+  expect(contactSection?.querySelector("h2")?.textContent?.trim()).toBe(
+    contract.contactHeading,
+  );
+  expect(contactSection?.textContent).toContain(contract.cvLabel);
+  expect(contactSection?.textContent).toContain("Email");
   expect(bodyText).toContain(contract.footerText);
-  expect(bodyText).not.toMatch(/\u00A9\s*20\d{2}/);
+  expect(bodyText).toContain(contract.footerYearText);
   expect(bodyText.trim().length).toBeGreaterThan(400);
 };
 
 describe("Localized static entrypoints", () => {
+  it("uses a valid social preview PNG asset", () => {
+    expect(existsSync(socialImagePath)).toBe(true);
+
+    const socialImage = readFileSync(socialImagePath);
+
+    expect(socialImage.length).toBeGreaterThanOrEqual(24);
+    expect(
+      socialImage.subarray(0, pngSignature.length).equals(pngSignature),
+    ).toBe(true);
+    expect(socialImage.toString("ascii", 12, 16)).toBe("IHDR");
+    expect(socialImage.readUInt32BE(16)).toBe(1200);
+    expect(socialImage.readUInt32BE(20)).toBe(630);
+  });
+
   it.each(entrypoints)(
     "uses locale-specific metadata for $path",
     ({ path, locale }) => {
@@ -162,9 +536,26 @@ describe("Localized static entrypoints", () => {
       expect(html).toContain(`<html lang="${locale}">`);
       expect(html).toContain(`<title>${site.meta.title}</title>`);
       expect(html).toContain(`content="${site.meta.description}"`);
-      expect(html).toContain(
-        `<script type="module" src="/src/main.tsx"></script>`,
+      expect(html).not.toContain(`/src/main.tsx`);
+    },
+  );
+
+  it.each(entrypoints)(
+    "uses the Lovable font weight set for $path",
+    ({ path }) => {
+      const html = readHtml(path);
+      const parser = new DOMParser();
+      const document = parser.parseFromString(html, "text/html");
+
+      const stylesheetLinks = Array.from(
+        document.head.querySelectorAll('link[rel="stylesheet"]'),
       );
+
+      expect(
+        stylesheetLinks.some(
+          (link) => link.getAttribute("href") === fontStylesheetUrl,
+        ),
+      ).toBe(true);
     },
   );
 
@@ -174,7 +565,7 @@ describe("Localized static entrypoints", () => {
       const html = readHtml(path);
 
       expect(html).toContain(`<html lang="${locale}">`);
-      expect(html).toContain('<main id="main-content">');
+      expect(html).toContain('<main id="main-content"');
       expect(html).toContain('href="#about"');
       expect(html).toContain('href="#experience"');
       expect(html).toContain('href="#projects"');
@@ -183,6 +574,31 @@ describe("Localized static entrypoints", () => {
       expect(html).toContain('href="#contact"');
 
       assertNoJsContract(html, locale);
+    },
+  );
+
+  it.each(entrypoints)(
+    "hydrates only the header React island for $path",
+    ({ path }) => {
+      const html = readHtml(path);
+      const parser = new DOMParser();
+      const document = parser.parseFromString(html, "text/html");
+      const islands = Array.from(
+        document.body.querySelectorAll("astro-island"),
+      );
+      const main = document.body.querySelector("main#main-content");
+      const footer = document.body.querySelector("footer.site-footer");
+
+      expect(islands).toHaveLength(1);
+      expect(islands[0]?.getAttribute("client")).toBe("load");
+      expect(islands[0]?.getAttribute("component-url")).toMatch(/SiteHeader\./);
+      expect(islands[0]?.querySelector("header")).not.toBeNull();
+      expect(islands[0]?.querySelector("main, footer, section")).toBeNull();
+      expect(main).not.toBeNull();
+      expect(main?.closest("astro-island")).toBeNull();
+      expect(footer).not.toBeNull();
+      expect(footer?.closest("astro-island")).toBeNull();
+      expect(html).not.toContain('component-url="/_astro/App');
     },
   );
 
@@ -220,18 +636,326 @@ describe("Localized static entrypoints", () => {
     },
   );
 
+  it.each(entrypoints)(
+    "includes localized social metadata for $path",
+    ({ path, locale }) => {
+      const html = readHtml(path);
+      const parser = new DOMParser();
+      const document = parser.parseFromString(html, "text/html");
+      const site = siteContentByLocale[locale];
+      const seo = seoContracts[path];
+
+      const propertyMeta = (property: string) =>
+        document.head
+          .querySelector(`meta[property="${property}"]`)
+          ?.getAttribute("content");
+      const nameMeta = (name: string) =>
+        document.head
+          .querySelector(`meta[name="${name}"]`)
+          ?.getAttribute("content");
+
+      expect(propertyMeta("og:title")).toBe(site.meta.title);
+      expect(propertyMeta("og:description")).toBe(site.meta.description);
+      expect(propertyMeta("og:url")).toBe(seo.openGraph.url);
+      expect(propertyMeta("og:locale")).toBe(seo.openGraph.locale);
+      expect(propertyMeta("og:locale:alternate")).toBe(
+        seo.openGraph.alternateLocale,
+      );
+      expect(propertyMeta("og:type")).toBe("website");
+      expect(propertyMeta("og:image")).toBe(socialImageUrl);
+      expect(propertyMeta("og:image:alt")).toBe(site.meta.socialImageAlt);
+      expect(propertyMeta("og:image:width")).toBe("1200");
+      expect(propertyMeta("og:image:height")).toBe("630");
+      expect(propertyMeta("og:image:type")).toBe("image/png");
+
+      expect(nameMeta("twitter:card")).toBe("summary_large_image");
+      expect(nameMeta("twitter:title")).toBe(site.meta.title);
+      expect(nameMeta("twitter:description")).toBe(site.meta.description);
+      expect(nameMeta("twitter:image")).toBe(socialImageUrl);
+      expect(nameMeta("twitter:image:alt")).toBe(site.meta.socialImageAlt);
+    },
+  );
+
+  it.each(entrypoints)(
+    "emits the theme boot script before the body for $path",
+    ({ path }) => {
+      const html = readHtml(path);
+      const bootScriptIndex = html.indexOf("devdigi-theme");
+      const bodyIndex = html.indexOf("<body");
+
+      expect(bootScriptIndex).toBeGreaterThanOrEqual(0);
+      expect(bodyIndex).toBeGreaterThanOrEqual(0);
+      expect(bootScriptIndex).toBeLessThan(bodyIndex);
+      expect(html).toContain("classList.add(theme)");
+      expect(html).toContain(
+        'storedTheme === "light" || storedTheme === "dark"',
+      );
+      expect(html).toContain("catch (_) {}");
+      expect(html).toContain("if (!theme)");
+      expect(html.indexOf("localStorage.getItem")).toBeLessThan(
+        html.indexOf("catch (_) {}"),
+      );
+      expect(html.indexOf("matchMedia")).toBeGreaterThan(
+        html.indexOf("catch (_) {}"),
+      );
+      expect(html.indexOf('theme = "dark"')).toBeGreaterThan(
+        html.indexOf("matchMedia"),
+      );
+    },
+  );
+
   it("routes locale paths to localized static HTML in vercel config", () => {
     const vercelConfig = JSON.parse(
       readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"),
-    ) as { rewrites: { source: string; destination: string }[] };
+    ) as {
+      cleanUrls: boolean;
+      rewrites?: { source: string; destination: string }[];
+    };
 
-    expect(vercelConfig.rewrites).toEqual(
-      expect.arrayContaining([
-        { source: "/en", destination: "/en/index.html" },
-        { source: "/en/:path*", destination: "/en/index.html" },
-        { source: "/es", destination: "/es/index.html" },
-        { source: "/es/:path*", destination: "/es/index.html" },
-      ]),
-    );
+    expect(vercelConfig.cleanUrls).toBe(true);
+    expect(vercelConfig.rewrites).toEqual([
+      { source: "/en", destination: "/en/index.html" },
+      { source: "/en/:path*", destination: "/en/index.html" },
+      { source: "/es", destination: "/es/index.html" },
+      { source: "/es/:path*", destination: "/es/index.html" },
+    ]);
+  });
+
+  it("validates and normalizes Experience links before render", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const source = siteContentByLocale.en;
+      const [currentExperience, ...remainingExperience] = source.experience;
+
+      const result = validateSiteContent({
+        ...source,
+        experience: [
+          {
+            ...currentExperience,
+            links: [
+              { label: " Public app ", href: " https://example.com/app " },
+              { label: "Broken app", href: "javascript:alert(1)" },
+            ],
+          },
+          ...remainingExperience,
+        ],
+      });
+
+      expect(result.content.experience[0].links).toEqual([
+        {
+          label: "Public app",
+          href: "https://example.com/app",
+          external: true,
+        },
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "experience",
+            owner: "Worldline Global Services — Native Apps Developer",
+            label: "Broken app",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 1 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("validates and normalizes Project links before render", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const source = siteContentByLocale.en;
+      const [currentProject, ...remainingProjects] = source.projects;
+
+      const result = validateSiteContent({
+        ...source,
+        projects: [
+          {
+            ...currentProject,
+            links: [
+              { label: " Frontend ", href: " https://example.com/front " },
+              { label: "Broken repo", href: "javascript:alert(1)" },
+            ],
+          },
+          ...remainingProjects,
+        ],
+      });
+
+      expect(result.content.projects[0].links).toEqual([
+        {
+          label: "Frontend",
+          href: "https://example.com/front",
+          external: true,
+        },
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "project",
+            owner: "Inkscroller",
+            label: "Broken repo",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 1 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("validates and normalizes Case Study links before render", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const source = siteContentByLocale.en;
+      const [currentCaseStudy, ...remainingCaseStudies] = source.caseStudies;
+
+      const result = validateSiteContent({
+        ...source,
+        caseStudies: [
+          {
+            ...currentCaseStudy,
+            links: [
+              {
+                label: " Public case study ",
+                href: " https://example.com/case-study ",
+              },
+              { label: "Unsafe case study", href: "javascript:alert(1)" },
+            ],
+          },
+          ...remainingCaseStudies,
+        ],
+      });
+
+      expect(result.content.caseStudies[0].links).toEqual([
+        {
+          label: "Public case study",
+          href: "https://example.com/case-study",
+          external: true,
+        },
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "caseStudy",
+            owner: "La Mercè production release",
+            label: "Unsafe case study",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 1 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("validates and normalizes Contact links including mailto and CV targets", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    try {
+      const source = siteContentByLocale.en;
+
+      const result = validateSiteContent({
+        ...source,
+        contacts: [
+          {
+            kind: "email",
+            variant: "secondary",
+            label: " Email ",
+            href: " mailto:test@example.com ",
+          },
+          {
+            kind: "cv",
+            variant: "secondary",
+            label: " CV ",
+            href: " /cv.pdf ",
+          },
+          {
+            kind: "linkedin",
+            variant: "primary",
+            label: " Site ",
+            href: " https://example.com/profile ",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
+            label: "Plain HTTP",
+            href: "http://example.com/profile",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
+            label: "Protocol relative",
+            href: "//example.com",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
+            label: "Broken",
+            href: "javascript:alert(1)",
+          },
+        ],
+      });
+
+      expect(result.content.contacts).toEqual([
+        {
+          kind: "email",
+          variant: "secondary",
+          label: "Email",
+          href: "mailto:test@example.com",
+          external: false,
+        },
+        {
+          kind: "cv",
+          variant: "secondary",
+          label: "CV",
+          href: "/cv.pdf",
+          external: false,
+        },
+        {
+          kind: "linkedin",
+          variant: "primary",
+          label: "Site",
+          href: "https://example.com/profile",
+          external: true,
+        },
+      ]);
+      expect(result.invalidLinks).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Protocol relative",
+            href: "//example.com",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Plain HTTP",
+            href: "http://example.com/profile",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Broken",
+            href: "javascript:alert(1)",
+          }),
+        ]),
+      );
+      expect(warn).toHaveBeenCalledWith(
+        "Dropped 3 invalid configured link(s) from en site content before render.",
+      );
+    } finally {
+      warn.mockRestore();
+    }
   });
 });

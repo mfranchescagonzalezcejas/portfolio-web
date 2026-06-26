@@ -1,0 +1,13 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HomePage from "../../layouts/HomePage.astro";
+import { siteContentByLocale } from "../../content/site";
+
+const locale = "en";
+const site = siteContentByLocale[locale];
+const currentYear = new Date().getFullYear();
+---
+
+<BaseLayout locale={locale} site={site}>
+  <HomePage locale={locale} site={site} currentYear={currentYear} />
+</BaseLayout>
