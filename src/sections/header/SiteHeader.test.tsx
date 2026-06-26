@@ -11,6 +11,7 @@ import { siteContentByLocale } from "../../content/site";
 import SiteHeader from "./SiteHeader";
 
 const site = siteContentByLocale.en;
+const originalMatchMedia = window.matchMedia;
 
 const renderHeader = () => {
   return render(
@@ -42,6 +43,10 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  Object.defineProperty(window, "matchMedia", {
+    configurable: true,
+    value: originalMatchMedia,
+  });
   window.localStorage.clear();
   document.documentElement.classList.remove("light", "dark");
 });
