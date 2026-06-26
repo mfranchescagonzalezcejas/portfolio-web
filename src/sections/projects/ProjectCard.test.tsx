@@ -21,7 +21,7 @@ const renderCard = (project = baseProject) =>
       proofLabel="Demonstrates"
       repositoryLabel="View repo"
       repositoryAriaLabel="{repository}: {link} for {project}"
-      mockupFallback={"App\nscreenshots\ncoming soon"}
+      mockupFallback={"Project\nvisuals\nin progress"}
     />,
   );
 
@@ -124,12 +124,12 @@ describe("ProjectCard", () => {
         proofLabel="Demuestra"
         repositoryLabel="Ver repo"
         repositoryAriaLabel="{repository}: {link} de {project}"
-        mockupFallback={"Capturas\nde la app\npróximamente"}
+        mockupFallback={"Visuales\ndel proyecto\nen progreso"}
       />,
     );
 
     expect(
-      screen.getByText(/Capturas\s+de la app\s+próximamente/),
+      screen.getByText(/Visuales\s+del proyecto\s+en progreso/),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("list", { name: "Tecnologías de Sample Project" }),

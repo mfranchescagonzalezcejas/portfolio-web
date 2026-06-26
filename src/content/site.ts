@@ -326,8 +326,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         readingEyebrow: "Reading now",
         readingTitle: "Chapter 47",
         stackLabel: "Flutter · Riverpod",
-        deliveryTitle: "Production-ready",
-        deliverySubtitle: "mobile delivery",
+        deliveryTitle: "In development",
+        deliverySubtitle: "architecture-first build",
         architectureTitle: "Clean Architecture",
         architectureSubtitle: "Repository Pattern",
       },
@@ -436,7 +436,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     featuredSection: {
       eyebrow: "Featured project",
       title: "Inkscroller",
-      kicker: "Full-stack manga reader app",
+      kicker: "Full-stack manga reader app · in development",
       linksLabel: "Project links",
       stackLabel: "{project} technology stack",
       linkAriaLabel: "{label} for {project}",
@@ -453,7 +453,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       proofLabel: "Demonstrates",
       repositoryLabel: "View repo",
       repositoryAriaLabel: "{repository}: {link} for {project}",
-      mockupFallback: "App\nscreenshots\ncoming soon",
+      mockupFallback: "Project\nvisuals\nin progress",
     },
     caseStudiesSection: {
       eyebrow: "Case studies",
@@ -694,9 +694,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       {
         name: "Inkscroller",
         description:
-          "Full-stack manga reader composed of a Flutter frontend and a FastAPI backend for catalogue discovery, reader flows, and authenticated preferences.",
+          "In-development full-stack manga reader composed of a Flutter frontend and a FastAPI backend for catalogue discovery, reader flows, and authenticated preferences.",
         shortDescription:
-          "Full-stack manga reader with Flutter frontend and FastAPI backend.",
+          "In-development manga reader with Flutter frontend and FastAPI backend.",
         stack: [
           "Flutter",
           "Dart",
@@ -710,10 +710,10 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "MangaDex",
         ],
         demonstrates:
-          "End-to-end mobile product structure across a Flutter app, REST API, external manga data sources, and authenticated preferences.",
+          "Work-in-progress mobile product structure across a Flutter app, REST API, external manga data sources, auth/preferences architecture, and reader/catalogue flows.",
         featured: true,
         mockupLabels: ["Library", "Manga detail", "Reader"],
-        mockupStatus: "Screenshot\ncoming soon",
+        mockupStatus: "In-progress\nUI flows",
         links: [
           {
             label: "Frontend",
@@ -732,9 +732,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       {
         name: "Inkscroller Frontend",
         description:
-          "Flutter frontend for Inkscroller, a manga reading experience focused on discoverability, personalized reading preferences, and an adaptive reader workflow.",
+          "Flutter frontend in development for Inkscroller, a manga reading experience focused on discoverability, personalized reading preferences, and an adaptive reader workflow.",
         shortDescription:
-          "Flutter frontend for a manga reading experience with personalized reading preferences.",
+          "In-development Flutter frontend for manga catalogue and reader flows.",
         stack: [
           "Flutter",
           "Dart",
@@ -746,7 +746,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "Firebase Analytics",
         ],
         demonstrates:
-          "Public-ready Flutter codebase, Clean Architecture, Screaming Architecture and Firebase-backed app setup.",
+          "Flutter frontend structure, Clean Architecture, Screaming Architecture, Riverpod state management, and Firebase-backed auth setup in progress.",
         links: [
           {
             label: "Repository",
@@ -758,9 +758,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       {
         name: "Inkscroller Backend",
         description:
-          "FastAPI REST API backend for Inkscroller that aggregates MangaDex and Jikan data and provides authenticated reading preferences with Firebase Auth.",
+          "FastAPI REST API backend in development for Inkscroller that aggregates MangaDex and Jikan data and supports authenticated reading preferences with Firebase Auth.",
         shortDescription:
-          "FastAPI backend for Inkscroller with MangaDex/Jikan integration, Firebase Auth, and persistence.",
+          "In-development FastAPI backend with MangaDex/Jikan integration, Firebase Auth, and persistence.",
         stack: [
           "FastAPI",
           "Python",
@@ -771,7 +771,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "Railway",
         ],
         demonstrates:
-          "API design, authenticated endpoints, external API aggregation, caching, and Railway deployment.",
+          "Backend API design, authenticated endpoints, external API aggregation, persistence, caching strategy, and Railway-oriented deployment structure.",
         links: [
           {
             label: "Repository",
@@ -937,8 +937,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         readingEyebrow: "Leyendo ahora",
         readingTitle: "Capítulo 47",
         stackLabel: "Flutter · Riverpod",
-        deliveryTitle: "Listo para producción",
-        deliverySubtitle: "entrega mobile",
+        deliveryTitle: "En desarrollo",
+        deliverySubtitle: "arquitectura primero",
         architectureTitle: "Arquitectura limpia",
         architectureSubtitle: "Patrón Repository",
       },
@@ -1047,7 +1047,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
     featuredSection: {
       eyebrow: "Proyecto destacado",
       title: "Inkscroller",
-      kicker: "App lectora de manga full-stack",
+      kicker: "App lectora de manga full-stack · en desarrollo",
       linksLabel: "Enlaces del proyecto",
       stackLabel: "Tecnologías de {project}",
       linkAriaLabel: "{label} de {project}",
@@ -1064,7 +1064,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       proofLabel: "Demuestra",
       repositoryLabel: "Ver repo",
       repositoryAriaLabel: "{repository}: {link} de {project}",
-      mockupFallback: "Capturas\nde la app\npróximamente",
+      mockupFallback: "Visuales\ndel proyecto\nen progreso",
     },
     caseStudiesSection: {
       eyebrow: "Casos de estudio",
@@ -1305,9 +1305,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       {
         name: "Inkscroller",
         description:
-          "Lector de manga full-stack compuesto por frontend Flutter y backend FastAPI para descubrimiento de catálogo, flujos de lectura y preferencias autenticadas.",
+          "Lector de manga full-stack en desarrollo, compuesto por frontend Flutter y backend FastAPI para descubrimiento de catálogo, flujos de lectura y preferencias autenticadas.",
         shortDescription:
-          "Lector de manga full-stack con frontend Flutter y backend FastAPI.",
+          "Lector de manga en desarrollo con frontend Flutter y backend FastAPI.",
         stack: [
           "Flutter",
           "Dart",
@@ -1321,10 +1321,10 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "MangaDex",
         ],
         demonstrates:
-          "Estructura de producto móvil end-to-end con app Flutter, REST API, fuentes externas de manga y preferencias autenticadas.",
+          "Estructura de producto móvil en progreso con app Flutter, REST API, fuentes externas de manga, arquitectura de autenticación/preferencias y flujos de catálogo/lectura.",
         featured: true,
         mockupLabels: ["Biblioteca", "Detalle manga", "Lector"],
-        mockupStatus: "Captura\npróximamente",
+        mockupStatus: "Flujos UI\nen progreso",
         links: [
           {
             label: "Frontend",
@@ -1343,9 +1343,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       {
         name: "Inkscroller Frontend",
         description:
-          "Frontend Flutter de Inkscroller, una experiencia de lectura de manga centrada en descubrimiento, preferencias personalizadas y flujo de lectura adaptativo.",
+          "Frontend Flutter en desarrollo para Inkscroller, una experiencia de lectura de manga centrada en descubrimiento, preferencias personalizadas y flujo de lectura adaptativo.",
         shortDescription:
-          "Frontend Flutter para una experiencia de lectura de manga con preferencias personalizadas.",
+          "Frontend Flutter en desarrollo para catálogo manga y flujos de lectura.",
         stack: [
           "Flutter",
           "Dart",
@@ -1357,7 +1357,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "Firebase Analytics",
         ],
         demonstrates:
-          "Base Flutter preparada para visibilidad pública, Clean Architecture, Screaming Architecture y configuración con Firebase.",
+          "Estructura frontend Flutter, Clean Architecture, Screaming Architecture, gestión de estado con Riverpod y configuración de autenticación con Firebase en progreso.",
         links: [
           {
             label: "Repositorio",
@@ -1369,9 +1369,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       {
         name: "Inkscroller Backend",
         description:
-          "Backend REST API en FastAPI para Inkscroller que agrega datos de MangaDex y Jikan y ofrece preferencias de lectura autenticadas con Firebase Auth.",
+          "Backend REST API en FastAPI, en desarrollo para Inkscroller, que agrega datos de MangaDex y Jikan y soporta preferencias de lectura autenticadas con Firebase Auth.",
         shortDescription:
-          "Backend FastAPI para Inkscroller con integración MangaDex/Jikan, Firebase Auth y persistencia.",
+          "Backend FastAPI en desarrollo con integración MangaDex/Jikan, Firebase Auth y persistencia.",
         stack: [
           "FastAPI",
           "Python",
@@ -1382,7 +1382,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
           "Railway",
         ],
         demonstrates:
-          "Diseño de API, endpoints autenticados, agregación de APIs externas, caché y despliegue en Railway.",
+          "Diseño de API backend, endpoints autenticados, agregación de APIs externas, persistencia, estrategia de caché y estructura orientada a despliegue en Railway.",
         links: [
           {
             label: "Repositorio",
