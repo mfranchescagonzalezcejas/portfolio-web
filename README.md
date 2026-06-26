@@ -176,3 +176,7 @@ Out of scope:
 - Backend APIs or authentication.
 - Dashboard or product-app functionality.
 - Railway deployment for this portfolio site; Railway remains reserved for the Inkscroller backend.
+
+## License
+
+No open-source license has been selected for this repository. The code is public for portfolio review purposes, but reuse, redistribution, or derivative work is not granted without permission.
