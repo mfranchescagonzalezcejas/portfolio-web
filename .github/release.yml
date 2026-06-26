@@ -1,0 +1,33 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+      - duplicate
+      - invalid
+      - question
+      - wontfix
+  categories:
+    - title: Breaking Changes
+      labels:
+        - type:breaking-change
+    - title: Features
+      labels:
+        - type:feature
+        - enhancement
+    - title: Bug Fixes
+      labels:
+        - type:bug
+        - bug
+    - title: Documentation
+      labels:
+        - type:docs
+        - documentation
+    - title: Refactoring
+      labels:
+        - type:refactor
+    - title: Maintenance
+      labels:
+        - type:chore
+    - title: Other Changes
+      labels:
+        - "*"
