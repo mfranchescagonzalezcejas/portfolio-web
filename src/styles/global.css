@@ -1384,14 +1384,45 @@ h4 {
 
 .hero-section {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   padding-top: 8rem;
   padding-bottom: 0;
 }
 
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    32rem 28rem at 50% 72%,
+    color-mix(in oklab, var(--primary) 24%, transparent) 0%,
+    color-mix(in oklab, var(--accent-blue) 15%, transparent) 38%,
+    transparent 72%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
 @media (min-width: 640px) {
   .hero-section {
     padding-top: 10rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-section::before {
+    background: radial-gradient(
+      46rem 38rem at calc(50% + 20rem) 58%,
+      color-mix(in oklab, var(--primary) 26%, transparent) 0%,
+      color-mix(in oklab, var(--accent-blue) 16%, transparent) 40%,
+      transparent 74%
+    );
   }
 }
 
@@ -1638,23 +1669,8 @@ h4 {
   overflow-x: clip;
 }
 
-.hero-visual::before {
-  content: "";
-  position: absolute;
-  inset: 1rem 0 0;
-  z-index: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    circle at 50% 45%,
-    color-mix(in oklab, var(--primary) 24%, transparent) 0%,
-    color-mix(in oklab, var(--accent-blue) 14%, transparent) 38%,
-    transparent 70%
-  );
-}
-
 .hero-visual-inner {
   position: relative;
-  z-index: 1;
   width: min(100%, 24rem);
   max-width: 100%;
   min-height: 34rem;

@@ -58,7 +58,7 @@ export default function Hero({ hero, links }: HeroProps) {
     <section id="top" className="hero-section" aria-labelledby="hero-title">
       <div className="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
 
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-8">
+      <div className="hero-content mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-8">
         <div>
           <p className="hero-status">
             <span className="hero-status-dot" aria-hidden="true">
