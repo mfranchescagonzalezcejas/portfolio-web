@@ -446,7 +446,7 @@ describe("navigation anchors", () => {
     expect(featuredSection).toBeInTheDocument();
     expect(
       within(featuredSection as HTMLElement).getByText(
-        "Full-stack manga reader app",
+        "Full-stack manga reader app · in development",
       ),
     ).toBeInTheDocument();
     expect(
@@ -653,7 +653,7 @@ describe("navigation anchors", () => {
       }),
     ).not.toBeInTheDocument();
     expect(featuredSection as HTMLElement).toHaveTextContent(
-      "Captura próximamente",
+      "Flujos UI en progreso",
     );
 
     expect(
@@ -683,7 +683,7 @@ describe("navigation anchors", () => {
       "https://github.com/mfranchescagonzalezcejas/portfolio-web",
     );
     expect(projectsSection as HTMLElement).toHaveTextContent(
-      "Capturas de la app próximamente",
+      "Visuales del proyecto en progreso",
     );
 
     expect(
@@ -697,10 +697,10 @@ describe("navigation anchors", () => {
       }),
     ).not.toBeInTheDocument();
     expect(featuredSection as HTMLElement).not.toHaveTextContent(
-      "Screenshot coming soon",
+      "In-progress UI flows",
     );
     expect(projectsSection as HTMLElement).not.toHaveTextContent(
-      "App screenshots coming soon",
+      "Project visuals in progress",
     );
   });
 
