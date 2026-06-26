@@ -149,11 +149,6 @@ export default function SiteHeader({
     root.classList.remove("light", "dark");
     root.classList.add(currentTheme);
     setThemeMode(currentTheme);
-    try {
-      window.localStorage.setItem("devdigi-theme", currentTheme);
-    } catch {
-      // Local storage can fail in restricted environments; UI still works with default class.
-    }
   }, []);
 
   const primaryNav = navItems.filter((item) =>

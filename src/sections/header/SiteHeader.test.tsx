@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   cleanup,
   fireEvent,
@@ -47,6 +47,25 @@ afterEach(() => {
 });
 
 describe("SiteHeader theme toggle", () => {
+  it("uses system theme on first render without storing it as a preference", async () => {
+    Object.defineProperty(window, "matchMedia", {
+      configurable: true,
+      value: vi.fn().mockImplementation((query: string) => ({
+        matches: query === "(prefers-color-scheme: light)",
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+      })),
+    });
+
+    renderHeader();
+
+    await waitFor(() => {
+      expect(document.documentElement).toHaveClass("light");
+    });
+    expect(window.localStorage.getItem("devdigi-theme")).toBeNull();
+  });
+
   it("toggles theme labels, root classes, and localStorage", async () => {
     const { switchToDark, switchToLight } = site.header.themeToggle;
 

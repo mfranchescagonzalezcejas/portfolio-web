@@ -934,8 +934,8 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       cvLabel: "Descargar CV",
       visual: {
         ariaLabel: "Mockup de demo del producto",
-        readingEyebrow: "Reading now",
-        readingTitle: "Chapter 47",
+        readingEyebrow: "Leyendo ahora",
+        readingTitle: "Capítulo 47",
         stackLabel: "Flutter · Riverpod",
         deliveryTitle: "Listo para producción",
         deliverySubtitle: "entrega mobile",
@@ -1643,17 +1643,18 @@ export const defaultLocale: Locale = "en";
 export const isLocale = (locale: string | undefined): locale is Locale =>
   locales.includes(locale as Locale);
 
-const validatedContentEntries = locales.map(
-  (locale) =>
-    [locale, validateSiteContent(rawSiteContent[locale]).content] as const,
-);
+const validatedContentEntries = locales.map((locale) => {
+  const result = validateSiteContent(rawSiteContent[locale]);
+
+  return [locale, result] as const;
+});
 
 export const siteContentByLocale = Object.fromEntries(
-  validatedContentEntries,
+  validatedContentEntries.map(([locale, result]) => [locale, result.content]),
 ) as Record<Locale, SiteContent>;
 
 export const siteContent = siteContentByLocale[defaultLocale];
 
-export const invalidLinks = locales.flatMap(
-  (locale) => validateSiteContent(rawSiteContent[locale]).invalidLinks,
+export const invalidLinks = validatedContentEntries.flatMap(
+  ([, result]) => result.invalidLinks,
 );

@@ -90,7 +90,7 @@ describe("Hero", () => {
     ).toBeInTheDocument();
   });
 
-  it("falls back to the first two links when no social profile links are present", () => {
+  it("falls back to non-CV links when no social profile links are present", () => {
     const links: ContactLinkItem[] = [
       {
         kind: "email",
@@ -127,13 +127,11 @@ describe("Hero", () => {
     const cvLinks = within(heroSection).getAllByRole("link", {
       name: "Download CV",
     });
-    const fallbackCvLink = cvLinks.find((link) =>
-      link.querySelector('svg[data-contact-icon="cv"]'),
-    );
-    expect(fallbackCvLink).toHaveAttribute("href", "/cv.pdf");
+    expect(cvLinks).toHaveLength(1);
+    expect(cvLinks[0]).toHaveAttribute("href", "/cv.pdf");
 
     expect(
-      within(heroSection).queryByRole("link", { name: "Alternate email" }),
-    ).not.toBeInTheDocument();
+      within(heroSection).getByRole("link", { name: "Alternate email" }),
+    ).toHaveAttribute("href", "mailto:alternate@example.com");
   });
 });
