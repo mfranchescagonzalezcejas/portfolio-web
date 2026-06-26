@@ -32,7 +32,7 @@ describe("responsive CSS contract", () => {
       ".hero-visual {\n  position: relative;\n  display: flex;\n  min-width: 0;\n  align-items: center;\n  justify-content: center;\n  min-height: 34rem;\n  overflow-x: hidden;\n  overflow-x: clip;",
     );
     expect(globalCss).toContain(
-      ".hero-section::before {\n  content: \"\";\n  position: absolute;",
+      '.hero-section::before {\n  content: "";\n  position: absolute;',
     );
     expect(globalCss).toContain(
       ".hero-content {\n  position: relative;\n  z-index: 1;",
