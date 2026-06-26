@@ -707,7 +707,12 @@ describe("Localized static entrypoints", () => {
     };
 
     expect(vercelConfig.cleanUrls).toBe(true);
-    expect(vercelConfig.rewrites).toBeUndefined();
+    expect(vercelConfig.rewrites).toEqual([
+      { source: "/en", destination: "/en/index.html" },
+      { source: "/en/:path*", destination: "/en/index.html" },
+      { source: "/es", destination: "/es/index.html" },
+      { source: "/es/:path*", destination: "/es/index.html" },
+    ]);
   });
 
   it("validates and normalizes Experience links before render", () => {

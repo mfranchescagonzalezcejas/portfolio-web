@@ -1,0 +1,84 @@
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+
+import { siteContentByLocale } from "../../content/site";
+import SiteHeader from "./SiteHeader";
+
+const renderHeader = () => {
+  const site = siteContentByLocale.en;
+
+  return render(
+    <SiteHeader
+      currentLocale={site.locale}
+      navItems={site.nav}
+      languageSwitcher={site.languageSwitcher}
+      header={site.header}
+    />,
+  );
+};
+
+const createLocalStorage = () => {
+  const storage = new Map<string, string>();
+
+  return {
+    getItem: (key: string) => storage.get(key) ?? null,
+    setItem: (key: string, value: string) => storage.set(key, value),
+    clear: () => storage.clear(),
+  };
+};
+
+beforeEach(() => {
+  Object.defineProperty(window, "localStorage", {
+    configurable: true,
+    value: createLocalStorage(),
+  });
+});
+
+afterEach(() => {
+  cleanup();
+  window.localStorage.clear();
+  document.documentElement.classList.remove("light", "dark");
+});
+
+describe("SiteHeader theme toggle", () => {
+  it("toggles theme labels, root classes, and localStorage", async () => {
+    window.localStorage.setItem("devdigi-theme", "dark");
+
+    renderHeader();
+
+    const toggleToLight = await screen.findByRole("button", {
+      name: "Switch to light mode",
+    });
+
+    await waitFor(() => {
+      expect(document.documentElement).toHaveClass("dark");
+    });
+    expect(window.localStorage.getItem("devdigi-theme")).toBe("dark");
+
+    fireEvent.click(toggleToLight);
+
+    expect(document.documentElement).toHaveClass("light");
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(window.localStorage.getItem("devdigi-theme")).toBe("light");
+
+    const toggleToDark = screen.getByRole("button", {
+      name: "Switch to dark mode",
+    });
+    expect(toggleToDark).toHaveAttribute("title", "Switch to dark mode");
+
+    fireEvent.click(toggleToDark);
+
+    expect(document.documentElement).toHaveClass("dark");
+    expect(document.documentElement).not.toHaveClass("light");
+    expect(window.localStorage.getItem("devdigi-theme")).toBe("dark");
+    expect(
+      screen.getByRole("button", { name: "Switch to light mode" }),
+    ).toHaveAttribute("title", "Switch to light mode");
+  });
+});
