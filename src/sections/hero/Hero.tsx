@@ -44,7 +44,9 @@ export default function Hero({ hero, links }: HeroProps) {
     <>
       {parsedTagline.lead ? `${parsedTagline.lead} ` : ""}
       <span className="text-gradient">{parsedTagline.highlight}</span>
-      {parsedTagline.tail ? ` ${parsedTagline.tail}` : ""}
+      {parsedTagline.tail
+        ? `${/^[.,;:!?]/.test(parsedTagline.tail) ? "" : " "}${parsedTagline.tail}`
+        : ""}
     </>
   ) : (
     <span className="text-gradient">{hero.tagline}</span>
