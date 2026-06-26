@@ -10,7 +10,7 @@ type ExperienceProps = {
 };
 
 const labelForExperience = (label: string, item: ExperienceContent) =>
-  label.replace("{company}", item.company).replace("{role}", item.role);
+  label.replaceAll("{company}", item.company).replaceAll("{role}", item.role);
 
 export default function Experience({ experience, section }: ExperienceProps) {
   return (

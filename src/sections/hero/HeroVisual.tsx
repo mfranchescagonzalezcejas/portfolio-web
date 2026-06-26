@@ -15,7 +15,7 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
           <span className="hero-phone-notch" aria-hidden="true" />
 
           <div className="hero-phone-screen">
-            <div className="hero-phone-status" aria-label="Header status row">
+            <div className="hero-phone-status">
               <span>9:41</span>
               <span>Inkscroller</span>
             </div>
@@ -32,7 +32,7 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
               </div>
             </div>
 
-            <div className="hero-library-list" aria-label="Library rows">
+            <div className="hero-library-list">
               {[1, 2, 3, 4].map((row) => (
                 <div className="hero-library-row" key={row}>
                   <div className="hero-cover" />
@@ -44,10 +44,7 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
               ))}
             </div>
 
-            <div
-              className="hero-phone-bottom"
-              aria-label="Bottom quick actions"
-            >
+            <div className="hero-phone-bottom">
               {["■", "❤", "↓", "☰"].map((item) => (
                 <span key={item}>{item}</span>
               ))}

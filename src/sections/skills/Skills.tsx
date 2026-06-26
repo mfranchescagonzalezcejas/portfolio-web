@@ -5,7 +5,7 @@ type SkillsProps = {
 };
 
 const formatCategoryLabel = (template: string, category: string) =>
-  template.replace("{category}", category);
+  template.replaceAll("{category}", category);
 
 export default function Skills({ section }: SkillsProps) {
   return (

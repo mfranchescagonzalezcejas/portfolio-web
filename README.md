@@ -1,6 +1,6 @@
 # Portfolio Web
 
-Personal landing page built with **React** (Vite) and **Tailwind CSS**. The current version is a lightweight MVP that is ready to run, build, and deploy as a static app, with route support for `/`, `/en`, and `/es`.
+Personal landing page built with **Astro**, **React islands**, and **Tailwind CSS**. The current version is a lightweight MVP that is ready to run, build, and deploy as a static app, with route support for `/`, `/en`, and `/es`.
 
 ## Quick start
 
@@ -9,17 +9,17 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite, usually:
+Open the local URL printed by Astro, usually:
 
 ```text
-http://localhost:5173
+http://localhost:4321
 ```
 
 ## Project status
 
 | Area | Status |
 |---|---|
-| Stack | React + Vite + Tailwind CSS |
+| Stack | Astro + React + Tailwind CSS |
 | Deployment target | Vercel |
 | Output | Static site in `dist/` |
 | Backend | Not included in the MVP |
@@ -53,7 +53,7 @@ Use these settings when importing the GitHub repo into Vercel:
 
 | Setting | Value |
 |---|---|
-| Framework preset | Vite |
+| Framework preset | Astro |
 | Install command | `npm install` |
 | Build command | `npm run build` |
 | Output directory | `dist` |

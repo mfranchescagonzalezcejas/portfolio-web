@@ -34,7 +34,9 @@ export default function Hero({ hero, links }: HeroProps) {
     .slice(0, 2);
 
   const fallbackLinks =
-    profileLinks.length > 0 ? profileLinks : links.slice(0, 2);
+    profileLinks.length > 0
+      ? profileLinks
+      : links.filter((link) => link.kind !== "cv").slice(0, 2);
   const firstName = hero.name.split(" ")[0] || hero.name;
   const parsedTagline = splitHeadlineWithAccent(hero.tagline);
 

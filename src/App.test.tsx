@@ -11,13 +11,6 @@ import App from "./app/App";
 const renderAtPath = (path: string) => {
   window.history.pushState({}, "", path);
 
-  const descriptionMeta = document.querySelector("meta[name='description']");
-  if (!descriptionMeta) {
-    const createdMeta = document.createElement("meta");
-    createdMeta.name = "description";
-    document.head.append(createdMeta);
-  }
-
   cleanup();
   return render(<App />);
 };

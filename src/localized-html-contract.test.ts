@@ -58,6 +58,7 @@ type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
   heroSnippet: string;
+  heroVisualStrings: string[];
   valuesSnippet: string;
   valuesItems: string[];
   summaryHeading: string;
@@ -164,6 +165,7 @@ const staticContracts: Record<
       "Let’s build great mobile products.",
     ],
     heroSnippet: "I build polished mobile apps for real users.",
+    heroVisualStrings: ["Reading now", "Chapter 47"],
     valuesSnippet:
       "Practical engineering that turns into shipped, maintainable mobile products.",
     valuesItems: [
@@ -246,6 +248,7 @@ const staticContracts: Record<
       "Construyamos grandes productos móviles.",
     ],
     heroSnippet: "Construyo apps móviles pulidas para usuarios reales.",
+    heroVisualStrings: ["Leyendo ahora", "Capítulo 47"],
     valuesSnippet:
       "Ingeniería práctica que se traduce en productos móviles entregados y mantenibles.",
     valuesItems: [
@@ -474,6 +477,9 @@ const assertNoJsContract = (
   });
 
   expect(bodyText).toContain(contract.heroSnippet);
+  for (const heroVisualString of contract.heroVisualStrings) {
+    expect(bodyText).toContain(heroVisualString);
+  }
   expect(bodyText).toContain(contract.valuesSnippet);
 
   for (const valueItem of contract.valuesItems) {

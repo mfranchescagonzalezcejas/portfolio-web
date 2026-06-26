@@ -69,24 +69,31 @@ export default function ProjectCard({
             className="project-card-links"
             aria-label={`${project.name} · ${linksLabel}`}
           >
-            {project.links.map((link) => (
-              <li key={link.href}>
-                <a
-                  className="cta-outline"
-                  href={link.href}
-                  target={link.external ? "_blank" : undefined}
-                  rel={link.external ? "noopener noreferrer" : undefined}
-                  aria-label={formatProjectLabel(repositoryAriaLabel, {
-                    repository: repositoryLabel,
-                    link: link.label,
-                    project: project.name,
-                  })}
-                >
-                  <GitBranch aria-hidden="true" className="project-link-icon" />
-                  {repositoryLabel}
-                </a>
-              </li>
-            ))}
+            {project.links.map((link) => {
+              const linkCtaLabel = link.ctaLabel ?? repositoryLabel;
+
+              return (
+                <li key={link.href}>
+                  <a
+                    className="cta-outline"
+                    href={link.href}
+                    target={link.external ? "_blank" : undefined}
+                    rel={link.external ? "noopener noreferrer" : undefined}
+                    aria-label={formatProjectLabel(repositoryAriaLabel, {
+                      repository: linkCtaLabel,
+                      link: link.label,
+                      project: project.name,
+                    })}
+                  >
+                    <GitBranch
+                      aria-hidden="true"
+                      className="project-link-icon"
+                    />
+                    {linkCtaLabel}
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         )}
       </div>

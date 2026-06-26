@@ -76,6 +76,28 @@ describe("ProjectCard", () => {
     );
   });
 
+  it("uses per-link CTA labels for visible and accessible link copy", () => {
+    renderCard({
+      ...baseProject,
+      links: [
+        {
+          label: "Frontend",
+          ctaLabel: "Frontend repo",
+          href: "https://example.com/frontend",
+          external: true,
+        },
+      ],
+    });
+
+    const ctaLink = screen.getByRole("link", {
+      name: "Frontend repo: Frontend for Sample Project",
+    });
+
+    expect(ctaLink).toHaveTextContent("Frontend repo");
+    expect(ctaLink).not.toHaveTextContent("View repo");
+    expect(ctaLink).toHaveAttribute("href", "https://example.com/frontend");
+  });
+
   it("omits the project links list when no links are configured", () => {
     renderCard();
 

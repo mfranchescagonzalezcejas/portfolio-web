@@ -404,7 +404,7 @@ beforeAll(async () => {
     ],
     {
       cwd: process.cwd(),
-      stdio: "pipe",
+      stdio: "ignore",
     },
   );
 
@@ -419,7 +419,7 @@ beforeAll(async () => {
     ],
     {
       cwd: process.cwd(),
-      stdio: "pipe",
+      stdio: "ignore",
     },
   );
 

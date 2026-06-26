@@ -43,10 +43,15 @@ export default function App({ locale, currentYear }: AppProps) {
     document.documentElement.lang = site.locale;
     document.title = site.meta.title;
 
-    const descriptionMeta = document.querySelector("meta[name='description']");
-    if (descriptionMeta) {
-      descriptionMeta.setAttribute("content", site.meta.description);
+    const descriptionMeta =
+      document.querySelector<HTMLMetaElement>("meta[name='description']") ??
+      document.head.appendChild(document.createElement("meta"));
+
+    if (!descriptionMeta.name) {
+      descriptionMeta.name = "description";
     }
+
+    descriptionMeta.setAttribute("content", site.meta.description);
   }, [site]);
 
   return (
