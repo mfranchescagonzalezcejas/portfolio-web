@@ -36,6 +36,7 @@ describe("responsive CSS contract", () => {
       ".hero-visual-inner {\n  position: relative;\n  z-index: 1;",
     );
     expect(globalCss).not.toContain(".hero-phone-glow");
+    expect(globalCss).not.toContain(".hero-float-glow");
     expect(globalCss).not.toMatch(/color-mix\([^)]*\b1[0-9]{2}%/);
     expect(globalCss).not.toContain("var(--overlay-bg) 150%");
   });

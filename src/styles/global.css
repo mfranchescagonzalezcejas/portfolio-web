@@ -1962,7 +1962,6 @@ h4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-float-glow,
   .hero-phone,
   .hero-status-dot-ping,
   .hero-cta-primary,
