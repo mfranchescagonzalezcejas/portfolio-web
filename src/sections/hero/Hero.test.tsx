@@ -137,11 +137,13 @@ describe("Hero", () => {
 
   it("keeps the phone glow out of the clipped visual markup layer", () => {
     const { container } = render(<Hero hero={hero} links={[]} />);
+    const heroContent = container.querySelector<HTMLElement>(".hero-content");
     const visualInner =
       container.querySelector<HTMLElement>(".hero-visual-inner");
     const phone = container.querySelector<HTMLElement>(".hero-phone");
 
     expect(container.querySelector(".hero-phone-glow")).not.toBeInTheDocument();
+    expect(heroContent).toBeInTheDocument();
     expect(visualInner).toBeInTheDocument();
     expect(phone).toBeInTheDocument();
     expect(visualInner).toContainElement(phone);
