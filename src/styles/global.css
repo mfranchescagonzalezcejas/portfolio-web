@@ -1384,14 +1384,56 @@ h4 {
 
 .hero-section {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   padding-top: 8rem;
   padding-bottom: 0;
 }
 
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: 24rem;
+  left: 50%;
+  z-index: 0;
+  width: min(22rem, 88vw);
+  height: 24rem;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  opacity: 0.72;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in oklab, var(--primary) 20%, transparent) 0%,
+    color-mix(in oklab, var(--accent-blue) 12%, transparent) 42%,
+    transparent 72%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
 @media (min-width: 640px) {
   .hero-section {
     padding-top: 10rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-section::before {
+    top: 10.5rem;
+    left: calc(50% + 19rem);
+    width: 31rem;
+    height: 33rem;
+    opacity: 0.76;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in oklab, var(--primary) 22%, transparent) 0%,
+      color-mix(in oklab, var(--accent-blue) 13%, transparent) 42%,
+      transparent 72%
+    );
   }
 }
 
@@ -1648,24 +1690,6 @@ h4 {
 
 .hero-cta-row {
   max-width: 32rem;
-}
-
-.hero-phone-glow {
-  position: absolute;
-  inset: -2rem;
-  z-index: -1;
-  border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    color-mix(in oklab, var(--primary) 20%, transparent),
-    color-mix(in oklab, var(--accent-blue) 10%, transparent) 45%,
-    transparent 70%
-  );
-  filter: blur(34px);
-}
-
-.hero-float-glow {
-  animation: hero-float 7s ease-in-out infinite;
 }
 
 .hero-phone {
@@ -1965,7 +1989,6 @@ h4 {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-float-glow,
   .hero-phone,
   .hero-status-dot-ping,
   .hero-cta-primary,
