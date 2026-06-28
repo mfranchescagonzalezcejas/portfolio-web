@@ -26,12 +26,12 @@ describe("locale routing behavior", () => {
     {
       path: "/",
       lang: "en",
-      tagline: "I build polished mobile apps for real users.",
+      tagline: "I help product teams ship reliable mobile apps.",
       headerCta: "Contact me",
       heroPrimaryCta: "View Projects",
       footer: "Built with care in Barcelona",
       description:
-        "DevDigi is my personal developer brand. Mobile Developer focused",
+        "Flutter / Mobile Developer in Barcelona focused on product-team delivery",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       languageSwitcherLabel: "Change language",
       currentLocaleName: "EN",
@@ -44,12 +44,12 @@ describe("locale routing behavior", () => {
     {
       path: "/en",
       lang: "en",
-      tagline: "I build polished mobile apps for real users.",
+      tagline: "I help product teams ship reliable mobile apps.",
       headerCta: "Contact me",
       heroPrimaryCta: "View Projects",
       footer: "Built with care in Barcelona",
       description:
-        "DevDigi is my personal developer brand. Mobile Developer focused",
+        "Flutter / Mobile Developer in Barcelona focused on product-team delivery",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       languageSwitcherLabel: "Change language",
       currentLocaleName: "EN",
@@ -62,12 +62,12 @@ describe("locale routing behavior", () => {
     {
       path: "/es",
       lang: "es",
-      tagline: "Construyo apps móviles pulidas para usuarios reales.",
+      tagline: "Ayudo a equipos de producto a entregar apps móviles fiables.",
       headerCta: "Contáctame",
       heroPrimaryCta: "Ver proyectos",
       footer: "Desarrollado con cariño en Barcelona",
       description:
-        "DevDigi es la marca personal de Mercedes; Ingeniería móvil con foco en Flutter",
+        "Flutter / Mobile Developer en Barcelona con foco en equipos de producto",
       titleMeta: "DevDigi | Mercedes Franchesca Gonzalez Cejas",
       languageSwitcherLabel: "Cambiar idioma",
       currentLocaleName: "ES",
@@ -840,7 +840,7 @@ describe("navigation anchors", () => {
       nativeLevel: "Native",
       contactHeading: "Let’s build great mobile products.",
       contactBody:
-        /Available for Mobile Developer, Flutter Developer, and Android Developer/i,
+        /Available for Flutter \/ Mobile Developer roles in product teams/i,
       cvLabel: "Download CV",
       footerText: "Built with care in Barcelona",
     },
@@ -856,7 +856,7 @@ describe("navigation anchors", () => {
       nativeLevel: "Nativo",
       contactHeading: "Construyamos grandes productos móviles.",
       contactBody:
-        /Disponible para oportunidades de Mobile Developer, Flutter Developer y Android Developer/i,
+        /Disponible para roles de Flutter \/ Mobile Developer en equipos de producto/i,
       cvLabel: "Descargar CV",
       footerText: "Desarrollado con cariño en Barcelona",
     },

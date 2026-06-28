@@ -7,7 +7,7 @@ Production portfolio site for **Mercedes Franchesca Gonzalez Cejas** and the **D
 
 Live site: **https://www.devdigi.dev**
 
-Latest validated release: **v0.2.2**
+Latest validated release: **v0.2.3**
 
 ## What this site contains
 
@@ -88,7 +88,7 @@ Production workflow:
 .github/workflows/vercel-production.yml
 ```
 
-The verified `v0.2.2` release created a successful GitHub `Production` deployment and aliased the Vercel deployment to:
+The verified `v0.2.3` release created a successful GitHub `Production` deployment and aliased the Vercel deployment to:
 
 ```text
 https://www.devdigi.dev
@@ -100,11 +100,11 @@ Patch releases follow the protected PR flow:
 
 1. Bump `package.json` and `package-lock.json`.
 2. Merge the bump through an approved issue and PR.
-3. Create an annotated tag, for example:
+3. Create an annotated tag for the next validated version, for example:
 
    ```bash
-   git tag -a v0.2.2 -m "Release v0.2.2"
-   git push origin v0.2.2
+   git tag -a v0.2.4 -m "Release v0.2.4"
+   git push origin v0.2.4
    ```
 
 4. Verify the `Deploy production to Vercel` workflow succeeds.

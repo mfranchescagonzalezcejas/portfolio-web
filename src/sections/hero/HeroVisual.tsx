@@ -9,8 +9,6 @@ export default function HeroVisual({ visual }: HeroVisualProps) {
   return (
     <aside className="hero-visual" aria-label={visual.ariaLabel}>
       <div className="hero-visual-inner">
-        <div className="hero-phone-glow hero-float-glow" aria-hidden="true" />
-
         <div className="hero-phone" aria-hidden="true">
           <span className="hero-phone-notch" aria-hidden="true" />
 
