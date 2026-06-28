@@ -7,4 +7,7 @@ dist/
 npm-debug.log*
 .atl/
 .engram/
+.codegraph/
+.cursor/
+design/design.op
 .vercel/
