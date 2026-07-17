@@ -146,6 +146,7 @@ describe("Hero", () => {
     expect(heroContent).toBeInTheDocument();
     expect(visualInner).toBeInTheDocument();
     expect(phone).toBeInTheDocument();
+    expect(heroContent).toContainElement(visualInner);
     expect(visualInner).toContainElement(phone);
   });
 });
