@@ -1,0 +1,53 @@
+name: Sync main → develop
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: github.event.head_commit.committer.name != 'github-actions[bot]'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create sync PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Check if develop has everything main has
+          if git merge-base --is-ancestor origin/main origin/develop; then
+            echo "develop is already up to date with main — no sync needed"
+            exit 0
+          fi
+
+          # Close any existing sync PR
+          gh pr list \
+            --base develop \
+            --label "sync:main-to-develop" \
+            --state open \
+            --json number \
+            --jq '.[].number' | while read -r num; do
+            gh pr close "$num" --comment "Replaced by newer sync"
+          done
+
+          # Create PR
+          TIMESTAMP=$(date +%s)
+          BRANCH="chore/sync-main-to-develop-${TIMESTAMP}"
+          git checkout -b "$BRANCH" origin/main
+          git push origin "$BRANCH"
+
+          gh pr create \
+            --base develop \
+            --head "$BRANCH" \
+            --title "chore: sync main → develop" \
+            --body "Automated sync after merge to \`main\`." \
+            --label "type:chore" \
+            --label "sync:main-to-develop"
