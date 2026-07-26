@@ -67,7 +67,7 @@ npm run typecheck
 npm run lint
 npm run format:check
 npm run build
-npm audit --audit-level=high
+npm audit --omit=dev --audit-level=high
 ```
 
 `npm run test` already includes a production build, but the explicit build command is kept in the checklist because deployment depends on static output correctness.
