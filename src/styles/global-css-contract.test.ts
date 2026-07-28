@@ -81,6 +81,20 @@ describe("responsive CSS contract", () => {
     expect(
       globalCss.match(/\.header-contact-cta \{\s+display: none;\s+\}/g),
     ).toHaveLength(1);
+    for (const selector of [
+      ".header-brand-link",
+      ".header-nav-link",
+      ".header-lang-toggle",
+      ".header-contact-cta",
+    ]) {
+      expect(globalCss).toContain(`${selector} {`);
+    }
+    expect(
+      globalCss.match(/min-height: 2\.75rem;/g)?.length,
+    ).toBeGreaterThanOrEqual(4);
+    expect(globalCss).toContain(
+      ".header-theme-toggle {\n  display: grid;\n  place-items: center;\n  min-width: 2.25rem;\n  width: 2.25rem;\n  min-height: 2.25rem;\n  height: 2.25rem;",
+    );
   });
 
   it("lets Experience period badges stack and wrap on narrow screens", () => {
@@ -92,5 +106,29 @@ describe("responsive CSS contract", () => {
     expect(experienceSource).toContain("whitespace-normal");
     expect(experienceSource).toContain("break-words");
     expect(experienceSource).toContain("sm:shrink-0 sm:whitespace-nowrap");
+  });
+
+  it("keeps hero profile links quiet while retaining 44px touch targets", () => {
+    expect(globalCss).toContain(
+      ".hero-profile-links {\n  display: flex;\n  flex-wrap: wrap;",
+    );
+    expect(globalCss).toContain(
+      ".hero-profile-link {\n  display: inline-flex;\n  align-items: center;\n  min-height: 2.75rem;",
+    );
+    expect(globalCss).toContain("text-decoration: underline;");
+    expect(globalCss).not.toContain(".hero-cta-social");
+  });
+
+  it("keeps Learning project cards symmetric", () => {
+    expect(globalCss).toContain(
+      ".projects-grid {\n  display: grid;\n  align-items: stretch;",
+    );
+    expect(globalCss).toContain(".projects-learning-group {");
+    expect(globalCss).toContain(".projects-learning-header {");
+    expect(globalCss).toContain(
+      ".projects-grid {\n    grid-template-columns: repeat(3, minmax(0, 1fr));",
+    );
+    expect(globalCss).not.toContain(".project-card-primary");
+    expect(globalCss).not.toContain(".project-card-icon-visual");
   });
 });

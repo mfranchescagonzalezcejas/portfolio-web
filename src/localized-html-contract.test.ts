@@ -35,7 +35,6 @@ const pngSignature = Buffer.from([
 const requiredProjectRepoUrls = [
   "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
   "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
-  "https://github.com/mfranchescagonzalezcejas/portfolio-web",
   "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
   "https://github.com/mfranchescagonzalezcejas/AppUIKit",
   "https://github.com/mfranchescagonzalezcejas/AppAndroid",
@@ -72,6 +71,8 @@ type StaticContract = {
   summaryBrandSnippet: string;
   cta: string;
   portfolioItems: string[];
+  learningProjectsTitle: string;
+  learningProjectsDescription: string;
   caseStudyItems: string[];
   caseStudySnippets: string[];
   skillsHeading: string;
@@ -81,7 +82,7 @@ type StaticContract = {
   footerText: string;
   footerYearText: string;
   navLabel: string;
-  skillsNavLabel: string;
+  primaryNav: [string, string][];
   educationHeading: string;
   educationCard: string;
   languagesCard: string;
@@ -209,14 +210,9 @@ const staticContracts: Record<
     summaryBrandSnippet:
       "where I showcase my mobile work, projects and technical growth",
     cta: "Contact me",
-    portfolioItems: [
-      "Inkscroller Frontend",
-      "Inkscroller Backend",
-      "DevDigi Portfolio Web",
-      "AppSwiftUI",
-      "AppUIKit",
-      "AppAndroid",
-    ],
+    portfolioItems: ["AppSwiftUI", "AppUIKit", "AppAndroid"],
+    learningProjectsTitle: "Learning projects",
+    learningProjectsDescription: "Worldline internship learning projects",
     caseStudyItems: [
       "La Mercè production release",
       "Barcelona a la Butxaca air quality",
@@ -250,7 +246,14 @@ const staticContracts: Record<
     footerText: "Built with care in Barcelona",
     footerYearText: `© ${new Date().getFullYear()} · Built with care in Barcelona`,
     navLabel: "Primary",
-    skillsNavLabel: "Skills",
+    primaryNav: [
+      ["About", "#about"],
+      ["Experience", "#experience"],
+      ["Projects", "#projects"],
+      ["Skills", "#skills"],
+      ["Education", "#education"],
+      ["Contact", "#contact"],
+    ],
     educationHeading: "Education and languages",
     educationCard: "Education",
     languagesCard: "Languages",
@@ -292,14 +295,9 @@ const staticContracts: Record<
     summaryBrandSnippet:
       "donde muestro mi trabajo mobile, proyectos y crecimiento técnico",
     cta: "Contáctame",
-    portfolioItems: [
-      "Inkscroller Frontend",
-      "Inkscroller Backend",
-      "Web Portfolio DevDigi",
-      "AppSwiftUI",
-      "AppUIKit",
-      "AppAndroid",
-    ],
+    portfolioItems: ["AppSwiftUI", "AppUIKit", "AppAndroid"],
+    learningProjectsTitle: "Proyectos de aprendizaje",
+    learningProjectsDescription: "prácticas en Worldline",
     caseStudyItems: [
       "Release en producción de La Mercè",
       "Barcelona a la Butxaca calidad del aire",
@@ -333,7 +331,14 @@ const staticContracts: Record<
     footerText: "Desarrollado con cariño en Barcelona",
     footerYearText: `© ${new Date().getFullYear()} · Desarrollado con cariño en Barcelona`,
     navLabel: "Principal",
-    skillsNavLabel: "Competencias",
+    primaryNav: [
+      ["Sobre mí", "#about"],
+      ["Experiencia", "#experience"],
+      ["Proyectos", "#projects"],
+      ["Habilidades", "#skills"],
+      ["Educación", "#education"],
+      ["Contacto", "#contact"],
+    ],
     educationHeading: "Formación e idiomas",
     educationCard: "Formación",
     languagesCard: "Idiomas",
@@ -381,18 +386,19 @@ const assertNoJsContract = (
   expect(
     body.querySelector(`nav[aria-label="${contract.navLabel}"]`),
   ).not.toBeNull();
+  const primaryNav = body.querySelector(
+    `nav[aria-label="${contract.navLabel}"]`,
+  );
   expect(
-    body
-      .querySelector(`nav[aria-label="${contract.navLabel}"] a[href="#skills"]`)
-      ?.textContent?.trim(),
-  ).toBe(contract.skillsNavLabel);
+    Array.from(primaryNav?.querySelectorAll("a") ?? []).map((link) => [
+      link.textContent?.trim(),
+      link.getAttribute("href"),
+    ]),
+  ).toEqual(contract.primaryNav);
 
   const inkScrollerPath =
     locale === "en" ? "/en/projects/inkscroller" : "/es/proyectos/inkscroller";
-  const inkScrollerHeaderLink = body.querySelector(
-    `nav[aria-label="${contract.navLabel}"] a[href="${inkScrollerPath}"]`,
-  );
-  expect(inkScrollerHeaderLink?.textContent?.trim()).toBe("InkScroller");
+  expect(primaryNav?.querySelector(`a[href="${inkScrollerPath}"]`)).toBeNull();
   expect(
     body.querySelector(`section#featured a[href="${inkScrollerPath}"]`),
   ).not.toBeNull();
@@ -446,6 +452,14 @@ const assertNoJsContract = (
   for (const projectName of contract.portfolioItems) {
     expect(bodyText).toContain(projectName);
   }
+  const projectsSection = body.querySelector("section#projects");
+  expect(projectsSection?.querySelector("h3")?.textContent?.trim()).toBe(
+    contract.learningProjectsTitle,
+  );
+  expect(projectsSection?.textContent).toContain(
+    contract.learningProjectsDescription,
+  );
+  expect(projectsSection?.querySelectorAll("article")).toHaveLength(3);
 
   const caseStudiesSection = body.querySelector("section#case-studies");
   expect(caseStudiesSection).not.toBeNull();
@@ -625,8 +639,6 @@ describe("Localized static entrypoints", () => {
       expect(html).toContain('href="#about"');
       expect(html).toContain('href="#experience"');
       expect(html).toContain('href="#projects"');
-      expect(html).toContain('href="#skills"');
-      expect(html).toContain('href="#education"');
       expect(html).toContain('href="#contact"');
 
       assertNoJsContract(html, locale);
@@ -1069,12 +1081,10 @@ describe("InkScroller static product routes", () => {
         document.querySelector(".header-contact-cta")?.getAttribute("href"),
       ).toBe(`${homeHref}#contact`);
       expect(
-        headerNavigation
-          ?.querySelector(
-            `a[href="${locale === "en" ? "/en/projects/inkscroller" : "/es/proyectos/inkscroller"}"]`,
-          )
-          ?.textContent?.trim(),
-      ).toBe("InkScroller");
+        headerNavigation?.querySelector(
+          `a[href="${locale === "en" ? "/en/projects/inkscroller" : "/es/proyectos/inkscroller"}"]`,
+        ),
+      ).toBeNull();
       expect(
         document.querySelector(".header-lang-toggle")?.textContent,
       ).toContain(site.languageSwitcher.options[locale]);

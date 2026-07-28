@@ -109,3 +109,32 @@ describe("SiteHeader theme toggle", () => {
     );
   });
 });
+
+describe("SiteHeader primary navigation", () => {
+  it("renders the six localized primary destinations", () => {
+    renderHeader();
+
+    const navigation = screen.getByRole("navigation", {
+      name: site.header.ariaLabel,
+    });
+    const links = Array.from(navigation.querySelectorAll("a"));
+
+    expect(links.map((link) => link.textContent)).toEqual([
+      "About",
+      "Experience",
+      "Projects",
+      "Skills",
+      "Education",
+      "Contact",
+    ]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "#about",
+      "#experience",
+      "#projects",
+      "#skills",
+      "#education",
+      "#contact",
+    ]);
+    expect(navigation).not.toHaveTextContent("InkScroller");
+  });
+});

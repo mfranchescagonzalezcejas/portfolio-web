@@ -1,4 +1,5 @@
 import { GitBranch, Smartphone } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { Project, SectionHeading } from "../../content/site";
 import { formatProjectLabel } from "./projectLabel";
 
@@ -20,11 +21,30 @@ export default function FeaturedProject({
 }: FeaturedProjectProps) {
   const mockups = project.mockups ?? [];
   const mockupLabels = project.mockupLabels ?? [];
+  const sectionRef = useRef<HTMLElement>(null);
+  const [revealed, setRevealed] = useState(true);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || revealed) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealed(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [revealed]);
 
   return (
     <section
+      ref={sectionRef}
       id="featured"
-      className="section-shell featured-section scroll-mt-32"
+      className={`section-shell featured-section scroll-mt-32 ${revealed ? "featured-reveal featured-revealed" : "featured-reveal"}`}
       aria-labelledby="featured-title"
     >
       <div className="section-inner">
@@ -43,6 +63,26 @@ export default function FeaturedProject({
             <div className="featured-project-copy">
               <p className="featured-project-kicker">{section.kicker}</p>
               <h3 className="featured-project-title">
+                <span className="featured-project-title-icon">
+                  <img
+                    src="/inkscroller/icons/background-v1.png"
+                    alt=""
+                    className="featured-icon-bg"
+                    aria-hidden="true"
+                    loading="lazy"
+                    width="1024"
+                    height="1024"
+                  />
+                  <img
+                    src="/inkscroller/icons/foreground-v1.png"
+                    alt=""
+                    className="featured-icon-fg"
+                    aria-hidden="true"
+                    loading="lazy"
+                    width="500"
+                    height="500"
+                  />
+                </span>
                 <span className="text-gradient">{project.name}</span>
               </h3>
               <p className="featured-project-description">

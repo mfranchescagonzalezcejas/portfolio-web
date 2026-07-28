@@ -153,17 +153,6 @@ export default function SiteHeader({
     setThemeMode(currentTheme);
   }, []);
 
-  const primaryNav = navItems.filter(
-    (item) =>
-      [
-        "#about",
-        "#experience",
-        "#projects",
-        "#skills",
-        "#education",
-        "#contact",
-      ].includes(item.href) || item.href.startsWith("/"),
-  );
   const isEnglishLocale = currentLocale === "en";
   const homeHref = currentLocale === "en" ? "/en" : "/es";
   const toHomeHref = (href: string) =>
@@ -203,7 +192,7 @@ export default function SiteHeader({
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
       <div className="header-shell glass mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 py-2.5 sm:px-6">
         <a
-          className="flex items-center gap-2"
+          className="header-brand-link flex items-center gap-2"
           href={toHomeHref("#top")}
           aria-label={header.homeLabel}
         >
@@ -219,7 +208,7 @@ export default function SiteHeader({
           aria-label={header.ariaLabel}
           className="header-primary-nav flex items-center gap-1"
         >
-          {primaryNav.map((item) => (
+          {navItems.map((item) => (
             <a
               key={item.href}
               className="header-nav-link"

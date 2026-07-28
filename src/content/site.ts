@@ -218,7 +218,8 @@ export type SiteContent = {
     proofLabel: string;
     repositoryLabel: string;
     repositoryAriaLabel: string;
-    mockupFallback: string;
+    learningProjectsTitle: string;
+    learningProjectsDescription: string;
   };
   caseStudiesSection: CaseStudySectionHeading;
   educationSection: EducationSectionContent;
@@ -289,7 +290,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "About", href: "#about" },
       { label: "Experience", href: "#experience" },
       { label: "Projects", href: "#projects" },
-      { label: "InkScroller", href: "/en/projects/inkscroller" },
       { label: "Skills", href: "#skills" },
       { label: "Education", href: "#education" },
       { label: "Contact", href: "#contact" },
@@ -461,7 +461,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       proofLabel: "Demonstrates",
       repositoryLabel: "View repo",
       repositoryAriaLabel: "{repository}: {link} for {project}",
-      mockupFallback: "Project\nvisuals\nin progress",
+      learningProjectsTitle: "Learning projects",
+      learningProjectsDescription:
+        "Worldline internship learning projects across native iOS and Android development.",
     },
     caseStudiesSection: {
       eyebrow: "Case studies",
@@ -760,80 +762,11 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         ],
       },
       {
-        name: "Inkscroller Frontend",
-        description:
-          "Flutter frontend in development for Inkscroller, a manga reading experience focused on discoverability, personalized reading preferences, and an adaptive reader workflow.",
-        shortDescription:
-          "In-development Flutter frontend for manga catalogue and reader flows.",
-        stack: [
-          "Flutter",
-          "Dart",
-          "Riverpod",
-          "get_it",
-          "Dio",
-          "GoRouter",
-          "Firebase Auth",
-          "Firebase Analytics",
-        ],
-        demonstrates:
-          "Flutter frontend structure, Clean Architecture, Screaming Architecture, Riverpod state management, and Firebase-backed auth setup in progress.",
-        links: [
-          {
-            label: "Repository",
-            href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
-            external: true,
-          },
-        ],
-      },
-      {
-        name: "Inkscroller Backend",
-        description:
-          "FastAPI REST API backend in development for Inkscroller that aggregates MangaDex and Jikan data and supports authenticated reading preferences with Firebase Auth.",
-        shortDescription:
-          "In-development FastAPI backend with MangaDex/Jikan integration, Firebase Auth, and persistence.",
-        stack: [
-          "FastAPI",
-          "Python",
-          "httpx",
-          "Pydantic",
-          "Firebase Auth",
-          "PostgreSQL",
-          "Railway",
-        ],
-        demonstrates:
-          "Backend API design, authenticated endpoints, external API aggregation, persistence, caching strategy, and Railway-oriented deployment structure.",
-        links: [
-          {
-            label: "Repository",
-            href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
-            external: true,
-          },
-        ],
-      },
-      {
-        name: "DevDigi Portfolio Web",
-        description:
-          "Personal portfolio website for DevDigi, built as the production home for my mobile development profile, selected projects, experience, and contact paths.",
-        shortDescription:
-          "Personal portfolio website for my mobile development profile and selected work.",
-        stack: ["Astro", "React", "Tailwind CSS", "TypeScript", "Vercel"],
-        demonstrates:
-          "Production portfolio delivery with localized content, accessible project sections, responsive UI, and automated validation.",
-        mockupStatus: "Portfolio\nwebsite",
-        links: [
-          {
-            label: "Repository",
-            href: "https://github.com/mfranchescagonzalezcejas/portfolio-web",
-            external: true,
-          },
-        ],
-      },
-      {
         name: "AppSwiftUI",
         description:
           "SwiftUI character browser that consumes the Jikan API and displays manga/anime character data in a native declarative interface.",
         shortDescription:
-          "SwiftUI character browser using the Jikan API, native navigation, and reactive state.",
+          "Worldline internship learning path: SwiftUI, API mapping, navigation, and reactive state.",
         stack: [
           "Swift",
           "SwiftUI",
@@ -856,7 +789,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         description:
           "UIKit character browser that consumes the Jikan API and displays manga/anime character data in a native iOS interface.",
         shortDescription:
-          "UIKit character browser using URLSession, custom cells, and list-to-detail navigation.",
+          "Worldline internship learning path: UIKit, networking, custom cells, and list-to-detail navigation.",
         stack: ["Swift", "UIKit", "URLSession", "Jikan API"],
         demonstrates:
           "Native iOS fundamentals with UIKit, MVC-style structure, networking, and asynchronous image handling.",
@@ -873,7 +806,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         description:
           "Android practice app for managing income, spending, and savings with Kotlin, Jetpack Compose, Koin, and encrypted local preferences.",
         shortDescription:
-          "Android practice app for income, spending, and savings with Jetpack Compose and local persistence.",
+          "Worldline internship learning path: Kotlin, Jetpack Compose, dependency injection, and local persistence.",
         stack: [
           "Kotlin",
           "Jetpack Compose",
@@ -923,8 +856,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Sobre mí", href: "#about" },
       { label: "Experiencia", href: "#experience" },
       { label: "Proyectos", href: "#projects" },
-      { label: "InkScroller", href: "/es/proyectos/inkscroller" },
-      { label: "Competencias", href: "#skills" },
+      { label: "Habilidades", href: "#skills" },
       { label: "Educación", href: "#education" },
       { label: "Contacto", href: "#contact" },
     ],
@@ -1095,7 +1027,9 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       proofLabel: "Demuestra",
       repositoryLabel: "Ver repo",
       repositoryAriaLabel: "{repository}: {link} de {project}",
-      mockupFallback: "Visuales\ndel proyecto\nen progreso",
+      learningProjectsTitle: "Proyectos de aprendizaje",
+      learningProjectsDescription:
+        "Proyectos de aprendizaje durante las prácticas en Worldline, en desarrollo nativo para iOS y Android.",
     },
     caseStudiesSection: {
       eyebrow: "Casos de estudio",
@@ -1394,80 +1328,11 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         ],
       },
       {
-        name: "Inkscroller Frontend",
-        description:
-          "Frontend Flutter en desarrollo para Inkscroller, una experiencia de lectura de manga centrada en descubrimiento, preferencias personalizadas y flujo de lectura adaptativo.",
-        shortDescription:
-          "Frontend Flutter en desarrollo para catálogo manga y flujos de lectura.",
-        stack: [
-          "Flutter",
-          "Dart",
-          "Riverpod",
-          "get_it",
-          "Dio",
-          "GoRouter",
-          "Firebase Auth",
-          "Firebase Analytics",
-        ],
-        demonstrates:
-          "Estructura frontend Flutter, Clean Architecture, Screaming Architecture, gestión de estado con Riverpod y configuración de autenticación con Firebase en progreso.",
-        links: [
-          {
-            label: "Repositorio",
-            href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
-            external: true,
-          },
-        ],
-      },
-      {
-        name: "Inkscroller Backend",
-        description:
-          "Backend REST API en FastAPI, en desarrollo para Inkscroller, que agrega datos de MangaDex y Jikan y soporta preferencias de lectura autenticadas con Firebase Auth.",
-        shortDescription:
-          "Backend FastAPI en desarrollo con integración MangaDex/Jikan, Firebase Auth y persistencia.",
-        stack: [
-          "FastAPI",
-          "Python",
-          "httpx",
-          "Pydantic",
-          "Firebase Auth",
-          "PostgreSQL",
-          "Railway",
-        ],
-        demonstrates:
-          "Diseño de API backend, endpoints autenticados, agregación de APIs externas, persistencia, estrategia de caché y estructura orientada a despliegue en Railway.",
-        links: [
-          {
-            label: "Repositorio",
-            href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
-            external: true,
-          },
-        ],
-      },
-      {
-        name: "Web Portfolio DevDigi",
-        description:
-          "Sitio web de portfolio personal para DevDigi, construido como presencia en producción para mi perfil mobile, proyectos seleccionados, experiencia y vías de contacto.",
-        shortDescription:
-          "Sitio web de portfolio personal para mi perfil mobile y trabajos seleccionados.",
-        stack: ["Astro", "React", "Tailwind CSS", "TypeScript", "Vercel"],
-        demonstrates:
-          "Entrega de portfolio en producción con contenido localizado, secciones de proyectos accesibles, UI responsive y validación automatizada.",
-        mockupStatus: "Sitio web\nportfolio",
-        links: [
-          {
-            label: "Repositorio",
-            href: "https://github.com/mfranchescagonzalezcejas/portfolio-web",
-            external: true,
-          },
-        ],
-      },
-      {
         name: "AppSwiftUI",
         description:
           "Explorador de personajes en SwiftUI que consume la API de Jikan y muestra datos de personajes de manga/anime en una interfaz nativa declarativa.",
         shortDescription:
-          "Explorador de personajes en SwiftUI con API de Jikan, navegación nativa y estado reactivo.",
+          "Itinerario de aprendizaje en las prácticas de Worldline: SwiftUI, mapeo de API, navegación y estado reactivo.",
         stack: [
           "Swift",
           "SwiftUI",
@@ -1490,7 +1355,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         description:
           "Explorador de personajes en UIKit que consume la API de Jikan y muestra datos de personajes de manga/anime en una interfaz iOS nativa.",
         shortDescription:
-          "Explorador de personajes en UIKit con URLSession, celdas personalizadas y navegación lista-detalle.",
+          "Itinerario de aprendizaje en las prácticas de Worldline: UIKit, networking, celdas personalizadas y navegación lista-detalle.",
         stack: ["Swift", "UIKit", "URLSession", "Jikan API"],
         demonstrates:
           "Fundamentos de iOS nativo con UIKit, estructura MVC, networking y carga asíncrona de imágenes.",
@@ -1507,7 +1372,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         description:
           "App Android de práctica para gestionar ingresos, gastos y ahorros con Kotlin, Jetpack Compose, Koin y preferencias locales cifradas.",
         shortDescription:
-          "App Android de práctica para ingresos, gastos y ahorros con Jetpack Compose y persistencia local.",
+          "Itinerario de aprendizaje en las prácticas de Worldline: Kotlin, Jetpack Compose, inyección de dependencias y persistencia local.",
         stack: [
           "Kotlin",
           "Jetpack Compose",
