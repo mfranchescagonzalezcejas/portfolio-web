@@ -68,18 +68,22 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
         <div class="inkscroller-carousel-track">
           {content.media.map((entry, i) => (
             <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
-              <div class="featured-phone">
-                <div class="featured-phone-notch"></div>
-                <div class="featured-phone-screen">
-                  {entry.kind === "capture" ? (
-                    <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
-                  ) : (
-                    <div class="inkscroller-placeholder"><strong>{entry.label}</strong><p>{entry.disclosure}</p></div>
-                  )}
+              <div class="inkscroller-slide-copy">
+                <h3 class="inkscroller-slide-title">{entry.title}</h3>
+                <p class="inkscroller-slide-desc">{entry.description}</p>
+              </div>
+              <div class="inkscroller-slide-device">
+                <div class="carousel-phone">
+                  <div class="featured-phone-notch"></div>
+                  <div class="featured-phone-screen">
+                    {entry.kind === "capture" ? (
+                      <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
+                    ) : (
+                      <div class="inkscroller-placeholder"><strong>{entry.label}</strong><p>{entry.disclosure}</p></div>
+                    )}
+                  </div>
                 </div>
               </div>
-              <h3 class="inkscroller-slide-title">{entry.title}</h3>
-              <p class="inkscroller-slide-desc">{entry.description}</p>
             </article>
           ))}
         </div>
@@ -175,9 +179,12 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
   .inkscroller-carousel { position: relative; width: 100%; }
   .inkscroller-carousel-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 1rem 0 3.5rem; }
   .inkscroller-carousel-track::-webkit-scrollbar { display: none; }
-  .inkscroller-slide { flex: 0 0 100%; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; text-align: center; padding-inline: 0.5rem; }
-  .inkscroller-slide-title { margin: 1rem 0 0; color: var(--foreground); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
-  .inkscroller-slide-desc { margin: 0.35rem 0 0; max-width: 20rem; color: var(--muted-foreground); font-size: 0.9rem; line-height: 1.5; }
+  .inkscroller-slide { flex: 0 0 100%; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; text-align: center; padding-inline: 0.5rem; gap: 1.5rem; }
+  .inkscroller-slide-copy { display: flex; flex-direction: column; gap: 0.35rem; }
+  .inkscroller-slide-title { margin: 0; color: var(--foreground); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
+  .inkscroller-slide-desc { margin: 0; max-width: 20rem; color: var(--muted-foreground); font-size: 0.9rem; line-height: 1.5; }
+  .inkscroller-slide-device { display: flex; justify-content: center; }
+  .carousel-phone { position: relative; width: 14rem; height: 28.5rem; border-radius: 1.8rem; border: 1px solid var(--overlay-border); background: linear-gradient(180deg, var(--surface-elevated), var(--surface)); padding: 0.5rem; box-shadow: var(--shadow-elevated); }
   
   .inkscroller-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 999px; border: 1px solid var(--overlay-border); background: var(--glass-background); backdrop-filter: var(--glass-backdrop); color: var(--foreground); font-size: 1rem; cursor: pointer; transition: background-color .12s, border-color .12s; }
   .inkscroller-arrow:hover, .inkscroller-arrow:focus-visible { background: var(--overlay-bg-hover); border-color: var(--foreground); }
@@ -200,5 +207,8 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
   
   @media (min-width: 48rem) {
     .inkscroller-hero { grid-template-columns: 1fr auto; }
+    .inkscroller-slide { flex-direction: row; text-align: left; gap: 3rem; padding-inline: 2rem; }
+    .inkscroller-slide-copy { flex: 1; }
+    .inkscroller-slide-desc { max-width: 28rem; }
   }
 </style>

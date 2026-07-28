@@ -106,7 +106,7 @@ const productEntrypoints = [
     canonical: `${productionSiteUrl}/en/projects/inkscroller`,
     alternate: `${productionSiteUrl}/es/proyectos/inkscroller`,
     hero: "Keep your next chapter within reach.",
-    preview: "Notice a story worth keeping.",
+    preview: "Browse curated stories and discover new reads.",
     beta: "Beta access is not currently available.",
   },
   {
@@ -116,7 +116,7 @@ const productEntrypoints = [
     canonical: `${productionSiteUrl}/es/proyectos/inkscroller`,
     alternate: `${productionSiteUrl}/en/projects/inkscroller`,
     hero: "Tu próximo capítulo, siempre a mano.",
-    preview: "Encuentra una historia que merece guardarse.",
+    preview: "Navega por historias seleccionadas y descubre nuevas lecturas.",
     beta: "El acceso a beta no está disponible actualmente.",
   },
 ] as const;
@@ -1091,7 +1091,7 @@ describe("InkScroller static product routes", () => {
       expect(document.querySelectorAll("astro-island")).toHaveLength(1);
       const media = inkscrollerContent[locale].media;
       expect(Array.isArray(media)).toBe(true);
-      expect(media).toHaveLength(3);
+      expect(media).toHaveLength(6);
       media.forEach((entry) => {
         expect(entry.kind).toMatch(/^(capture|placeholder)$/);
         expect(typeof entry.title).toBe("string");
@@ -1106,13 +1106,13 @@ describe("InkScroller static product routes", () => {
       expect(sectionText).toHaveLength(4);
       expect(sectionText[3]).toContain(beta);
       if (locale === "es") {
-        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .featured-phone-screen img");
-        expect(carouselImgs).toHaveLength(3);
+        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .carousel-phone .featured-phone-screen img");
+        expect(carouselImgs).toHaveLength(6);
       } else {
-        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .featured-phone-screen img");
+        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .carousel-phone .featured-phone-screen img");
         expect(carouselImgs).toHaveLength(0);
-        const carouselPlaceholders = document.querySelectorAll(".inkscroller-carousel .inkscroller-placeholder");
-        expect(carouselPlaceholders).toHaveLength(3);
+        const carouselPlaceholders = document.querySelectorAll(".inkscroller-carousel .carousel-phone .inkscroller-placeholder");
+        expect(carouselPlaceholders).toHaveLength(6);
       }
     },
   );
