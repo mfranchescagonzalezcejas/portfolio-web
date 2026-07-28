@@ -2596,3 +2596,8 @@ a {
 .inkscroller-dot:hover {
   background: var(--muted-foreground);
 }
+
+.carousel-phone { position: relative; width: 14rem; max-width: 100%; height: 28.5rem; border-radius: 2rem; border: 1px solid var(--overlay-border); background: linear-gradient(180deg, var(--surface-elevated), var(--surface)); padding: 0.5rem; box-shadow: var(--shadow-elevated); flex-shrink: 0; }
+.carousel-phone-notch { position: absolute; left: 50%; z-index: 2; transform: translateX(-50%); border-radius: 999px; background: var(--device-notch); top: 0.625rem; width: 3.5rem; height: 0.875rem; }
+.carousel-phone-screen { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border-radius: 1.35rem; background: var(--device-screen-start); }
+.carousel-phone-screen img { width: 100%; height: 100%; object-fit: contain; display: block; }
