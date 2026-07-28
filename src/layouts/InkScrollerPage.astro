@@ -3,6 +3,7 @@ import type { ProductMedia } from "../content/inkscroller";
 import { siteContentByLocale } from "../content/site";
 import BaseLayout from "./BaseLayout.astro";
 import SiteHeader from "../sections/header/SiteHeader";
+import ContactLinks from "../sections/contact/ContactLinks";
 
 type SlideMeta = { title: string; description: string };
 
@@ -23,6 +24,7 @@ type Props = {
 };
 
 const { content } = Astro.props;
+const currentYear = new Date().getFullYear();
 const site = siteContentByLocale[content.locale];
 const firstMedia = content.media[0];
 const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedia.label;
@@ -74,8 +76,8 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
               </div>
               <div class="inkscroller-slide-device">
                 <div class="carousel-phone">
-                  <div class="featured-phone-notch"></div>
-                  <div class="featured-phone-screen">
+                  <div class="carousel-phone-notch"></div>
+                  <div class="carousel-phone-screen">
                     {entry.kind === "capture" ? (
                       <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
                     ) : (
@@ -102,6 +104,14 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
       <a href={content.beta.href}>{content.beta.action}</a>
     </section>
   </main>
+  <ContactLinks links={site.contacts} section={site.contactSection} />
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>DevDigi by Mercedes Gonzalez</p>
+      <p>© {currentYear} · {site.footerText}</p>
+    </div>
+  </footer>
+</BaseLayout>
 </BaseLayout>
 
 <script>
@@ -202,8 +212,9 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
   .inkscroller-beta { border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1.5rem, 5vw, 3rem); background: var(--surface); display: grid; gap: 0.75rem; text-align: center; justify-items: center; }
   .inkscroller-beta h2 { font-family: var(--font-display); font-size: clamp(1.25rem, 3vw, 1.75rem); margin: 0; }
   .inkscroller-beta p { color: var(--muted-foreground); max-width: 28rem; margin: 0; }
-  .inkscroller-beta a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.25rem; border: 1px solid var(--overlay-border); border-radius: 999px; color: var(--foreground); font-weight: 500; transition: background-color .12s, border-color .12s; text-decoration: none; }
-  .inkscroller-beta a:hover { background: var(--overlay-bg-hover); border-color: var(--accent-teal); }
+  .inkscroller-beta a { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 1.5rem; border: 1px solid var(--overlay-border); border-radius: 999px; color: var(--foreground); font-weight: 500; font-size: 0.9rem; transition: background-color .12s, border-color .12s, transform .12s; text-decoration: none; gap: 0.5rem; }
+  .inkscroller-beta a:hover { background: var(--overlay-bg-hover); border-color: var(--accent-teal); transform: translateY(-1px); }
+  .inkscroller-beta a:active { transition-duration: 80ms; }
   
   .inkscroller-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; padding: 1rem; text-align: center; }
   .inkscroller-placeholder strong { color: var(--device-text-strong); font-family: var(--font-display); font-size: 0.72rem; }
