@@ -2479,3 +2479,118 @@ a {
     white-space: nowrap;
   }
 }
+
+/* ── Inkscroller product carousel ─────────────────────────────── */
+
+.inkscroller-carousel-section {
+  padding: 0;
+}
+
+.inkscroller-carousel {
+  position: relative;
+  width: 100%;
+}
+
+.inkscroller-carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 1.5rem;
+  padding: 1rem 0 3.5rem;
+  -ms-overflow-style: none;
+}
+
+.inkscroller-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.inkscroller-slide {
+  flex: 0 0 min(18rem, 90vw);
+  scroll-snap-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.inkscroller-slide-title {
+  margin: 0.75rem 0 0;
+  color: var(--section-title-color);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.inkscroller-slide-desc {
+  margin: 0.25rem 0 0;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.inkscroller-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--overlay-border);
+  background: var(--glass-background);
+  backdrop-filter: var(--glass-backdrop);
+  color: var(--foreground);
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.inkscroller-arrow:hover,
+.inkscroller-arrow:focus-visible {
+  background: var(--overlay-bg-hover);
+  border-color: var(--foreground);
+}
+
+.inkscroller-prev {
+  left: 0;
+}
+.inkscroller-next {
+  right: 0;
+}
+
+.inkscroller-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: -2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.inkscroller-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  border: none;
+  background: var(--overlay-border);
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background-color 120ms ease,
+    transform 120ms ease;
+}
+
+.inkscroller-dot.active {
+  background: var(--primary);
+  transform: scale(1.25);
+}
+
+.inkscroller-dot:hover {
+  background: var(--muted-foreground);
+}

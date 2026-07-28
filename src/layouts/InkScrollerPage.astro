@@ -4,6 +4,8 @@ import { siteContentByLocale } from "../content/site";
 import BaseLayout from "./BaseLayout.astro";
 import SiteHeader from "../sections/header/SiteHeader";
 
+type SlideMeta = { title: string; description: string };
+
 type Props = {
   content: {
     locale: "en" | "es";
@@ -15,13 +17,15 @@ type Props = {
     proof: { title: string; items: string[] };
     capabilities: { title: string; items: { capability: string; value: string }[] };
     story: { title: string; steps: { title: string; description: string }[] };
-    media: ProductMedia;
+    media: Array<ProductMedia & SlideMeta>;
     beta: { title: string; description: string; action: string; href: string };
   };
 };
 
 const { content } = Astro.props;
 const site = siteContentByLocale[content.locale];
+const firstMedia = content.media[0];
+const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedia.label;
 ---
 
 <BaseLayout locale={content.locale} pageSeo={content.seo}>
@@ -37,24 +41,56 @@ const site = siteContentByLocale[content.locale];
   />
   <main id="inkscroller-content" class="inkscroller-page">
     <section class="inkscroller-hero" aria-labelledby="inkscroller-title">
-      <p>{content.hero.eyebrow}</p>
-      <h1 id="inkscroller-title">{content.hero.title}</h1>
-      <p>{content.hero.description}</p>
+      <div class="inkscroller-hero-copy">
+        <p>{content.hero.eyebrow}</p>
+        <h1 id="inkscroller-title">{content.hero.title}</h1>
+        <p>{content.hero.description}</p>
+      </div>
+      <div class="inkscroller-hero-device" aria-label={heroAriaLabel}>
+        <div class="featured-phone">
+          <div class="featured-phone-notch"></div>
+          <div class="featured-phone-screen">
+            {firstMedia.kind === "capture" ? (
+              <img src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="lazy" decoding="async" />
+            ) : (
+              <div class="inkscroller-placeholder"><strong>{firstMedia.label}</strong><p>{firstMedia.disclosure}</p></div>
+            )}
+          </div>
+        </div>
+      </div>
     </section>
     <section aria-labelledby="inkscroller-proof-title">
       <h2 id="inkscroller-proof-title">{content.proof.title}</h2>
       <ul>{content.proof.items.map((item) => <li>{item}</li>)}</ul>
     </section>
-    <section aria-labelledby="inkscroller-capabilities-title">
-      <h2 id="inkscroller-capabilities-title">{content.capabilities.title}</h2>
-      {content.capabilities.items.map((item) => <article><h3>{item.capability}</h3><p>{item.value}</p></article>)}
-    </section>
-    <section aria-labelledby="inkscroller-story-title">
-      <h2 id="inkscroller-story-title">{content.story.title}</h2>
-      <ol>{content.story.steps.map((step, index) => <li><span>{String(index + 1).padStart(2, "0")}</span><h3>{step.title}</h3><p>{step.description}</p></li>)}</ol>
-    </section>
-    <section class="inkscroller-media" aria-label={content.media.kind === "capture" ? content.media.alt : content.media.label}>
-      {content.media.kind === "capture" ? <img src={content.media.src} alt={content.media.alt} width={content.media.width} height={content.media.height} loading="lazy" /> : <><strong>{content.media.label}</strong><p>{content.media.disclosure}</p></>}
+    <section class="inkscroller-carousel-section" aria-label="Product carousel">
+      <div id="inkscroller-carousel" class="inkscroller-carousel" tabindex="0" role="region" aria-label="Product screenshots carousel">
+        <div class="inkscroller-carousel-track">
+          {content.media.map((entry, i) => (
+            <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
+              <div class="featured-phone">
+                <div class="featured-phone-notch"></div>
+                <div class="featured-phone-screen">
+                  {entry.kind === "capture" ? (
+                    <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
+                  ) : (
+                    <div class="inkscroller-placeholder"><strong>{entry.label}</strong><p>{entry.disclosure}</p></div>
+                  )}
+                </div>
+              </div>
+              <h3 class="inkscroller-slide-title">{entry.title}</h3>
+              <p class="inkscroller-slide-desc">{entry.description}</p>
+            </article>
+          ))}
+        </div>
+        <button class="inkscroller-arrow inkscroller-prev" aria-label="Previous slide" type="button">&#8592;</button>
+        <button class="inkscroller-arrow inkscroller-next" aria-label="Next slide" type="button">&#8594;</button>
+        <nav class="inkscroller-dots" aria-label="Carousel navigation">
+          {content.media.map((entry, i) => (
+            <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-label={`Go to slide ${i + 1}: ${entry.title}`} type="button" data-index={i}></button>
+          ))}
+        </nav>
+      </div>
     </section>
     <section class="inkscroller-beta" aria-labelledby="inkscroller-beta-title">
       <h2 id="inkscroller-beta-title">{content.beta.title}</h2>
@@ -64,17 +100,77 @@ const site = siteContentByLocale[content.locale];
   </main>
 </BaseLayout>
 
+<script>
+  const carousel = document.getElementById("inkscroller-carousel") as HTMLElement | null;
+  if (carousel) {
+    const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const track = carousel.querySelector(".inkscroller-carousel-track") as HTMLElement | null;
+    const prev = carousel.querySelector(".inkscroller-prev") as HTMLButtonElement | null;
+    const next = carousel.querySelector(".inkscroller-next") as HTMLButtonElement | null;
+    const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot")) as HTMLButtonElement[];
+    let timer: ReturnType<typeof setInterval> | null = null;
+
+    function scrollToSlide(index: number) {
+      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []) as HTMLElement[];
+      if (slides[index]) {
+        slides[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
+      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
+    }
+
+    function nextSlide() {
+      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []) as HTMLElement[];
+      const current = dots.findIndex((d) => d.classList.contains("active"));
+      scrollToSlide((current + 1) % slides.length);
+    }
+
+    function startAutoPlay() {
+      if (prefersReducedMotion.matches || timer) return;
+      timer = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoPlay() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    carousel.addEventListener("mouseenter", stopAutoPlay);
+    carousel.addEventListener("focusin", stopAutoPlay);
+    carousel.addEventListener("mouseleave", startAutoPlay);
+    carousel.addEventListener("focusout", (e) => {
+      if (!carousel.contains(e.relatedTarget as Node | null)) startAutoPlay();
+    });
+
+    prev?.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Math.max(0, dots.findIndex((d) => d.classList.contains("active")) - 1)); });
+    next?.addEventListener("click", () => { stopAutoPlay(); nextSlide(); });
+    dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Number(dot.dataset.index)); }));
+
+    carousel.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        stopAutoPlay();
+        const current = dots.findIndex((d) => d.classList.contains("active"));
+        scrollToSlide(e.key === "ArrowLeft" ? Math.max(0, current - 1) : Math.min(dots.length - 1, current + 1));
+      }
+    });
+
+    if (!prefersReducedMotion.matches) startAutoPlay();
+  }
+</script>
+
 <style>
-  .inkscroller-page { width: min(100% - 2rem, 70rem); margin: auto; display: grid; gap: 3rem; padding: 9rem 0 4rem; }
-  .inkscroller-beta a { display: inline-flex; align-items: center; min-height: 44px; color: var(--foreground); }
-  .inkscroller-page section { min-width: 0; }
+  .inkscroller-page { width: min(100% - 2rem, 70rem); margin: auto; display: grid; gap: 3rem; padding: 9rem 0 4rem; overflow-x: clip; }
+  .inkscroller-hero { display: grid; gap: 2rem; align-items: center; }
   .inkscroller-hero h1 { max-width: 16ch; font: 700 clamp(2.5rem, 8vw, 5rem)/1 var(--font-display); }
+  .inkscroller-hero-device { display: flex; justify-content: center; }
+  .inkscroller-page section { min-width: 0; }
   .inkscroller-page h2 { font-family: var(--font-display); }
-  .inkscroller-page article, .inkscroller-page li { margin-block: 1rem; }
-  .inkscroller-page ol { padding: 0; list-style: none; }
-  .inkscroller-page ol span { color: var(--accent-teal); font-family: var(--font-mono); }
-  .inkscroller-media, .inkscroller-beta { border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1.5rem, 5vw, 3rem); background: var(--surface); }
-  .inkscroller-media img { display: block; width: min(100%, 22rem); height: auto; margin: auto; object-fit: contain; }
-  .inkscroller-beta a { padding-inline: 1rem; border: 1px solid var(--border); border-radius: 999px; }
-  @media (min-width: 48rem) { .inkscroller-page section[aria-labelledby="inkscroller-capabilities-title"] { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; } .inkscroller-page section[aria-labelledby="inkscroller-capabilities-title"] h2 { grid-column: 1 / -1; } }
+  .inkscroller-page li { margin-block: 1rem; }
+  .inkscroller-beta { border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1.5rem, 5vw, 3rem); background: var(--surface); }
+  .inkscroller-beta a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 1rem; border: 1px solid var(--border); border-radius: 999px; color: var(--foreground); }
+  .inkscroller-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; padding: 1rem; text-align: center; }
+  .inkscroller-placeholder strong { color: var(--device-text-strong); font-family: var(--font-display); font-size: 0.72rem; }
+  .inkscroller-placeholder p { color: var(--device-overlay-text); font-family: var(--font-mono); font-size: 0.58rem; margin: 0; }
+  @media (min-width: 48rem) {
+    .inkscroller-hero { grid-template-columns: 1fr auto; }
+  }
 </style>

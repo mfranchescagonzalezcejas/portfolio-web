@@ -2,6 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
+import { inkscrollerContent } from "./content/inkscroller";
 import { siteContentByLocale, validateSiteContent } from "./content/site";
 
 type LocaleEntrypoint = {
@@ -105,7 +106,7 @@ const productEntrypoints = [
     canonical: `${productionSiteUrl}/en/projects/inkscroller`,
     alternate: `${productionSiteUrl}/es/proyectos/inkscroller`,
     hero: "Keep your next chapter within reach.",
-    preview: "This is a product preview, not an English app capture.",
+    preview: "Notice a story worth keeping.",
     beta: "Beta access is not currently available.",
   },
   {
@@ -115,8 +116,7 @@ const productEntrypoints = [
     canonical: `${productionSiteUrl}/es/proyectos/inkscroller`,
     alternate: `${productionSiteUrl}/en/projects/inkscroller`,
     hero: "Tu próximo capítulo, siempre a mano.",
-    preview:
-      "Las capturas verificadas en español se añadirán en la siguiente entrega.",
+    preview: "Encuentra una historia que merece guardarse.",
     beta: "El acceso a beta no está disponible actualmente.",
   },
 ] as const;
@@ -1089,15 +1089,31 @@ describe("InkScroller static product routes", () => {
         document.querySelector(".header-lang-toggle")?.textContent,
       ).toContain(site.languageSwitcher.options[locale]);
       expect(document.querySelectorAll("astro-island")).toHaveLength(1);
-      expect(document.querySelector(".inkscroller-media img")).toBeNull();
+      const media = inkscrollerContent[locale].media;
+      expect(Array.isArray(media)).toBe(true);
+      expect(media).toHaveLength(3);
+      media.forEach((entry) => {
+        expect(entry.kind).toMatch(/^(capture|placeholder)$/);
+        expect(typeof entry.title).toBe("string");
+        expect(typeof entry.description).toBe("string");
+      });
       expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
         preview,
       );
       expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
         beta,
       );
-      expect(sectionText).toHaveLength(6);
-      expect(sectionText[5]).toContain(beta);
+      expect(sectionText).toHaveLength(4);
+      expect(sectionText[3]).toContain(beta);
+      if (locale === "es") {
+        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .featured-phone-screen img");
+        expect(carouselImgs).toHaveLength(3);
+      } else {
+        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .featured-phone-screen img");
+        expect(carouselImgs).toHaveLength(0);
+        const carouselPlaceholders = document.querySelectorAll(".inkscroller-carousel .inkscroller-placeholder");
+        expect(carouselPlaceholders).toHaveLength(3);
+      }
     },
   );
 });

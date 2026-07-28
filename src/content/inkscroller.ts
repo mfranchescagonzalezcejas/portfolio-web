@@ -10,6 +10,8 @@ export type ProductMedia =
     }
   | { kind: "placeholder"; label: string; disclosure: string };
 
+type SlideMeta = { title: string; description: string };
+
 type InkScrollerContent = {
   locale: Locale;
   seo: {
@@ -28,7 +30,7 @@ type InkScrollerContent = {
     items: { capability: string; value: string }[];
   };
   story: { title: string; steps: { title: string; description: string }[] };
-  media: ProductMedia;
+  media: Array<ProductMedia & SlideMeta>;
   beta: { title: string; description: string; action: string; href: string };
 };
 
@@ -96,11 +98,29 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
         },
       ],
     },
-    media: {
-      kind: "placeholder",
-      label: "English product preview",
-      disclosure: "This is a product preview, not an English app capture.",
-    },
+    media: [
+      {
+        kind: "placeholder",
+        label: "Preview",
+        disclosure: "This is a product preview, not an English app capture.",
+        title: "Find",
+        description: "Notice a story worth keeping.",
+      },
+      {
+        kind: "placeholder",
+        label: "Preview",
+        disclosure: "This is a product preview, not an English app capture.",
+        title: "Save",
+        description: "Add it to your personal reading space.",
+      },
+      {
+        kind: "placeholder",
+        label: "Preview",
+        disclosure: "This is a product preview, not an English app capture.",
+        title: "Continue",
+        description: "Return when you are ready for the next chapter.",
+      },
+    ],
     beta: {
       title: "Beta updates",
       description:
@@ -169,12 +189,35 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
         },
       ],
     },
-    media: {
-      kind: "placeholder",
-      label: "Vista previa del producto",
-      disclosure:
-        "Las capturas verificadas en español se añadirán en la siguiente entrega.",
-    },
+    media: [
+      {
+        kind: "capture",
+        src: "/inkscroller/home-library-es-v1.jpg",
+        alt: "Biblioteca de InkScroller mostrando historias guardadas",
+        width: 1080,
+        height: 2340,
+        title: "Find",
+        description: "Encuentra una historia que merece guardarse.",
+      },
+      {
+        kind: "capture",
+        src: "/inkscroller/home-manga-detail-es-v1.jpg",
+        alt: "Detalle de manga en InkScroller con opción de guardar",
+        width: 1080,
+        height: 2340,
+        title: "Save",
+        description: "Añádela a tu espacio personal de lectura.",
+      },
+      {
+        kind: "capture",
+        src: "/inkscroller/home-reader-es-v1.jpg",
+        alt: "Lector de InkScroller retomando la lectura",
+        width: 1080,
+        height: 2340,
+        title: "Continue",
+        description: "Vuelve cuando estés lista para el próximo capítulo.",
+      },
+    ],
     beta: {
       title: "Actualizaciones de beta",
       description:
