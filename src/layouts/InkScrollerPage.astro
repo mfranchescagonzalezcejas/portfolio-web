@@ -47,9 +47,9 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
         <p class="inkscroller-hero-desc">{content.hero.description}</p>
       </div>
       <div class="inkscroller-hero-device" aria-label={heroAriaLabel}>
-        <div class="featured-phone">
-          <div class="featured-phone-notch"></div>
-          <div class="featured-phone-screen">
+        <div class="carousel-phone">
+          <div class="carousel-phone-notch"></div>
+          <div class="carousel-phone-screen">
             {firstMedia.kind === "capture" ? (
               <img src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="lazy" decoding="async" />
             ) : (
@@ -165,6 +165,7 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
   .inkscroller-page { width: min(100% - 2rem, 70rem); margin: auto; display: grid; gap: 4rem; padding: 9rem 0 4rem; overflow-x: clip; }
   
   .inkscroller-hero { display: grid; gap: 2rem; align-items: center; }
+  .inkscroller-hero-copy { max-width: 32rem; }
   .inkscroller-hero-eyebrow { color: var(--primary); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin: 0; }
   .inkscroller-hero h1 { max-width: 16ch; font: 700 clamp(2.5rem, 8vw, 5rem)/1 var(--font-display); margin: 0.75rem 0 0; }
   .inkscroller-hero-desc { max-width: 36rem; color: var(--muted-foreground); font-size: 1.125rem; line-height: 1.75; margin: 1rem 0 0; }
@@ -184,7 +185,10 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
   .inkscroller-slide-title { margin: 0; color: var(--foreground); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
   .inkscroller-slide-desc { margin: 0; max-width: 20rem; color: var(--muted-foreground); font-size: 0.9rem; line-height: 1.5; }
   .inkscroller-slide-device { display: flex; justify-content: center; }
-  .carousel-phone { position: relative; width: 14rem; height: 28.5rem; border-radius: 1.8rem; border: 1px solid var(--overlay-border); background: linear-gradient(180deg, var(--surface-elevated), var(--surface)); padding: 0.5rem; box-shadow: var(--shadow-elevated); }
+  .carousel-phone { position: relative; width: 14rem; height: 28.5rem; border-radius: 2rem; border: 1px solid var(--overlay-border); background: linear-gradient(180deg, var(--surface-elevated), var(--surface)); padding: 0.5rem; box-shadow: var(--shadow-elevated); }
+  .carousel-phone-notch { position: absolute; left: 50%; z-index: 2; transform: translateX(-50%); border-radius: 999px; background: var(--device-notch); top: 0.625rem; width: 3.5rem; height: 0.875rem; }
+  .carousel-phone-screen { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border-radius: 1.35rem; background: var(--device-screen-start); }
+  .carousel-phone-screen img { width: 100%; height: 100%; object-fit: contain; }
   
   .inkscroller-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 999px; border: 1px solid var(--overlay-border); background: var(--glass-background); backdrop-filter: var(--glass-backdrop); color: var(--foreground); font-size: 1rem; cursor: pointer; transition: background-color .12s, border-color .12s; }
   .inkscroller-arrow:hover, .inkscroller-arrow:focus-visible { background: var(--overlay-bg-hover); border-color: var(--foreground); }
@@ -206,9 +210,9 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
   .inkscroller-placeholder p { color: var(--device-overlay-text); font-family: var(--font-mono); font-size: 0.58rem; margin: 0; }
   
   @media (min-width: 48rem) {
-    .inkscroller-hero { grid-template-columns: 1fr auto; }
+    .inkscroller-hero { grid-template-columns: 1fr 14rem; gap: 3rem; }
     .inkscroller-slide { flex-direction: row; text-align: left; gap: 3rem; padding-inline: 2rem; }
-    .inkscroller-slide-copy { flex: 1; }
+    .inkscroller-slide-copy { flex: 1; max-width: 24rem; }
     .inkscroller-slide-desc { max-width: 28rem; }
   }
 </style>
