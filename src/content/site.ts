@@ -23,8 +23,15 @@ export type Project = {
   demonstrates: string;
   featured?: boolean;
   links: LinkItem[];
+  mockups?: ProjectMockup[];
   mockupLabels?: string[];
   mockupStatus?: string;
+};
+
+export type ProjectMockup = {
+  src: `/inkscroller/${string}`;
+  width: 1080;
+  height: 2340;
 };
 
 export type Experience = {
@@ -282,6 +289,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "About", href: "#about" },
       { label: "Experience", href: "#experience" },
       { label: "Projects", href: "#projects" },
+      { label: "InkScroller", href: "/en/projects/inkscroller" },
       { label: "Skills", href: "#skills" },
       { label: "Education", href: "#education" },
       { label: "Contact", href: "#contact" },
@@ -712,9 +720,31 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         demonstrates:
           "Work-in-progress mobile product structure across a Flutter app, REST API, external manga data sources, auth/preferences architecture, and reader/catalogue flows.",
         featured: true,
+        mockups: [
+          {
+            src: "/inkscroller/home-library-es-v1.jpg",
+            width: 1080,
+            height: 2340,
+          },
+          {
+            src: "/inkscroller/home-manga-detail-es-v1.jpg",
+            width: 1080,
+            height: 2340,
+          },
+          {
+            src: "/inkscroller/home-reader-es-v1.jpg",
+            width: 1080,
+            height: 2340,
+          },
+        ],
         mockupLabels: ["Library", "Manga detail", "Reader"],
         mockupStatus: "In-progress\nUI flows",
         links: [
+          {
+            label: "InkScroller",
+            ctaLabel: "View InkScroller",
+            href: "/en/projects/inkscroller",
+          },
           {
             label: "Frontend",
             ctaLabel: "Frontend repo",
@@ -893,6 +923,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       { label: "Sobre mí", href: "#about" },
       { label: "Experiencia", href: "#experience" },
       { label: "Proyectos", href: "#projects" },
+      { label: "InkScroller", href: "/es/proyectos/inkscroller" },
       { label: "Competencias", href: "#skills" },
       { label: "Educación", href: "#education" },
       { label: "Contacto", href: "#contact" },
@@ -1323,9 +1354,31 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         demonstrates:
           "Estructura de producto móvil en progreso con app Flutter, REST API, fuentes externas de manga, arquitectura de autenticación/preferencias y flujos de catálogo/lectura.",
         featured: true,
+        mockups: [
+          {
+            src: "/inkscroller/home-library-es-v1.jpg",
+            width: 1080,
+            height: 2340,
+          },
+          {
+            src: "/inkscroller/home-manga-detail-es-v1.jpg",
+            width: 1080,
+            height: 2340,
+          },
+          {
+            src: "/inkscroller/home-reader-es-v1.jpg",
+            width: 1080,
+            height: 2340,
+          },
+        ],
         mockupLabels: ["Biblioteca", "Detalle manga", "Lector"],
         mockupStatus: "Flujos UI\nen progreso",
         links: [
+          {
+            label: "InkScroller",
+            ctaLabel: "Ver InkScroller",
+            href: "/es/proyectos/inkscroller",
+          },
           {
             label: "Frontend",
             ctaLabel: "Repo frontend",

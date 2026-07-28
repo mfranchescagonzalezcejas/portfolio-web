@@ -54,6 +54,12 @@ const requiredCaseStudyUrls = [
   "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
 ];
 
+const homeMockupPaths = [
+  "/inkscroller/home-library-es-v1.jpg",
+  "/inkscroller/home-manga-detail-es-v1.jpg",
+  "/inkscroller/home-reader-es-v1.jpg",
+] as const;
+
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
@@ -89,6 +95,30 @@ const entrypoints: LocaleEntrypoint[] = [
   { path: "dist/en/index.html", locale: "en" },
   { path: "dist/es/index.html", locale: "es" },
 ];
+
+const productEntrypoints = [
+  {
+    path: "dist/en/projects/inkscroller/index.html",
+    locale: "en",
+    title: "InkScroller | DevDigi",
+    canonical: `${productionSiteUrl}/en/projects/inkscroller`,
+    alternate: `${productionSiteUrl}/es/proyectos/inkscroller`,
+    hero: "Keep your next chapter within reach.",
+    preview: "This is a product preview, not an English app capture.",
+    beta: "Beta access is not currently available.",
+  },
+  {
+    path: "dist/es/proyectos/inkscroller/index.html",
+    locale: "es",
+    title: "InkScroller | DevDigi",
+    canonical: `${productionSiteUrl}/es/proyectos/inkscroller`,
+    alternate: `${productionSiteUrl}/en/projects/inkscroller`,
+    hero: "Tu próximo capítulo, siempre a mano.",
+    preview:
+      "Las capturas verificadas en español se añadirán en la siguiente entrega.",
+    beta: "El acceso a beta no está disponible actualmente.",
+  },
+] as const;
 
 const seoContracts: Record<string, SeoContract> = {
   "dist/index.html": {
@@ -356,6 +386,32 @@ const assertNoJsContract = (
       .querySelector(`nav[aria-label="${contract.navLabel}"] a[href="#skills"]`)
       ?.textContent?.trim(),
   ).toBe(contract.skillsNavLabel);
+
+  const inkScrollerPath =
+    locale === "en" ? "/en/projects/inkscroller" : "/es/proyectos/inkscroller";
+  const inkScrollerHeaderLink = body.querySelector(
+    `nav[aria-label="${contract.navLabel}"] a[href="${inkScrollerPath}"]`,
+  );
+  expect(inkScrollerHeaderLink?.textContent?.trim()).toBe("InkScroller");
+  expect(
+    body.querySelector(`section#featured a[href="${inkScrollerPath}"]`),
+  ).not.toBeNull();
+
+  const featuredMockups = Array.from(
+    body.querySelectorAll<HTMLImageElement>(
+      'section#featured .featured-phone-screen img[alt=""][loading="lazy"]',
+    ),
+  );
+  expect(featuredMockups).toHaveLength(3);
+  expect(featuredMockups.map((mockup) => mockup.getAttribute("src"))).toEqual(
+    homeMockupPaths,
+  );
+  featuredMockups.forEach((mockup) => {
+    expect(mockup.getAttribute("width")).toBe("1080");
+    expect(mockup.getAttribute("height")).toBe("2340");
+    expect(mockup.getAttribute("decoding")).toBe("async");
+  });
+  expect(html).not.toContain("drive-download-20260726T185531Z-1-001");
 
   for (const sectionId of sectionIds) {
     const section = body.querySelector(`section#${sectionId}`);
@@ -958,4 +1014,80 @@ describe("Localized static entrypoints", () => {
       warn.mockRestore();
     }
   });
+});
+
+describe("InkScroller static product routes", () => {
+  it.each(productEntrypoints)(
+    "renders the canonical $locale product route with the shared hydrated header",
+    ({ path, locale, title, canonical, alternate, hero, preview, beta }) => {
+      const html = readHtml(path);
+      const document = new DOMParser().parseFromString(html, "text/html");
+      const site = siteContentByLocale[locale];
+      const headerNavigation = document.querySelector("header nav");
+      const sections = Array.from(document.querySelectorAll("main section"));
+      const sectionText = sections.map((section) =>
+        normalizeReadableText(section.textContent ?? ""),
+      );
+
+      expect(document.documentElement.lang).toBe(locale);
+      expect(document.title).toBe(title);
+      expect(
+        document.head
+          .querySelector('link[rel="canonical"]')
+          ?.getAttribute("href"),
+      ).toBe(canonical);
+      expect(
+        document.head
+          .querySelector(
+            `link[rel="alternate"][hreflang="${locale === "en" ? "es" : "en"}"]`,
+          )
+          ?.getAttribute("href"),
+      ).toBe(alternate);
+      expect(
+        document.querySelector("main#inkscroller-content h1")?.textContent,
+      ).toBe(hero);
+      expect(document.querySelector("header.fixed")).not.toBeNull();
+      expect(headerNavigation?.getAttribute("aria-label")).toBe(
+        site.header.ariaLabel,
+      );
+      const homeHref = locale === "en" ? "/en" : "/es";
+      expect(
+        document
+          .querySelector(`header a[aria-label="${site.header.homeLabel}"]`)
+          ?.getAttribute("href"),
+      ).toBe(`${homeHref}#top`);
+      site.nav
+        .filter((item) => item.href.startsWith("#"))
+        .forEach((item) => {
+          expect(
+            headerNavigation
+              ?.querySelector(`a[href="${homeHref}${item.href}"]`)
+              ?.textContent?.trim(),
+          ).toBe(item.label);
+        });
+      expect(
+        document.querySelector(".header-contact-cta")?.getAttribute("href"),
+      ).toBe(`${homeHref}#contact`);
+      expect(
+        headerNavigation
+          ?.querySelector(
+            `a[href="${locale === "en" ? "/en/projects/inkscroller" : "/es/proyectos/inkscroller"}"]`,
+          )
+          ?.textContent?.trim(),
+      ).toBe("InkScroller");
+      expect(
+        document.querySelector(".header-lang-toggle")?.textContent,
+      ).toContain(site.languageSwitcher.options[locale]);
+      expect(document.querySelectorAll("astro-island")).toHaveLength(1);
+      expect(document.querySelector(".inkscroller-media img")).toBeNull();
+      expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
+        preview,
+      );
+      expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
+        beta,
+      );
+      expect(sectionText).toHaveLength(6);
+      expect(sectionText[5]).toContain(beta);
+    },
+  );
 });

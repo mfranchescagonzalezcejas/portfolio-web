@@ -117,6 +117,7 @@ function getThemeMode(): ThemeMode {
 
 type SiteHeaderProps = {
   currentLocale: Locale;
+  isHome?: boolean;
   navItems: NavItem[];
   languageSwitcher: {
     label: string;
@@ -136,6 +137,7 @@ type SiteHeaderProps = {
 
 export default function SiteHeader({
   currentLocale,
+  isHome = true,
   navItems,
   languageSwitcher,
   header,
@@ -151,17 +153,21 @@ export default function SiteHeader({
     setThemeMode(currentTheme);
   }, []);
 
-  const primaryNav = navItems.filter((item) =>
-    [
-      "#about",
-      "#experience",
-      "#projects",
-      "#skills",
-      "#education",
-      "#contact",
-    ].includes(item.href),
+  const primaryNav = navItems.filter(
+    (item) =>
+      [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ].includes(item.href) || item.href.startsWith("/"),
   );
   const isEnglishLocale = currentLocale === "en";
+  const homeHref = currentLocale === "en" ? "/en" : "/es";
+  const toHomeHref = (href: string) =>
+    isHome || !href.startsWith("#") ? href : `${homeHref}${href}`;
   const nextLocale = isEnglishLocale ? "es" : "en";
   const nextLocaleHref = nextLocale === "en" ? "/en" : `/${nextLocale}`;
 
@@ -198,7 +204,7 @@ export default function SiteHeader({
       <div className="header-shell glass mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 py-2.5 sm:px-6">
         <a
           className="flex items-center gap-2"
-          href="#top"
+          href={toHomeHref("#top")}
           aria-label={header.homeLabel}
         >
           <span className="header-brand-mark" aria-hidden="true">
@@ -214,7 +220,11 @@ export default function SiteHeader({
           className="header-primary-nav flex items-center gap-1"
         >
           {primaryNav.map((item) => (
-            <a key={item.href} className="header-nav-link" href={item.href}>
+            <a
+              key={item.href}
+              className="header-nav-link"
+              href={toHomeHref(item.href)}
+            >
               {item.label}
             </a>
           ))}
@@ -243,7 +253,7 @@ export default function SiteHeader({
             {themeMode === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          <a className="header-contact-cta" href="#contact">
+          <a className="header-contact-cta" href={toHomeHref("#contact")}>
             {header.ctaLabel}
             <ArrowUpRightIcon className="header-icon-sm" />
           </a>

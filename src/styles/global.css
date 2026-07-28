@@ -226,6 +226,12 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -967,7 +973,7 @@ h4 {
 
 .featured-phone {
   position: relative;
-  width: 8.25rem;
+  width: 9.72rem;
   height: 19.75rem;
   border-radius: 1.8rem;
   border: 1px solid var(--overlay-border);
@@ -1019,7 +1025,27 @@ h4 {
 
 .featured-phone-screen {
   border-radius: 1.3rem;
-  padding: 0.75rem;
+  padding: 0;
+}
+
+.featured-phone-screen > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+@media (max-width: 640px) {
+  .featured-project-mockups {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .featured-phone-1,
+  .featured-phone-2,
+  .featured-phone-3 {
+    transform: none;
+  }
 }
 
 .featured-phone-icon {
@@ -2019,8 +2045,7 @@ h4 {
   .hero-code-overlay,
   .hero-stack-pill,
   .hero-delivery-card,
-  .hero-architecture-card,
-  .featured-project-mockups {
+  .hero-architecture-card {
     display: none;
   }
 
@@ -2067,7 +2092,7 @@ h4 {
   }
 
   .featured-project-layout {
-    grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+    grid-template-columns: minmax(0, 1fr) minmax(31rem, 1fr);
   }
 
   .featured-project-links {

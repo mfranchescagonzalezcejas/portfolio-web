@@ -1,0 +1,80 @@
+---
+import type { ProductMedia } from "../content/inkscroller";
+import { siteContentByLocale } from "../content/site";
+import BaseLayout from "./BaseLayout.astro";
+import SiteHeader from "../sections/header/SiteHeader";
+
+type Props = {
+  content: {
+    locale: "en" | "es";
+    seo: { title: string; description: string; canonicalPath: string; alternates: Record<"en" | "es" | "x-default", string> };
+    home: { label: string; href: string };
+    counterpart: { label: string; href: string };
+    skipLabel: string;
+    hero: { eyebrow: string; title: string; description: string };
+    proof: { title: string; items: string[] };
+    capabilities: { title: string; items: { capability: string; value: string }[] };
+    story: { title: string; steps: { title: string; description: string }[] };
+    media: ProductMedia;
+    beta: { title: string; description: string; action: string; href: string };
+  };
+};
+
+const { content } = Astro.props;
+const site = siteContentByLocale[content.locale];
+---
+
+<BaseLayout locale={content.locale} pageSeo={content.seo}>
+  <div id="top"></div>
+  <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-content">{content.skipLabel}</a>
+  <SiteHeader
+    currentLocale={site.locale}
+    isHome={false}
+    navItems={site.nav}
+    languageSwitcher={site.languageSwitcher}
+    header={site.header}
+    client:load
+  />
+  <main id="inkscroller-content" class="inkscroller-page">
+    <section class="inkscroller-hero" aria-labelledby="inkscroller-title">
+      <p>{content.hero.eyebrow}</p>
+      <h1 id="inkscroller-title">{content.hero.title}</h1>
+      <p>{content.hero.description}</p>
+    </section>
+    <section aria-labelledby="inkscroller-proof-title">
+      <h2 id="inkscroller-proof-title">{content.proof.title}</h2>
+      <ul>{content.proof.items.map((item) => <li>{item}</li>)}</ul>
+    </section>
+    <section aria-labelledby="inkscroller-capabilities-title">
+      <h2 id="inkscroller-capabilities-title">{content.capabilities.title}</h2>
+      {content.capabilities.items.map((item) => <article><h3>{item.capability}</h3><p>{item.value}</p></article>)}
+    </section>
+    <section aria-labelledby="inkscroller-story-title">
+      <h2 id="inkscroller-story-title">{content.story.title}</h2>
+      <ol>{content.story.steps.map((step, index) => <li><span>{String(index + 1).padStart(2, "0")}</span><h3>{step.title}</h3><p>{step.description}</p></li>)}</ol>
+    </section>
+    <section class="inkscroller-media" aria-label={content.media.kind === "capture" ? content.media.alt : content.media.label}>
+      {content.media.kind === "capture" ? <img src={content.media.src} alt={content.media.alt} width={content.media.width} height={content.media.height} loading="lazy" /> : <><strong>{content.media.label}</strong><p>{content.media.disclosure}</p></>}
+    </section>
+    <section class="inkscroller-beta" aria-labelledby="inkscroller-beta-title">
+      <h2 id="inkscroller-beta-title">{content.beta.title}</h2>
+      <p>{content.beta.description}</p>
+      <a href={content.beta.href}>{content.beta.action}</a>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .inkscroller-page { width: min(100% - 2rem, 70rem); margin: auto; display: grid; gap: 3rem; padding: 9rem 0 4rem; }
+  .inkscroller-beta a { display: inline-flex; align-items: center; min-height: 44px; color: var(--foreground); }
+  .inkscroller-page section { min-width: 0; }
+  .inkscroller-hero h1 { max-width: 16ch; font: 700 clamp(2.5rem, 8vw, 5rem)/1 var(--font-display); }
+  .inkscroller-page h2 { font-family: var(--font-display); }
+  .inkscroller-page article, .inkscroller-page li { margin-block: 1rem; }
+  .inkscroller-page ol { padding: 0; list-style: none; }
+  .inkscroller-page ol span { color: var(--accent-teal); font-family: var(--font-mono); }
+  .inkscroller-media, .inkscroller-beta { border: 1px solid var(--border); border-radius: var(--radius); padding: clamp(1.5rem, 5vw, 3rem); background: var(--surface); }
+  .inkscroller-media img { display: block; width: min(100%, 22rem); height: auto; margin: auto; object-fit: contain; }
+  .inkscroller-beta a { padding-inline: 1rem; border: 1px solid var(--border); border-radius: 999px; }
+  @media (min-width: 48rem) { .inkscroller-page section[aria-labelledby="inkscroller-capabilities-title"] { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; } .inkscroller-page section[aria-labelledby="inkscroller-capabilities-title"] h2 { grid-column: 1 / -1; } }
+</style>

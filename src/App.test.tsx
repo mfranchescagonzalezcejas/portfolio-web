@@ -7,6 +7,8 @@ import {
   within,
 } from "@testing-library/react";
 import App from "./app/App";
+import { siteContentByLocale } from "./content/site";
+import SiteHeader from "./sections/header/SiteHeader";
 
 const renderAtPath = (path: string) => {
   window.history.pushState({}, "", path);
@@ -303,6 +305,86 @@ describe("Experience behavior", () => {
 });
 
 describe("navigation anchors", () => {
+  it.each([
+    {
+      locale: "en" as const,
+      isHome: true,
+      expectedHome: "#top",
+      expectedSection: "#about",
+      expectedContact: "#contact",
+      expectedProduct: "/en/projects/inkscroller",
+    },
+    {
+      locale: "es" as const,
+      isHome: true,
+      expectedHome: "#top",
+      expectedSection: "#about",
+      expectedContact: "#contact",
+      expectedProduct: "/es/proyectos/inkscroller",
+    },
+    {
+      locale: "en" as const,
+      isHome: false,
+      expectedHome: "/en#top",
+      expectedSection: "/en#about",
+      expectedContact: "/en#contact",
+      expectedProduct: "/en/projects/inkscroller",
+    },
+    {
+      locale: "es" as const,
+      isHome: false,
+      expectedHome: "/es#top",
+      expectedSection: "/es#about",
+      expectedContact: "/es#contact",
+      expectedProduct: "/es/proyectos/inkscroller",
+    },
+  ])(
+    "keeps $locale SiteHeader links correct when isHome is $isHome",
+    ({
+      locale,
+      isHome,
+      expectedHome,
+      expectedSection,
+      expectedContact,
+      expectedProduct,
+    }) => {
+      const site = siteContentByLocale[locale];
+      render(
+        <SiteHeader
+          currentLocale={locale}
+          isHome={isHome}
+          navItems={site.nav}
+          languageSwitcher={site.languageSwitcher}
+          header={site.header}
+        />,
+      );
+
+      const header = screen.getByRole("banner");
+      expect(
+        within(header).getByRole("link", { name: site.header.homeLabel }),
+      ).toHaveAttribute("href", expectedHome);
+      expect(
+        within(header).getByRole("link", { name: site.nav[0].label }),
+      ).toHaveAttribute("href", expectedSection);
+      site.nav
+        .filter((item) => item.href.startsWith("#"))
+        .forEach((item) => {
+          expect(
+            within(header).getByRole("link", { name: item.label }),
+          ).toHaveAttribute(
+            "href",
+            isHome ? item.href : `/${locale}${item.href}`,
+          );
+        });
+      expect(
+        within(header).getByRole("link", { name: site.header.ctaLabel }),
+      ).toHaveAttribute("href", expectedContact);
+      expect(
+        within(header).getByRole("link", { name: "InkScroller" }),
+      ).toHaveAttribute("href", expectedProduct);
+    },
+  );
+
   it("uses a non-navigation group for the language switcher", () => {
     renderAtPath("/");
 
@@ -489,6 +571,54 @@ describe("navigation anchors", () => {
     ).not.toBeInTheDocument();
   });
 
+  it.each([
+    {
+      path: "/",
+      ctaLabel: "View InkScroller",
+      href: "/en/projects/inkscroller",
+    },
+    {
+      path: "/es",
+      ctaLabel: "Ver InkScroller",
+      href: "/es/proyectos/inkscroller",
+    },
+  ])(
+    "renders locale-correct InkScroller discovery links and decorative captures for $path",
+    ({ path, ctaLabel, href }) => {
+      renderAtPath(path);
+
+      const header = screen.getByRole("banner");
+      expect(
+        within(header).getByRole("link", { name: "InkScroller" }),
+      ).toHaveAttribute("href", href);
+
+      const featuredSection = document.getElementById("featured");
+      expect(featuredSection).toBeInTheDocument();
+      expect(
+        within(featuredSection as HTMLElement).getByRole("link", {
+          name: `${ctaLabel} ${path === "/es" ? "de" : "for"} Inkscroller`,
+        }),
+      ).toHaveAttribute("href", href);
+
+      const mockups = Array.from(
+        featuredSection?.querySelectorAll<HTMLImageElement>(
+          '.featured-phone-screen img[alt=""][loading="lazy"]',
+        ) ?? [],
+      );
+      expect(mockups).toHaveLength(3);
+      expect(mockups.map((mockup) => mockup.getAttribute("src"))).toEqual([
+        "/inkscroller/home-library-es-v1.jpg",
+        "/inkscroller/home-manga-detail-es-v1.jpg",
+        "/inkscroller/home-reader-es-v1.jpg",
+      ]);
+      mockups.forEach((mockup) => {
+        expect(mockup).toHaveAttribute("width", "1080");
+        expect(mockup).toHaveAttribute("height", "2340");
+        expect(mockup).toHaveAttribute("decoding", "async");
+      });
+    },
+  );
+
   it("renders truthful project titles with real repository links", () => {
     renderAtPath("/");
 
@@ -652,9 +782,9 @@ describe("navigation anchors", () => {
         name: "Caso de estudio de Inkscroller",
       }),
     ).not.toBeInTheDocument();
-    expect(featuredSection as HTMLElement).toHaveTextContent(
-      "Flujos UI en progreso",
-    );
+    expect(
+      featuredSection?.querySelectorAll(".featured-phone-screen img"),
+    ).toHaveLength(3);
 
     expect(
       within(projectsSection as HTMLElement).getByRole("list", {

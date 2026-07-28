@@ -18,10 +18,7 @@ export default function FeaturedProject({
   project,
   section,
 }: FeaturedProjectProps) {
-  const [primaryLink, secondaryLink] = project.links;
-  const primaryCtaLabel = primaryLink?.ctaLabel ?? section.primaryCtaLabel;
-  const secondaryCtaLabel =
-    secondaryLink?.ctaLabel ?? section.secondaryCtaLabel;
+  const mockups = project.mockups ?? [];
   const mockupLabels = project.mockupLabels ?? [];
 
   return (
@@ -70,54 +67,43 @@ export default function FeaturedProject({
                   className="featured-project-links"
                   aria-label={`${project.name} · ${section.linksLabel}`}
                 >
-                  {primaryLink ? (
-                    <li>
-                      <a
-                        className="cta-button featured-project-link-primary"
-                        href={primaryLink.href}
-                        target={primaryLink.external ? "_blank" : undefined}
-                        rel={
-                          primaryLink.external
-                            ? "noopener noreferrer"
-                            : undefined
-                        }
-                        aria-label={formatProjectLabel(section.linkAriaLabel, {
-                          label: primaryCtaLabel,
-                          project: project.name,
-                        })}
-                      >
-                        <GitBranch
-                          aria-hidden="true"
-                          className="project-link-icon"
-                        />
-                        {primaryCtaLabel}
-                      </a>
-                    </li>
-                  ) : null}
-                  {secondaryLink ? (
-                    <li>
-                      <a
-                        className="cta-outline featured-project-link-secondary"
-                        href={secondaryLink.href}
-                        target={secondaryLink.external ? "_blank" : undefined}
-                        rel={
-                          secondaryLink.external
-                            ? "noopener noreferrer"
-                            : undefined
-                        }
-                        aria-label={formatProjectLabel(section.linkAriaLabel, {
-                          label: secondaryCtaLabel,
-                          project: project.name,
-                        })}
-                      >
-                        <GitBranch
-                          aria-hidden="true"
-                          className="project-link-icon"
-                        />
-                        {secondaryCtaLabel}
-                      </a>
-                    </li>
-                  ) : null}
+                  {project.links.map((link, index) => {
+                    const ctaLabel =
+                      link.ctaLabel ??
+                      (index === 0
+                        ? section.primaryCtaLabel
+                        : section.secondaryCtaLabel);
+
+                    return (
+                      <li key={link.href}>
+                        <a
+                          className={
+                            index === 0
+                              ? "cta-button featured-project-link-primary"
+                              : "cta-outline featured-project-link-secondary"
+                          }
+                          href={link.href}
+                          target={link.external ? "_blank" : undefined}
+                          rel={
+                            link.external ? "noopener noreferrer" : undefined
+                          }
+                          aria-label={formatProjectLabel(
+                            section.linkAriaLabel,
+                            {
+                              label: ctaLabel,
+                              project: project.name,
+                            },
+                          )}
+                        >
+                          <GitBranch
+                            aria-hidden="true"
+                            className="project-link-icon"
+                          />
+                          {ctaLabel}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>
@@ -130,13 +116,26 @@ export default function FeaturedProject({
                 >
                   <div className="featured-phone-notch" />
                   <div className="featured-phone-screen">
-                    <div className="featured-phone-icon">
-                      <Smartphone aria-hidden="true" />
-                    </div>
-                    <p className="featured-phone-label">{label}</p>
-                    <p className="featured-phone-status">
-                      {project.mockupStatus}
-                    </p>
+                    {mockups[index] ? (
+                      <img
+                        src={mockups[index].src}
+                        width={mockups[index].width}
+                        height={mockups[index].height}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <>
+                        <div className="featured-phone-icon">
+                          <Smartphone aria-hidden="true" />
+                        </div>
+                        <p className="featured-phone-label">{label}</p>
+                        <p className="featured-phone-status">
+                          {project.mockupStatus}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}

@@ -56,6 +56,20 @@ type ResponsiveMetrics = {
     whiteSpace: string;
     textOverflow: string;
   }>;
+  featuredMockups: Array<{
+    src: string;
+    width: string | null;
+    height: string | null;
+    loading: string;
+    decoding: string;
+    objectFit: string;
+    objectPosition: string;
+    screenWidth: number;
+    screenHeight: number;
+    imageWidth: number;
+    imageHeight: number;
+  }>;
+  inkScrollerLinkFocused: boolean;
 };
 
 const chromeCandidates = [
@@ -227,6 +241,8 @@ async function waitForExpression<T>(
 
 async function collectMetrics(
   theme: "light" | "dark",
+  path = "/es/",
+  width = 320,
 ): Promise<ResponsiveMetrics> {
   const target = await readJson<TargetDescriptor>(
     `http://${previewHost}:${chromePort}/json/new?about:blank`,
@@ -238,7 +254,7 @@ async function collectMetrics(
     await client.send("Page.enable");
     await client.send("Runtime.enable");
     await client.send("Emulation.setDeviceMetricsOverride", {
-      width: 320,
+      width,
       height: 900,
       deviceScaleFactor: 1,
       mobile: true,
@@ -251,7 +267,7 @@ async function collectMetrics(
       `,
     });
     await client.send("Page.navigate", {
-      url: `http://${previewHost}:${previewPort}/es/`,
+      url: `http://${previewHost}:${previewPort}${path}`,
     });
     await waitForExpression<boolean>(
       client,
@@ -264,8 +280,10 @@ async function collectMetrics(
       expression: `(() => {
           const nav = document.querySelector('header nav[aria-label]');
           const cta = document.querySelector('.header-contact-cta');
+          const inkScrollerLink = document.querySelector('header nav a[href*="inkscroller"]');
           const navStyle = window.getComputedStyle(nav);
           const ctaStyle = window.getComputedStyle(cta);
+          inkScrollerLink.focus();
 
           return {
             documentElement: {
@@ -307,6 +325,27 @@ async function collectMetrics(
                 textOverflow: style.textOverflow,
               };
             }),
+            featuredMockups: Array.from(document.querySelectorAll('.featured-phone-screen img')).map((image) => {
+              const screen = image.closest('.featured-phone-screen');
+              const screenRect = screen.getBoundingClientRect();
+              const imageRect = image.getBoundingClientRect();
+              const style = window.getComputedStyle(image);
+
+              return {
+                src: image.getAttribute('src'),
+                width: image.getAttribute('width'),
+                height: image.getAttribute('height'),
+                loading: image.loading,
+                decoding: image.decoding,
+                objectFit: style.objectFit,
+                objectPosition: style.objectPosition,
+                screenWidth: screenRect.width,
+                screenHeight: screenRect.height,
+                imageWidth: imageRect.width,
+                imageHeight: imageRect.height,
+              };
+            }),
+            inkScrollerLinkFocused: document.activeElement === inkScrollerLink,
           };
         })()`,
       returnByValue: true,
@@ -486,6 +525,51 @@ describe("rendered responsive overflow", () => {
           expect(title.whiteSpace, `${theme}: ${title.text}`).toBe("normal");
           expect(title.textOverflow, `${theme}: ${title.text}`).toBe("clip");
         }
+      }
+    },
+    testTimeoutMs,
+  );
+
+  it.each([
+    { path: "/en/", width: 320, href: "/en/projects/inkscroller" },
+    { path: "/en/", width: 375, href: "/en/projects/inkscroller" },
+    { path: "/en/", width: 768, href: "/en/projects/inkscroller" },
+    { path: "/en/", width: 1440, href: "/en/projects/inkscroller" },
+    { path: "/es/", width: 320, href: "/es/proyectos/inkscroller" },
+    { path: "/es/", width: 375, href: "/es/proyectos/inkscroller" },
+    { path: "/es/", width: 768, href: "/es/proyectos/inkscroller" },
+    { path: "/es/", width: 1440, href: "/es/proyectos/inkscroller" },
+  ])(
+    "keeps featured InkScroller captures contained at $path $widthpx",
+    async ({ path, width, href }) => {
+      const metrics = await collectMetrics("dark", path, width);
+
+      expect(metrics.documentElement.scrollWidth).toBe(width);
+      expect(metrics.body.scrollWidth).toBe(width);
+      expect(metrics.inkScrollerLinkFocused).toBe(true);
+      expect(metrics.featuredMockups).toHaveLength(3);
+      expect(metrics.featuredMockups.map((mockup) => mockup.src)).toEqual([
+        "/inkscroller/home-library-es-v1.jpg",
+        "/inkscroller/home-manga-detail-es-v1.jpg",
+        "/inkscroller/home-reader-es-v1.jpg",
+      ]);
+      expect(href).toContain("inkscroller");
+
+      for (const mockup of metrics.featuredMockups) {
+        expect(mockup.width).toBe("1080");
+        expect(mockup.height).toBe("2340");
+        expect(mockup.loading).toBe("lazy");
+        expect(mockup.decoding).toBe("async");
+        expect(mockup.objectFit).toBe("cover");
+        expect(mockup.objectPosition).toBe("50% 0%");
+        expect(mockup.screenWidth, JSON.stringify(mockup)).toBeGreaterThan(0);
+        expect(mockup.screenHeight, JSON.stringify(mockup)).toBeGreaterThan(0);
+        expect(mockup.imageWidth).toBeCloseTo(mockup.screenWidth, 1);
+        expect(mockup.imageHeight).toBeCloseTo(mockup.screenHeight, 1);
+        expect(mockup.screenWidth / mockup.screenHeight).toBeCloseTo(
+          1080 / 2340,
+          2,
+        );
       }
     },
     testTimeoutMs,
