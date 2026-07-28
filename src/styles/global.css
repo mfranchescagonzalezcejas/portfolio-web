@@ -2497,7 +2497,6 @@ a {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
-  gap: 1.5rem;
   padding: 1rem 0 3.5rem;
   -ms-overflow-style: none;
 }
@@ -2507,12 +2506,13 @@ a {
 }
 
 .inkscroller-slide {
-  flex: 0 0 min(18rem, 90vw);
-  scroll-snap-align: center;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding-inline: 0.5rem;
 }
 
 .inkscroller-slide-title {
@@ -2574,13 +2574,15 @@ a {
 }
 
 .inkscroller-dot {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.75rem;
+  height: 0.75rem;
   border-radius: 999px;
   border: none;
   background: var(--overlay-border);
   cursor: pointer;
   padding: 0;
+  min-width: 14px;
+  min-height: 14px;
   transition:
     background-color 120ms ease,
     transform 120ms ease;
