@@ -1023,7 +1023,7 @@ h4 {
 
 .featured-mockup-1,
 .featured-mockup-3 {
-  width: min(10rem, 30vw);
+  width: min(15rem, 38vw);
   opacity: 0.25;
   filter: blur(2px);
   z-index: 1;
@@ -1036,15 +1036,15 @@ h4 {
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-1 {
-  width: min(8rem, 24vw);
-  margin-right: -1.6rem;
+  width: min(12rem, 30vw);
+  margin-right: -2.4rem;
   opacity: 0.12;
 }
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-3 {
-  width: min(8rem, 24vw);
-  margin-left: -1.6rem;
+  width: min(12rem, 30vw);
+  margin-left: -2.4rem;
   opacity: 0.12;
 }
 
