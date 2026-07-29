@@ -26,6 +26,7 @@ export type BetaContent = {
       eyebrow: string;
       title: string;
       description: string;
+      microcopy: string;
     };
     scope: {
       title: string;
@@ -34,6 +35,10 @@ export type BetaContent = {
     requirements: {
       title: string;
       items: string[];
+    };
+    process: {
+      title: string;
+      steps: string[];
     };
     faq: {
       title: string;
@@ -48,6 +53,11 @@ export type BetaContent = {
       body: string;
       contactEmail: string;
       deletionInfo: string;
+    };
+    help: {
+      title: string;
+      emailLabel: string;
+      communityLabel: string;
     };
   };
 };
@@ -88,7 +98,8 @@ export const betaContent: Record<Locale, BetaContent> = {
         eyebrow: "Closed beta",
         title: "Join InkScroller Beta",
         description:
-          "Help shape a reading companion built for discovering, organising and following manga — across platforms, at your own pace.",
+          "Help shape a reading companion built for discovering, organising and following manga, manhwa and manhua — across platforms, at your own pace.",
+        microcopy: "Android · Google Play · 14 days",
       },
       scope: {
         title: "What we are validating",
@@ -108,6 +119,10 @@ export const betaContent: Record<Locale, BetaContent> = {
           "Willingness to use the app for at least 14 days",
           "Comfort providing feedback via Discord and forms",
         ],
+      },
+      process: {
+        title: "How it works",
+        steps: ["Application", "Review", "Google Play", "Feedback"],
       },
       faq: {
         title: "Frequently asked questions",
@@ -151,6 +166,11 @@ export const betaContent: Record<Locale, BetaContent> = {
         deletionInfo:
           "To request deletion of your data, email the address above from the same email you used in the form.",
       },
+      help: {
+        title: "Beta help",
+        emailLabel: "Email",
+        communityLabel: "Discord community",
+      },
     },
   },
   es: {
@@ -183,6 +203,7 @@ export const betaContent: Record<Locale, BetaContent> = {
         title: "Únete a la beta de InkScroller",
         description:
           "Ayuda a dar forma a un acompañante de lectura diseñado para descubrir, organizar y seguir manga, manhwa y manhua — entre plataformas, a tu ritmo.",
+        microcopy: "Android · Google Play · 14 días",
       },
       scope: {
         title: "Qué estamos validando",
@@ -202,6 +223,10 @@ export const betaContent: Record<Locale, BetaContent> = {
           "Disponibilidad para usar la app al menos 14 días",
           "Disposición a dar feedback mediante Discord y formularios",
         ],
+      },
+      process: {
+        title: "Cómo funciona",
+        steps: ["Formulario", "Revisión", "Google Play", "Feedback"],
       },
       faq: {
         title: "Preguntas frecuentes",
@@ -244,6 +269,11 @@ export const betaContent: Record<Locale, BetaContent> = {
         contactEmail: "contact.me@devdigi.dev",
         deletionInfo:
           "Para solicitar la eliminación de tus datos, escribe al correo anterior desde la misma dirección que usaste en el formulario.",
+      },
+      help: {
+        title: "Ayuda beta",
+        emailLabel: "Email",
+        communityLabel: "Comunidad en Discord",
       },
     },
   },

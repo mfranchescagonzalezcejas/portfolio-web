@@ -118,6 +118,7 @@ function getThemeMode(): ThemeMode {
 type SiteHeaderProps = {
   currentLocale: Locale;
   isHome?: boolean;
+  localePath?: string;
   navItems: NavItem[];
   languageSwitcher: {
     label: string;
@@ -138,6 +139,7 @@ type SiteHeaderProps = {
 export default function SiteHeader({
   currentLocale,
   isHome = true,
+  localePath,
   navItems,
   languageSwitcher,
   header,
@@ -158,7 +160,11 @@ export default function SiteHeader({
   const toHomeHref = (href: string) =>
     isHome || !href.startsWith("#") ? href : `${homeHref}${href}`;
   const nextLocale = isEnglishLocale ? "es" : "en";
-  const nextLocaleHref = nextLocale === "en" ? "/en" : `/${nextLocale}`;
+  const nextLocaleHref = localePath
+    ? localePath.replace(/^\/(en|es)(?=\/|$)/, `/${nextLocale}`)
+    : nextLocale === "en"
+      ? "/en"
+      : `/${nextLocale}`;
 
   const currentLocaleLabel = languageSwitcher.options[currentLocale];
   const localeAriaHint =

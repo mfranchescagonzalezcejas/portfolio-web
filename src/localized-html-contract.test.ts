@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 import { inkscrollerContent } from "./content/inkscroller";
+import { betaContent } from "./content/beta";
 import { siteContentByLocale, validateSiteContent } from "./content/site";
 
 type LocaleEntrypoint = {
@@ -31,6 +32,7 @@ const inkScrollerPagePath = resolve(
   process.cwd(),
   "src/layouts/InkScrollerPage.astro",
 );
+const globalStylesPath = resolve(process.cwd(), "src/styles/global.css");
 const fontStylesheetUrl =
   "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
 const pngSignature = Buffer.from([
@@ -1171,16 +1173,23 @@ describe("Beta index routes", () => {
       programName: "InkScroller",
       cta: "Más información",
     },
-  ])("renders the $locale beta index with program listing", ({ path, locale, title, programName, cta }) => {
-    const html = readHtml(path);
-    const document = new DOMParser().parseFromString(html, "text/html");
+  ])(
+    "renders the $locale beta index with program listing",
+    ({ path, locale, title, programName, cta }) => {
+      const html = readHtml(path);
+      const document = new DOMParser().parseFromString(html, "text/html");
 
-    expect(document.documentElement.lang).toBe(locale);
-    expect(document.title).toBe(title);
-    expect(document.querySelector(".beta-program-name")?.textContent).toBe(programName);
-    expect(document.querySelector(".beta-cta-primary")?.textContent?.trim()).toBe(cta);
-    expect(document.querySelector("header")).not.toBeNull();
-  });
+      expect(document.documentElement.lang).toBe(locale);
+      expect(document.title).toBe(title);
+      expect(document.querySelector(".beta-program-name")?.textContent).toBe(
+        programName,
+      );
+      expect(
+        document.querySelector(".beta-cta-primary")?.textContent?.trim(),
+      ).toBe(cta);
+      expect(document.querySelector("header")).not.toBeNull();
+    },
+  );
 });
 
 describe("InkScroller beta landing routes", () => {
@@ -1190,20 +1199,52 @@ describe("InkScroller beta landing routes", () => {
       locale: "en",
       eyebrow: "Closed beta",
       heading: "Join InkScroller Beta",
+      languageHref: "/es/beta/inkscroller",
     },
     {
       path: "dist/es/beta/inkscroller/index.html",
       locale: "es",
       eyebrow: "Beta cerrada",
       heading: "Únete a la beta de InkScroller",
+      languageHref: "/en/beta/inkscroller",
     },
-  ])("renders the $locale InkScroller beta landing", ({ path, locale, eyebrow, heading }) => {
-    const html = readHtml(path);
-    const document = new DOMParser().parseFromString(html, "text/html");
+  ])(
+    "renders the $locale InkScroller beta landing",
+    ({ path, locale, eyebrow, heading, languageHref }) => {
+      const html = readHtml(path);
+      const document = new DOMParser().parseFromString(html, "text/html");
 
-    expect(document.documentElement.lang).toBe(locale);
-    expect(document.querySelector(".inkscroller-hero-eyebrow")?.textContent).toBe(eyebrow);
-    expect(document.querySelector("h1")?.textContent).toBe(heading);
-    expect(document.querySelector("header")).not.toBeNull();
+      expect(document.documentElement.lang).toBe(locale);
+      expect(
+        document.querySelector(".inkscroller-hero-eyebrow")?.textContent,
+      ).toBe(eyebrow);
+      expect(document.querySelector("h1")?.textContent).toBe(heading);
+      expect(document.querySelector("header")).not.toBeNull();
+      expect(
+        document.querySelector(".header-lang-toggle")?.getAttribute("href"),
+      ).toBe(languageHref);
+      expect(document.querySelectorAll(".beta-proof-list li")).toHaveLength(4);
+      expect(document.querySelectorAll(".beta-faq details")).toHaveLength(
+        betaContent[locale as "en" | "es"].inkscroller.faq.questions.length,
+      );
+      expect(document.querySelectorAll(".beta-cta--primary")).toHaveLength(2);
+      expect(document.querySelector("section#contact")).toBeNull();
+      expect(document.body.textContent).toContain(
+        betaContent[locale as "en" | "es"].inkscroller.hero.microcopy,
+      );
+    },
+  );
+
+  it("keeps beta route styling in the global stylesheet", () => {
+    const styles = readFileSync(globalStylesPath, "utf8");
+    const betaPage = readFileSync(
+      resolve(process.cwd(), "src/pages/en/beta/inkscroller.astro"),
+      "utf8",
+    );
+
+    expect(styles).toContain(".beta-landing-shell");
+    expect(styles).toContain("scroll-margin-top: 9rem");
+    expect(styles).toContain(".beta-hero-layout");
+    expect(betaPage).not.toContain("<style>");
   });
 });

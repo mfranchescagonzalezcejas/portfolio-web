@@ -1,7 +1,6 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import SiteHeader from "../../../sections/header/SiteHeader";
-import ContactLinks from "../../../sections/contact/ContactLinks";
 import { siteContentByLocale } from "../../../content/site";
 import { betaContent, type BetaContent } from "../../../content/beta";
 
@@ -18,78 +17,106 @@ const currentYear = new Date().getFullYear();
   <SiteHeader
     currentLocale={site.locale}
     isHome={false}
+    localePath="/es/beta/inkscroller"
     navItems={site.nav}
     languageSwitcher={site.languageSwitcher}
     header={site.header}
     client:load
   />
 
-  <main id="inkscroller-beta">
+  <main id="inkscroller-beta" class="beta-landing">
     <section class="inkscroller-beta-hero hero-section" aria-labelledby="inkscroller-beta-title">
       <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
-      <div class="hero-content mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20 lg:py-24">
-        <p class="inkscroller-hero-eyebrow">{page.hero.eyebrow}</p>
-        <h1 id="inkscroller-beta-title" class="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl max-w-3xl">{page.hero.title}</h1>
-        <p class="hero-copy mt-6 max-w-2xl text-base leading-relaxed sm:text-lg">{page.hero.description}</p>
+      <div class="beta-landing-shell beta-hero-layout">
+        <div class="beta-hero-copy">
+          <p class="inkscroller-hero-eyebrow">{page.hero.eyebrow}</p>
+          <h1 id="inkscroller-beta-title" class="font-display hero-title beta-hero-title">{page.hero.title}</h1>
+          <p class="hero-copy beta-hero-description">{page.hero.description}</p>
+          <a class="beta-cta beta-cta--primary beta-hero-cta" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">{page.cta.primary.label}</a>
+          <p class="beta-hero-microcopy">{page.hero.microcopy}</p>
       </div>
-    </section>
-
-    <section class="section-shell">
-      <div class="section-inner">
-        <h2 class="beta-section-label">{page.scope.title}</h2>
-        <ul class="beta-pills">
-          {page.scope.items.map((item) => <li class="beta-pill">{item}</li>)}
-        </ul>
-      </div>
-    </section>
-
-    <section class="section-shell">
-      <div class="section-inner">
-        <h2 class="beta-section-label">{page.requirements.title}</h2>
-        <ul class="beta-list">
-          {page.requirements.items.map((item) => <li>{item}</li>)}
-        </ul>
-      </div>
-    </section>
-
-    <section class="section-shell">
-      <div class="section-inner">
-        <h2 class="beta-section-label">{page.faq.title}</h2>
-        <dl class="beta-faq">
-          {page.faq.questions.map(({ q, a }) => (
-            <details class="beta-faq-item">
-              <summary class="beta-faq-q">{q}</summary>
-              <dd class="beta-faq-a">{a}</dd>
-            </details>
-          ))}
-        </dl>
-      </div>
-    </section>
-
-    <section class="section-shell beta-cta-shell">
-      <div class="section-inner beta-cta-wrap">
-        <a class="beta-cta" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">
-          {page.cta.primary.label}
-        </a>
-        <a class="beta-cta-link" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">
-          {page.cta.secondary.label} &rarr;
-        </a>
-      </div>
-    </section>
-
-    <section class="section-shell">
-      <div class="section-inner">
-        <div class="beta-privacy">
-          <h2 class="beta-section-label">{page.privacy.title}</h2>
-          <p>{page.privacy.body}</p>
-          <p class="beta-privacy-contact">Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
-          <p>{page.privacy.deletionInfo}</p>
+        <div class="inkscroller-hero-device beta-hero-device">
+          <div class="carousel-phone">
+            <div class="carousel-phone-notch" aria-hidden="true"></div>
+            <div class="carousel-phone-screen">
+              <img src="/inkscroller/product-home-es-v1.jpg" alt="Vista previa de InkScroller" width="540" height="1170" loading="eager" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
+
+    <section id="validation" class="beta-proof" aria-labelledby="beta-proof-title">
+      <div class="beta-landing-shell">
+        <h2 id="beta-proof-title" class="beta-proof-title">{page.scope.title}</h2>
+        <ul class="beta-proof-list">
+          {page.scope.items.slice(0, 4).map((item) => (
+            <li><span aria-hidden="true">✓</span>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section id="eligibility" class="beta-section" aria-labelledby="beta-eligibility-title">
+      <div class="beta-landing-shell beta-two-column">
+        <div>
+          <h2 id="beta-eligibility-title" class="beta-section-title">{page.requirements.title}</h2>
+          <ul class="beta-check-list">
+            {page.requirements.items.map((item) => (
+              <li><span aria-hidden="true">✓</span>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2 class="beta-section-title">{page.process.title}</h2>
+          <ol class="beta-process-list">
+            {page.process.steps.map((step, index) => (
+              <li><span aria-hidden="true">{index + 1}</span>{step}</li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="beta-contextual-cta" aria-label="Solicitud de beta">
+      <div class="beta-landing-shell beta-contextual-cta-inner">
+        <a class="beta-cta beta-cta--primary" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">{page.cta.primary.label}</a>
+        <a class="beta-cta beta-cta--secondary" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">{page.cta.secondary.label}</a>
+      </div>
+    </section>
+
+    <section id="faq" class="beta-section" aria-labelledby="beta-faq-title">
+      <div class="beta-landing-shell beta-faq-shell">
+        <h2 id="beta-faq-title" class="beta-section-title">{page.faq.title}</h2>
+        <div class="beta-faq">
+          {page.faq.questions.map(({ q, a }) => (
+            <details class="beta-faq-item">
+              <summary class="beta-faq-question">{q}</summary>
+              <p class="beta-faq-answer">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" class="beta-section beta-section--privacy" aria-labelledby="beta-privacy-title">
+      <div class="beta-landing-shell beta-privacy">
+        <h2 id="beta-privacy-title" class="beta-section-title">{page.privacy.title}</h2>
+        <p>{page.privacy.body}</p>
+        <p>Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
+        <p>{page.privacy.deletionInfo}</p>
+      </div>
+    </section>
+
+    <section id="beta-help" class="beta-help" aria-labelledby="beta-help-title">
+      <div class="beta-landing-shell beta-help-inner">
+        <h2 id="beta-help-title" class="beta-help-title">{page.help.title}</h2>
+        <a href={`mailto:${page.privacy.contactEmail}`}>{page.help.emailLabel}: {page.privacy.contactEmail}</a>
+        <a href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">{page.help.communityLabel}</a>
+        </div>
+    </section>
   </main>
 
-  <ContactLinks links={site.contacts} section={site.contactSection} />
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p>DevDigi por Mercedes Gonzalez</p>
@@ -97,133 +124,3 @@ const currentYear = new Date().getFullYear();
     </div>
   </footer>
 </BaseLayout>
-
-<style>
-  .inkscroller-beta-hero { overflow: visible; }
-
-  .beta-section-label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--muted-foreground);
-    margin: 0 0 1.25rem;
-  }
-
-  .beta-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .beta-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.85rem;
-    border-radius: 999px;
-    border: 1px solid color-mix(in oklab, var(--accent-teal) 20%, transparent);
-    background: color-mix(in oklab, var(--accent-teal) 6%, transparent);
-    color: var(--accent-teal);
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    line-height: 1.4;
-  }
-
-  .beta-list {
-    display: grid;
-    gap: 0.75rem;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-  }
-  .beta-list li {
-    padding-left: 1.25rem;
-    position: relative;
-    color: var(--muted-foreground);
-    line-height: 1.5;
-  }
-  .beta-list li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0.6em;
-    width: 0.375rem;
-    height: 0.375rem;
-    border-radius: 50%;
-    background: var(--primary);
-  }
-
-  .beta-faq { display: grid; gap: 0.5rem; margin: 0; }
-  .beta-faq-item {
-    border-radius: var(--radius);
-    border: 1px solid var(--overlay-border);
-    overflow: hidden;
-  }
-  .beta-faq-q {
-    padding: 0.875rem 1rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    user-select: none;
-  }
-  .beta-faq-q::-webkit-details-marker { display: none; }
-  .beta-faq-q::after {
-    content: "+";
-    font-size: 1.125rem;
-    font-weight: 400;
-    color: var(--muted-foreground);
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .beta-faq-item[open] .beta-faq-q::after { transform: rotate(45deg); }
-  .beta-faq-a {
-    margin: 0;
-    padding: 0 1rem 0.875rem;
-    color: var(--muted-foreground);
-    font-size: 0.875rem;
-    line-height: 1.6;
-  }
-
-  .beta-cta-shell { text-align: center; }
-  .beta-cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
-  .beta-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 3rem;
-    padding: 0 2rem;
-    border-radius: 999px;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    font-weight: 600;
-    font-size: 1rem;
-    text-decoration: none;
-    transition: opacity 0.12s, transform 0.12s;
-  }
-  .beta-cta:hover { opacity: 0.85; transform: translateY(-1px); }
-  .beta-cta-link {
-    color: var(--muted-foreground);
-    font-size: 0.875rem;
-    text-decoration: underline;
-    transition: color 0.12s;
-  }
-  .beta-cta-link:hover { color: var(--foreground); }
-
-  .beta-privacy {
-    font-size: 0.8rem;
-    color: var(--muted-foreground);
-    line-height: 1.6;
-    max-width: 48rem;
-  }
-  .beta-privacy .beta-section-label { margin-bottom: 0.75rem; }
-  .beta-privacy p { margin: 0 0 0.5rem; } .beta-privacy p:last-child { margin: 0; }
-  .beta-link { color: var(--primary); text-decoration: underline; }
-</style>

@@ -15,6 +15,7 @@ const content = betaContent[locale];
   <SiteHeader
     currentLocale={site.locale}
     isHome={false}
+    localePath="/en/beta"
     navItems={site.nav}
     languageSwitcher={site.languageSwitcher}
     header={site.header}
@@ -43,63 +44,3 @@ const content = betaContent[locale];
     </section>
   </main>
 </BaseLayout>
-
-<style>
-  .beta-program-list {
-    display: grid;
-    gap: 1.5rem;
-    margin-top: 2rem;
-  }
-  .beta-program-card {
-    padding: 1.5rem;
-    border-radius: var(--radius);
-  }
-  .beta-program-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-  }
-  .beta-program-name {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 700;
-    margin: 0;
-  }
-  .beta-program-status {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0.25rem 0.625rem;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .beta-program-status[data-status="open"] {
-    background: color-mix(in oklab, var(--primary) 15%, transparent);
-    color: var(--primary);
-  }
-  .beta-program-desc {
-    color: var(--muted-foreground);
-    font-size: 0.9rem;
-    margin: 0 0 1rem;
-    line-height: 1.5;
-  }
-  .beta-cta-primary {
-    display: inline-flex;
-    align-items: center;
-    min-height: 2.5rem;
-    padding: 0 1.25rem;
-    border-radius: 999px;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    font-weight: 600;
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: opacity 0.12s;
-  }
-  .beta-cta-primary:hover {
-    opacity: 0.85;
-  }
-</style>
