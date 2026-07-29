@@ -53,12 +53,12 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
           <p class="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">{content.hero.description}</p>
         </div>
         <div class="inkscroller-hero-device">
-          <div class="carousel-phone">
-            <div class="carousel-phone-notch"></div>
-            <div class="carousel-phone-screen" id="hero-screen">
+          <div class="mockup-phone">
+            <div class="mockup-phone-screen" id="hero-screen">
               <img id="hero-img-current" class="hero-img-layer" src={firstMedia.kind === "capture" ? firstMedia.src : ""} alt={firstMedia.kind === "capture" ? firstMedia.alt : ""} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
               <img id="hero-img-next" class="hero-img-layer" src="" alt="" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" style="display:none" />
             </div>
+            <div class="mockup-phone-frame" aria-hidden="true"></div>
           </div>
         </div>
       </div>
@@ -75,15 +75,15 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
               <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
                 <h3 class="inkscroller-slide-title">{entry.title}</h3>
                 <div class="inkscroller-slide-device">
-                  <div class="carousel-phone">
-                    <div class="carousel-phone-notch"></div>
-                    <div class="carousel-phone-screen">
+                  <div class="mockup-phone">
+                    <div class="mockup-phone-screen">
                       {entry.kind === "capture" ? (
                         <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
                       ) : (
                         <div class="inkscroller-placeholder"><strong>{entry.label}</strong><p>{entry.disclosure}</p></div>
                       )}
                     </div>
+                    <div class="mockup-phone-frame" aria-hidden="true"></div>
                   </div>
                 </div>
                 <p class="inkscroller-slide-desc">{entry.description}</p>
