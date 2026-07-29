@@ -199,7 +199,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
               nextImg.classList.remove("slide-in");
               nextImg.style.display = "none";
               idx = nextIdx;
-            }, 400);
+            }, 450);
           }, 4500);
           const heroDevice = currentImg.closest(".inkscroller-hero-device");
           heroDevice?.addEventListener("mouseenter", () => clearInterval(heroTimer));
