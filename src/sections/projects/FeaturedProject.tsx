@@ -137,28 +137,28 @@ export default function FeaturedProject({
                 </ul>
               )}
             </div>
-
-            <div className="featured-project-mockups" aria-hidden="true">
-              {mockups.map((mockup, index) => (
-                <div
-                  key={mockup.src}
-                  className={`mockup-phone featured-mockup featured-mockup-${index + 1}`}
-                >
-                  <div className="mockup-phone-screen">
-                    <img
-                      src={mockup.src}
-                      width={mockup.width}
-                      height={mockup.height}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                  <div className="mockup-phone-frame" />
-                </div>
-              ))}
-            </div>
           </div>
+        </div>
+
+        <div className="featured-project-mockups" aria-hidden="true">
+          {mockups.map((mockup, index) => (
+            <div
+              key={mockup.src}
+              className={`mockup-phone featured-mockup featured-mockup-${index + 1}`}
+            >
+              <div className="mockup-phone-screen">
+                <img
+                  src={mockup.src}
+                  width={mockup.width}
+                  height={mockup.height}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="mockup-phone-frame" />
+            </div>
+          ))}
         </div>
       </div>
     </section>
