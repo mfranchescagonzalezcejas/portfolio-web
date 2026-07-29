@@ -2610,6 +2610,11 @@ a {
 .inkscroller-hero-eyebrow { color: var(--primary); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin: 0; }
 .inkscroller-hero-device { display: flex; justify-content: center; align-items: center; height: 100%; }
 
+.inkscroller-hero.hero-section::before { top: 6rem; height: 22rem; }
+@media (min-width: 1024px) {
+  .inkscroller-hero.hero-section::before { top: 4rem; left: calc(50% + 16rem); width: 26rem; height: 26rem; }
+}
+
 .inkscroller-proof { padding: 0; }
 .inkscroller-proof h2 { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-foreground); margin: 0 0 1rem; }
 .inkscroller-proof ul { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
