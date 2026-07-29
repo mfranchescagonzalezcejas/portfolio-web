@@ -76,7 +76,9 @@ describe("responsive CSS contract", () => {
     expect(compactHeaderBlock).toContain(".header-primary-nav");
     expect(compactHeaderBlock).toContain("flex: 0 0 100%;");
     expect(compactHeaderBlock).toContain("overflow-x: auto;");
-    expect(compactHeaderBlock).not.toContain(".header-shell .header-contact-cta");
+    expect(compactHeaderBlock).not.toContain(
+      ".header-shell .header-contact-cta",
+    );
     expect(globalCss).toContain(
       "@media (max-width: 639px) {\n  .header-shell .header-contact-cta {\n    display: none;",
     );
@@ -136,11 +138,36 @@ describe("responsive CSS contract", () => {
     expect(dotBlock).toContain(".inkscroller-dot.active::before");
   });
 
-  it("keeps InkScroller slides at 35% with active scale 1.05 and inactive scale 0.92", () => {
-    expect(globalCss).toContain(".inkscroller-slide {\n  flex: 0 0 35%;");
-    expect(globalCss).toContain(".inkscroller-slide.active {\n  transform: scale(1.05);");
-    expect(globalCss).toContain(".inkscroller-slide:not(.active) {\n  transform: scale(0.92);");
-    expect(globalCss).toContain(".inkscroller-slide:not(.active) {\n  transform: scale(0.92);\n  opacity: 0.45;");
+  it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
+    expect(globalCss).toContain(
+      ".inkscroller-carousel {\n  position: relative;\n  width: 100%;\n  padding-inline: 0;",
+    );
+    expect(globalCss).toContain(".inkscroller-slide {\n  flex: 0 0 82%;");
+    expect(globalCss).toContain(
+      ".inkscroller-slide.active {\n  transform: scale(1.02);",
+    );
+    expect(globalCss).toContain(
+      ".inkscroller-slide:not(.active) {\n  transform: scale(0.88);\n  opacity: 0.3;",
+    );
+    expect(globalCss).toContain(
+      ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n.inkscroller-slide:not(.active) .inkscroller-slide-desc {\n  visibility: hidden;",
+    );
+    expect(globalCss).toContain(
+      "@media (max-width: 47.999rem) {\n  .inkscroller-prev {\n    left: -0.75rem;\n  }\n  .inkscroller-next {\n    right: -0.75rem;",
+    );
+    expect(globalCss).toContain(
+      "@media (min-width: 48rem) {\n  .inkscroller-carousel {\n    padding-inline: 1.5rem;",
+    );
+    expect(globalCss).toContain(".inkscroller-slide {\n    flex-basis: 35%;");
+    expect(globalCss).toContain(
+      ".inkscroller-slide.active {\n    transform: scale(1.05);",
+    );
+    expect(globalCss).toContain(
+      ".inkscroller-slide:not(.active) {\n    transform: scale(0.92);\n    opacity: 0.45;",
+    );
+    expect(globalCss).toContain(
+      ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n  .inkscroller-slide:not(.active) .inkscroller-slide-desc {\n    visibility: visible;",
+    );
   });
 
   it("keeps Learning project cards symmetric", () => {

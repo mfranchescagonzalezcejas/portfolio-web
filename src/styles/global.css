@@ -2769,7 +2769,7 @@ a {
 .inkscroller-carousel {
   position: relative;
   width: 100%;
-  padding-inline: 1.5rem;
+  padding-inline: 0;
 }
 .inkscroller-carousel-viewport {
   overflow: hidden;
@@ -2786,7 +2786,7 @@ a {
   transition: none;
 }
 .inkscroller-slide {
-  flex: 0 0 35%;
+  flex: 0 0 82%;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -2815,7 +2815,7 @@ a {
   line-height: 1.5;
 }
 .inkscroller-slide.active {
-  transform: scale(1.05);
+  transform: scale(1.02);
   opacity: 1;
   z-index: 2;
   position: relative;
@@ -2824,8 +2824,12 @@ a {
   box-shadow: 0 0 30px color-mix(in oklab, var(--primary) 25%, transparent);
 }
 .inkscroller-slide:not(.active) {
-  transform: scale(0.92);
-  opacity: 0.45;
+  transform: scale(0.88);
+  opacity: 0.3;
+}
+.inkscroller-slide:not(.active) .inkscroller-slide-title,
+.inkscroller-slide:not(.active) .inkscroller-slide-desc {
+  visibility: hidden;
 }
 
 .inkscroller-arrow {
@@ -2904,6 +2908,15 @@ a {
   background: var(--muted-foreground);
 }
 
+@media (max-width: 47.999rem) {
+  .inkscroller-prev {
+    left: -0.75rem;
+  }
+  .inkscroller-next {
+    right: -0.75rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .inkscroller-carousel-track,
   .inkscroller-slide,
@@ -2980,6 +2993,23 @@ a {
 }
 
 @media (min-width: 48rem) {
+  .inkscroller-carousel {
+    padding-inline: 1.5rem;
+  }
+  .inkscroller-slide {
+    flex-basis: 35%;
+  }
+  .inkscroller-slide.active {
+    transform: scale(1.05);
+  }
+  .inkscroller-slide:not(.active) {
+    transform: scale(0.92);
+    opacity: 0.45;
+  }
+  .inkscroller-slide:not(.active) .inkscroller-slide-title,
+  .inkscroller-slide:not(.active) .inkscroller-slide-desc {
+    visibility: visible;
+  }
   .inkscroller-slide-title {
     font-size: 1.3rem;
   }
