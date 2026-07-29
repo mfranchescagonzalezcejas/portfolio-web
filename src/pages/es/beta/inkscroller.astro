@@ -27,78 +27,66 @@ const currentYear = new Date().getFullYear();
   <main id="inkscroller-beta">
     <section class="inkscroller-beta-hero hero-section" aria-labelledby="inkscroller-beta-title">
       <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
-      <div class="hero-content mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-8">
-        <div>
-          <p class="inkscroller-hero-eyebrow">{page.hero.eyebrow}</p>
-          <h1 id="inkscroller-beta-title" class="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl">{page.hero.title}</h1>
-          <p class="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">{page.hero.description}</p>
-        </div>
-        <div class="inkscroller-hero-device flex justify-center lg:justify-end">
-          <div class="carousel-phone">
-            <div class="carousel-phone-notch" aria-hidden="true"></div>
-            <div class="carousel-phone-screen">
-              <img src="/inkscroller/product-home-es-v1.jpg" alt="Vista previa de InkScroller" width="540" height="1170" loading="eager" />
-            </div>
-          </div>
-        </div>
+      <div class="hero-content mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20 lg:py-24">
+        <p class="inkscroller-hero-eyebrow">{page.hero.eyebrow}</p>
+        <h1 id="inkscroller-beta-title" class="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl max-w-3xl">{page.hero.title}</h1>
+        <p class="hero-copy mt-6 max-w-2xl text-base leading-relaxed sm:text-lg">{page.hero.description}</p>
       </div>
     </section>
 
-    <div class="beta-sections">
-      <section class="beta-block">
-        <div class="beta-block-inner">
-          <h2 class="beta-block-title">{page.scope.title}</h2>
-          <div class="beta-card-grid">
-            {page.scope.items.map((item) => (
-              <article class="beta-card card-surface"><p class="beta-card-text">{item}</p></article>
-            ))}
-          </div>
-        </div>
-      </section>
+    <section class="section-shell">
+      <div class="section-inner">
+        <h2 class="beta-section-label">{page.scope.title}</h2>
+        <ul class="beta-pills">
+          {page.scope.items.map((item) => <li class="beta-pill">{item}</li>)}
+        </ul>
+      </div>
+    </section>
 
-      <section class="beta-block">
-        <div class="beta-block-inner">
-          <h2 class="beta-block-title">{page.requirements.title}</h2>
-          <div class="beta-card-grid beta-card-grid--wide">
-            {page.requirements.items.map((item) => (
-              <article class="beta-card card-surface"><p class="beta-card-text">{item}</p></article>
-            ))}
-          </div>
-        </div>
-      </section>
+    <section class="section-shell">
+      <div class="section-inner">
+        <h2 class="beta-section-label">{page.requirements.title}</h2>
+        <ul class="beta-list">
+          {page.requirements.items.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
 
-      <section class="beta-block">
-        <div class="beta-block-inner">
-          <h2 class="beta-block-title">{page.faq.title}</h2>
-          <dl class="beta-faq">
-            {page.faq.questions.map(({ q, a }) => (
-              <details class="beta-faq-item card-surface">
-                <summary class="beta-faq-question">{q}</summary>
-                <dd class="beta-faq-answer">{a}</dd>
-              </details>
-            ))}
-          </dl>
-        </div>
-      </section>
+    <section class="section-shell">
+      <div class="section-inner">
+        <h2 class="beta-section-label">{page.faq.title}</h2>
+        <dl class="beta-faq">
+          {page.faq.questions.map(({ q, a }) => (
+            <details class="beta-faq-item">
+              <summary class="beta-faq-q">{q}</summary>
+              <dd class="beta-faq-a">{a}</dd>
+            </details>
+          ))}
+        </dl>
+      </div>
+    </section>
 
-      <section class="beta-block beta-block--cta">
-        <div class="beta-block-inner beta-cta-strip">
-          <a class="beta-cta beta-cta--primary" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">{page.cta.primary.label}</a>
-          <a class="beta-cta beta-cta--secondary" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">{page.cta.secondary.label}</a>
-        </div>
-      </section>
+    <section class="section-shell beta-cta-shell">
+      <div class="section-inner beta-cta-wrap">
+        <a class="beta-cta" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">
+          {page.cta.primary.label}
+        </a>
+        <a class="beta-cta-link" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">
+          {page.cta.secondary.label} &rarr;
+        </a>
+      </div>
+    </section>
 
-      <section class="beta-block">
-        <div class="beta-block-inner">
-          <h2 class="beta-block-title">{page.privacy.title}</h2>
-          <div class="beta-privacy card-surface">
-            <p>{page.privacy.body}</p>
-            <p class="beta-privacy-contact">Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
-            <p class="beta-privacy-note">{page.privacy.deletionInfo}</p>
-          </div>
+    <section class="section-shell">
+      <div class="section-inner">
+        <div class="beta-privacy">
+          <h2 class="beta-section-label">{page.privacy.title}</h2>
+          <p>{page.privacy.body}</p>
+          <p class="beta-privacy-contact">Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
+          <p>{page.privacy.deletionInfo}</p>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   </main>
 
   <ContactLinks links={site.contacts} section={site.contactSection} />
@@ -112,52 +100,130 @@ const currentYear = new Date().getFullYear();
 
 <style>
   .inkscroller-beta-hero { overflow: visible; }
-  .inkscroller-beta-hero.hero-section::before { top: 24rem; left: 50%; transform: translateX(-50%); }
-  @media (min-width: 1024px) { .inkscroller-beta-hero.hero-section::before { top: 20rem; } }
 
-  .beta-sections { display: flex; flex-direction: column; }
-
-  .beta-block { padding: 0 1rem; }
-  .beta-block-inner { max-width: 64rem; margin: 0 auto; padding: 2.5rem 0; }
-  .beta-block + .beta-block { border-top: 1px solid var(--overlay-border); }
-
-  .beta-block--cta { background: var(--surface); }
-  .beta-block--cta + .beta-block { border-top: none; }
-  .beta-cta-strip { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; padding-top: 3rem; padding-bottom: 3rem; }
-
-  .beta-block-title {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 700;
+  .beta-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
     margin: 0 0 1.25rem;
-    color: var(--foreground);
   }
 
-  .beta-card-grid { display: grid; gap: 0.75rem; }
-  @media (min-width: 640px) { .beta-card-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px) { .beta-card-grid { grid-template-columns: repeat(3, 1fr); } .beta-card-grid--wide { grid-template-columns: repeat(2, 1fr); } }
-
-  .beta-card { padding: 1.25rem; border-radius: var(--radius); }
-  .beta-card-text { margin: 0; line-height: 1.5; color: var(--muted-foreground); }
-
-  .beta-faq { display: grid; gap: 0.75rem; margin: 0; }
-  .beta-faq-item { border-radius: var(--radius); overflow: hidden; }
-  .beta-faq-question {
-    padding: 1rem 1.25rem; font-weight: 600; cursor: pointer; list-style: none;
-    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; user-select: none;
+  .beta-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
-  .beta-faq-question::-webkit-details-marker { display: none; }
-  .beta-faq-question::after { content: "+"; font-size: 1.25rem; font-weight: 400; color: var(--muted-foreground); transition: transform 0.2s; flex-shrink: 0; }
-  .beta-faq-item[open] .beta-faq-question::after { transform: rotate(45deg); }
-  .beta-faq-answer { margin: 0; padding: 0 1.25rem 1rem; color: var(--muted-foreground); line-height: 1.5; }
+  .beta-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in oklab, var(--accent-teal) 20%, transparent);
+    background: color-mix(in oklab, var(--accent-teal) 6%, transparent);
+    color: var(--accent-teal);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
 
-  .beta-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0 2rem; border-radius: 999px; font-weight: 600; font-size: 1rem; text-decoration: none; gap: 0.5rem; transition: background-color 0.12s, border-color 0.12s, transform 0.12s; }
-  .beta-cta--primary { background: var(--primary); color: var(--primary-foreground); }
-  .beta-cta--primary:hover { opacity: 0.85; transform: translateY(-1px); }
-  .beta-cta--secondary { border: 1px solid var(--overlay-border); color: var(--foreground); }
-  .beta-cta--secondary:hover { background: var(--overlay-bg-hover); border-color: var(--foreground); transform: translateY(-1px); }
+  .beta-list {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .beta-list li {
+    padding-left: 1.25rem;
+    position: relative;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .beta-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: var(--primary);
+  }
 
-  .beta-privacy { padding: 1.25rem; border-radius: var(--radius); font-size: 0.85rem; color: var(--muted-foreground); line-height: 1.6; }
-  .beta-privacy p { margin: 0 0 0.75rem; } .beta-privacy p:last-child { margin: 0; }
+  .beta-faq { display: grid; gap: 0.5rem; margin: 0; }
+  .beta-faq-item {
+    border-radius: var(--radius);
+    border: 1px solid var(--overlay-border);
+    overflow: hidden;
+  }
+  .beta-faq-q {
+    padding: 0.875rem 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    user-select: none;
+  }
+  .beta-faq-q::-webkit-details-marker { display: none; }
+  .beta-faq-q::after {
+    content: "+";
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: var(--muted-foreground);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .beta-faq-item[open] .beta-faq-q::after { transform: rotate(45deg); }
+  .beta-faq-a {
+    margin: 0;
+    padding: 0 1rem 0.875rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .beta-cta-shell { text-align: center; }
+  .beta-cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+  .beta-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0 2rem;
+    border-radius: 999px;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: opacity 0.12s, transform 0.12s;
+  }
+  .beta-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+  .beta-cta-link {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    text-decoration: underline;
+    transition: color 0.12s;
+  }
+  .beta-cta-link:hover { color: var(--foreground); }
+
+  .beta-privacy {
+    font-size: 0.8rem;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+    max-width: 48rem;
+  }
+  .beta-privacy .beta-section-label { margin-bottom: 0.75rem; }
+  .beta-privacy p { margin: 0 0 0.5rem; } .beta-privacy p:last-child { margin: 0; }
   .beta-link { color: var(--primary); text-decoration: underline; }
 </style>

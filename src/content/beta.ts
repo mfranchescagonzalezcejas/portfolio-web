@@ -88,7 +88,7 @@ export const betaContent: Record<Locale, BetaContent> = {
         eyebrow: "Closed beta",
         title: "Join InkScroller Beta",
         description:
-          "Help shape a reading companion built for discovering, organising and following manga, manhwa and manhua — across platforms, at your own pace.",
+          "Help shape a reading companion built for discovering, organising and following manga — across platforms, at your own pace.",
       },
       scope: {
         title: "What we are validating",
