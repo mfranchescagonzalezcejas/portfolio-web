@@ -1010,17 +1010,25 @@ h4 {
   min-height: 20.5rem;
 }
 
-.featured-project-mockups .featured-mockup {
-  width: min(8.5rem, 28vw);
+.featured-mockup {
+  transition: opacity 0.3s, filter 0.3s, width 0.3s;
 }
 
 .featured-mockup-1,
 .featured-mockup-3 {
-  transform: translateY(1.1rem);
+  width: min(5.5rem, 18vw);
+  opacity: 0.3;
+  filter: blur(2px);
+  z-index: 1;
 }
 
 .featured-mockup-2 {
-  transform: translateY(-0.35rem);
+  width: min(12rem, 40vw);
+  z-index: 2;
+}
+
+.featured-project-mockups:hover .featured-mockup-2 {
+  width: min(14rem, 46vw);
 }
 
 @media (max-width: 640px) {
@@ -1032,7 +1040,10 @@ h4 {
   .featured-mockup-1,
   .featured-mockup-2,
   .featured-mockup-3 {
-    transform: none;
+    width: min(9rem, 60vw);
+    opacity: 1;
+    filter: none;
+    z-index: auto;
   }
 }
 
