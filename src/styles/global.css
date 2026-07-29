@@ -2644,8 +2644,12 @@ a {
 }
 .mockup-phone-screen {
   position: absolute;
+  top: 0.8810572687%;
+  right: 1.8691588785%;
+  bottom: 0.8810572687%;
+  left: 1.8691588785%;
   overflow: hidden;
-  border-radius: 0.75rem;
+  z-index: 0;
 }
 .mockup-phone-screen img {
   width: 100%;
@@ -2658,8 +2662,13 @@ a {
   inset: 0;
   width: 100%;
   height: 100%;
-  background: url("/inkscroller/mockups/phone-frame.png") no-repeat center / 100% 100%;
+  z-index: 1;
+  background: url("/inkscroller/mockups/phone-frame-dark.png") no-repeat
+    center / 100% 100%;
   pointer-events: none;
+}
+.light .mockup-phone-frame {
+  background-image: url("/inkscroller/mockups/phone-frame-light.png");
 }
 .carousel-phone-screen {
   display: flex;

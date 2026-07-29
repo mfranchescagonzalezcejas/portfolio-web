@@ -1111,18 +1111,23 @@ describe("InkScroller static product routes", () => {
       );
       expect(sectionText).toHaveLength(4);
       expect(sectionText[3]).toContain(beta);
+      expect(
+        document.querySelectorAll(
+          ".inkscroller-hero-device .mockup-phone .mockup-phone-screen",
+        ),
+      ).toHaveLength(1);
       if (locale === "es") {
         const carouselImgs = document.querySelectorAll(
-          ".inkscroller-carousel .carousel-phone .carousel-phone-screen img",
+          ".inkscroller-carousel .mockup-phone .mockup-phone-screen img",
         );
         expect(carouselImgs).toHaveLength(6);
       } else {
         const carouselImgs = document.querySelectorAll(
-          ".inkscroller-carousel .carousel-phone .carousel-phone-screen img",
+          ".inkscroller-carousel .mockup-phone .mockup-phone-screen img",
         );
         expect(carouselImgs).toHaveLength(0);
         const carouselPlaceholders = document.querySelectorAll(
-          ".inkscroller-carousel .carousel-phone .inkscroller-placeholder",
+          ".inkscroller-carousel .mockup-phone .inkscroller-placeholder",
         );
         expect(carouselPlaceholders).toHaveLength(6);
       }
