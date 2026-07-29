@@ -2610,9 +2610,9 @@ a {
 .inkscroller-hero-eyebrow { color: var(--primary); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin: 0; }
 .inkscroller-hero-device { display: flex; justify-content: center; align-items: center; height: 100%; }
 
-.inkscroller-hero.hero-section::before { top: 6rem; height: 22rem; }
+.inkscroller-hero.hero-section::before { top: 6rem; left: 50%; transform: translateX(-50%); width: min(22rem, 80vw); height: 20rem; }
 @media (min-width: 1024px) {
-  .inkscroller-hero.hero-section::before { top: 4rem; left: calc(50% + 16rem); width: 26rem; height: 26rem; }
+  .inkscroller-hero.hero-section::before { top: 5rem; left: calc(50% + 8rem); width: 26rem; height: 24rem; transform: translateX(-50%); }
 }
 
 .inkscroller-proof { padding: 0; }
