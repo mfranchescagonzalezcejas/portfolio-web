@@ -902,6 +902,8 @@ h4 {
 }
 
 .featured-project-copy {
+  position: relative;
+  z-index: 1;
   max-width: 42rem;
 }
 
