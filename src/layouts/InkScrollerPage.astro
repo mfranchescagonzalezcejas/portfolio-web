@@ -191,8 +191,15 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     }
 
     function nextSlide() {
-      const next = Math.min(activeIndex + 1, slides.length - 1);
-      scrollToSlide(next);
+      const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
+      const nextReal = (currentReal + 1) % totalReal;
+      scrollToSlide(cloneCount + nextReal);
+    }
+
+    function prevSlide() {
+      const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
+      const prevReal = (currentReal - 1 + totalReal) % totalReal;
+      scrollToSlide(cloneCount + prevReal);
     }
 
     function startAutoPlay() {
@@ -213,7 +220,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (!carousel.contains(e.relatedTarget)) startAutoPlay();
     });
 
-    prev?.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Math.max(0, activeIndex - 1)); });
+    prev?.addEventListener("click", () => { stopAutoPlay(); prevSlide(); });
     next?.addEventListener("click", () => { stopAutoPlay(); nextSlide(); });
     dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(cloneCount + Number(dot.dataset.index)); }));
 
@@ -221,7 +228,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
         stopAutoPlay();
-        scrollToSlide(e.key === "ArrowLeft" ? Math.max(0, activeIndex - 1) : Math.min(slides.length - 1, activeIndex + 1));
+        if (e.key === "ArrowLeft") prevSlide(); else nextSlide();
       }
     });
 
