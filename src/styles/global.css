@@ -2639,8 +2639,8 @@ a {
 .inkscroller-carousel-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 1rem 0 3.5rem; }
 .inkscroller-carousel-track::-webkit-scrollbar { display: none; }
 .inkscroller-carousel { position: relative; width: 100%; overflow: visible; }
-.inkscroller-carousel-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 1rem 0 3.5rem; scroll-padding: 0 22%; }
-.inkscroller-slide { flex: 0 0 55%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; text-align: center; padding-inline: 0.5rem; gap: 1rem; transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease; }
+.inkscroller-carousel-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 1rem 0 3.5rem; scroll-padding: 0 18%; }
+.inkscroller-slide { flex: 0 0 45%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; text-align: center; padding-inline: 0.5rem; gap: 1rem; transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease; }
 .inkscroller-slide-title { margin: 0; color: var(--foreground); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; }
 .inkscroller-slide-desc { margin: 0; max-width: 20rem; color: var(--muted-foreground); font-size: 0.9rem; line-height: 1.5; }
 .inkscroller-slide.active { transform: scale(1.05); opacity: 1; z-index: 2; position: relative; }
