@@ -1110,12 +1110,18 @@ describe("InkScroller static product routes", () => {
       expect(sectionText).toHaveLength(4);
       expect(sectionText[3]).toContain(beta);
       if (locale === "es") {
-        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .carousel-phone .carousel-phone-screen img");
+        const carouselImgs = document.querySelectorAll(
+          ".inkscroller-carousel .carousel-phone .carousel-phone-screen img",
+        );
         expect(carouselImgs).toHaveLength(6);
       } else {
-        const carouselImgs = document.querySelectorAll(".inkscroller-carousel .carousel-phone .carousel-phone-screen img");
+        const carouselImgs = document.querySelectorAll(
+          ".inkscroller-carousel .carousel-phone .carousel-phone-screen img",
+        );
         expect(carouselImgs).toHaveLength(0);
-        const carouselPlaceholders = document.querySelectorAll(".inkscroller-carousel .carousel-phone .inkscroller-placeholder");
+        const carouselPlaceholders = document.querySelectorAll(
+          ".inkscroller-carousel .carousel-phone .inkscroller-placeholder",
+        );
         expect(carouselPlaceholders).toHaveLength(6);
       }
     },
@@ -1123,17 +1129,28 @@ describe("InkScroller static product routes", () => {
 });
 
 describe("InkScroller carousel loop", () => {
-  it("keeps leading clones and seamless boundary wraps in circular order", () => {
+  it("uses a transform track with hidden edge clones instead of scroll rebases", () => {
     const page = readFileSync(inkScrollerPagePath, "utf8");
 
+    expect(page).toContain("const cloneSlide = (slide) => {");
+    expect(page).toContain('clone.setAttribute("aria-hidden", "true");');
     expect(page).toContain(
-      "track?.prepend(...origSlides.slice(-cloneCount).map((slide) => slide.cloneNode(true)));",
+      "track?.prepend(...origSlides.slice(-cloneCount).map(cloneSlide));",
     );
-    // Next-seamless: instantly reposition to leading clone, then animate one step right
-    expect(page).toContain("activeIndex = cloneCount - 1;");
-    expect(page).toContain("scrollToSlide(activeIndex + 1);");
-    // Prev-seamless: instantly reposition to trailing clone, then animate one step left
-    expect(page).toContain("activeIndex = cloneCount + totalReal;");
-    expect(page).toContain("scrollToSlide(activeIndex - 1);");
+    expect(page).toContain("createCarouselQueue(totalReal)");
+    expect(page).toContain(
+      "const preview = (viewport.clientWidth - slideWidth) / 2;",
+    );
+    expect(page).toContain(
+      "const slideWidth = parseFloat(getComputedStyle(slides[0]).width) || viewport.clientWidth;",
+    );
+    expect(page).toContain(
+      "track.style.transform = `translate3d(${preview - index * slideWidth}px, 0, 0)`;",
+    );
+    expect(page).toContain('event.propertyName === "transform"');
+    expect(page).toContain("new ResizeObserver(() => {");
+    expect(page).toContain('dot.setAttribute("aria-current", "true");');
+    expect(page).not.toContain("scrollLeft");
+    expect(page).not.toContain("scroll-snap");
   });
 });

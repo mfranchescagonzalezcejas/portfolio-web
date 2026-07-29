@@ -12,10 +12,10 @@ const experienceSource = readFileSync(
   "utf8",
 );
 
-const mobileHeaderStart = globalCss.indexOf("@media (max-width: 767px)");
-const mobileHeaderEnd = globalCss.indexOf(
-  ".header-lang-toggle",
-  mobileHeaderStart,
+const compactHeaderStart = globalCss.indexOf("@media (max-width: 879px)");
+const compactHeaderEnd = globalCss.indexOf(
+  "@media (max-width: 639px)",
+  compactHeaderStart,
 );
 const heroGlowStart = globalCss.indexOf(".hero-section::before");
 const heroGlowEnd = globalCss.indexOf(".hero-content", heroGlowStart);
@@ -54,30 +54,32 @@ describe("responsive CSS contract", () => {
     expect(globalCss).not.toContain("var(--overlay-bg) 150%");
   });
 
-  it("keeps mobile header containment and CTA hiding at the mobile breakpoint", () => {
+  it("keeps the header compact through tablet portrait while retaining its CTA", () => {
     expect(
-      mobileHeaderStart,
-      "mobile header media query start marker should exist",
+      compactHeaderStart,
+      "compact header media query start marker should exist",
     ).toBeGreaterThanOrEqual(0);
     expect(
-      mobileHeaderEnd,
-      "mobile header end marker should be found after the start marker",
-    ).toBeGreaterThan(mobileHeaderStart);
+      compactHeaderEnd,
+      "compact header end marker should be found after the start marker",
+    ).toBeGreaterThan(compactHeaderStart);
 
-    const mobileHeaderBlock = globalCss.slice(
-      mobileHeaderStart,
-      mobileHeaderEnd,
+    const compactHeaderBlock = globalCss.slice(
+      compactHeaderStart,
+      compactHeaderEnd,
     );
 
-    expect(mobileHeaderBlock).toContain(".header-shell");
-    expect(mobileHeaderBlock).toContain("flex-wrap: wrap;");
-    expect(mobileHeaderBlock).toContain("max-width: calc(100vw - 2rem);");
-    expect(mobileHeaderBlock).toContain("overflow: hidden;");
-    expect(mobileHeaderBlock).toContain(".header-primary-nav");
-    expect(mobileHeaderBlock).toContain("flex: 0 0 100%;");
-    expect(mobileHeaderBlock).toContain("overflow-x: auto;");
-    expect(mobileHeaderBlock).toContain(".header-shell .header-contact-cta");
-    expect(mobileHeaderBlock).toContain("display: none;");
+    expect(compactHeaderBlock).toContain(".header-shell");
+    expect(compactHeaderBlock).toContain("flex-wrap: wrap;");
+    expect(compactHeaderBlock).toContain("max-width: calc(100vw - 2rem);");
+    expect(compactHeaderBlock).toContain("overflow: hidden;");
+    expect(compactHeaderBlock).toContain(".header-primary-nav");
+    expect(compactHeaderBlock).toContain("flex: 0 0 100%;");
+    expect(compactHeaderBlock).toContain("overflow-x: auto;");
+    expect(compactHeaderBlock).not.toContain(".header-shell .header-contact-cta");
+    expect(globalCss).toContain(
+      "@media (max-width: 639px) {\n  .header-shell .header-contact-cta {\n    display: none;",
+    );
     expect(
       globalCss.match(/\.header-contact-cta \{\s+display: none;\s+\}/g),
     ).toHaveLength(1);
@@ -117,6 +119,30 @@ describe("responsive CSS contract", () => {
     );
     expect(globalCss).toContain("text-decoration: underline;");
     expect(globalCss).not.toContain(".hero-cta-social");
+  });
+
+  it("keeps InkScroller dots visually small with 24px hit targets", () => {
+    const dotStart = globalCss.lastIndexOf(".inkscroller-dot {");
+    const dotEnd = globalCss.indexOf(".inkscroller-beta", dotStart);
+    const dotBlock = globalCss.slice(dotStart, dotEnd);
+
+    expect(dotBlock).toContain("width: 1.5rem;");
+    expect(dotBlock).toContain("height: 1.5rem;");
+    expect(dotBlock).toContain("min-width: 1.5rem;");
+    expect(dotBlock).toContain("min-height: 1.5rem;");
+    expect(dotBlock).toContain(".inkscroller-dot::before");
+    expect(dotBlock).toContain("width: 0.75rem;");
+    expect(dotBlock).toContain("height: 0.75rem;");
+    expect(dotBlock).toContain(".inkscroller-dot.active::before");
+  });
+
+  it("keeps symmetric InkScroller screenshot previews inside the carousel", () => {
+    expect(globalCss).toContain(
+      "--inkscroller-preview: clamp(1.25rem, 7vw, 5rem);",
+    );
+    expect(globalCss).toContain(
+      "flex: 0 0 calc(100% - (2 * var(--inkscroller-preview)));",
+    );
   });
 
   it("keeps Learning project cards symmetric", () => {

@@ -69,31 +69,33 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     </section>
     <section class="inkscroller-carousel-section" aria-label="Product carousel">
       <div id="inkscroller-carousel" class="inkscroller-carousel" tabindex="0" role="region" aria-label="Product screenshots carousel">
-        <div class="inkscroller-carousel-track">
-          {content.media.map((entry, i) => (
-            <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
-              <h3 class="inkscroller-slide-title">{entry.title}</h3>
-              <div class="inkscroller-slide-device">
-                <div class="carousel-phone">
-                  <div class="carousel-phone-notch"></div>
-                  <div class="carousel-phone-screen">
-                    {entry.kind === "capture" ? (
-                      <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
-                    ) : (
-                      <div class="inkscroller-placeholder"><strong>{entry.label}</strong><p>{entry.disclosure}</p></div>
-                    )}
+        <div class="inkscroller-carousel-viewport">
+          <div class="inkscroller-carousel-track">
+            {content.media.map((entry) => (
+              <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
+                <h3 class="inkscroller-slide-title">{entry.title}</h3>
+                <div class="inkscroller-slide-device">
+                  <div class="carousel-phone">
+                    <div class="carousel-phone-notch"></div>
+                    <div class="carousel-phone-screen">
+                      {entry.kind === "capture" ? (
+                        <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
+                      ) : (
+                        <div class="inkscroller-placeholder"><strong>{entry.label}</strong><p>{entry.disclosure}</p></div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <p class="inkscroller-slide-desc">{entry.description}</p>
-            </article>
-          ))}
+                <p class="inkscroller-slide-desc">{entry.description}</p>
+              </article>
+            ))}
+          </div>
         </div>
         <button class="inkscroller-arrow inkscroller-prev" aria-label="Previous slide" type="button">&#8592;</button>
         <button class="inkscroller-arrow inkscroller-next" aria-label="Next slide" type="button">&#8594;</button>
         <nav class="inkscroller-dots" aria-label="Carousel navigation">
           {content.media.map((entry, i) => (
-            <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-label={`Go to slide ${i + 1}: ${entry.title}`} type="button" data-index={i}></button>
+            <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-current={i === 0 ? "true" : undefined} aria-label={`Go to slide ${i + 1}: ${entry.title}`} type="button" data-index={i}></button>
           ))}
         </nav>
       </div>
@@ -113,119 +115,108 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
   </footer>
 </BaseLayout>
 
-<script is:inline>
+<script>
+  // @ts-nocheck
+  import { createCarouselQueue } from "../lib/carousel-navigation";
+
   const carousel = document.getElementById("inkscroller-carousel");
   if (carousel) {
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const track = carousel.querySelector(".inkscroller-carousel-track");
+    const viewport = carousel.querySelector(".inkscroller-carousel-viewport");
     const prev = carousel.querySelector(".inkscroller-prev");
     const next = carousel.querySelector(".inkscroller-next");
     const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot"));
     let timer = null;
-    let activeIndex = 0;
 
-    // Build slide list with clones for infinite scroll
+    // One edge clone per side keeps the wrap animation continuous.
     const origSlides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
-    const cloneCount = 3;
-    // Prepend clones of last slides in their original order.
-    track?.prepend(...origSlides.slice(-cloneCount).map((slide) => slide.cloneNode(true)));
-    // Append clones of first slides
-    for (let i = 0; i < cloneCount; i++) {
-      const clone = origSlides[i].cloneNode(true);
-      track?.appendChild(clone);
-    }
+    const cloneCount = 1;
+    const cloneSlide = (slide) => {
+      const clone = slide.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      return clone;
+    };
+    track?.prepend(...origSlides.slice(-cloneCount).map(cloneSlide));
+    track?.append(...origSlides.slice(0, cloneCount).map(cloneSlide));
     const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
     const totalReal = origSlides.length;
-    const totalClones = slides.length;
-    let isJumping = false;
+    let isAnimating = false;
+    const navigation = createCarouselQueue(totalReal);
+    let physicalIndex = cloneCount;
+    let activeAction = null;
+    let settleTimer = null;
 
-    // Start at first real slide
-    if (track) {
-      track.style.scrollSnapType = "none";
-      const firstSlide = slides[cloneCount];
-      const trackRect = track.getBoundingClientRect();
-      const slideRect = firstSlide.getBoundingClientRect();
-      const centerOffset = (trackRect.width - slideRect.width) / 2;
-      track.scrollLeft = track.scrollLeft + (slideRect.left - trackRect.left) - centerOffset;
-      requestAnimationFrame(() => { track.style.scrollSnapType = ""; });
+    function setPosition(index, animate) {
+      if (!track) return;
+      track.classList.toggle("is-resetting", !animate);
+      const slideWidth = parseFloat(getComputedStyle(slides[0]).width) || viewport.clientWidth;
+      const preview = (viewport.clientWidth - slideWidth) / 2;
+      track.style.transform = `translate3d(${preview - index * slideWidth}px, 0, 0)`;
+      physicalIndex = index;
+      if (!animate) void track.offsetWidth;
+      track.classList.remove("is-resetting");
     }
 
-    function getSlideIndex() {
-      let bestIdx = 0;
-      let bestRatio = 0;
-      slides.forEach((slide, i) => {
-        const rect = slide.getBoundingClientRect();
-        const trackRect = track.getBoundingClientRect();
-        const overlap = Math.min(rect.right, trackRect.right) - Math.max(rect.left, trackRect.left);
-        const ratio = overlap / rect.width;
-        if (ratio > bestRatio) { bestRatio = ratio; bestIdx = i; }
+    function updateActive(index) {
+      origSlides.forEach((slide, slideIndex) => slide.classList.toggle("active", slideIndex === index));
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === index;
+        dot.classList.toggle("active", active);
+        if (active) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
       });
-      return bestIdx;
     }
 
-    function updateActive() {
-      const idx = getSlideIndex();
-      slides.forEach((s, i) => s.classList.toggle("active", i === idx));
-      // Map to real slide for dots
-      const realIdx = ((idx - cloneCount) % totalReal + totalReal) % totalReal;
-      dots.forEach((d, i) => d.classList.toggle("active", i === realIdx));
-      activeIndex = idx;
+    function physicalTarget(action) {
+      if (action.type === "index") return cloneCount + action.index;
+      if (action.direction === 1 && navigation.current() === totalReal - 1) return totalReal + cloneCount;
+      if (action.direction === -1 && navigation.current() === 0) return 0;
+      return physicalIndex + action.direction;
     }
 
-    function scrollToSlide(index) {
-      if (slides[index] && track) {
-        isJumping = true;
-        const trackRect = track.getBoundingClientRect();
-        const slideRect = slides[index].getBoundingClientRect();
-        const centerOffset = (trackRect.width - slideRect.width) / 2;
-        const targetScroll = track.scrollLeft + (slideRect.left - trackRect.left) - centerOffset;
-        track.scrollTo({ left: targetScroll, behavior: "smooth" });
-        // Let animation settle then check loop for teleport
-        setTimeout(() => { isJumping = false; checkLoop(); }, 400);
+    function settleNavigation() {
+      if (!activeAction) return;
+      clearTimeout(settleTimer);
+      const action = activeAction;
+      activeAction = null;
+      navigation.settle(action.index);
+      if (physicalIndex === 0 || physicalIndex === totalReal + cloneCount) {
+        setPosition(cloneCount + action.index, false);
       }
+      updateActive(action.index);
+      isAnimating = false;
+      runNavigation();
     }
 
-    function checkLoop() {
-      if (isJumping) return;
-      const idx = getSlideIndex();
-      if (idx < cloneCount || idx >= cloneCount + totalReal) {
-        isJumping = true;
-        // Map clone index to correct real slide index.
-        const target = idx < cloneCount
-          ? cloneCount + (totalReal - cloneCount + idx) // leading clones: preserve real index
-          : idx - totalReal;                   // trailing clones: subtract offset
-        const t = slides[target];
-        // Use offsetLeft (always correct, unlike getBoundingClientRect which breaks when target is off-screen)
-        const leftEdge = t.offsetLeft - track.offsetLeft;
-        const centerOffset = (track.clientWidth - t.offsetWidth) / 2;
-        track.scrollLeft = leftEdge - centerOffset;
-        updateActive();
-        isJumping = false;
+    function runNavigation() {
+      if (isAnimating || !track) return;
+      const action = navigation.take();
+      if (!action) return;
+
+      isAnimating = true;
+      activeAction = action;
+      setPosition(physicalTarget(action), !prefersReducedMotion.matches);
+      if (prefersReducedMotion.matches) {
+        settleNavigation();
+      } else {
+        settleTimer = setTimeout(settleNavigation, 500);
       }
     }
 
     function nextSlide() {
-      const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
-      if (currentReal === totalReal - 1) {
-        // Seamless wrap: instantly reposition to leading clone, then animate one step right
-        activeIndex = cloneCount - 1;
-        track.scrollTo({ left: slides[activeIndex].offsetLeft, behavior: "auto" });
-        scrollToSlide(activeIndex + 1);
-      } else {
-        scrollToSlide(activeIndex + 1);
-      }
+      navigation.enqueueStep(1);
+      runNavigation();
     }
 
     function prevSlide() {
-      const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
-      if (currentReal === 0) {
-        // Seamless wrap: instantly reposition to trailing clone, then animate one step left
-        activeIndex = cloneCount + totalReal;
-        track.scrollTo({ left: slides[activeIndex].offsetLeft, behavior: "auto" });
-        scrollToSlide(activeIndex - 1);
-      } else {
-        scrollToSlide(activeIndex - 1);
-      }
+      navigation.enqueueStep(-1);
+      runNavigation();
+    }
+
+    function goToSlide(index) {
+      navigation.enqueueIndex(index);
+      runNavigation();
     }
 
     function startAutoPlay() {
@@ -237,7 +228,18 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (timer) { clearInterval(timer); timer = null; }
     }
 
-    track?.addEventListener("scroll", () => { updateActive(); checkLoop(); });
+    track?.addEventListener("transitionend", (event) => {
+      if (event.target === track && event.propertyName === "transform") settleNavigation();
+    });
+
+    new ResizeObserver(() => {
+      if (activeAction) navigation.retry(activeAction);
+      clearTimeout(settleTimer);
+      activeAction = null;
+      isAnimating = false;
+      setPosition(cloneCount + navigation.current(), false);
+      runNavigation();
+    }).observe(carousel);
 
     carousel.addEventListener("mouseenter", stopAutoPlay);
     carousel.addEventListener("focusin", stopAutoPlay);
@@ -248,7 +250,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     prev?.addEventListener("click", () => { stopAutoPlay(); prevSlide(); });
     next?.addEventListener("click", () => { stopAutoPlay(); nextSlide(); });
-    dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(cloneCount + Number(dot.dataset.index)); }));
+    dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); goToSlide(Number(dot.dataset.index)); }));
 
     carousel.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -258,11 +260,9 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       }
     });
 
-    updateActive();
+    setPosition(physicalIndex, false);
+    updateActive(0);
     if (!prefersReducedMotion.matches) startAutoPlay();
-
-    // Fix initial active state after layout settles
-    setTimeout(updateActive, 200);
   }
 
   // Hero image auto-cycle
