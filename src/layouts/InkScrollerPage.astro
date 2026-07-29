@@ -191,10 +191,11 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (idx < cloneCount || idx >= cloneCount + totalReal) {
         isJumping = true;
         const target = idx < cloneCount ? idx + totalReal : idx - totalReal;
-        track.style.scrollBehavior = "auto";
-        track.scrollLeft = slides[target].offsetLeft;
+        track.style.scrollSnapType = "none";
+        const t = slides[target];
+        track.scrollLeft = t.offsetLeft - track.offsetLeft;
         requestAnimationFrame(() => {
-          track.style.scrollBehavior = "";
+          track.style.scrollSnapType = "";
           isJumping = false;
           updateActive();
         });
