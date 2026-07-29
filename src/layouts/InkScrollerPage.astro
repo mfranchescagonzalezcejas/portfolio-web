@@ -72,10 +72,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
         <div class="inkscroller-carousel-track">
           {content.media.map((entry, i) => (
             <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
-              <div class="inkscroller-slide-copy">
-                <h3 class="inkscroller-slide-title">{entry.title}</h3>
-                <p class="inkscroller-slide-desc">{entry.description}</p>
-              </div>
+              <h3 class="inkscroller-slide-title">{entry.title}</h3>
               <div class="inkscroller-slide-device">
                 <div class="carousel-phone">
                   <div class="carousel-phone-notch"></div>
@@ -88,6 +85,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
                   </div>
                 </div>
               </div>
+              <p class="inkscroller-slide-desc">{entry.description}</p>
             </article>
           ))}
         </div>
