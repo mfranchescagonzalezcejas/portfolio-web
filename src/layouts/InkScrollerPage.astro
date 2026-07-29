@@ -131,7 +131,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     // One edge clone per side keeps the wrap animation continuous.
     const origSlides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
-    const cloneCount = 1;
+    const cloneCount = 3;
     const cloneSlide = (slide) => {
       const clone = slide.cloneNode(true);
       clone.setAttribute("aria-hidden", "true");
@@ -170,8 +170,6 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     function physicalTarget(action) {
       if (action.type === "index") return cloneCount + action.index;
-      if (action.direction === 1 && navigation.current() === totalReal - 1) return totalReal + cloneCount;
-      if (action.direction === -1 && navigation.current() === 0) return 0;
       return physicalIndex + action.direction;
     }
 
@@ -181,7 +179,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       const action = activeAction;
       activeAction = null;
       navigation.settle(action.index);
-      if (physicalIndex === 0 || physicalIndex === totalReal + cloneCount) {
+      if (physicalIndex < cloneCount || physicalIndex >= totalReal + cloneCount) {
         setPosition(cloneCount + action.index, false);
       }
       updateActive(action.index);

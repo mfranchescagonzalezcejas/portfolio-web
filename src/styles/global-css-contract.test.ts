@@ -136,13 +136,11 @@ describe("responsive CSS contract", () => {
     expect(dotBlock).toContain(".inkscroller-dot.active::before");
   });
 
-  it("keeps symmetric InkScroller screenshot previews inside the carousel", () => {
-    expect(globalCss).toContain(
-      "--inkscroller-preview: clamp(1.25rem, 7vw, 5rem);",
-    );
-    expect(globalCss).toContain(
-      "flex: 0 0 calc(100% - (2 * var(--inkscroller-preview)));",
-    );
+  it("keeps InkScroller slides at 35% with active scale 1.05 and inactive scale 0.92", () => {
+    expect(globalCss).toContain(".inkscroller-slide {\n  flex: 0 0 35%;");
+    expect(globalCss).toContain(".inkscroller-slide.active {\n  transform: scale(1.05);");
+    expect(globalCss).toContain(".inkscroller-slide:not(.active) {\n  transform: scale(0.92);");
+    expect(globalCss).toContain(".inkscroller-slide:not(.active) {\n  transform: scale(0.92);\n  opacity: 0.45;");
   });
 
   it("keeps Learning project cards symmetric", () => {

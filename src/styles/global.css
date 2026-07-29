@@ -2770,7 +2770,6 @@ a {
   position: relative;
   width: 100%;
   padding-inline: 1.5rem;
-  --inkscroller-preview: clamp(1.25rem, 7vw, 5rem);
 }
 .inkscroller-carousel-viewport {
   overflow: hidden;
@@ -2787,7 +2786,7 @@ a {
   transition: none;
 }
 .inkscroller-slide {
-  flex: 0 0 calc(100% - (2 * var(--inkscroller-preview)));
+  flex: 0 0 35%;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -2798,7 +2797,8 @@ a {
   transition:
     transform 0.3s ease,
     opacity 0.3s ease,
-    box-shadow 0.3s ease;
+    box-shadow 0.3s ease,
+    filter 0.3s ease;
 }
 .inkscroller-slide-title {
   margin: 0;
