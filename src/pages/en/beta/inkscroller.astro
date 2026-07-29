@@ -1,0 +1,176 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../sections/header/SiteHeader";
+import { siteContentByLocale } from "../../../content/site";
+import { betaContent } from "../../../content/beta";
+const locale = "en";
+const site = siteContentByLocale[locale];
+const { inkscroller: page, seo } = betaContent[locale];
+---
+
+<BaseLayout locale={locale} site={site} pageSeo={seo}>
+  <div id="top"></div>
+  <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-beta">Skip to content</a>
+  <SiteHeader
+    currentLocale={site.locale}
+    isHome={false}
+    navItems={site.nav}
+    languageSwitcher={site.languageSwitcher}
+    header={site.header}
+    client:load
+  />
+  <main id="inkscroller-beta" class="section-shell">
+    <section class="section-inner inkscroller-beta-hero">
+      <span class="inkscroller-hero-eyebrow">{page.hero.eyebrow}</span>
+      <h1 class="section-title">{page.hero.title}</h1>
+      <p class="hero-copy">{page.hero.description}</p>
+    </section>
+
+    <section class="section-inner inkscroller-beta-section">
+      <h2 class="inkscroller-beta-heading">{page.scope.title}</h2>
+      <ul class="inkscroller-beta-list">
+        {page.scope.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="section-inner inkscroller-beta-section">
+      <h2 class="inkscroller-beta-heading">{page.requirements.title}</h2>
+      <ul class="inkscroller-beta-list">
+        {page.requirements.items.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+
+    <section class="section-inner inkscroller-beta-section">
+      <h2 class="inkscroller-beta-heading">{page.faq.title}</h2>
+      <dl class="inkscroller-beta-faq">
+        {page.faq.questions.map(({ q, a }) => (
+          <div class="inkscroller-beta-faq-item">
+            <dt>{q}</dt>
+            <dd>{a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="section-inner inkscroller-beta-section inkscroller-beta-cta-section">
+      <a class="inkscroller-beta-cta inkscroller-beta-cta-primary" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">
+        {page.cta.primary.label} &rarr;
+      </a>
+      <a class="inkscroller-beta-cta inkscroller-beta-cta-secondary" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">
+        {page.cta.secondary.label} &rarr;
+      </a>
+    </section>
+
+    <section class="section-inner inkscroller-beta-section inkscroller-beta-privacy">
+      <h2 class="inkscroller-beta-heading">{page.privacy.title}</h2>
+      <p>{page.privacy.body}</p>
+      <p>Email: <a class="inkscroller-beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
+      <p>{page.privacy.deletionInfo}</p>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .inkscroller-beta-hero {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+  }
+  .inkscroller-beta-section {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-top: 1px solid var(--overlay-border);
+  }
+  .inkscroller-beta-heading {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 1rem;
+  }
+  .inkscroller-beta-list {
+    display: grid;
+    gap: 0.75rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  .inkscroller-beta-list li {
+    padding-left: 1.25rem;
+    position: relative;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .inkscroller-beta-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.375rem;
+    height: 0.375rem;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+  .inkscroller-beta-faq {
+    display: grid;
+    gap: 1.25rem;
+    margin: 0;
+  }
+  .inkscroller-beta-faq-item dt {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  .inkscroller-beta-faq-item dd {
+    margin: 0;
+    color: var(--muted-foreground);
+    line-height: 1.5;
+  }
+  .inkscroller-beta-cta-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .inkscroller-beta-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    gap: 0.375rem;
+    transition: background-color 0.12s, border-color 0.12s, transform 0.12s;
+  }
+  .inkscroller-beta-cta-primary {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .inkscroller-beta-cta-primary:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+  }
+  .inkscroller-beta-cta-secondary {
+    border: 1px solid var(--overlay-border);
+    color: var(--foreground);
+  }
+  .inkscroller-beta-cta-secondary:hover {
+    background: var(--overlay-bg-hover);
+    border-color: var(--foreground);
+    transform: translateY(-1px);
+  }
+  .inkscroller-beta-privacy {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+  }
+  .inkscroller-beta-privacy h2 {
+    color: var(--foreground);
+    font-size: 1rem;
+  }
+  .inkscroller-beta-link {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+</style>

@@ -1154,3 +1154,56 @@ describe("InkScroller carousel loop", () => {
     expect(page).not.toContain("scroll-snap");
   });
 });
+
+describe("Beta index routes", () => {
+  it.each([
+    {
+      path: "dist/en/beta/index.html",
+      locale: "en",
+      title: "Beta Programs | DevDigi",
+      programName: "InkScroller",
+      cta: "Learn more",
+    },
+    {
+      path: "dist/es/beta/index.html",
+      locale: "es",
+      title: "Programas Beta | DevDigi",
+      programName: "InkScroller",
+      cta: "Más información",
+    },
+  ])("renders the $locale beta index with program listing", ({ path, locale, title, programName, cta }) => {
+    const html = readHtml(path);
+    const document = new DOMParser().parseFromString(html, "text/html");
+
+    expect(document.documentElement.lang).toBe(locale);
+    expect(document.title).toBe(title);
+    expect(document.querySelector(".beta-program-name")?.textContent).toBe(programName);
+    expect(document.querySelector(".beta-cta-primary")?.textContent?.trim()).toBe(cta);
+    expect(document.querySelector("header")).not.toBeNull();
+  });
+});
+
+describe("InkScroller beta landing routes", () => {
+  it.each([
+    {
+      path: "dist/en/beta/inkscroller/index.html",
+      locale: "en",
+      eyebrow: "Closed beta",
+      heading: "Join InkScroller Beta",
+    },
+    {
+      path: "dist/es/beta/inkscroller/index.html",
+      locale: "es",
+      eyebrow: "Beta cerrada",
+      heading: "Únete a la beta de InkScroller",
+    },
+  ])("renders the $locale InkScroller beta landing", ({ path, locale, eyebrow, heading }) => {
+    const html = readHtml(path);
+    const document = new DOMParser().parseFromString(html, "text/html");
+
+    expect(document.documentElement.lang).toBe(locale);
+    expect(document.querySelector(".inkscroller-hero-eyebrow")?.textContent).toBe(eyebrow);
+    expect(document.querySelector("h1")?.textContent).toBe(heading);
+    expect(document.querySelector("header")).not.toBeNull();
+  });
+});
