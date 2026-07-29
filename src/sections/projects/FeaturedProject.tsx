@@ -65,15 +65,6 @@ export default function FeaturedProject({
               <h3 className="featured-project-title">
                 <span className="featured-project-title-icon">
                   <img
-                    src="/inkscroller/icons/background-v1.png"
-                    alt=""
-                    className="featured-icon-bg"
-                    aria-hidden="true"
-                    loading="lazy"
-                    width="1024"
-                    height="1024"
-                  />
-                  <img
                     src="/inkscroller/icons/foreground-v1.png"
                     alt=""
                     className="featured-icon-fg"

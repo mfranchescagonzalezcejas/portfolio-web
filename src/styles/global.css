@@ -938,18 +938,12 @@ h4 {
   overflow: hidden;
 }
 
-.featured-icon-bg,
 .featured-icon-fg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
-
-.featured-icon-fg {
-  object-fit: contain;
-  padding: 0.45rem;
 }
 
 .featured-project-description {
