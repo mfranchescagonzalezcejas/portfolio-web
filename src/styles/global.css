@@ -2608,7 +2608,7 @@ a {
 .carousel-phone-screen img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
 .inkscroller-hero { display: grid; gap: 1rem; align-items: center; position: relative; isolation: isolate; }
-.inkscroller-hero::before { content: ""; position: absolute; top: 4rem; left: 50%; z-index: 0; width: min(18rem, 70vw); height: 20rem; transform: translateX(-50%); border-radius: 9999px; opacity: 0.5; pointer-events: none; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--primary) 18%, transparent) 0%, color-mix(in oklab, var(--accent-blue) 10%, transparent) 42%, transparent 72%); }
+.inkscroller-hero::before { content: ""; position: absolute; top: 4rem; right: -2rem; z-index: 0; width: min(18rem, 70vw); height: 20rem; border-radius: 9999px; opacity: 0.5; pointer-events: none; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--primary) 18%, transparent) 0%, color-mix(in oklab, var(--accent-blue) 10%, transparent) 42%, transparent 72%); }
 .inkscroller-hero > * { position: relative; z-index: 1; }
 .inkscroller-hero-eyebrow { color: var(--primary); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin: 0; }
 .inkscroller-hero h1 { max-width: 16ch; font: 700 clamp(2.5rem, 8vw, 5rem)/1 var(--font-display); margin: 0.75rem 0 0; }
@@ -2652,7 +2652,7 @@ a {
 
 @media (min-width: 48rem) {
   .inkscroller-hero { grid-template-columns: 1.25fr 14rem; gap: 1rem; }
-  .inkscroller-hero::before { top: 6rem; left: calc(50% + 8rem); width: 24rem; height: 26rem; opacity: 0.55; }
+  .inkscroller-hero::before { top: 2rem; right: 2rem; width: 22rem; height: 24rem; opacity: 0.55; }
   .inkscroller-slide { flex-direction: row; text-align: left; gap: 2rem; padding-inline: 3rem; }
   .inkscroller-slide-copy { flex: 1; max-width: 24rem; }
   .inkscroller-slide-desc { max-width: 28rem; }
