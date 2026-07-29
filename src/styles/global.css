@@ -2620,7 +2620,7 @@ a {
 .inkscroller-proof li { display: inline-flex; align-items: center; padding: 0.4rem 0.85rem; border-radius: 999px; border: 1px solid color-mix(in oklab, var(--accent-teal) 20%, transparent); background: color-mix(in oklab, var(--accent-teal) 6%, transparent); color: var(--accent-teal); font-family: var(--font-mono); font-size: 0.8rem; font-weight: 500; }
 
 .inkscroller-carousel-section { padding: 0; }
-.inkscroller-carousel { position: relative; width: 100%; }
+.inkscroller-carousel { position: relative; width: 100%; padding-inline: 1.5rem; }
 .inkscroller-carousel-track { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding: 1rem 0 3.5rem; }
 .inkscroller-carousel-track::-webkit-scrollbar { display: none; }
 .inkscroller-slide { flex: 0 0 100%; scroll-snap-align: start; display: flex; flex-direction: column; align-items: center; text-align: center; padding-inline: 0.5rem; gap: 1.5rem; }
@@ -2649,8 +2649,8 @@ a {
 .inkscroller-placeholder p { color: var(--device-overlay-text); font-family: var(--font-mono); font-size: 0.58rem; margin: 0; }
 
 @media (min-width: 48rem) {
-  .inkscroller-hero { grid-template-columns: 1fr 14rem; gap: 3rem; }
-  .inkscroller-slide { flex-direction: row; text-align: left; gap: 3rem; padding-inline: 2rem; }
+  .inkscroller-hero { grid-template-columns: 1fr 14rem; gap: 1.5rem; }
+  .inkscroller-slide { flex-direction: row; text-align: left; gap: 2rem; padding-inline: 3rem; }
   .inkscroller-slide-copy { flex: 1; max-width: 24rem; }
   .inkscroller-slide-desc { max-width: 28rem; }
 }
