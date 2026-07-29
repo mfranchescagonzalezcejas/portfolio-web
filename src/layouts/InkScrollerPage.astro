@@ -177,11 +177,14 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     function scrollToSlide(index) {
       if (slides[index] && track) {
+        isJumping = true;
         const trackRect = track.getBoundingClientRect();
         const slideRect = slides[index].getBoundingClientRect();
         const centerOffset = (trackRect.width - slideRect.width) / 2;
         const targetScroll = track.scrollLeft + (slideRect.left - trackRect.left) - centerOffset;
         track.scrollTo({ left: targetScroll, behavior: "smooth" });
+        // Let animation settle before allowing checkLoop to teleport
+        setTimeout(() => { isJumping = false; }, 400);
       }
     }
 
@@ -191,14 +194,13 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (idx < cloneCount || idx >= cloneCount + totalReal) {
         isJumping = true;
         const target = idx < cloneCount ? idx + totalReal : idx - totalReal;
-        track.style.scrollSnapType = "none";
         const t = slides[target];
-        track.scrollLeft = t.offsetLeft - track.offsetLeft;
-        requestAnimationFrame(() => {
-          track.style.scrollSnapType = "";
-          isJumping = false;
-          updateActive();
-        });
+        const trackRect = track.getBoundingClientRect();
+        const slideRect = t.getBoundingClientRect();
+        const centerOffset = (trackRect.width - slideRect.width) / 2;
+        track.scrollLeft = track.scrollLeft + (slideRect.left - trackRect.left) - centerOffset;
+        updateActive();
+        isJumping = false;
       }
     }
 
