@@ -2925,9 +2925,21 @@ a {
 }
 
 .inkscroller-beta-hero.hero-section::before {
-  top: 22rem;
+  display: none;
+}
+
+.hero-glow {
+  position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  z-index: 0;
+  width: min(22rem, 88vw);
+  height: 24rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 18%, transparent);
+  filter: blur(44px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
 }
 
 .beta-hero-layout {
@@ -2959,6 +2971,10 @@ a {
   color: var(--muted-foreground);
   font-family: var(--font-mono);
   font-size: 0.75rem;
+}
+
+.beta-hero-device {
+  position: relative;
 }
 
 .beta-hero-device .carousel-phone {
@@ -3161,13 +3177,14 @@ a {
     gap: 4rem;
   }
 
-  .inkscroller-beta-hero.hero-section::before {
-    top: 9rem;
-    left: calc(50% + clamp(18rem, 24vw, 29rem));
+  .beta-hero-device {
+    position: relative;
+    justify-content: center;
   }
 
-  .beta-hero-device {
-    justify-content: center;
+  .beta-hero-device .hero-glow {
+    width: 22rem;
+    height: 24rem;
   }
 }
 
