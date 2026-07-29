@@ -2604,9 +2604,15 @@ a {
 
 .carousel-phone { position: relative; width: 14rem; max-width: 100%; height: 28.5rem; border-radius: 2rem; border: 1px solid var(--overlay-border); background: linear-gradient(180deg, var(--surface-elevated), var(--surface)); padding: 0.5rem; box-shadow: var(--shadow-elevated); flex-shrink: 0; }
 .carousel-phone-notch { position: absolute; left: 50%; z-index: 2; transform: translateX(-50%); border-radius: 999px; background: var(--device-notch); top: 0.625rem; width: 3.5rem; height: 0.875rem; }
-.carousel-phone-screen { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border-radius: 1.35rem; background: var(--device-screen-start); }
-.carousel-phone-screen img { width: 100%; height: 100%; object-fit: contain; display: block; transition: opacity 0.3s ease; }
-.carousel-phone-screen img.hero-fade { opacity: 0; }
+.carousel-phone-screen { display: flex; height: 100%; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; border-radius: 1.35rem; background: var(--device-screen-start); perspective: 600px; }
+.carousel-phone-screen img { width: 100%; height: 100%; object-fit: contain; display: block; backface-visibility: hidden; }
+.carousel-phone-screen img.hero-flip { animation: heroFlip 0.6s ease-in-out; }
+
+@keyframes heroFlip {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(90deg); }
+  100% { transform: rotateY(0deg); }
+}
 
 .inkscroller-hero-eyebrow { color: var(--primary); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin: 0; }
 .inkscroller-hero-device { display: flex; justify-content: center; align-items: center; height: 100%; }
