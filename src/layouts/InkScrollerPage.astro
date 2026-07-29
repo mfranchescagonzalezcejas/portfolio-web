@@ -203,14 +203,22 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     function nextSlide() {
       const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
-      const nextReal = (currentReal + 1) % totalReal;
-      scrollToSlide(cloneCount + nextReal);
+      if (currentReal === totalReal - 1) {
+        // Wrapping from last to first: go to the clone after the real slides (forward)
+        scrollToSlide(cloneCount + totalReal);
+      } else {
+        scrollToSlide(activeIndex + 1);
+      }
     }
 
     function prevSlide() {
       const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
-      const prevReal = (currentReal - 1 + totalReal) % totalReal;
-      scrollToSlide(cloneCount + prevReal);
+      if (currentReal === 0) {
+        // Wrapping from first to last: go to the clone before the real slides (backward)
+        scrollToSlide(cloneCount - 1);
+      } else {
+        scrollToSlide(activeIndex - 1);
+      }
     }
 
     function startAutoPlay() {
