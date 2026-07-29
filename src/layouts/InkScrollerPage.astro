@@ -177,16 +177,16 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     function checkLoop() {
       if (isJumping) return;
       const idx = getSlideIndex();
-      if (idx < cloneCount) {
-        // Scrolled into leading clones -> jump to corresponding real slides
+      if (idx < cloneCount || idx >= cloneCount + totalReal) {
         isJumping = true;
-        track.scrollLeft = slides[idx + totalReal].offsetLeft;
-        requestAnimationFrame(() => { isJumping = false; updateActive(); });
-      } else if (idx >= cloneCount + totalReal) {
-        // Scrolled into trailing clones -> jump back
-        isJumping = true;
-        track.scrollLeft = slides[idx - totalReal].offsetLeft;
-        requestAnimationFrame(() => { isJumping = false; updateActive(); });
+        const target = idx < cloneCount ? idx + totalReal : idx - totalReal;
+        track.style.scrollBehavior = "auto";
+        track.scrollLeft = slides[target].offsetLeft;
+        requestAnimationFrame(() => {
+          track.style.scrollBehavior = "";
+          isJumping = false;
+          updateActive();
+        });
       }
     }
 
