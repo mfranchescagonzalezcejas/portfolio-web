@@ -143,8 +143,9 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     let isJumping = false;
 
     // Start at first real slide
-    const startOffset = slides[cloneCount].offsetLeft;
-    track.scrollLeft = startOffset;
+    if (track) {
+      track.scrollTo({ left: slides[cloneCount].offsetLeft, behavior: "instant" });
+    }
 
     function getSlideIndex() {
       let bestIdx = 0;
@@ -236,7 +237,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     if (!prefersReducedMotion.matches) startAutoPlay();
 
     // Fix initial active state after layout settles
-    setTimeout(updateActive, 100);
+    setTimeout(updateActive, 200);
   }
 
   // Hero image auto-cycle
