@@ -2611,7 +2611,7 @@ a {
 .inkscroller-hero-eyebrow { color: var(--primary); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin: 0; }
 .inkscroller-hero h1 { max-width: 16ch; font: 700 clamp(2.5rem, 8vw, 5rem)/1 var(--font-display); margin: 0.75rem 0 0; }
 .inkscroller-hero-desc { max-width: 36rem; color: var(--muted-foreground); font-size: 1.125rem; line-height: 1.75; margin: 1rem 0 0; }
-.inkscroller-hero-device { display: flex; justify-content: center; }
+.inkscroller-hero-device { display: flex; justify-content: center; align-items: flex-start; padding-top: 0.75rem; }
 .inkscroller-hero-copy { max-width: 32rem; }
 
 .inkscroller-proof { padding: 0; }
@@ -2649,7 +2649,7 @@ a {
 .inkscroller-placeholder p { color: var(--device-overlay-text); font-family: var(--font-mono); font-size: 0.58rem; margin: 0; }
 
 @media (min-width: 48rem) {
-  .inkscroller-hero { grid-template-columns: 1fr 14rem; gap: 1.5rem; }
+  .inkscroller-hero { grid-template-columns: 1.25fr 14rem; gap: 2rem; }
   .inkscroller-slide { flex-direction: row; text-align: left; gap: 2rem; padding-inline: 3rem; }
   .inkscroller-slide-copy { flex: 1; max-width: 24rem; }
   .inkscroller-slide-desc { max-width: 28rem; }
