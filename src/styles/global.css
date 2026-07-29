@@ -2664,7 +2664,7 @@ a {
 .inkscroller-placeholder p { color: var(--device-overlay-text); font-family: var(--font-mono); font-size: 0.58rem; margin: 0; }
 
 @media (min-width: 48rem) {
-  .inkscroller-slide { flex-direction: row; text-align: left; gap: 2rem; padding-inline: 3rem; }
-  .inkscroller-slide-copy { flex: 1; max-width: 24rem; }
+  .inkscroller-slide { flex-direction: row; text-align: left; gap: 2.5rem; padding-inline: 2rem; justify-content: center; }
+  .inkscroller-slide-copy { max-width: 22rem; }
   .inkscroller-slide-desc { max-width: 28rem; }
 }
