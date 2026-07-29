@@ -1017,7 +1017,8 @@ h4 {
     width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    margin 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .featured-mockup-1,
@@ -1034,9 +1035,16 @@ h4 {
 }
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
-  .featured-mockup-1,
+  .featured-mockup-1 {
+  width: min(4.4rem, 15vw);
+  margin-right: -0.7rem;
+  opacity: 0.12;
+}
+
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-3 {
+  width: min(4.4rem, 15vw);
+  margin-left: -0.7rem;
   opacity: 0.12;
 }
 
@@ -1050,6 +1058,7 @@ h4 {
   .featured-mockup-2,
   .featured-mockup-3 {
     width: min(9rem, 60vw);
+    margin: 0;
     opacity: 1;
     filter: none;
     z-index: auto;
