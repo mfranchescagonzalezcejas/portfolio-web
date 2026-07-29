@@ -120,12 +120,33 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     const track = carousel.querySelector(".inkscroller-carousel-track");
     const prev = carousel.querySelector(".inkscroller-prev");
     const next = carousel.querySelector(".inkscroller-next");
-    const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
     const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot"));
     let timer = null;
     let activeIndex = 0;
 
-    function updateActive() {
+    // Build slide list with clones for infinite scroll
+    const origSlides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
+    const cloneCount = 3;
+    // Prepend clones of last slides
+    for (let i = cloneCount; i > 0; i--) {
+      const clone = origSlides[origSlides.length - i].cloneNode(true);
+      track?.insertBefore(clone, track.firstChild);
+    }
+    // Append clones of first slides
+    for (let i = 0; i < cloneCount; i++) {
+      const clone = origSlides[i].cloneNode(true);
+      track?.appendChild(clone);
+    }
+    const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
+    const totalReal = origSlides.length;
+    const totalClones = slides.length;
+    let isJumping = false;
+
+    // Start at first real slide
+    const startOffset = slides[cloneCount].offsetLeft;
+    track.scrollLeft = startOffset;
+
+    function getSlideIndex() {
       let bestIdx = 0;
       let bestRatio = 0;
       slides.forEach((slide, i) => {
@@ -135,9 +156,16 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
         const ratio = overlap / rect.width;
         if (ratio > bestRatio) { bestRatio = ratio; bestIdx = i; }
       });
-      slides.forEach((s, i) => s.classList.toggle("active", i === bestIdx));
-      dots.forEach((d, i) => d.classList.toggle("active", i === bestIdx));
-      activeIndex = bestIdx;
+      return bestIdx;
+    }
+
+    function updateActive() {
+      const idx = getSlideIndex();
+      slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+      // Map to real slide for dots
+      const realIdx = ((idx - cloneCount) % totalReal + totalReal) % totalReal;
+      dots.forEach((d, i) => d.classList.toggle("active", i === realIdx));
+      activeIndex = idx;
     }
 
     function scrollToSlide(index) {
@@ -146,8 +174,25 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       }
     }
 
+    function checkLoop() {
+      if (isJumping) return;
+      const idx = getSlideIndex();
+      if (idx < cloneCount) {
+        // Scrolled into leading clones -> jump to corresponding real slides
+        isJumping = true;
+        track.scrollLeft = slides[idx + totalReal].offsetLeft;
+        requestAnimationFrame(() => { isJumping = false; updateActive(); });
+      } else if (idx >= cloneCount + totalReal) {
+        // Scrolled into trailing clones -> jump back
+        isJumping = true;
+        track.scrollLeft = slides[idx - totalReal].offsetLeft;
+        requestAnimationFrame(() => { isJumping = false; updateActive(); });
+      }
+    }
+
     function nextSlide() {
-      scrollToSlide((activeIndex + 1) % slides.length);
+      const next = Math.min(activeIndex + 1, slides.length - 1);
+      scrollToSlide(next);
     }
 
     function startAutoPlay() {
@@ -159,8 +204,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (timer) { clearInterval(timer); timer = null; }
     }
 
-    // Track scroll to update active slide
-    track?.addEventListener("scroll", updateActive);
+    track?.addEventListener("scroll", () => { updateActive(); checkLoop(); });
 
     carousel.addEventListener("mouseenter", stopAutoPlay);
     carousel.addEventListener("focusin", stopAutoPlay);
@@ -171,7 +215,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     prev?.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Math.max(0, activeIndex - 1)); });
     next?.addEventListener("click", () => { stopAutoPlay(); nextSlide(); });
-    dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Number(dot.dataset.index)); }));
+    dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(cloneCount + Number(dot.dataset.index)); }));
 
     carousel.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
@@ -183,6 +227,9 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     updateActive();
     if (!prefersReducedMotion.matches) startAutoPlay();
+
+    // Fix initial active state after layout settles
+    setTimeout(updateActive, 100);
   }
 
   // Hero image auto-cycle
