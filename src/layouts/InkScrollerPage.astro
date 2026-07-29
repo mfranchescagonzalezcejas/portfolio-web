@@ -55,12 +55,9 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
         <div class="inkscroller-hero-device">
           <div class="carousel-phone">
             <div class="carousel-phone-notch"></div>
-            <div class="carousel-phone-screen">
-              {firstMedia.kind === "capture" ? (
-                <img id="hero-phone-img" src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
-              ) : (
-                <div class="inkscroller-placeholder"><strong>{firstMedia.label}</strong><p>{firstMedia.disclosure}</p></div>
-              )}
+            <div class="carousel-phone-screen" id="hero-screen">
+              <img id="hero-img-current" class="hero-img-layer" src={firstMedia.kind === "capture" ? firstMedia.src : ""} alt={firstMedia.kind === "capture" ? firstMedia.alt : ""} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
+              <img id="hero-img-next" class="hero-img-layer" src="" alt="" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
             </div>
           </div>
         </div>
@@ -176,23 +173,35 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
   // Hero image auto-cycle
   {
-    const heroImg = document.getElementById("hero-phone-img");
-    if (heroImg && heroImg.dataset.captures) {
-      const captures = JSON.parse(heroImg.dataset.captures);
+    const currentImg = document.getElementById("hero-img-current");
+    const nextImg = document.getElementById("hero-img-next");
+    const screen = document.getElementById("hero-screen");
+    if (currentImg && nextImg && currentImg.dataset.captures) {
+      const captures = JSON.parse(currentImg.dataset.captures);
       if (captures.length > 1) {
         let idx = 0;
         const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
         if (prefersReducedMotion.matches) { /* no cycle */ } else {
           const heroTimer = setInterval(() => {
-            idx = (idx + 1) % captures.length;
-            heroImg.classList.add("hero-slide");
+            const nextIdx = (idx + 1) % captures.length;
+            // Set next image to incoming position (below)
+            nextImg.src = captures[nextIdx].src;
+            nextImg.alt = captures[nextIdx].alt;
+            // Animate: current slides out (up), next slides in (from below)
+            currentImg.classList.add("slide-out");
+            nextImg.classList.add("slide-in");
+            // After animation, reset: current becomes the visible image
             setTimeout(() => {
-              heroImg.src = captures[idx].src;
-              heroImg.alt = captures[idx].alt;
-            }, 250);
-            setTimeout(() => heroImg.classList.remove("hero-slide"), 500);
+              currentImg.src = captures[nextIdx].src;
+              currentImg.alt = captures[nextIdx].alt;
+              currentImg.classList.remove("slide-out");
+              nextImg.classList.remove("slide-in");
+              nextImg.src = "";
+              nextImg.alt = "";
+              idx = nextIdx;
+            }, 400);
           }, 4500);
-          const heroDevice = heroImg.closest(".inkscroller-hero-device");
+          const heroDevice = currentImg.closest(".inkscroller-hero-device");
           heroDevice?.addEventListener("mouseenter", () => clearInterval(heroTimer));
         }
       }
