@@ -57,7 +57,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
             <div class="carousel-phone-notch"></div>
             <div class="carousel-phone-screen">
               {firstMedia.kind === "capture" ? (
-                <img id="hero-phone-img" src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
+                <img id="hero-phone-img" src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
               ) : (
                 <div class="inkscroller-placeholder"><strong>{firstMedia.label}</strong><p>{firstMedia.disclosure}</p></div>
               )}
@@ -117,20 +117,19 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     </div>
   </footer>
 </BaseLayout>
-</BaseLayout>
 
-<script>
-  const carousel = document.getElementById("inkscroller-carousel") as HTMLElement | null;
+<script is:inline>
+  const carousel = document.getElementById("inkscroller-carousel");
   if (carousel) {
     const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-    const track = carousel.querySelector(".inkscroller-carousel-track") as HTMLElement | null;
-    const prev = carousel.querySelector(".inkscroller-prev") as HTMLButtonElement | null;
-    const next = carousel.querySelector(".inkscroller-next") as HTMLButtonElement | null;
-    const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot")) as HTMLButtonElement[];
-    let timer: ReturnType<typeof setInterval> | null = null;
+    const track = carousel.querySelector(".inkscroller-carousel-track");
+    const prev = carousel.querySelector(".inkscroller-prev");
+    const next = carousel.querySelector(".inkscroller-next");
+    const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot"));
+    let timer = null;
 
-    function scrollToSlide(index: number) {
-      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []) as HTMLElement[];
+    function scrollToSlide(index) {
+      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
       if (slides[index]) {
         slides[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "start" });
       }
@@ -138,7 +137,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     }
 
     function nextSlide() {
-      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []) as HTMLElement[];
+      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
       const current = dots.findIndex((d) => d.classList.contains("active"));
       scrollToSlide((current + 1) % slides.length);
     }
@@ -156,7 +155,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     carousel.addEventListener("focusin", stopAutoPlay);
     carousel.addEventListener("mouseleave", startAutoPlay);
     carousel.addEventListener("focusout", (e) => {
-      if (!carousel.contains(e.relatedTarget as Node | null)) startAutoPlay();
+      if (!carousel.contains(e.relatedTarget)) startAutoPlay();
     });
 
     prev?.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Math.max(0, dots.findIndex((d) => d.classList.contains("active")) - 1)); });
@@ -177,19 +176,21 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
   // Hero image auto-cycle
   {
-    const heroImg = document.getElementById("hero-phone-img") as HTMLImageElement | null;
-    const captures = {heroCapturesJson};
-    if (heroImg && captures.length > 1) {
-      let idx = 0;
-      const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-      if (prefersReducedMotion.matches) { /* no cycle */ } else {
-        const heroTimer = setInterval(() => {
-          idx = (idx + 1) % captures.length;
-          heroImg.src = captures[idx].src;
-          heroImg.alt = captures[idx].alt;
-        }, 4000);
-        const heroDevice = heroImg.closest(".inkscroller-hero-device");
-        heroDevice?.addEventListener("mouseenter", () => clearInterval(heroTimer));
+    const heroImg = document.getElementById("hero-phone-img");
+    if (heroImg && heroImg.dataset.captures) {
+      const captures = JSON.parse(heroImg.dataset.captures);
+      if (captures.length > 1) {
+        let idx = 0;
+        const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+        if (prefersReducedMotion.matches) { /* no cycle */ } else {
+          const heroTimer = setInterval(() => {
+            idx = (idx + 1) % captures.length;
+            heroImg.src = captures[idx].src;
+            heroImg.alt = captures[idx].alt;
+          }, 4000);
+          const heroDevice = heroImg.closest(".inkscroller-hero-device");
+          heroDevice?.addEventListener("mouseenter", () => clearInterval(heroTimer));
+        }
       }
     }
   }
