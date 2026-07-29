@@ -120,21 +120,34 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     const track = carousel.querySelector(".inkscroller-carousel-track");
     const prev = carousel.querySelector(".inkscroller-prev");
     const next = carousel.querySelector(".inkscroller-next");
+    const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
     const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot"));
     let timer = null;
+    let activeIndex = 0;
+
+    function updateActive() {
+      let bestIdx = 0;
+      let bestRatio = 0;
+      slides.forEach((slide, i) => {
+        const rect = slide.getBoundingClientRect();
+        const trackRect = track.getBoundingClientRect();
+        const overlap = Math.min(rect.right, trackRect.right) - Math.max(rect.left, trackRect.left);
+        const ratio = overlap / rect.width;
+        if (ratio > bestRatio) { bestRatio = ratio; bestIdx = i; }
+      });
+      slides.forEach((s, i) => s.classList.toggle("active", i === bestIdx));
+      dots.forEach((d, i) => d.classList.toggle("active", i === bestIdx));
+      activeIndex = bestIdx;
+    }
 
     function scrollToSlide(index) {
-      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
       if (slides[index] && track) {
         track.scrollTo({ left: slides[index].offsetLeft, behavior: "smooth" });
       }
-      dots.forEach((dot, i) => dot.classList.toggle("active", i === index));
     }
 
     function nextSlide() {
-      const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
-      const current = dots.findIndex((d) => d.classList.contains("active"));
-      scrollToSlide((current + 1) % slides.length);
+      scrollToSlide((activeIndex + 1) % slides.length);
     }
 
     function startAutoPlay() {
@@ -146,6 +159,9 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (timer) { clearInterval(timer); timer = null; }
     }
 
+    // Track scroll to update active slide
+    track?.addEventListener("scroll", updateActive);
+
     carousel.addEventListener("mouseenter", stopAutoPlay);
     carousel.addEventListener("focusin", stopAutoPlay);
     carousel.addEventListener("mouseleave", startAutoPlay);
@@ -153,7 +169,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (!carousel.contains(e.relatedTarget)) startAutoPlay();
     });
 
-    prev?.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Math.max(0, dots.findIndex((d) => d.classList.contains("active")) - 1)); });
+    prev?.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Math.max(0, activeIndex - 1)); });
     next?.addEventListener("click", () => { stopAutoPlay(); nextSlide(); });
     dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); scrollToSlide(Number(dot.dataset.index)); }));
 
@@ -161,11 +177,11 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
         stopAutoPlay();
-        const current = dots.findIndex((d) => d.classList.contains("active"));
-        scrollToSlide(e.key === "ArrowLeft" ? Math.max(0, current - 1) : Math.min(dots.length - 1, current + 1));
+        scrollToSlide(e.key === "ArrowLeft" ? Math.max(0, activeIndex - 1) : Math.min(slides.length - 1, activeIndex + 1));
       }
     });
 
+    updateActive();
     if (!prefersReducedMotion.matches) startAutoPlay();
   }
 
