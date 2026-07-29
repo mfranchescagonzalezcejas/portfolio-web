@@ -145,7 +145,11 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     // Start at first real slide
     if (track) {
       track.style.scrollSnapType = "none";
-      track.scrollLeft = slides[cloneCount].offsetLeft - track.offsetLeft;
+      const firstSlide = slides[cloneCount];
+      const trackRect = track.getBoundingClientRect();
+      const slideRect = firstSlide.getBoundingClientRect();
+      const centerOffset = (trackRect.width - slideRect.width) / 2;
+      track.scrollLeft = track.scrollLeft + (slideRect.left - trackRect.left) - centerOffset;
       requestAnimationFrame(() => { track.style.scrollSnapType = ""; });
     }
 
@@ -173,7 +177,11 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
 
     function scrollToSlide(index) {
       if (slides[index] && track) {
-        track.scrollTo({ left: slides[index].offsetLeft, behavior: "smooth" });
+        const trackRect = track.getBoundingClientRect();
+        const slideRect = slides[index].getBoundingClientRect();
+        const centerOffset = (trackRect.width - slideRect.width) / 2;
+        const targetScroll = track.scrollLeft + (slideRect.left - trackRect.left) - centerOffset;
+        track.scrollTo({ left: targetScroll, behavior: "smooth" });
       }
     }
 
