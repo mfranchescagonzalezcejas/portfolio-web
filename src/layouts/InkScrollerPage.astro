@@ -183,8 +183,8 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
         const centerOffset = (trackRect.width - slideRect.width) / 2;
         const targetScroll = track.scrollLeft + (slideRect.left - trackRect.left) - centerOffset;
         track.scrollTo({ left: targetScroll, behavior: "smooth" });
-        // Let animation settle before allowing checkLoop to teleport
-        setTimeout(() => { isJumping = false; }, 400);
+        // Let animation settle then check loop for teleport
+        setTimeout(() => { isJumping = false; checkLoop(); }, 400);
       }
     }
 
