@@ -185,13 +185,13 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
         if (prefersReducedMotion.matches) { /* no cycle */ } else {
           const heroTimer = setInterval(() => {
             idx = (idx + 1) % captures.length;
-            heroImg.classList.add("hero-flip");
+            heroImg.classList.add("hero-slide");
             setTimeout(() => {
               heroImg.src = captures[idx].src;
               heroImg.alt = captures[idx].alt;
-            }, 300);
-            setTimeout(() => heroImg.classList.remove("hero-flip"), 600);
-          }, 5000);
+            }, 250);
+            setTimeout(() => heroImg.classList.remove("hero-slide"), 500);
+          }, 4500);
           const heroDevice = heroImg.closest(".inkscroller-hero-device");
           heroDevice?.addEventListener("mouseenter", () => clearInterval(heroTimer));
         }
