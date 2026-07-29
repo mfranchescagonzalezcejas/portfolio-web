@@ -142,9 +142,14 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     const totalClones = slides.length;
     let isJumping = false;
 
-    // Start at first real slide
+    // Start at first real slide - disable snap temporarily to prevent snap to wrong slide
     if (track) {
-      track.scrollTo({ left: slides[cloneCount].offsetLeft, behavior: "instant" });
+      track.style.scrollSnapType = "none";
+      slides[cloneCount].scrollIntoView({ inline: "center", block: "nearest" });
+      // Re-enable snap after position is set
+      requestAnimationFrame(() => {
+        track.style.scrollSnapType = "";
+      });
     }
 
     function getSlideIndex() {
