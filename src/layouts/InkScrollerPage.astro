@@ -57,7 +57,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
             <div class="carousel-phone-notch"></div>
             <div class="carousel-phone-screen" id="hero-screen">
               <img id="hero-img-current" class="hero-img-layer" src={firstMedia.kind === "capture" ? firstMedia.src : ""} alt={firstMedia.kind === "capture" ? firstMedia.alt : ""} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
-              <img id="hero-img-next" class="hero-img-layer" src="" alt="" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
+              <img id="hero-img-next" class="hero-img-layer" src="" alt="" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" style="display:none" />
             </div>
           </div>
         </div>
