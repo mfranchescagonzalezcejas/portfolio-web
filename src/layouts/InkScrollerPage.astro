@@ -28,6 +28,8 @@ const currentYear = new Date().getFullYear();
 const site = siteContentByLocale[content.locale];
 const firstMedia = content.media[0];
 const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedia.label;
+const heroCaptures = content.media.filter((m: ProductMedia & SlideMeta) => m.kind === "capture");
+const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, alt: m.alt })));
 ---
 
 <BaseLayout locale={content.locale} pageSeo={content.seo}>
@@ -55,7 +57,7 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
             <div class="carousel-phone-notch"></div>
             <div class="carousel-phone-screen">
               {firstMedia.kind === "capture" ? (
-                <img src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
+                <img id="hero-phone-img" src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
               ) : (
                 <div class="inkscroller-placeholder"><strong>{firstMedia.label}</strong><p>{firstMedia.disclosure}</p></div>
               )}
@@ -171,6 +173,25 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
     });
 
     if (!prefersReducedMotion.matches) startAutoPlay();
+  }
+
+  // Hero image auto-cycle
+  {
+    const heroImg = document.getElementById("hero-phone-img") as HTMLImageElement | null;
+    const captures = {heroCapturesJson};
+    if (heroImg && captures.length > 1) {
+      let idx = 0;
+      const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+      if (prefersReducedMotion.matches) { /* no cycle */ } else {
+        const heroTimer = setInterval(() => {
+          idx = (idx + 1) % captures.length;
+          heroImg.src = captures[idx].src;
+          heroImg.alt = captures[idx].alt;
+        }, 4000);
+        const heroDevice = heroImg.closest(".inkscroller-hero-device");
+        heroDevice?.addEventListener("mouseenter", () => clearInterval(heroTimer));
+      }
+    }
   }
 </script>
 
