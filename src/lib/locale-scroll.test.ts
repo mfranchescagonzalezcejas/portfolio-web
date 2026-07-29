@@ -44,7 +44,7 @@ describe("locale scroll position", () => {
       JSON.stringify({ pathname: "/es/proyectos/inkscroller", x: 12, y: 640 }),
     );
     const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
-    vi.stubGlobal("requestAnimationFrame", (callback: FrameRequestCallback) => {
+    vi.stubGlobal("requestAnimationFrame", (callback: Parameters<typeof requestAnimationFrame>[0]) => {
       callback(0);
       return 0;
     });
