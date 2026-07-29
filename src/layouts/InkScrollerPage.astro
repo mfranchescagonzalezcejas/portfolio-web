@@ -187,6 +187,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
             // Set next image to incoming position (below)
             nextImg.src = captures[nextIdx].src;
             nextImg.alt = captures[nextIdx].alt;
+            nextImg.style.display = "block";
             // Animate: current slides out (up), next slides in (from below)
             currentImg.classList.add("slide-out");
             nextImg.classList.add("slide-in");
@@ -196,8 +197,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
               currentImg.alt = captures[nextIdx].alt;
               currentImg.classList.remove("slide-out");
               nextImg.classList.remove("slide-in");
-              nextImg.src = "";
-              nextImg.alt = "";
+              nextImg.style.display = "none";
               idx = nextIdx;
             }, 400);
           }, 4500);
