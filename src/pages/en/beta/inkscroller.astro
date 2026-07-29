@@ -37,86 +37,68 @@ const currentYear = new Date().getFullYear();
           <div class="carousel-phone">
             <div class="carousel-phone-notch" aria-hidden="true"></div>
             <div class="carousel-phone-screen">
-              <img
-                src="/inkscroller/product-home-es-v1.jpg"
-                alt="InkScroller app preview"
-                width="540"
-                height="1170"
-                loading="eager"
-              />
+              <img src="/inkscroller/product-home-es-v1.jpg" alt="InkScroller app preview" width="540" height="1170" loading="eager" />
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section-shell">
-      <div class="section-inner beta-section-header">
-        <h2 class="section-title">{page.scope.title}</h2>
-      </div>
-      <div class="section-inner beta-card-grid">
-        {page.scope.items.map((item) => (
-          <article class="beta-card card-surface">
-            <p class="beta-card-text">{item}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="section-shell">
-      <div class="section-inner beta-section-header">
-        <h2 class="section-title">{page.requirements.title}</h2>
-      </div>
-      <div class="section-inner beta-card-grid beta-card-grid--wide">
-        {page.requirements.items.map((item) => (
-          <article class="beta-card card-surface">
-            <p class="beta-card-text">{item}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="section-shell">
-      <div class="section-inner beta-section-header">
-        <h2 class="section-title">{page.faq.title}</h2>
-      </div>
-      <div class="section-inner">
-        <dl class="beta-faq">
-          {page.faq.questions.map(({ q, a }) => (
-            <details class="beta-faq-item card-surface">
-              <summary class="beta-faq-question">{q}</summary>
-              <dd class="beta-faq-answer">{a}</dd>
-            </details>
-          ))}
-        </dl>
-      </div>
-    </section>
-
-    <section class="section-shell beta-cta-section">
-      <div class="section-inner beta-cta-strip">
-        <a class="beta-cta beta-cta--primary" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">
-          {page.cta.primary.label}
-        </a>
-        <a class="beta-cta beta-cta--secondary" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">
-          {page.cta.secondary.label}
-        </a>
-      </div>
-    </section>
-
-    <section class="section-shell">
-      <div class="section-inner beta-section-header">
-        <h2 class="section-title">{page.privacy.title}</h2>
-      </div>
-      <div class="section-inner">
-        <div class="beta-privacy card-surface">
-          <p>{page.privacy.body}</p>
-          <p class="beta-privacy-contact">
-            Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a>
-          </p>
-          <p class="beta-privacy-note">{page.privacy.deletionInfo}</p>
+    <div class="beta-sections">
+      <section class="beta-block">
+        <div class="beta-block-inner">
+          <h2 class="beta-block-title">{page.scope.title}</h2>
+          <div class="beta-card-grid">
+            {page.scope.items.map((item) => (
+              <article class="beta-card card-surface"><p class="beta-card-text">{item}</p></article>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section class="beta-block">
+        <div class="beta-block-inner">
+          <h2 class="beta-block-title">{page.requirements.title}</h2>
+          <div class="beta-card-grid beta-card-grid--wide">
+            {page.requirements.items.map((item) => (
+              <article class="beta-card card-surface"><p class="beta-card-text">{item}</p></article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="beta-block">
+        <div class="beta-block-inner">
+          <h2 class="beta-block-title">{page.faq.title}</h2>
+          <dl class="beta-faq">
+            {page.faq.questions.map(({ q, a }) => (
+              <details class="beta-faq-item card-surface">
+                <summary class="beta-faq-question">{q}</summary>
+                <dd class="beta-faq-answer">{a}</dd>
+              </details>
+            ))}
+          </dl>
+        </div>
+      </section>
+
+      <section class="beta-block beta-block--cta">
+        <div class="beta-block-inner beta-cta-strip">
+          <a class="beta-cta beta-cta--primary" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">{page.cta.primary.label}</a>
+          <a class="beta-cta beta-cta--secondary" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">{page.cta.secondary.label}</a>
+        </div>
+      </section>
+
+      <section class="beta-block">
+        <div class="beta-block-inner">
+          <h2 class="beta-block-title">{page.privacy.title}</h2>
+          <div class="beta-privacy card-surface">
+            <p>{page.privacy.body}</p>
+            <p class="beta-privacy-contact">Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
+            <p class="beta-privacy-note">{page.privacy.deletionInfo}</p>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
   <ContactLinks links={site.contacts} section={site.contactSection} />
@@ -129,158 +111,53 @@ const currentYear = new Date().getFullYear();
 </BaseLayout>
 
 <style>
-  .inkscroller-beta-hero {
-    overflow: visible;
-  }
-  .inkscroller-beta-hero.hero-section::before {
-    top: 24rem;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  @media (min-width: 1024px) {
-    .inkscroller-beta-hero.hero-section::before {
-      top: 20rem;
-    }
-  }
+  .inkscroller-beta-hero { overflow: visible; }
+  .inkscroller-beta-hero.hero-section::before { top: 24rem; left: 50%; transform: translateX(-50%); }
+  @media (min-width: 1024px) { .inkscroller-beta-hero.hero-section::before { top: 20rem; } }
 
-  .beta-section-header {
-    padding-top: 2rem;
-    padding-bottom: 1rem;
-  }
-  .beta-section-header .section-title {
-    margin: 0;
-  }
+  .beta-sections { display: flex; flex-direction: column; }
 
-  .beta-card-grid {
-    display: grid;
-    gap: 0.75rem;
-    padding-bottom: 2rem;
-  }
-  .beta-card-grid--wide {
-    grid-template-columns: 1fr;
-  }
-  @media (min-width: 640px) {
-    .beta-card-grid:not(.beta-card-grid--wide) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    .beta-card-grid--wide {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (min-width: 1024px) {
-    .beta-card-grid:not(.beta-card-grid--wide) {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    .beta-card-grid--wide {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
+  .beta-block { padding: 0 1rem; }
+  .beta-block-inner { max-width: 64rem; margin: 0 auto; padding: 2.5rem 0; }
+  .beta-block + .beta-block { border-top: 1px solid var(--overlay-border); }
 
-  .beta-card {
-    padding: 1.25rem;
-    border-radius: var(--radius);
-  }
-  .beta-card-text {
-    margin: 0;
-    line-height: 1.5;
-    color: var(--muted-foreground);
-  }
+  .beta-block--cta { background: var(--surface); }
+  .beta-block--cta + .beta-block { border-top: none; }
+  .beta-cta-strip { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; padding-top: 3rem; padding-bottom: 3rem; }
 
-  .beta-faq {
-    display: grid;
-    gap: 0.75rem;
-    margin: 0 0 2rem;
-  }
-  .beta-faq-item {
-    border-radius: var(--radius);
-    overflow: hidden;
-  }
-  .beta-faq-item[open] {
-    border-bottom-left-radius: var(--radius);
-    border-bottom-right-radius: var(--radius);
-  }
-  .beta-faq-question {
-    padding: 1rem 1.25rem;
-    font-weight: 600;
-    cursor: pointer;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    user-select: none;
-  }
-  .beta-faq-question::-webkit-details-marker { display: none; }
-  .beta-faq-question::after {
-    content: "+";
+  .beta-block-title {
+    font-family: var(--font-display);
     font-size: 1.25rem;
-    font-weight: 400;
-    color: var(--muted-foreground);
-    transition: transform 0.2s;
-    flex-shrink: 0;
-  }
-  .beta-faq-item[open] .beta-faq-question::after {
-    transform: rotate(45deg);
-  }
-  .beta-faq-answer {
-    margin: 0;
-    padding: 0 1.25rem 1rem;
-    color: var(--muted-foreground);
-    line-height: 1.5;
-  }
-
-  .beta-cta-section {
-    background: var(--surface);
-  }
-  .beta-cta-strip {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    justify-content: center;
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
-  }
-  .beta-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 3rem;
-    padding: 0 2rem;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 1rem;
-    text-decoration: none;
-    gap: 0.5rem;
-    transition: background-color 0.12s, border-color 0.12s, transform 0.12s;
-  }
-  .beta-cta--primary {
-    background: var(--primary);
-    color: var(--primary-foreground);
-  }
-  .beta-cta--primary:hover {
-    opacity: 0.85;
-    transform: translateY(-1px);
-  }
-  .beta-cta--secondary {
-    border: 1px solid var(--overlay-border);
+    font-weight: 700;
+    margin: 0 0 1.25rem;
     color: var(--foreground);
   }
-  .beta-cta--secondary:hover {
-    background: var(--overlay-bg-hover);
-    border-color: var(--foreground);
-    transform: translateY(-1px);
-  }
 
-  .beta-privacy {
-    padding: 1.25rem;
-    border-radius: var(--radius);
-    font-size: 0.85rem;
-    color: var(--muted-foreground);
-    line-height: 1.6;
-    margin-bottom: 2rem;
+  .beta-card-grid { display: grid; gap: 0.75rem; }
+  @media (min-width: 640px) { .beta-card-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .beta-card-grid { grid-template-columns: repeat(3, 1fr); } .beta-card-grid--wide { grid-template-columns: repeat(2, 1fr); } }
+
+  .beta-card { padding: 1.25rem; border-radius: var(--radius); }
+  .beta-card-text { margin: 0; line-height: 1.5; color: var(--muted-foreground); }
+
+  .beta-faq { display: grid; gap: 0.75rem; margin: 0; }
+  .beta-faq-item { border-radius: var(--radius); overflow: hidden; }
+  .beta-faq-question {
+    padding: 1rem 1.25rem; font-weight: 600; cursor: pointer; list-style: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; user-select: none;
   }
-  .beta-privacy p { margin: 0 0 0.75rem; }
-  .beta-privacy p:last-child { margin: 0; }
-  .beta-privacy-contact { margin-top: 0.75rem; }
+  .beta-faq-question::-webkit-details-marker { display: none; }
+  .beta-faq-question::after { content: "+"; font-size: 1.25rem; font-weight: 400; color: var(--muted-foreground); transition: transform 0.2s; flex-shrink: 0; }
+  .beta-faq-item[open] .beta-faq-question::after { transform: rotate(45deg); }
+  .beta-faq-answer { margin: 0; padding: 0 1.25rem 1rem; color: var(--muted-foreground); line-height: 1.5; }
+
+  .beta-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 3rem; padding: 0 2rem; border-radius: 999px; font-weight: 600; font-size: 1rem; text-decoration: none; gap: 0.5rem; transition: background-color 0.12s, border-color 0.12s, transform 0.12s; }
+  .beta-cta--primary { background: var(--primary); color: var(--primary-foreground); }
+  .beta-cta--primary:hover { opacity: 0.85; transform: translateY(-1px); }
+  .beta-cta--secondary { border: 1px solid var(--overlay-border); color: var(--foreground); }
+  .beta-cta--secondary:hover { background: var(--overlay-bg-hover); border-color: var(--foreground); transform: translateY(-1px); }
+
+  .beta-privacy { padding: 1.25rem; border-radius: var(--radius); font-size: 0.85rem; color: var(--muted-foreground); line-height: 1.6; }
+  .beta-privacy p { margin: 0 0 0.75rem; } .beta-privacy p:last-child { margin: 0; }
   .beta-link { color: var(--primary); text-decoration: underline; }
 </style>
