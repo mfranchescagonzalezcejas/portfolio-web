@@ -2597,7 +2597,7 @@ a {
   background: var(--muted-foreground);
 }
 
-.inkscroller-page { width: min(100% - 2rem, 70rem); margin: auto; display: grid; gap: 4rem; padding: 9rem 0 4rem; overflow-x: clip; }
+.inkscroller-page { width: min(100% - 2rem, 70rem); margin: auto; display: grid; gap: 4rem; padding: 9rem 0 4rem; overflow-x: clip; position: relative; }
 .inkscroller-page section { min-width: 0; }
 .inkscroller-page h2 { font-family: var(--font-display); }
 .inkscroller-page li { margin-block: 1rem; }

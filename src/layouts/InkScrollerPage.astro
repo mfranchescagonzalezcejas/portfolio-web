@@ -42,8 +42,8 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
     client:load
   />
   <main id="inkscroller-content" class="inkscroller-page">
+    <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
     <section class="inkscroller-hero" aria-labelledby="inkscroller-title">
-      <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
       <div class="inkscroller-hero-copy">
         <p class="inkscroller-hero-eyebrow">{content.hero.eyebrow}</p>
         <h1 id="inkscroller-title">{content.hero.title}</h1>
