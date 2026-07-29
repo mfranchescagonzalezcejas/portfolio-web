@@ -1019,7 +1019,7 @@ h4 {
 @media (min-width: 1024px) {
   .featured-project-mockups {
     position: absolute;
-    right: 0;
+    right: 3px;
     top: 50%;
     z-index: 0;
     min-height: 0;
