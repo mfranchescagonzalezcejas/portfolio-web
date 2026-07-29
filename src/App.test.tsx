@@ -570,7 +570,7 @@ describe("navigation anchors", () => {
 
       const mockups = Array.from(
         featuredSection?.querySelectorAll<HTMLImageElement>(
-          '.featured-phone-screen img[alt=""][loading="lazy"]',
+          '.mockup-phone-screen img[alt=""][loading="lazy"]',
         ) ?? [],
       );
       expect(mockups).toHaveLength(3);
@@ -753,7 +753,7 @@ describe("navigation anchors", () => {
       }),
     ).not.toBeInTheDocument();
     expect(
-      featuredSection?.querySelectorAll(".featured-phone-screen img"),
+      featuredSection?.querySelectorAll(".mockup-phone-screen img"),
     ).toHaveLength(3);
 
     expect(

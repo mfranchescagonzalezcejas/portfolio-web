@@ -340,8 +340,8 @@ async function collectMetrics(
                 textOverflow: style.textOverflow,
               };
             }),
-             featuredMockups: Array.from(document.querySelectorAll('.featured-phone-screen img')).map((image) => {
-              const screen = image.closest('.featured-phone-screen');
+             featuredMockups: Array.from(document.querySelectorAll('.mockup-phone-screen img')).map((image) => {
+               const screen = image.closest('.mockup-phone-screen');
               const screenRect = screen.getBoundingClientRect();
               const imageRect = image.getBoundingClientRect();
               const style = window.getComputedStyle(image);

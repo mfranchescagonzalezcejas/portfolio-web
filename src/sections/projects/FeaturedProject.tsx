@@ -1,4 +1,4 @@
-import { GitBranch, Smartphone } from "lucide-react";
+import { GitBranch } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { Project, SectionHeading } from "../../content/site";
 import { formatProjectLabel } from "./projectLabel";
@@ -20,7 +20,6 @@ export default function FeaturedProject({
   section,
 }: FeaturedProjectProps) {
   const mockups = project.mockups ?? [];
-  const mockupLabels = project.mockupLabels ?? [];
   const sectionRef = useRef<HTMLElement>(null);
   const [revealed, setRevealed] = useState(true);
 
@@ -140,34 +139,22 @@ export default function FeaturedProject({
             </div>
 
             <div className="featured-project-mockups" aria-hidden="true">
-              {mockupLabels.map((label, index) => (
+              {mockups.map((mockup, index) => (
                 <div
-                  key={label}
-                  className={`featured-phone featured-phone-${index + 1}`}
+                  key={mockup.src}
+                  className={`mockup-phone featured-mockup featured-mockup-${index + 1}`}
                 >
-                  <div className="featured-phone-notch" />
-                  <div className="featured-phone-screen">
-                    {mockups[index] ? (
-                      <img
-                        src={mockups[index].src}
-                        width={mockups[index].width}
-                        height={mockups[index].height}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    ) : (
-                      <>
-                        <div className="featured-phone-icon">
-                          <Smartphone aria-hidden="true" />
-                        </div>
-                        <p className="featured-phone-label">{label}</p>
-                        <p className="featured-phone-status">
-                          {project.mockupStatus}
-                        </p>
-                      </>
-                    )}
+                  <div className="mockup-phone-screen">
+                    <img
+                      src={mockup.src}
+                      width={mockup.width}
+                      height={mockup.height}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
+                  <div className="mockup-phone-frame" />
                 </div>
               ))}
             </div>

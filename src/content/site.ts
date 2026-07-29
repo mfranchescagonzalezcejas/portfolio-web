@@ -24,8 +24,6 @@ export type Project = {
   featured?: boolean;
   links: LinkItem[];
   mockups?: ProjectMockup[];
-  mockupLabels?: string[];
-  mockupStatus?: string;
 };
 
 export type ProjectMockup = {
@@ -739,8 +737,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
             height: 2340,
           },
         ],
-        mockupLabels: ["Library", "Manga detail", "Reader"],
-        mockupStatus: "In-progress\nUI flows",
         links: [
           {
             label: "InkScroller",
@@ -1305,8 +1301,6 @@ const rawSiteContent: Record<Locale, SiteContent> = {
             height: 2340,
           },
         ],
-        mockupLabels: ["Biblioteca", "Detalle manga", "Lector"],
-        mockupStatus: "Flujos UI\nen progreso",
         links: [
           {
             label: "InkScroller",

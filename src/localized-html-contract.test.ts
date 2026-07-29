@@ -411,7 +411,7 @@ const assertNoJsContract = (
 
   const featuredMockups = Array.from(
     body.querySelectorAll<HTMLImageElement>(
-      'section#featured .featured-phone-screen img[alt=""][loading="lazy"]',
+      'section#featured .mockup-phone-screen img[alt=""][loading="lazy"]',
     ),
   );
   expect(featuredMockups).toHaveLength(3);
