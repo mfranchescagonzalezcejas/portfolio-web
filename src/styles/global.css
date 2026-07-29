@@ -1037,14 +1037,14 @@ h4 {
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-1 {
   width: min(4.4rem, 15vw);
-  margin-right: -0.7rem;
+  margin-right: -0.9rem;
   opacity: 0.12;
 }
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-3 {
   width: min(4.4rem, 15vw);
-  margin-left: -0.7rem;
+  margin-left: -0.9rem;
   opacity: 0.12;
 }
 
