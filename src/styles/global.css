@@ -1013,7 +1013,11 @@ h4 {
 }
 
 .featured-mockup {
-  transition: opacity 0.35s ease, filter 0.35s ease, width 0.35s ease;
+  transition:
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .featured-mockup-1,
@@ -1029,14 +1033,18 @@ h4 {
   z-index: 2;
 }
 
-.featured-project-mockups:hover .featured-mockup-1,
-.featured-project-mockups:hover .featured-mockup-3 {
-  opacity: 0.4;
-  filter: blur(1px);
+.featured-mockup-2:hover {
+  width: min(15rem, 50vw);
+  transform: scale(1.08);
 }
 
-.featured-project-mockups:hover .featured-mockup-2 {
-  width: min(14rem, 46vw);
+.featured-project-mockups:has(.featured-mockup-2:hover)
+  .featured-mockup-1,
+.featured-project-mockups:has(.featured-mockup-2:hover)
+  .featured-mockup-3 {
+  width: min(3.5rem, 11vw);
+  opacity: 0.08;
+  filter: blur(4px);
 }
 
 @media (max-width: 640px) {
