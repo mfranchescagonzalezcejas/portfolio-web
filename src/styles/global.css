@@ -1035,11 +1035,9 @@ h4 {
 
 .featured-mockup {
   transition:
-    width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-    margin 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (min-width: 1024px) {
@@ -1056,26 +1054,33 @@ h4 {
   z-index: 1;
 }
 
+.featured-project-mockups .featured-mockup-1 {
+  transform-origin: right center;
+}
+
+.featured-project-mockups .featured-mockup-3 {
+  transform-origin: left center;
+}
+
 .featured-project-mockups .featured-mockup-2 {
   width: min(12rem, 42vw);
   z-index: 2;
 }
 
 .featured-project-mockups .featured-mockup-2:hover {
-  width: min(14rem, 46vw);
+  transform: scale(1.166666667);
+  z-index: 3;
 }
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-1 {
-  width: min(9.6rem, 30vw);
-  margin-right: -1.9rem;
+  transform: scale(0.8);
   opacity: 0.12;
 }
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-3 {
-  width: min(9.6rem, 30vw);
-  margin-left: -1.9rem;
+  transform: scale(0.8);
   opacity: 0.12;
 }
 

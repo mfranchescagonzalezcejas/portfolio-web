@@ -575,9 +575,14 @@ describe("navigation anchors", () => {
       );
       expect(mockups).toHaveLength(3);
       expect(mockups.map((mockup) => mockup.getAttribute("src"))).toEqual([
-        "/inkscroller/home-library-es-v1.jpg",
-        "/inkscroller/home-manga-detail-es-v1.jpg",
-        "/inkscroller/home-reader-es-v1.jpg",
+        `/inkscroller/screenshots/dark/${path === "/es" ? "es" : "en"}/explore.jpg`,
+        `/inkscroller/screenshots/dark/${path === "/es" ? "es" : "en"}/home.jpg`,
+        `/inkscroller/screenshots/dark/${path === "/es" ? "es" : "en"}/library.jpg`,
+      ]);
+      expect(mockups.map((mockup) => mockup.dataset.lightSrc)).toEqual([
+        `/inkscroller/screenshots/light/${path === "/es" ? "es" : "en"}/explore.jpg`,
+        `/inkscroller/screenshots/light/${path === "/es" ? "es" : "en"}/home.jpg`,
+        `/inkscroller/screenshots/light/${path === "/es" ? "es" : "en"}/library.jpg`,
       ]);
       mockups.forEach((mockup) => {
         expect(mockup).toHaveAttribute("width", "1080");

@@ -60,11 +60,10 @@ const requiredCaseStudyUrls = [
   "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
 ];
 
-const homeMockupPaths = [
-  "/inkscroller/home-library-es-v1.jpg",
-  "/inkscroller/home-manga-detail-es-v1.jpg",
-  "/inkscroller/home-reader-es-v1.jpg",
-] as const;
+const homeMockupPaths = (locale: "en" | "es", theme: "dark" | "light") =>
+  ["explore", "home", "library"].map(
+    (capture) => `/inkscroller/screenshots/${theme}/${locale}/${capture}.jpg`,
+  );
 
 type StaticContract = {
   skipLabel: string;
@@ -416,13 +415,16 @@ const assertNoJsContract = (
   );
   expect(featuredMockups).toHaveLength(3);
   expect(featuredMockups.map((mockup) => mockup.getAttribute("src"))).toEqual(
-    homeMockupPaths,
+    homeMockupPaths(locale, "dark"),
   );
   featuredMockups.forEach((mockup) => {
     expect(mockup.getAttribute("width")).toBe("1080");
     expect(mockup.getAttribute("height")).toBe("2340");
     expect(mockup.getAttribute("decoding")).toBe("async");
   });
+  expect(featuredMockups.map((mockup) => mockup.getAttribute("data-light-src"))).toEqual(
+    homeMockupPaths(locale, "light"),
+  );
   expect(html).not.toContain("drive-download-20260726T185531Z-1-001");
 
   for (const sectionId of sectionIds) {
@@ -1094,14 +1096,51 @@ describe("InkScroller static product routes", () => {
       expect(
         document.querySelector(".header-lang-toggle")?.textContent,
       ).toContain(site.languageSwitcher.options[locale]);
+      expect(
+        document.querySelector(".header-lang-toggle")?.getAttribute("href"),
+      ).toBe(
+        locale === "en"
+          ? "/es/proyectos/inkscroller"
+          : "/en/projects/inkscroller",
+      );
       expect(document.querySelectorAll("astro-island")).toHaveLength(1);
       const media = inkscrollerContent[locale].media;
       expect(Array.isArray(media)).toBe(true);
-      expect(media).toHaveLength(6);
+      expect(media).toHaveLength(7);
+      expect(media.map((entry) => entry.src.dark)).toEqual([
+        `/inkscroller/screenshots/dark/${locale}/home.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/explore.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/library.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/story-detail.jpg`,
+        "/inkscroller/screenshots/dark/reader.jpg",
+        "/inkscroller/screenshots/dark/reader-2.jpg",
+        `/inkscroller/screenshots/dark/${locale}/reader-settings.jpg`,
+      ]);
+      expect(media.map((entry) => entry.src.light)).toEqual([
+        `/inkscroller/screenshots/light/${locale}/home.jpg`,
+        `/inkscroller/screenshots/light/${locale}/explore.jpg`,
+        `/inkscroller/screenshots/light/${locale}/library.jpg`,
+        `/inkscroller/screenshots/light/${locale}/story-detail.jpg`,
+        "/inkscroller/screenshots/light/reader.jpg",
+        "/inkscroller/screenshots/light/reader-2.jpg",
+        locale === "en"
+          ? "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg"
+          : "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
+      ]);
+      expect(media.slice(4, 6).map((entry) => entry.title)).toEqual(
+        locale === "en"
+          ? ["Reader: vertical", "Reader: paginated"]
+          : ["Lector: vertical", "Lector: paginado"],
+      );
       media.forEach((entry) => {
-        expect(entry.kind).toMatch(/^(capture|placeholder)$/);
+        expect(entry.kind).toBe("capture");
         expect(typeof entry.title).toBe("string");
         expect(typeof entry.description).toBe("string");
+        Object.values(entry.src).forEach((src) => {
+          expect(existsSync(resolve(process.cwd(), "public", src.slice(1)))).toBe(
+            true,
+          );
+        });
       });
       expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
         preview,
@@ -1116,23 +1155,78 @@ describe("InkScroller static product routes", () => {
           ".inkscroller-hero-device .mockup-phone .mockup-phone-screen",
         ),
       ).toHaveLength(1);
-      if (locale === "es") {
-        const carouselImgs = document.querySelectorAll(
-          ".inkscroller-carousel .mockup-phone .mockup-phone-screen img",
-        );
-        expect(carouselImgs).toHaveLength(6);
-      } else {
-        const carouselImgs = document.querySelectorAll(
-          ".inkscroller-carousel .mockup-phone .mockup-phone-screen img",
-        );
-        expect(carouselImgs).toHaveLength(0);
-        const carouselPlaceholders = document.querySelectorAll(
-          ".inkscroller-carousel .mockup-phone .inkscroller-placeholder",
-        );
-        expect(carouselPlaceholders).toHaveLength(6);
-      }
+      const carouselImgs = document.querySelectorAll(
+        ".inkscroller-carousel .mockup-phone .mockup-phone-screen img",
+      );
+      expect(carouselImgs).toHaveLength(7);
+      expect(
+        Array.from(carouselImgs).map((image) => image.getAttribute("src")),
+      ).toContain(`/inkscroller/screenshots/dark/${locale}/reader-settings.jpg`);
+      expect(
+        Array.from(carouselImgs).map((image) => image.getAttribute("data-light-src")),
+      ).toContain(
+        locale === "en"
+          ? "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg"
+          : "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
+      );
     },
   );
+
+  it("switches product carousel captures for the boot theme and later theme changes", async () => {
+    const html = readHtml("dist/en/projects/inkscroller/index.html");
+    const renderedDocument = new DOMParser().parseFromString(html, "text/html");
+    const bootScript = Array.from(renderedDocument.head.querySelectorAll("script"))
+      .map((script) => script.textContent ?? "")
+      .find((script) => script.includes("syncThemeImages"));
+    const previousHtmlClass = document.documentElement.className;
+    const previousHead = document.head.innerHTML;
+    const previousBody = document.body.innerHTML;
+    const previousMatchMedia = Object.getOwnPropertyDescriptor(
+      window,
+      "matchMedia",
+    );
+
+    try {
+      Object.defineProperty(window, "matchMedia", {
+        configurable: true,
+        value: () => ({ matches: true }),
+      });
+      document.documentElement.className = "";
+      document.head.innerHTML = "";
+      document.body.innerHTML = "";
+      window.eval(bootScript ?? "");
+      expect(document.documentElement).toHaveClass("light");
+
+      document.body.innerHTML = renderedDocument.body.innerHTML;
+      await Promise.resolve();
+
+      const carouselImages = Array.from(
+        document.querySelectorAll<HTMLImageElement>(
+          ".inkscroller-carousel .mockup-phone-screen img",
+        ),
+      );
+      expect(carouselImages).toHaveLength(7);
+      expect(carouselImages.map((image) => image.getAttribute("src"))).toEqual(
+        inkscrollerContent.en.media.map((entry) => entry.src.light),
+      );
+
+      document.documentElement.className = "dark";
+      await Promise.resolve();
+
+      expect(carouselImages.map((image) => image.getAttribute("src"))).toEqual(
+        inkscrollerContent.en.media.map((entry) => entry.src.dark),
+      );
+    } finally {
+      document.documentElement.className = previousHtmlClass;
+      document.head.innerHTML = previousHead;
+      document.body.innerHTML = previousBody;
+      if (previousMatchMedia) {
+        Object.defineProperty(window, "matchMedia", previousMatchMedia);
+      } else {
+        delete window.matchMedia;
+      }
+    }
+  });
 });
 
 describe("InkScroller carousel loop", () => {

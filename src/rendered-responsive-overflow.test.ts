@@ -286,7 +286,6 @@ async function collectMetrics(
       client,
       "document.readyState === 'complete' && Boolean(document.querySelector('header nav[aria-label]'))",
     );
-
     const evaluation = await client.send<
       RuntimeEvaluateResult<ResponsiveMetrics>
     >("Runtime.evaluate", {
@@ -662,10 +661,11 @@ describe("rendered responsive overflow", () => {
       expect(metrics.primaryNavHrefs).toEqual(primaryNavHrefs);
       expect(metrics.featuredInkScrollerLinkFocused).toBe(true);
       expect(metrics.featuredMockups).toHaveLength(3);
+      const locale = path.startsWith("/es") ? "es" : "en";
       expect(metrics.featuredMockups.map((mockup) => mockup.src)).toEqual([
-        "/inkscroller/home-library-es-v1.jpg",
-        "/inkscroller/home-manga-detail-es-v1.jpg",
-        "/inkscroller/home-reader-es-v1.jpg",
+        `/inkscroller/screenshots/dark/${locale}/explore.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/home.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/library.jpg`,
       ]);
       expect(metrics.learningProjects).toEqual({
         title: learningProjectsTitle,

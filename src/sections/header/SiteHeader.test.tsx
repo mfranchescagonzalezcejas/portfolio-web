@@ -137,4 +137,22 @@ describe("SiteHeader primary navigation", () => {
     ]);
     expect(navigation).not.toHaveTextContent("InkScroller");
   });
+
+  it.each([
+    ["/en/projects/inkscroller", "/es/proyectos/inkscroller"],
+    ["/en/beta/inkscroller", "/es/beta/inkscroller"],
+  ])("preserves the route when switching locales to %s", (_localePath, href) => {
+    render(
+      <SiteHeader
+        currentLocale={site.locale}
+        isHome={false}
+        localeHref={href}
+        navItems={site.nav}
+        languageSwitcher={site.languageSwitcher}
+        header={site.header}
+      />,
+    );
+
+    expect(screen.getByTitle("Switch to Spanish")).toHaveAttribute("href", href);
+  });
 });

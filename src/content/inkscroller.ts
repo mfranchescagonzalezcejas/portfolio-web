@@ -1,14 +1,12 @@
 import type { Locale } from "./site";
 
-export type ProductMedia =
-  | {
-      kind: "capture";
-      src: `/inkscroller/${string}`;
-      alt: string;
-      width: number;
-      height: number;
-    }
-  | { kind: "placeholder"; label: string; disclosure: string };
+export type ProductMedia = {
+  kind: "capture";
+  src: Record<"dark" | "light", `/inkscroller/${string}`>;
+  alt: string;
+  width: number;
+  height: number;
+};
 
 type SlideMeta = { title: string; description: string };
 
@@ -100,44 +98,86 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
     },
     media: [
       {
-        kind: "placeholder",
-        label: "Preview",
-        disclosure: "This is a product preview, not an English app capture.",
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/en/home.jpg",
+          light: "/inkscroller/screenshots/light/en/home.jpg",
+        },
+        alt: "InkScroller home screen with reading dashboard",
+        width: 1080,
+        height: 2340,
         title: "Home",
         description: "Your personal reading dashboard at a glance.",
       },
       {
-        kind: "placeholder",
-        label: "Preview",
-        disclosure: "This is a product preview, not an English app capture.",
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/en/explore.jpg",
+          light: "/inkscroller/screenshots/light/en/explore.jpg",
+        },
+        alt: "InkScroller explore screen with story discovery",
+        width: 1080,
+        height: 2340,
         title: "Explore",
         description: "Browse curated stories and discover new reads.",
       },
       {
-        kind: "placeholder",
-        label: "Preview",
-        disclosure: "This is a product preview, not an English app capture.",
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/en/library.jpg",
+          light: "/inkscroller/screenshots/light/en/library.jpg",
+        },
+        alt: "InkScroller library screen with saved stories",
+        width: 1080,
+        height: 2340,
         title: "Library",
         description: "Keep your saved stories organized and close.",
       },
       {
-        kind: "placeholder",
-        label: "Preview",
-        disclosure: "This is a product preview, not an English app capture.",
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/en/story-detail.jpg",
+          light: "/inkscroller/screenshots/light/en/story-detail.jpg",
+        },
+        alt: "InkScroller story detail screen with saved reading options",
+        width: 1080,
+        height: 2340,
         title: "Story detail",
         description: "Dive into the details before you start reading.",
       },
       {
-        kind: "placeholder",
-        label: "Preview",
-        disclosure: "This is a product preview, not an English app capture.",
-        title: "Reader",
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/reader.jpg",
+          light: "/inkscroller/screenshots/light/reader.jpg",
+        },
+        alt: "InkScroller reader in continuous vertical reading mode",
+        width: 1080,
+        height: 2340,
+        title: "Reader: vertical",
         description: "A focused reading space, free of distractions.",
       },
       {
-        kind: "placeholder",
-        label: "Preview",
-        disclosure: "This is a product preview, not an English app capture.",
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/reader-2.jpg",
+          light: "/inkscroller/screenshots/light/reader-2.jpg",
+        },
+        alt: "InkScroller reader in paginated reading mode",
+        width: 1080,
+        height: 2340,
+        title: "Reader: paginated",
+        description: "Move through a story one page at a time.",
+      },
+      {
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/en/reader-settings.jpg",
+          light: "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg",
+        },
+        alt: "InkScroller reader settings screen",
+        width: 1080,
+        height: 2340,
         title: "Reader settings",
         description: "Customize font, size, and theme to match your pace.",
       },
@@ -213,7 +253,10 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
     media: [
       {
         kind: "capture",
-        src: "/inkscroller/product-home-es-v1.jpg",
+        src: {
+          dark: "/inkscroller/screenshots/dark/es/home.jpg",
+          light: "/inkscroller/screenshots/light/es/home.jpg",
+        },
         alt: "Inicio de InkScroller con panel de lectura",
         width: 1080,
         height: 2340,
@@ -222,16 +265,23 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       },
       {
         kind: "capture",
-        src: "/inkscroller/product-explore-es-v1.jpg",
+        src: {
+          dark: "/inkscroller/screenshots/dark/es/explore.jpg",
+          light: "/inkscroller/screenshots/light/es/explore.jpg",
+        },
         alt: "Explorar InkScroller descubriendo historias",
         width: 1080,
         height: 2340,
         title: "Explorar",
-        description: "Navega por historias seleccionadas y descubre nuevas lecturas.",
+        description:
+          "Navega por historias seleccionadas y descubre nuevas lecturas.",
       },
       {
         kind: "capture",
-        src: "/inkscroller/home-library-es-v1.jpg",
+        src: {
+          dark: "/inkscroller/screenshots/dark/es/library.jpg",
+          light: "/inkscroller/screenshots/light/es/library.jpg",
+        },
         alt: "Biblioteca de InkScroller mostrando historias guardadas",
         width: 1080,
         height: 2340,
@@ -240,7 +290,10 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       },
       {
         kind: "capture",
-        src: "/inkscroller/home-manga-detail-es-v1.jpg",
+        src: {
+          dark: "/inkscroller/screenshots/dark/es/story-detail.jpg",
+          light: "/inkscroller/screenshots/light/es/story-detail.jpg",
+        },
         alt: "Detalle de manga en InkScroller con opción de guardar",
         width: 1080,
         height: 2340,
@@ -249,16 +302,34 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       },
       {
         kind: "capture",
-        src: "/inkscroller/home-reader-es-v1.jpg",
-        alt: "Lector de InkScroller retomando la lectura",
+        src: {
+          dark: "/inkscroller/screenshots/dark/reader.jpg",
+          light: "/inkscroller/screenshots/light/reader.jpg",
+        },
+        alt: "Lector de InkScroller en modo de lectura vertical continua",
         width: 1080,
         height: 2340,
-        title: "Lector",
+        title: "Lector: vertical",
         description: "Un espacio de lectura enfocado, libre de distracciones.",
       },
       {
         kind: "capture",
-        src: "/inkscroller/product-settings-es-v1.jpg",
+        src: {
+          dark: "/inkscroller/screenshots/dark/reader-2.jpg",
+          light: "/inkscroller/screenshots/light/reader-2.jpg",
+        },
+        alt: "Lector de InkScroller en modo de lectura paginada",
+        width: 1080,
+        height: 2340,
+        title: "Lector: paginado",
+        description: "Avanza por la historia de página en página.",
+      },
+      {
+        kind: "capture",
+        src: {
+          dark: "/inkscroller/screenshots/dark/es/reader-settings.jpg",
+          light: "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
+        },
         alt: "Ajustes del lector de InkScroller",
         width: 1080,
         height: 2340,

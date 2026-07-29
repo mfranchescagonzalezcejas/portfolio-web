@@ -1,5 +1,6 @@
 import type { Locale, NavItem } from "../../content/site";
-import { useEffect, useState } from "react";
+import { saveLocaleScrollPosition } from "../../lib/locale-scroll";
+import { useEffect, useState, type MouseEvent } from "react";
 
 type ThemeMode = "light" | "dark";
 
@@ -119,6 +120,7 @@ type SiteHeaderProps = {
   currentLocale: Locale;
   isHome?: boolean;
   localePath?: string;
+  localeHref?: string;
   navItems: NavItem[];
   languageSwitcher: {
     label: string;
@@ -140,6 +142,7 @@ export default function SiteHeader({
   currentLocale,
   isHome = true,
   localePath,
+  localeHref,
   navItems,
   languageSwitcher,
   header,
@@ -152,6 +155,7 @@ export default function SiteHeader({
 
     root.classList.remove("light", "dark");
     root.classList.add(currentTheme);
+    document.dispatchEvent(new Event("devdigi-theme-change"));
     setThemeMode(currentTheme);
   }, []);
 
@@ -160,11 +164,11 @@ export default function SiteHeader({
   const toHomeHref = (href: string) =>
     isHome || !href.startsWith("#") ? href : `${homeHref}${href}`;
   const nextLocale = isEnglishLocale ? "es" : "en";
-  const nextLocaleHref = localePath
+  const nextLocaleHref = localeHref ?? (localePath
     ? localePath.replace(/^\/(en|es)(?=\/|$)/, `/${nextLocale}`)
     : nextLocale === "en"
       ? "/en"
-      : `/${nextLocale}`;
+      : `/${nextLocale}`);
 
   const currentLocaleLabel = languageSwitcher.options[currentLocale];
   const localeAriaHint =
@@ -183,6 +187,7 @@ export default function SiteHeader({
 
       root.classList.remove("light", "dark");
       root.classList.add(nextTheme);
+      document.dispatchEvent(new Event("devdigi-theme-change"));
 
       try {
         window.localStorage.setItem("devdigi-theme", nextTheme);
@@ -192,6 +197,22 @@ export default function SiteHeader({
 
       return nextTheme;
     });
+  };
+
+  const onLocaleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      (event.currentTarget.target && event.currentTarget.target !== "_self")
+    ) {
+      return;
+    }
+
+    saveLocaleScrollPosition(nextLocaleHref);
   };
 
   return (
@@ -229,6 +250,7 @@ export default function SiteHeader({
           <div role="group" aria-label={languageSwitcher.label}>
             <a
               href={nextLocaleHref}
+              onClick={onLocaleClick}
               className="header-lang-toggle"
               aria-label={`${currentLocaleLabel}. ${localeAriaHint}`}
               title={localeAriaHint}

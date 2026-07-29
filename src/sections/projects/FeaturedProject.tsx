@@ -144,12 +144,14 @@ export default function FeaturedProject({
           <div className="featured-project-mockups" aria-hidden="true">
             {mockups.map((mockup, index) => (
               <div
-                key={mockup.src}
+                key={mockup.src.dark}
                 className={`mockup-phone featured-mockup featured-mockup-${index + 1}`}
               >
                 <div className="mockup-phone-screen">
                   <img
-                    src={mockup.src}
+                    src={mockup.src.dark}
+                    data-dark-src={mockup.src.dark}
+                    data-light-src={mockup.src.light}
                     width={mockup.width}
                     height={mockup.height}
                     alt=""

@@ -27,9 +27,9 @@ const { content } = Astro.props;
 const currentYear = new Date().getFullYear();
 const site = siteContentByLocale[content.locale];
 const firstMedia = content.media[0];
-const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedia.label;
-const heroCaptures = content.media.filter((m: ProductMedia & SlideMeta) => m.kind === "capture");
-const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, alt: m.alt })));
+const heroCapturesJson = JSON.stringify(
+  content.media.map((media) => ({ src: media.src, alt: media.alt })),
+);
 ---
 
 <BaseLayout locale={content.locale} pageSeo={content.seo}>
@@ -38,6 +38,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
   <SiteHeader
     currentLocale={site.locale}
     isHome={false}
+    localeHref={content.counterpart.href}
     navItems={site.nav}
     languageSwitcher={site.languageSwitcher}
     header={site.header}
@@ -55,7 +56,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
         <div class="inkscroller-hero-device">
           <div class="mockup-phone">
             <div class="mockup-phone-screen" id="hero-screen">
-              <img id="hero-img-current" class="hero-img-layer" src={firstMedia.kind === "capture" ? firstMedia.src : ""} alt={firstMedia.kind === "capture" ? firstMedia.alt : ""} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
+              <img id="hero-img-current" class="hero-img-layer" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
               <img id="hero-img-next" class="hero-img-layer" src="" alt="" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" style="display:none" />
             </div>
             <div class="mockup-phone-frame" aria-hidden="true"></div>
@@ -77,11 +78,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
                 <div class="inkscroller-slide-device">
                   <div class="mockup-phone">
                     <div class="mockup-phone-screen">
-                      {entry.kind === "capture" ? (
-                        <img src={entry.src} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
-                      ) : (
-                        <div class="inkscroller-placeholder"><strong>{entry.label}</strong><p>{entry.disclosure}</p></div>
-                      )}
+                      <img src={entry.src.dark} data-dark-src={entry.src.dark} data-light-src={entry.src.light} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
                     </div>
                     <div class="mockup-phone-frame" aria-hidden="true"></div>
                   </div>
@@ -277,7 +274,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
           const heroTimer = setInterval(() => {
             const nextIdx = (idx + 1) % captures.length;
             // Set next image to incoming position (below)
-            nextImg.src = captures[nextIdx].src;
+            nextImg.src = captures[nextIdx].src[document.documentElement.classList.contains("light") ? "light" : "dark"];
             nextImg.alt = captures[nextIdx].alt;
             nextImg.style.display = "block";
             // Animate: current slides out (up), next slides in (from below)
@@ -285,7 +282,7 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
             nextImg.classList.add("slide-in");
             // After animation, reset: current becomes the visible image
             setTimeout(() => {
-              currentImg.src = captures[nextIdx].src;
+              currentImg.src = captures[nextIdx].src[document.documentElement.classList.contains("light") ? "light" : "dark"];
               currentImg.alt = captures[nextIdx].alt;
               currentImg.classList.remove("slide-out");
               nextImg.classList.remove("slide-in");

@@ -27,7 +27,7 @@ export type Project = {
 };
 
 export type ProjectMockup = {
-  src: `/inkscroller/${string}`;
+  src: Record<"dark" | "light", `/inkscroller/${string}`>;
   width: 1080;
   height: 2340;
 };
@@ -722,17 +722,26 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         featured: true,
         mockups: [
           {
-            src: "/inkscroller/home-library-es-v1.jpg",
+            src: {
+              dark: "/inkscroller/screenshots/dark/en/explore.jpg",
+              light: "/inkscroller/screenshots/light/en/explore.jpg",
+            },
             width: 1080,
             height: 2340,
           },
           {
-            src: "/inkscroller/home-manga-detail-es-v1.jpg",
+            src: {
+              dark: "/inkscroller/screenshots/dark/en/home.jpg",
+              light: "/inkscroller/screenshots/light/en/home.jpg",
+            },
             width: 1080,
             height: 2340,
           },
           {
-            src: "/inkscroller/home-reader-es-v1.jpg",
+            src: {
+              dark: "/inkscroller/screenshots/dark/en/library.jpg",
+              light: "/inkscroller/screenshots/light/en/library.jpg",
+            },
             width: 1080,
             height: 2340,
           },
@@ -1286,17 +1295,26 @@ const rawSiteContent: Record<Locale, SiteContent> = {
         featured: true,
         mockups: [
           {
-            src: "/inkscroller/home-library-es-v1.jpg",
+            src: {
+              dark: "/inkscroller/screenshots/dark/es/explore.jpg",
+              light: "/inkscroller/screenshots/light/es/explore.jpg",
+            },
             width: 1080,
             height: 2340,
           },
           {
-            src: "/inkscroller/home-manga-detail-es-v1.jpg",
+            src: {
+              dark: "/inkscroller/screenshots/dark/es/home.jpg",
+              light: "/inkscroller/screenshots/light/es/home.jpg",
+            },
             width: 1080,
             height: 2340,
           },
           {
-            src: "/inkscroller/home-reader-es-v1.jpg",
+            src: {
+              dark: "/inkscroller/screenshots/dark/es/library.jpg",
+              light: "/inkscroller/screenshots/light/es/library.jpg",
+            },
             width: 1080,
             height: 2340,
           },
