@@ -1072,14 +1072,12 @@ h4 {
   z-index: 3;
 }
 
-.featured-project-mockups:has(.featured-mockup-2:hover)
-  .featured-mockup-1 {
+.featured-project-mockups:has(.featured-mockup-2:hover) .featured-mockup-1 {
   transform: scale(0.8);
   opacity: 0.12;
 }
 
-.featured-project-mockups:has(.featured-mockup-2:hover)
-  .featured-mockup-3 {
+.featured-project-mockups:has(.featured-mockup-2:hover) .featured-mockup-3 {
   transform: scale(0.8);
   opacity: 0.12;
 }

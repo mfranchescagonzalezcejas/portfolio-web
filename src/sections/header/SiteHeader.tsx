@@ -164,11 +164,13 @@ export default function SiteHeader({
   const toHomeHref = (href: string) =>
     isHome || !href.startsWith("#") ? href : `${homeHref}${href}`;
   const nextLocale = isEnglishLocale ? "es" : "en";
-  const nextLocaleHref = localeHref ?? (localePath
-    ? localePath.replace(/^\/(en|es)(?=\/|$)/, `/${nextLocale}`)
-    : nextLocale === "en"
-      ? "/en"
-      : `/${nextLocale}`);
+  const nextLocaleHref =
+    localeHref ??
+    (localePath
+      ? localePath.replace(/^\/(en|es)(?=\/|$)/, `/${nextLocale}`)
+      : nextLocale === "en"
+        ? "/en"
+        : `/${nextLocale}`);
 
   const currentLocaleLabel = languageSwitcher.options[currentLocale];
   const localeAriaHint =

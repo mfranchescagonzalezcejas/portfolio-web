@@ -39,7 +39,14 @@ describe("locale routing behavior", () => {
       currentLocaleName: "EN",
       nextLocaleHref: "/es",
       nextLocaleHint: "Switch to Spanish",
-      primaryNavLabels: ["About", "Experience", "Projects", "Skills", "Education", "Contact"],
+      primaryNavLabels: [
+        "About",
+        "Experience",
+        "Projects",
+        "Skills",
+        "Education",
+        "Contact",
+      ],
       themeToggleLabel: "Switch to light mode",
     },
     {
@@ -56,7 +63,14 @@ describe("locale routing behavior", () => {
       currentLocaleName: "EN",
       nextLocaleHref: "/es",
       nextLocaleHint: "Switch to Spanish",
-      primaryNavLabels: ["About", "Experience", "Projects", "Skills", "Education", "Contact"],
+      primaryNavLabels: [
+        "About",
+        "Experience",
+        "Projects",
+        "Skills",
+        "Education",
+        "Contact",
+      ],
       themeToggleLabel: "Switch to light mode",
     },
     {
@@ -73,7 +87,14 @@ describe("locale routing behavior", () => {
       currentLocaleName: "ES",
       nextLocaleHref: "/en",
       nextLocaleHint: "Cambiar a inglés",
-      primaryNavLabels: ["Sobre mí", "Experiencia", "Proyectos", "Habilidades", "Educación", "Contacto"],
+      primaryNavLabels: [
+        "Sobre mí",
+        "Experiencia",
+        "Proyectos",
+        "Habilidades",
+        "Educación",
+        "Contacto",
+      ],
       themeToggleLabel: "Cambiar a modo claro",
     },
   ])(
@@ -144,7 +165,14 @@ describe("locale routing behavior", () => {
         within(primaryNav)
           .getAllByRole("link")
           .map((link) => link.getAttribute("href")),
-      ).toEqual(["#about", "#experience", "#projects", "#skills", "#education", "#contact"]);
+      ).toEqual([
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ]);
       expect(
         within(primaryNav).queryByText("InkScroller"),
       ).not.toBeInTheDocument();
@@ -910,7 +938,14 @@ describe("navigation anchors", () => {
       within(primaryNav)
         .getAllByRole("link")
         .map((link) => link.textContent),
-    ).toEqual(["Sobre mí", "Experiencia", "Proyectos", "Habilidades", "Educación", "Contacto"]);
+    ).toEqual([
+      "Sobre mí",
+      "Experiencia",
+      "Proyectos",
+      "Habilidades",
+      "Educación",
+      "Contacto",
+    ]);
     expect(
       within(primaryNav).queryByRole("link", { name: "InkScroller" }),
     ).not.toBeInTheDocument();

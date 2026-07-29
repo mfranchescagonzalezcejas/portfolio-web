@@ -549,17 +549,23 @@ describe("rendered responsive overflow", () => {
             `${theme}: ${control.className}`,
           ).toBeGreaterThanOrEqual(
             control.className.includes("header-nav-link") ||
-            control.className.includes("header-lang-toggle") ||
-            control.className.includes("header-theme-toggle") ||
-            control.className.includes("header-contact-cta") ? 36 : 44);
+              control.className.includes("header-lang-toggle") ||
+              control.className.includes("header-theme-toggle") ||
+              control.className.includes("header-contact-cta")
+              ? 36
+              : 44,
+          );
           expect(
             control.height,
             `${theme}: ${control.className}`,
           ).toBeGreaterThanOrEqual(
             control.className.includes("header-nav-link") ||
-            control.className.includes("header-lang-toggle") ||
-            control.className.includes("header-theme-toggle") ||
-            control.className.includes("header-contact-cta") ? 36 : 44);
+              control.className.includes("header-lang-toggle") ||
+              control.className.includes("header-theme-toggle") ||
+              control.className.includes("header-contact-cta")
+              ? 36
+              : 44,
+          );
         }
         expect(metrics.experiencePeriodBadges.length, theme).toBeGreaterThan(0);
 
@@ -592,56 +598,112 @@ describe("rendered responsive overflow", () => {
     {
       path: "/en/",
       width: 320,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Learning projects",
       learningProjectColumns: 1,
     },
     {
       path: "/en/",
       width: 375,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Learning projects",
       learningProjectColumns: 1,
     },
     {
       path: "/en/",
       width: 768,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Learning projects",
       learningProjectColumns: 2,
     },
     {
       path: "/en/",
       width: 1440,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Learning projects",
       learningProjectColumns: 3,
     },
     {
       path: "/es/",
       width: 320,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Proyectos de aprendizaje",
       learningProjectColumns: 1,
     },
     {
       path: "/es/",
       width: 375,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Proyectos de aprendizaje",
       learningProjectColumns: 1,
     },
     {
       path: "/es/",
       width: 768,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Proyectos de aprendizaje",
       learningProjectColumns: 2,
     },
     {
       path: "/es/",
       width: 1440,
-      primaryNavHrefs: ["#about", "#experience", "#projects", "#skills", "#education", "#contact"],
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
       learningProjectsTitle: "Proyectos de aprendizaje",
       learningProjectColumns: 3,
     },
@@ -720,12 +782,17 @@ describe("rendered responsive overflow", () => {
           continue;
         }
 
-        const minDim = control.className.includes("header-nav-link") ||
-                       control.className.includes("header-lang-toggle") ||
-                       control.className.includes("header-theme-toggle") ||
-                       control.className.includes("header-contact-cta") ? 36 : 44;
+        const minDim =
+          control.className.includes("header-nav-link") ||
+          control.className.includes("header-lang-toggle") ||
+          control.className.includes("header-theme-toggle") ||
+          control.className.includes("header-contact-cta")
+            ? 36
+            : 44;
         expect(control.width, control.className).toBeGreaterThanOrEqual(minDim);
-        expect(control.height, control.className).toBeGreaterThanOrEqual(minDim);
+        expect(control.height, control.className).toBeGreaterThanOrEqual(
+          minDim,
+        );
       }
     },
     testTimeoutMs,

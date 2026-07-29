@@ -44,10 +44,13 @@ describe("locale scroll position", () => {
       JSON.stringify({ pathname: "/es/proyectos/inkscroller", x: 12, y: 640 }),
     );
     const scrollTo = vi.spyOn(window, "scrollTo").mockImplementation(() => {});
-    vi.stubGlobal("requestAnimationFrame", (callback: Parameters<typeof requestAnimationFrame>[0]) => {
-      callback(0);
-      return 0;
-    });
+    vi.stubGlobal(
+      "requestAnimationFrame",
+      (callback: Parameters<typeof requestAnimationFrame>[0]) => {
+        callback(0);
+        return 0;
+      },
+    );
 
     restoreLocaleScrollPosition();
     window.dispatchEvent(new Event("load"));

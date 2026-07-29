@@ -422,9 +422,9 @@ const assertNoJsContract = (
     expect(mockup.getAttribute("height")).toBe("2340");
     expect(mockup.getAttribute("decoding")).toBe("async");
   });
-  expect(featuredMockups.map((mockup) => mockup.getAttribute("data-light-src"))).toEqual(
-    homeMockupPaths(locale, "light"),
-  );
+  expect(
+    featuredMockups.map((mockup) => mockup.getAttribute("data-light-src")),
+  ).toEqual(homeMockupPaths(locale, "light"));
   expect(html).not.toContain("drive-download-20260726T185531Z-1-001");
 
   for (const sectionId of sectionIds) {
@@ -1137,9 +1137,9 @@ describe("InkScroller static product routes", () => {
         expect(typeof entry.title).toBe("string");
         expect(typeof entry.description).toBe("string");
         Object.values(entry.src).forEach((src) => {
-          expect(existsSync(resolve(process.cwd(), "public", src.slice(1)))).toBe(
-            true,
-          );
+          expect(
+            existsSync(resolve(process.cwd(), "public", src.slice(1))),
+          ).toBe(true);
         });
       });
       expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
@@ -1161,9 +1161,13 @@ describe("InkScroller static product routes", () => {
       expect(carouselImgs).toHaveLength(7);
       expect(
         Array.from(carouselImgs).map((image) => image.getAttribute("src")),
-      ).toContain(`/inkscroller/screenshots/dark/${locale}/reader-settings.jpg`);
+      ).toContain(
+        `/inkscroller/screenshots/dark/${locale}/reader-settings.jpg`,
+      );
       expect(
-        Array.from(carouselImgs).map((image) => image.getAttribute("data-light-src")),
+        Array.from(carouselImgs).map((image) =>
+          image.getAttribute("data-light-src"),
+        ),
       ).toContain(
         locale === "en"
           ? "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg"
@@ -1175,7 +1179,9 @@ describe("InkScroller static product routes", () => {
   it("switches product carousel captures for the boot theme and later theme changes", async () => {
     const html = readHtml("dist/en/projects/inkscroller/index.html");
     const renderedDocument = new DOMParser().parseFromString(html, "text/html");
-    const bootScript = Array.from(renderedDocument.head.querySelectorAll("script"))
+    const bootScript = Array.from(
+      renderedDocument.head.querySelectorAll("script"),
+    )
       .map((script) => script.textContent ?? "")
       .find((script) => script.includes("syncThemeImages"));
     const previousHtmlClass = document.documentElement.className;

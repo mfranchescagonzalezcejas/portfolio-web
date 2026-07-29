@@ -93,9 +93,10 @@ export default function Hero({ hero, links }: HeroProps) {
 
             {profileLinks.map((link) => {
               const Icon = getContactIcon(link.kind);
-              const variantClass = link.kind === "linkedin"
-                ? "contact-cta-link-primary cta-button"
-                : "contact-cta-link-secondary cta-outline";
+              const variantClass =
+                link.kind === "linkedin"
+                  ? "contact-cta-link-primary cta-button"
+                  : "contact-cta-link-secondary cta-outline";
 
               return (
                 <a
@@ -105,7 +106,11 @@ export default function Hero({ hero, links }: HeroProps) {
                   target={link.external ? "_blank" : undefined}
                   rel={link.external ? "noopener noreferrer" : undefined}
                 >
-                  <Icon className="contact-cta-icon" aria-hidden="true" data-contact-icon={link.kind} />
+                  <Icon
+                    className="contact-cta-icon"
+                    aria-hidden="true"
+                    data-contact-icon={link.kind}
+                  />
                   <span>{link.label}</span>
                 </a>
               );

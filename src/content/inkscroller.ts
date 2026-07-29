@@ -173,7 +173,8 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
         kind: "capture",
         src: {
           dark: "/inkscroller/screenshots/dark/en/reader-settings.jpg",
-          light: "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg",
+          light:
+            "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg",
         },
         alt: "InkScroller reader settings screen",
         width: 1080,
@@ -328,7 +329,8 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
         kind: "capture",
         src: {
           dark: "/inkscroller/screenshots/dark/es/reader-settings.jpg",
-          light: "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
+          light:
+            "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
         },
         alt: "Ajustes del lector de InkScroller",
         width: 1080,

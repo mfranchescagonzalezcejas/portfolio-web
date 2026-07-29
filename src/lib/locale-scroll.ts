@@ -34,7 +34,10 @@ export function saveLocaleScrollPosition(href: string) {
 
     if (!isValidPosition(position)) return;
 
-    window.sessionStorage.setItem(localeScrollStorageKey, JSON.stringify(position));
+    window.sessionStorage.setItem(
+      localeScrollStorageKey,
+      JSON.stringify(position),
+    );
   } catch {
     // Storage and URL parsing are optional enhancements to normal navigation.
   }
