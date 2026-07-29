@@ -111,7 +111,7 @@ const productEntrypoints = [
     alternate: `${productionSiteUrl}/es/proyectos/inkscroller`,
     hero: "Keep your next chapter within reach.",
     preview: "Browse curated stories and discover new reads.",
-    beta: "Beta access is not currently available.",
+    beta: "Apply as a tester",
   },
   {
     path: "dist/es/proyectos/inkscroller/index.html",
@@ -121,7 +121,7 @@ const productEntrypoints = [
     alternate: `${productionSiteUrl}/en/projects/inkscroller`,
     hero: "Tu próximo capítulo, siempre a mano.",
     preview: "Navega por historias seleccionadas y descubre nuevas lecturas.",
-    beta: "El acceso a beta no está disponible actualmente.",
+    beta: "Solicitar acceso",
   },
 ] as const;
 

@@ -143,11 +143,11 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       },
     ],
     beta: {
-      title: "Beta updates",
+      title: "Beta testing",
       description:
-        "Beta access is not currently available. Contact me to follow the project.",
-      action: "Ask about InkScroller",
-      href: "mailto:mercedesgon03@gmail.com?subject=InkScroller",
+        "InkScroller is in closed beta. Join as a tester to help shape the app.",
+      action: "Apply as a tester",
+      href: "/en/beta/inkscroller",
     },
   },
   es: {
@@ -267,11 +267,11 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       },
     ],
     beta: {
-      title: "Actualizaciones de beta",
+      title: "Beta cerrada",
       description:
-        "El acceso a beta no está disponible actualmente. Contacta conmigo para seguir el proyecto.",
-      action: "Consultar sobre InkScroller",
-      href: "mailto:mercedesgon03@gmail.com?subject=InkScroller",
+        "InkScroller está en beta cerrada. Solicita acceso como tester y ayuda a mejorar la app.",
+      action: "Solicitar acceso",
+      href: "/es/beta/inkscroller",
     },
   },
 };
