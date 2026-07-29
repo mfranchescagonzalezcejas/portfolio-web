@@ -27,6 +27,10 @@ type SeoContract = {
 const productionSiteUrl = "https://devdigi.dev";
 const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
+const inkScrollerPagePath = resolve(
+  process.cwd(),
+  "src/layouts/InkScrollerPage.astro",
+);
 const fontStylesheetUrl =
   "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
 const pngSignature = Buffer.from([
@@ -1116,4 +1120,20 @@ describe("InkScroller static product routes", () => {
       }
     },
   );
+});
+
+describe("InkScroller carousel loop", () => {
+  it("keeps leading clones and seamless boundary wraps in circular order", () => {
+    const page = readFileSync(inkScrollerPagePath, "utf8");
+
+    expect(page).toContain(
+      "track?.prepend(...origSlides.slice(-cloneCount).map((slide) => slide.cloneNode(true)));",
+    );
+    // Next-seamless: instantly reposition to leading clone, then animate one step right
+    expect(page).toContain("activeIndex = cloneCount - 1;");
+    expect(page).toContain("scrollToSlide(activeIndex + 1);");
+    // Prev-seamless: instantly reposition to trailing clone, then animate one step left
+    expect(page).toContain("activeIndex = cloneCount + totalReal;");
+    expect(page).toContain("scrollToSlide(activeIndex - 1);");
+  });
 });

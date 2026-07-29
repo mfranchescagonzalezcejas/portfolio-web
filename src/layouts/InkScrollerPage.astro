@@ -127,11 +127,8 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     // Build slide list with clones for infinite scroll
     const origSlides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
     const cloneCount = 3;
-    // Prepend clones of last slides
-    for (let i = cloneCount; i > 0; i--) {
-      const clone = origSlides[origSlides.length - i].cloneNode(true);
-      track?.insertBefore(clone, track.firstChild);
-    }
+    // Prepend clones of last slides in their original order.
+    track?.prepend(...origSlides.slice(-cloneCount).map((slide) => slide.cloneNode(true)));
     // Append clones of first slides
     for (let i = 0; i < cloneCount; i++) {
       const clone = origSlides[i].cloneNode(true);
@@ -193,9 +190,9 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
       const idx = getSlideIndex();
       if (idx < cloneCount || idx >= cloneCount + totalReal) {
         isJumping = true;
-        // Map clone index to correct real slide index
+        // Map clone index to correct real slide index.
         const target = idx < cloneCount
-          ? cloneCount + totalReal - 1 - idx  // leading clones: reverse order
+          ? cloneCount + (totalReal - cloneCount + idx) // leading clones: preserve real index
           : idx - totalReal;                   // trailing clones: subtract offset
         const t = slides[target];
         // Use offsetLeft (always correct, unlike getBoundingClientRect which breaks when target is off-screen)
@@ -210,8 +207,10 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     function nextSlide() {
       const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
       if (currentReal === totalReal - 1) {
-        // Wrapping from last to first: go to the clone after the real slides (forward)
-        scrollToSlide(cloneCount + totalReal);
+        // Seamless wrap: instantly reposition to leading clone, then animate one step right
+        activeIndex = cloneCount - 1;
+        track.scrollTo({ left: slides[activeIndex].offsetLeft, behavior: "auto" });
+        scrollToSlide(activeIndex + 1);
       } else {
         scrollToSlide(activeIndex + 1);
       }
@@ -220,8 +219,10 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     function prevSlide() {
       const currentReal = ((activeIndex - cloneCount) % totalReal + totalReal) % totalReal;
       if (currentReal === 0) {
-        // Wrapping from first to last: go to first clone (Ajustes, index 0) — backward direction
-        scrollToSlide(0);
+        // Seamless wrap: instantly reposition to trailing clone, then animate one step left
+        activeIndex = cloneCount + totalReal;
+        track.scrollTo({ left: slides[activeIndex].offsetLeft, behavior: "auto" });
+        scrollToSlide(activeIndex - 1);
       } else {
         scrollToSlide(activeIndex - 1);
       }
