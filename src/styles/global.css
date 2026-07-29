@@ -2609,10 +2609,11 @@ a {
 
 .inkscroller-hero-eyebrow { color: var(--primary); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; margin: 0; }
 .inkscroller-hero-device { display: flex; justify-content: center; align-items: center; height: 100%; }
+.inkscroller-hero.hero-section { overflow: visible; }
 
-.inkscroller-hero.hero-section::before { top: 6rem; left: 50%; transform: translateX(-50%); width: min(22rem, 80vw); height: 20rem; }
+.inkscroller-hero.hero-section::before { top: 24rem; left: 50%; transform: translateX(-50%); }
 @media (min-width: 1024px) {
-  .inkscroller-hero.hero-section::before { top: 5rem; left: calc(50% + 8rem); width: 26rem; height: 24rem; transform: translateX(-50%); }
+  .inkscroller-hero.hero-section::before { top: 10.5rem; left: calc(50% + 19rem); width: 31rem; height: 33rem; opacity: 0.76; background: radial-gradient(ellipse at center, color-mix(in oklab, var(--primary) 22%, transparent) 0%, color-mix(in oklab, var(--accent-blue) 13%, transparent) 42%, transparent 72%); }
 }
 
 .inkscroller-proof { padding: 0; }
