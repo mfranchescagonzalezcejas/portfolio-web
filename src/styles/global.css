@@ -542,9 +542,10 @@ h4 {
 .featured-project-card {
   max-width: 66rem;
   margin: 3.25rem auto 0;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 2rem;
   padding: 1.35rem;
+  background: transparent;
 }
 
 .featured-section {
@@ -1004,8 +1005,12 @@ h4 {
   flex: none;
 }
 
-.featured-card-enclosure {
-  position: relative;
+.card-bg-clip {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: -1;
 }
 
 .featured-project-mockups {
@@ -1019,7 +1024,7 @@ h4 {
 @media (min-width: 1024px) {
   .featured-project-mockups {
     position: absolute;
-    right: 3px;
+    right: 0;
     top: 50%;
     z-index: 0;
     min-height: 0;

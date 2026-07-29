@@ -54,90 +54,90 @@ export default function FeaturedProject({
           </h2>
         </div>
 
-        <div className="featured-card-enclosure">
-          <div className="featured-project-card card-surface">
+        <div className="featured-project-card card-surface">
+          <div className="card-bg-clip">
             <div className="featured-project-glow featured-project-glow-primary" />
             <div className="featured-project-glow featured-project-glow-secondary" />
+          </div>
 
-            <div className="featured-project-layout">
-              <div className="featured-project-copy">
-                <p className="featured-project-kicker">{section.kicker}</p>
-                <h3 className="featured-project-title">
-                  <span className="featured-project-title-icon">
-                    <img
-                      src="/inkscroller/icons/foreground-v1.png"
-                      alt=""
-                      className="featured-icon-fg"
-                      aria-hidden="true"
-                      loading="lazy"
-                      width="500"
-                      height="500"
-                    />
-                  </span>
-                  <span className="text-gradient">{project.name}</span>
-                </h3>
-                <p className="featured-project-description">
-                  {project.description}
-                </p>
+          <div className="featured-project-layout">
+            <div className="featured-project-copy">
+              <p className="featured-project-kicker">{section.kicker}</p>
+              <h3 className="featured-project-title">
+                <span className="featured-project-title-icon">
+                  <img
+                    src="/inkscroller/icons/foreground-v1.png"
+                    alt=""
+                    className="featured-icon-fg"
+                    aria-hidden="true"
+                    loading="lazy"
+                    width="500"
+                    height="500"
+                  />
+                </span>
+                <span className="text-gradient">{project.name}</span>
+              </h3>
+              <p className="featured-project-description">
+                {project.description}
+              </p>
 
+              <ul
+                className="project-stack-list"
+                aria-label={formatProjectLabel(section.stackLabel, {
+                  project: project.name,
+                })}
+              >
+                {project.stack.map((stackItem) => (
+                  <li key={stackItem} className="project-tech-badge">
+                    {stackItem}
+                  </li>
+                ))}
+              </ul>
+
+              {project.links.length > 0 && (
                 <ul
-                  className="project-stack-list"
-                  aria-label={formatProjectLabel(section.stackLabel, {
-                    project: project.name,
-                  })}
+                  className="featured-project-links"
+                  aria-label={`${project.name} · ${section.linksLabel}`}
                 >
-                  {project.stack.map((stackItem) => (
-                    <li key={stackItem} className="project-tech-badge">
-                      {stackItem}
-                    </li>
-                  ))}
+                  {project.links.map((link, index) => {
+                    const ctaLabel =
+                      link.ctaLabel ??
+                      (index === 0
+                        ? section.primaryCtaLabel
+                        : section.secondaryCtaLabel);
+
+                    return (
+                      <li key={link.href}>
+                        <a
+                          className={
+                            index === 0
+                              ? "cta-button featured-project-link-primary"
+                              : "cta-outline featured-project-link-secondary"
+                          }
+                          href={link.href}
+                          target={link.external ? "_blank" : undefined}
+                          rel={
+                            link.external ? "noopener noreferrer" : undefined
+                          }
+                          aria-label={formatProjectLabel(
+                            section.linkAriaLabel,
+                            {
+                              label: ctaLabel,
+                              project: project.name,
+                            },
+                          )}
+                        >
+                          <GitBranch
+                            aria-hidden="true"
+                            className="project-link-icon"
+                          />
+                          {ctaLabel}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
-
-                {project.links.length > 0 && (
-                  <ul
-                    className="featured-project-links"
-                    aria-label={`${project.name} · ${section.linksLabel}`}
-                  >
-                    {project.links.map((link, index) => {
-                      const ctaLabel =
-                        link.ctaLabel ??
-                        (index === 0
-                          ? section.primaryCtaLabel
-                          : section.secondaryCtaLabel);
-
-                      return (
-                        <li key={link.href}>
-                          <a
-                            className={
-                              index === 0
-                                ? "cta-button featured-project-link-primary"
-                                : "cta-outline featured-project-link-secondary"
-                            }
-                            href={link.href}
-                            target={link.external ? "_blank" : undefined}
-                            rel={
-                              link.external ? "noopener noreferrer" : undefined
-                            }
-                            aria-label={formatProjectLabel(
-                              section.linkAriaLabel,
-                              {
-                                label: ctaLabel,
-                                project: project.name,
-                              },
-                            )}
-                          >
-                            <GitBranch
-                              aria-hidden="true"
-                              className="project-link-icon"
-                            />
-                            {ctaLabel}
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
-              </div>
+              )}
             </div>
           </div>
 
