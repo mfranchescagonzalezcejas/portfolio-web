@@ -169,8 +169,8 @@ const heroCapturesJson = JSON.stringify(heroCaptures.map((m) => ({ src: m.src, a
     }
 
     function scrollToSlide(index) {
-      if (slides[index] && track) {
-        track.scrollTo({ left: slides[index].offsetLeft, behavior: "smooth" });
+      if (slides[index]) {
+        slides[index].scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
       }
     }
 
