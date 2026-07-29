@@ -1004,6 +1004,29 @@ h4 {
   flex: none;
 }
 
+.featured-card-enclosure {
+  position: relative;
+}
+
+.featured-project-mockups {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  min-height: 20.5rem;
+}
+
+@media (min-width: 1024px) {
+  .featured-project-mockups {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    z-index: 0;
+    min-height: 0;
+    transform: translateY(-50%);
+  }
+}
+
 .featured-mockup {
   transition:
     width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
@@ -1014,19 +1037,6 @@ h4 {
 }
 
 @media (min-width: 1024px) {
-  .featured-project-mockups {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    z-index: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0;
-    transform: translateY(-50%);
-    pointer-events: auto;
-  }
-
   .featured-project-card {
     position: relative;
   }
@@ -2203,7 +2213,7 @@ h4 {
   }
 
   .featured-project-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(31rem, 1fr);
   }
 
   .featured-project-links {
