@@ -42,22 +42,24 @@ const heroAriaLabel = firstMedia.kind === "capture" ? firstMedia.alt : firstMedi
     client:load
   />
   <main id="inkscroller-content" class="inkscroller-page">
-    <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
-    <section class="inkscroller-hero" aria-labelledby="inkscroller-title">
-      <div class="inkscroller-hero-copy">
-        <p class="inkscroller-hero-eyebrow">{content.hero.eyebrow}</p>
-        <h1 id="inkscroller-title">{content.hero.title}</h1>
-        <p class="inkscroller-hero-desc">{content.hero.description}</p>
-      </div>
-      <div class="inkscroller-hero-device" aria-label={heroAriaLabel}>
-        <div class="carousel-phone">
-          <div class="carousel-phone-notch"></div>
-          <div class="carousel-phone-screen">
-            {firstMedia.kind === "capture" ? (
-              <img src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="lazy" decoding="async" />
-            ) : (
-              <div class="inkscroller-placeholder"><strong>{firstMedia.label}</strong><p>{firstMedia.disclosure}</p></div>
-            )}
+    <section class="inkscroller-hero hero-section" aria-labelledby="inkscroller-title">
+      <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
+      <div class="hero-content mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-8">
+        <div>
+          <p class="inkscroller-hero-eyebrow">{content.hero.eyebrow}</p>
+          <h1 id="inkscroller-title" class="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl">{content.hero.title}</h1>
+          <p class="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">{content.hero.description}</p>
+        </div>
+        <div class="inkscroller-hero-device">
+          <div class="carousel-phone">
+            <div class="carousel-phone-notch"></div>
+            <div class="carousel-phone-screen">
+              {firstMedia.kind === "capture" ? (
+                <img src={firstMedia.src} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
+              ) : (
+                <div class="inkscroller-placeholder"><strong>{firstMedia.label}</strong><p>{firstMedia.disclosure}</p></div>
+              )}
+            </div>
           </div>
         </div>
       </div>
