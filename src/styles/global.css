@@ -1025,32 +1025,31 @@ h4 {
 
 .featured-mockup-1,
 .featured-mockup-3 {
-  width: min(12rem, 36vw);
+  width: min(12rem, 38vw);
   opacity: 0.25;
   filter: blur(2px);
   z-index: 1;
 }
 
 .featured-mockup-2 {
-  width: min(12rem, 36vw);
+  width: min(12rem, 42vw);
   z-index: 2;
 }
 
-.featured-project-mockups:has(.featured-mockup-2:hover)
-  .featured-mockup-2 {
-  width: min(14rem, 44vw);
+.featured-mockup-2:hover {
+  width: min(14rem, 46vw);
 }
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-1 {
-  width: min(9.6rem, 28vw);
+  width: min(9.6rem, 30vw);
   margin-right: -1.9rem;
   opacity: 0.12;
 }
 
 .featured-project-mockups:has(.featured-mockup-2:hover)
   .featured-mockup-3 {
-  width: min(9.6rem, 28vw);
+  width: min(9.6rem, 30vw);
   margin-left: -1.9rem;
   opacity: 0.12;
 }
