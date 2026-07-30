@@ -1370,7 +1370,7 @@ describe("InkScroller beta landing routes", () => {
   it("keeps beta route styling in the global stylesheet", () => {
     const styles = readFileSync(globalStylesPath, "utf8");
     const betaPage = readFileSync(
-      resolve(process.cwd(), "src/pages/en/beta/inkscroller.astro"),
+      resolve(process.cwd(), "src/pages/[locale]/beta/inkscroller.astro"),
       "utf8",
     );
 
