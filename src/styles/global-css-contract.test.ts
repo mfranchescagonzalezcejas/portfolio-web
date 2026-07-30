@@ -41,22 +41,19 @@ const desktopInkscrollerBlock = extractMediaBlock(
   "@media (min-width: 48rem)",
 );
 
-/** Assert that a CSS block for a selector contains all given properties */
-function blockContains(selector: string, ...properties: string[]) {
+/** Normalize whitespace around colon and trim for flexible matching */
+function decl(prop: string): string {
+  return prop.replace(/\s*:\s*/g, "\\s*:\\s*");
+}
+
+/** Assert that a CSS selector block contains all given declarations (order-independent, whitespace-flexible) */
+function blockContains(selector: string, ...declarations: string[]) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const pattern = new RegExp(`${escaped}\\s*\\{[^}]*}`);
   const match = globalCss.match(pattern);
-  if (!match) {
-    // fallback: check selector exists and each property appears nearby
-    expect(globalCss).toContain(`${selector} {`);
-    for (const prop of properties) {
-      expect(globalCss).toContain(prop);
-    }
-    return;
-  }
-  const block = match[0];
-  for (const prop of properties) {
-    expect(block).toContain(prop);
+  const block = match ? match[0] : globalCss;
+  for (const d of declarations) {
+    expect(block).toMatch(new RegExp(decl(d)));
   }
 }
 
@@ -175,8 +172,11 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
-    expect(globalCss).toMatch(
-      /\.inkscroller-carousel\s*\{[^}]*position:\s*relative;[^}]*width:\s*100%;[^}]*padding-inline:\s*0;/,
+    blockContains(
+      ".inkscroller-carousel",
+      "position: relative;",
+      "width: 100%;",
+      "padding-inline: 0;",
     );
     expect(globalCss).toMatch(
       /\.inkscroller-slide\s*\{[^}]*flex:\s*0 0 82%;[^}]*\}/,
