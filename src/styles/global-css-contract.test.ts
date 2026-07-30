@@ -20,6 +20,48 @@ const compactHeaderEnd = globalCss.indexOf(
 const heroGlowStart = globalCss.indexOf(".hero-section::before");
 const heroGlowEnd = globalCss.indexOf(".hero-content", heroGlowStart);
 
+const compact639Start = globalCss.indexOf("@media (max-width: 639px)");
+const compact639End = globalCss.indexOf("@media", compact639Start + 20);
+const compact639Block =
+  compact639Start >= 0
+    ? globalCss.slice(
+        compact639Start,
+        compact639End > compact639Start ? compact639End : undefined,
+      )
+    : "";
+
+const mobileInkscrollerStart = globalCss.indexOf(
+  "@media (max-width: 47.999rem)",
+);
+const mobileInkscrollerEnd = globalCss.indexOf(
+  "@media",
+  mobileInkscrollerStart + 20,
+);
+const mobileInkscrollerBlock =
+  mobileInkscrollerStart >= 0
+    ? globalCss.slice(
+        mobileInkscrollerStart,
+        mobileInkscrollerEnd > mobileInkscrollerStart
+          ? mobileInkscrollerEnd
+          : undefined,
+      )
+    : "";
+
+const desktopInkscrollerStart = globalCss.indexOf("@media (min-width: 48rem)");
+const desktopInkscrollerEnd = globalCss.indexOf(
+  "@media",
+  desktopInkscrollerStart + 20,
+);
+const desktopInkscrollerBlock =
+  desktopInkscrollerStart >= 0
+    ? globalCss.slice(
+        desktopInkscrollerStart,
+        desktopInkscrollerEnd > desktopInkscrollerStart
+          ? desktopInkscrollerEnd
+          : undefined,
+      )
+    : "";
+
 /** Assert that a CSS block for a selector contains all given properties */
 function blockContains(selector: string, ...properties: string[]) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -92,9 +134,8 @@ describe("responsive CSS contract", () => {
     expect(compactHeaderBlock).not.toContain(
       ".header-shell .header-contact-cta",
     );
-    expect(globalCss).toMatch(
-      /@media\s*\(max-width:\s*639px\)\s*\{[\s\S]*\.header-shell\s+\.header-contact-cta[\s\S]*display:\s*none;/,
-    );
+    expect(compact639Block).toContain(".header-shell .header-contact-cta");
+    expect(compact639Block).toContain("display: none;");
     expect(
       globalCss.match(/\.header-contact-cta \{\s+display: none;\s+\}/g),
     ).toHaveLength(1);
@@ -161,41 +202,41 @@ describe("responsive CSS contract", () => {
       /\.inkscroller-slide\s*\{[^}]*flex:\s*0 0 82%;[^}]*\}/,
     );
     expect(globalCss).toMatch(
-      /\.inkscroller-slide\.active\s*\{[\s\S]*transform:\s*scale\(1\.02\);/,
+      /\.inkscroller-slide\.active\s*\{[^}]*transform:\s*scale\(1\.02\);/,
     );
     expect(globalCss).toMatch(
       /\.inkscroller-slide:not\(\.active\)\s*\{[^}]*transform:\s*scale\(0\.88\);[^}]*opacity:\s*0\.3;[^}]*\}/,
     );
     expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title[\s\S]*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc[\s\S]*visibility:\s*hidden/,
+      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title,\n\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*hidden;/,
     );
-    expect(globalCss).toMatch(
-      /@media\s*\(max-width:\s*47\.999rem\)\s*\{[\s\S]*\.inkscroller-prev[\s\S]*left:\s*-0\.75rem;[\s\S]*\.inkscroller-next[\s\S]*right:\s*-0\.75rem;/,
+    expect(mobileInkscrollerBlock).toContain(".inkscroller-prev");
+    expect(mobileInkscrollerBlock).toContain("left: -0.75rem;");
+    expect(mobileInkscrollerBlock).toContain(".inkscroller-next");
+    expect(mobileInkscrollerBlock).toContain("right: -0.75rem;");
+    expect(desktopInkscrollerBlock).toContain(".inkscroller-carousel");
+    expect(desktopInkscrollerBlock).toContain("padding-inline: 1.5rem;");
+    expect(desktopInkscrollerBlock).toContain(".inkscroller-slide");
+    expect(desktopInkscrollerBlock).toContain("flex-basis: 35%;");
+    expect(desktopInkscrollerBlock).toContain(".inkscroller-slide.active");
+    expect(desktopInkscrollerBlock).toContain("transform: scale(1.05);");
+    expect(desktopInkscrollerBlock).toContain(
+      ".inkscroller-slide:not(.active)",
     );
-    expect(globalCss).toMatch(
-      /@media\s*\(min-width:\s*48rem\)\s*\{[\s\S]*\.inkscroller-carousel[\s\S]*padding-inline:\s*1\.5rem;/,
+    expect(desktopInkscrollerBlock).toContain("transform: scale(0.92);");
+    expect(desktopInkscrollerBlock).toContain("opacity: 0.45;");
+    expect(desktopInkscrollerBlock).toContain(
+      ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n  .inkscroller-slide:not(.active) .inkscroller-slide-desc",
     );
-    expect(globalCss).toMatch(/\.inkscroller-slide[\s\S]*flex-basis:\s*35%;/);
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide\.active[\s\S]*transform:\s*scale\(1\.05\);/,
-    );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)[\s\S]*transform:\s*scale\(0\.92\);/,
-    );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)[\s\S]*opacity:\s*0\.45;/,
-    );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title[\s\S]*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc[\s\S]*visibility:\s*visible/,
-    );
+    expect(desktopInkscrollerBlock).toContain("visibility: visible;");
   });
 
   it("keeps Learning project cards symmetric", () => {
     blockContains(".projects-grid", "display: grid;", "align-items: stretch;");
     expect(globalCss).toContain(".projects-learning-group {");
     expect(globalCss).toContain(".projects-learning-header {");
-    expect(globalCss).toMatch(
-      /\.projects-grid[\s\S]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);/,
+    expect(globalCss).toContain(
+      ".projects-grid {\n    grid-template-columns: repeat(3, minmax(0, 1fr));",
     );
     expect(globalCss).not.toContain(".project-card-primary");
     expect(globalCss).not.toContain(".project-card-icon-visual");
