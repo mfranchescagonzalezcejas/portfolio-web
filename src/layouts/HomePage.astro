@@ -71,7 +71,12 @@ const projectCards = site.projects.filter((project) => !project.featured);
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p>DevDigi by Mercedes Gonzalez</p>
-      <p>© {currentYear} · {site.footerText}</p>
+      <p>© <span class="copyright-year">{currentYear}</span> · {site.footerText}</p>
     </div>
   </footer>
 </div>
+
+<script is:inline>
+  document.querySelector(".copyright-year").textContent =
+    String(new Date().getFullYear());
+</script>
