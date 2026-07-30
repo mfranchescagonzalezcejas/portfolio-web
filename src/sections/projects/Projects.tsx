@@ -46,9 +46,9 @@ export default function Projects({ projects, section }: ProjectsProps) {
           </div>
 
           <div className="projects-grid">
-            {projects.map((project) => (
+            {projects.map((project, index) => (
               <ProjectCard
-                key={project.name}
+                key={`${project.name}-${index}`}
                 project={project}
                 linksLabel={section.linksLabel}
                 stackLabel={section.stackLabel}

@@ -91,7 +91,7 @@ export default function Hero({ hero, links }: HeroProps) {
               <span>{hero.cvLabel}</span>
             </a>
 
-            {profileLinks.map((link) => {
+            {profileLinks.map((link, index) => {
               const Icon = getContactIcon(link.kind);
               const variantClass =
                 link.kind === "linkedin"
@@ -100,7 +100,7 @@ export default function Hero({ hero, links }: HeroProps) {
 
               return (
                 <a
-                  key={link.href}
+                  key={`${link.href}-${index}`}
                   className={`contact-cta-link ${variantClass}`}
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
