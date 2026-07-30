@@ -44,5 +44,8 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "typescript": "^6.0.3",
     "vitest": "^4.1.9"
+  },
+  "overrides": {
+    "fast-uri": "3.1.4"
   }
 }
