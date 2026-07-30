@@ -49,11 +49,16 @@ function decl(prop: string): string {
   return `(?<=[;{]\\s*)${normalized}`;
 }
 
-/** Assert that a CSS selector block contains all given declarations (order-independent, whitespace-flexible) */
-function blockContains(selector: string, ...declarations: string[]) {
+/** Assert that a CSS rule block (from a given source) contains all given declarations */
+function blockContains(
+  source: string,
+  selector: string,
+  ...declarations: string[]
+) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const pattern = new RegExp(`${escaped}\\s*\\{[^}]*}`);
-  const match = globalCss.match(pattern);
+  // Anchor to rule boundary: start of string, after }, after { (media query), or after comma
+  const pattern = new RegExp(`(?:^|}|\\{|,)\\s*${escaped}\\s*\\{[^}]*}`);
+  const match = source.match(pattern);
   const block = match ? match[0] : "";
   for (const d of declarations) {
     expect(block).toMatch(new RegExp(decl(d)));
@@ -62,9 +67,20 @@ function blockContains(selector: string, ...declarations: string[]) {
 
 describe("responsive CSS contract", () => {
   it("keeps root overflow clipped without invalid color-mix percentages", () => {
-    blockContains("html", "overflow-x: hidden;", "overflow-x: clip;");
-    blockContains("body", "overflow-x: hidden;", "overflow-x: clip;");
     blockContains(
+      globalCss,
+      "html",
+      "overflow-x: hidden;",
+      "overflow-x: clip;",
+    );
+    blockContains(
+      globalCss,
+      "body",
+      "overflow-x: hidden;",
+      "overflow-x: clip;",
+    );
+    blockContains(
+      globalCss,
       ".hero-visual",
       "min-height: 34rem",
       "overflow-x: hidden;",
@@ -131,6 +147,7 @@ describe("responsive CSS contract", () => {
       globalCss.match(/min-height: 2\.75rem;/g)?.length,
     ).toBeGreaterThanOrEqual(4);
     blockContains(
+      globalCss,
       ".header-theme-toggle",
       "display: grid;",
       "place-items: center;",
@@ -153,8 +170,14 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps hero profile links quiet while retaining 44px touch targets", () => {
-    blockContains(".hero-profile-links", "display: flex;", "flex-wrap: wrap;");
     blockContains(
+      globalCss,
+      ".hero-profile-links",
+      "display: flex;",
+      "flex-wrap: wrap;",
+    );
+    blockContains(
+      globalCss,
       ".hero-profile-link",
       "display: inline-flex;",
       "align-items: center;",
@@ -176,45 +199,66 @@ describe("responsive CSS contract", () => {
 
   it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
     blockContains(
+      globalCss,
       ".inkscroller-carousel",
       "position: relative;",
       "width: 100%;",
       "padding-inline: 0;",
     );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide\s*\{[^}]*flex:\s*0 0 82%;[^}]*\}/,
+    blockContains(globalCss, ".inkscroller-slide", "flex: 0 0 82%;");
+    blockContains(
+      globalCss,
+      ".inkscroller-slide.active",
+      "transform: scale(1.02);",
     );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide\.active\s*\{[^}]*transform:\s*scale\(1\.02\);/,
-    );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)\s*\{[^}]*transform:\s*scale\(0\.88\);[^}]*opacity:\s*0\.3;[^}]*\}/,
-    );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title,\n\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*hidden;/,
-    );
-    expect(mobileInkscrollerBlock).toContain(".inkscroller-prev");
-    expect(mobileInkscrollerBlock).toContain("left: -0.75rem;");
-    expect(mobileInkscrollerBlock).toContain(".inkscroller-next");
-    expect(mobileInkscrollerBlock).toContain("right: -0.75rem;");
-    expect(desktopInkscrollerBlock).toContain(".inkscroller-carousel");
-    expect(desktopInkscrollerBlock).toContain("padding-inline: 1.5rem;");
-    expect(desktopInkscrollerBlock).toContain(".inkscroller-slide");
-    expect(desktopInkscrollerBlock).toContain("flex-basis: 35%;");
-    expect(desktopInkscrollerBlock).toContain(".inkscroller-slide.active");
-    expect(desktopInkscrollerBlock).toContain("transform: scale(1.05);");
-    expect(desktopInkscrollerBlock).toContain(
+    blockContains(
+      globalCss,
       ".inkscroller-slide:not(.active)",
+      "transform: scale(0.88);",
+      "opacity: 0.3;",
     );
-    expect(desktopInkscrollerBlock).toContain("transform: scale(0.92);");
-    expect(desktopInkscrollerBlock).toContain("opacity: 0.45;");
+    expect(globalCss).toMatch(
+      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title\s*,\s*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*hidden;/,
+    );
+    expect(mobileInkscrollerBlock).toMatch(
+      /\.inkscroller-prev\s*\{[^}]*left:\s*-0\.75rem;/,
+    );
+    expect(mobileInkscrollerBlock).toMatch(
+      /\.inkscroller-next\s*\{[^}]*right:\s*-0\.75rem;/,
+    );
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-carousel",
+      "padding-inline: 1.5rem;",
+    );
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-slide",
+      "flex-basis: 35%;",
+    );
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-slide.active",
+      "transform: scale(1.05);",
+    );
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-slide:not(.active)",
+      "transform: scale(0.92);",
+      "opacity: 0.45;",
+    );
     expect(desktopInkscrollerBlock).toMatch(
-      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title[\s\S]*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*visible;/,
+      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title\s*,\s*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*visible;/,
     );
   });
 
   it("keeps Learning project cards symmetric", () => {
-    blockContains(".projects-grid", "display: grid;", "align-items: stretch;");
+    blockContains(
+      globalCss,
+      ".projects-grid",
+      "display: grid;",
+      "align-items: stretch;",
+    );
     expect(globalCss).toContain(".projects-learning-group {");
     expect(globalCss).toContain(".projects-learning-header {");
     expect(globalCss).toMatch(
