@@ -83,10 +83,7 @@ export type ExperienceSectionHeading = SectionHeading & {
 };
 
 export type ValueIconName =
-  | "smartphone"
-  | "layers"
-  | "git-branch"
-  | "check-circle";
+  "smartphone" | "layers" | "git-branch" | "check-circle";
 
 export type ValueCard = {
   title: string;
