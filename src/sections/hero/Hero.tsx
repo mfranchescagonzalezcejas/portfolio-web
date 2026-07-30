@@ -30,7 +30,10 @@ export default function Hero({ hero, links }: HeroProps) {
     (link) => link.kind === "linkedin" || link.kind === "github",
   );
   const firstName = hero.name.split(" ")[0] || hero.name;
-  const parsedTagline = splitHeadlineWithAccent(hero.tagline, hero.taglineAccent);
+  const parsedTagline = splitHeadlineWithAccent(
+    hero.tagline,
+    hero.taglineAccent,
+  );
 
   const headlineLine = parsedTagline.highlight ? (
     <>
