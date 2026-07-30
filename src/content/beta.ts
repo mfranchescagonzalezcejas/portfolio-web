@@ -22,6 +22,12 @@ export type BetaContent = {
     programs: BetaProgram[];
   };
   inkscroller: {
+    seo: {
+      title: string;
+      description: string;
+      canonicalPath: string;
+      alternates: Record<Locale | "x-default", string>;
+    };
     hero: {
       eyebrow: string;
       title: string;
@@ -68,6 +74,12 @@ const betaPaths = {
   "x-default": "/en/beta",
 } as const;
 
+const betaInkScrollerPaths = {
+  en: "/en/beta/inkscroller",
+  es: "/es/beta/inkscroller",
+  "x-default": "/en/beta/inkscroller",
+} as const;
+
 export const betaContent: Record<Locale, BetaContent> = {
   en: {
     locale: "en",
@@ -94,6 +106,13 @@ export const betaContent: Record<Locale, BetaContent> = {
       ],
     },
     inkscroller: {
+      seo: {
+        title: "Join InkScroller Beta | DevDigi",
+        description:
+          "Apply to test InkScroller and help improve the mobile reading experience.",
+        canonicalPath: betaInkScrollerPaths.en,
+        alternates: betaInkScrollerPaths,
+      },
       hero: {
         eyebrow: "Closed beta",
         title: "Join InkScroller Beta",
@@ -198,6 +217,13 @@ export const betaContent: Record<Locale, BetaContent> = {
       ],
     },
     inkscroller: {
+      seo: {
+        title: "Únete a la beta de InkScroller | DevDigi",
+        description:
+          "Solicita acceso para probar InkScroller y ayudar a mejorar la experiencia de lectura móvil.",
+        canonicalPath: betaInkScrollerPaths.es,
+        alternates: betaInkScrollerPaths,
+      },
       hero: {
         eyebrow: "Beta cerrada",
         title: "Únete a la beta de InkScroller",

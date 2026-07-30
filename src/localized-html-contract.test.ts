@@ -1204,7 +1204,7 @@ describe("InkScroller static product routes", () => {
       expect(document.documentElement).toHaveClass("light");
 
       document.body.innerHTML = renderedDocument.body.innerHTML;
-      await Promise.resolve();
+      document.dispatchEvent(new Event("DOMContentLoaded"));
 
       const carouselImages = Array.from(
         document.querySelectorAll<HTMLImageElement>(
@@ -1232,6 +1232,17 @@ describe("InkScroller static product routes", () => {
         delete window.matchMedia;
       }
     }
+  });
+
+  it("observes only theme class changes when synchronizing images", () => {
+    const layout = readFileSync(
+      resolve(process.cwd(), "src/layouts/BaseLayout.astro"),
+      "utf8",
+    );
+
+    expect(layout).toContain('attributeFilter: ["class"]');
+    expect(layout).not.toContain("childList:");
+    expect(layout).not.toContain("subtree:");
   });
 });
 
@@ -1328,15 +1339,35 @@ describe("InkScroller beta landing routes", () => {
       expect(
         document.querySelector(".header-lang-toggle")?.getAttribute("href"),
       ).toBe(languageHref);
-      expect(document.querySelectorAll(".beta-proof-list li")).toHaveLength(4);
+      const beta = betaContent[locale as "en" | "es"].inkscroller;
+      expect(document.querySelectorAll(".beta-proof-list li")).toHaveLength(
+        beta.scope.items.length,
+      );
       expect(document.querySelectorAll(".beta-faq details")).toHaveLength(
-        betaContent[locale as "en" | "es"].inkscroller.faq.questions.length,
+        beta.faq.questions.length,
       );
       expect(document.querySelectorAll(".beta-cta--primary")).toHaveLength(2);
       expect(document.querySelector("section#contact")).toBeNull();
-      expect(document.body.textContent).toContain(
-        betaContent[locale as "en" | "es"].inkscroller.hero.microcopy,
-      );
+      expect(document.body.textContent).toContain(beta.hero.microcopy);
+      expect(document.title).toBe(beta.seo.title);
+      expect(
+        document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+      ).toBe(`https://devdigi.dev${beta.seo.canonicalPath}`);
+      (
+        Object.entries(beta.seo.alternates) as [
+          "en" | "es" | "x-default",
+          string,
+        ][]
+      ).forEach(([hreflang, path]) => {
+        expect(
+          document
+            .querySelector(`link[rel="alternate"][hreflang="${hreflang}"]`)
+            ?.getAttribute("href"),
+        ).toBe(`https://devdigi.dev${path}`);
+      });
+      expect(
+        document.querySelector(".beta-hero-device img")?.getAttribute("src"),
+      ).toBe(inkscrollerContent[locale as "en" | "es"].media[0].src.dark);
     },
   );
 

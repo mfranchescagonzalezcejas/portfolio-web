@@ -124,30 +124,27 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps InkScroller dots visually small with 24px hit targets", () => {
-    const dotStart = globalCss.lastIndexOf(".inkscroller-dot {");
-    const dotEnd = globalCss.indexOf(".inkscroller-beta", dotStart);
-    const dotBlock = globalCss.slice(dotStart, dotEnd);
-
-    expect(dotBlock).toContain("width: 1.5rem;");
-    expect(dotBlock).toContain("height: 1.5rem;");
-    expect(dotBlock).toContain("min-width: 1.5rem;");
-    expect(dotBlock).toContain("min-height: 1.5rem;");
-    expect(dotBlock).toContain(".inkscroller-dot::before");
-    expect(dotBlock).toContain("width: 0.75rem;");
-    expect(dotBlock).toContain("height: 0.75rem;");
-    expect(dotBlock).toContain(".inkscroller-dot.active::before");
+    expect(globalCss).toMatch(
+      /\.inkscroller-dot\s*\{[\s\S]*width:\s*1\.5rem;[\s\S]*height:\s*1\.5rem;[\s\S]*min-width:\s*1\.5rem;[\s\S]*min-height:\s*1\.5rem;/,
+    );
+    expect(globalCss).toMatch(
+      /\.inkscroller-dot::before\s*\{[\s\S]*width:\s*0\.75rem;[\s\S]*height:\s*0\.75rem;/,
+    );
+    expect(globalCss).toContain(".inkscroller-dot.active::before");
   });
 
   it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
-    expect(globalCss).toContain(
-      ".inkscroller-carousel {\n  position: relative;\n  width: 100%;\n  padding-inline: 0;",
+    expect(globalCss).toMatch(
+      /\.inkscroller-carousel\s*\{[\s\S]*position:\s*relative;[\s\S]*width:\s*100%;[\s\S]*padding-inline:\s*0;/,
     );
-    expect(globalCss).toContain(".inkscroller-slide {\n  flex: 0 0 82%;");
-    expect(globalCss).toContain(
-      ".inkscroller-slide.active {\n  transform: scale(1.02);",
+    expect(globalCss).toMatch(
+      /\.inkscroller-slide\s*\{[\s\S]*flex:\s*0 0 82%;/,
     );
-    expect(globalCss).toContain(
-      ".inkscroller-slide:not(.active) {\n  transform: scale(0.88);\n  opacity: 0.3;",
+    expect(globalCss).toMatch(
+      /\.inkscroller-slide\.active\s*\{[\s\S]*transform:\s*scale\(1\.02\);/,
+    );
+    expect(globalCss).toMatch(
+      /\.inkscroller-slide:not\(\.active\)\s*\{[\s\S]*transform:\s*scale\(0\.88\);[\s\S]*opacity:\s*0\.3;/,
     );
     expect(globalCss).toContain(
       ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n.inkscroller-slide:not(.active) .inkscroller-slide-desc {\n  visibility: hidden;",

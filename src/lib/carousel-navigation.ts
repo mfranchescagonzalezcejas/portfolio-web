@@ -7,7 +7,8 @@ export function createCarouselQueue(total: number, initialIndex = 0) {
   let plannedIndex = initialIndex;
   const actions: CarouselAction[] = [];
 
-  const normalize = (index: number) => (index + total) % total;
+  const normalize = (index: number) =>
+    total > 0 ? (index + total) % total : 0;
 
   return {
     enqueueStep(direction: -1 | 1) {

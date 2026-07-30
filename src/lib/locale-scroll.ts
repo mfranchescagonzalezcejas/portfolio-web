@@ -64,9 +64,8 @@ export function restoreLocaleScrollPosition() {
     return;
   }
 
-  const restore = () => {
+  const restore = () =>
     window.requestAnimationFrame(() => window.scrollTo(position.x, position.y));
-  };
 
   if (document.readyState === "complete") restore();
   else window.addEventListener("load", restore, { once: true });

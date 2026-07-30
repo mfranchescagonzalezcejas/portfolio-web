@@ -41,4 +41,18 @@ describe("carousel navigation queue", () => {
       { type: "index", index: 3 },
     ]);
   });
+
+  it("stays at zero when no slides are available", () => {
+    const queue = createCarouselQueue(0);
+
+    queue.enqueueStep(1);
+    queue.enqueueIndex(2);
+    queue.settle(1);
+
+    expect([queue.take(), queue.take(), queue.current()]).toEqual([
+      { type: "step", direction: 1, index: 0 },
+      { type: "index", index: 0 },
+      0,
+    ]);
+  });
 });

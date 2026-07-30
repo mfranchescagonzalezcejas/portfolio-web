@@ -1,26 +1,12 @@
 ---
-import type { ProductMedia } from "../content/inkscroller";
+import type { InkScrollerContent } from "../content/inkscroller";
 import { siteContentByLocale } from "../content/site";
 import BaseLayout from "./BaseLayout.astro";
 import SiteHeader from "../sections/header/SiteHeader";
 import ContactLinks from "../sections/contact/ContactLinks";
 
-type SlideMeta = { title: string; description: string };
-
 type Props = {
-  content: {
-    locale: "en" | "es";
-    seo: { title: string; description: string; canonicalPath: string; alternates: Record<"en" | "es" | "x-default", string> };
-    home: { label: string; href: string };
-    counterpart: { label: string; href: string };
-    skipLabel: string;
-    hero: { eyebrow: string; title: string; description: string };
-    proof: { title: string; items: string[] };
-    capabilities: { title: string; items: { capability: string; value: string }[] };
-    story: { title: string; steps: { title: string; description: string }[] };
-    media: Array<ProductMedia & SlideMeta>;
-    beta: { title: string; description: string; action: string; href: string };
-  };
+  content: InkScrollerContent;
 };
 
 const { content } = Astro.props;
@@ -268,11 +254,19 @@ const heroCapturesJson = JSON.stringify(
     if (currentImg && nextImg && currentImg.dataset.captures) {
       const captures = JSON.parse(currentImg.dataset.captures);
       if (captures.length > 1) {
-        let idx = 0;
-        const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-        if (prefersReducedMotion.matches) { /* no cycle */ } else {
-          const heroTimer = setInterval(() => {
-            const nextIdx = (idx + 1) % captures.length;
+          let idx = 0;
+          let heroTimer = null;
+          const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+          const setCurrentCapture = (capture) => {
+            currentImg.src = capture.src[document.documentElement.classList.contains("light") ? "light" : "dark"];
+            currentImg.dataset.darkSrc = capture.src.dark;
+            currentImg.dataset.lightSrc = capture.src.light;
+            currentImg.alt = capture.alt;
+          };
+          const startCycle = () => {
+            if (prefersReducedMotion.matches || heroTimer) return;
+            heroTimer = setInterval(() => {
+              const nextIdx = (idx + 1) % captures.length;
             // Set next image to incoming position (below)
             nextImg.src = captures[nextIdx].src[document.documentElement.classList.contains("light") ? "light" : "dark"];
             nextImg.alt = captures[nextIdx].alt;
@@ -282,17 +276,23 @@ const heroCapturesJson = JSON.stringify(
             nextImg.classList.add("slide-in");
             // After animation, reset: current becomes the visible image
             setTimeout(() => {
-              currentImg.src = captures[nextIdx].src[document.documentElement.classList.contains("light") ? "light" : "dark"];
-              currentImg.alt = captures[nextIdx].alt;
+              setCurrentCapture(captures[nextIdx]);
               currentImg.classList.remove("slide-out");
               nextImg.classList.remove("slide-in");
               nextImg.style.display = "none";
               idx = nextIdx;
             }, 450);
-          }, 4500);
+            }, 4500);
+          };
+          const stopCycle = () => {
+            if (!heroTimer) return;
+            clearInterval(heroTimer);
+            heroTimer = null;
+          };
           const heroDevice = currentImg.closest(".inkscroller-hero-device");
-          heroDevice?.addEventListener("mouseenter", () => clearInterval(heroTimer));
-        }
+          heroDevice?.addEventListener("mouseenter", stopCycle);
+          heroDevice?.addEventListener("mouseleave", startCycle);
+          startCycle();
       }
     }
   }

@@ -183,22 +183,20 @@ export default function SiteHeader({
       : header.themeToggle.switchToDark;
 
   const onThemeToggle = () => {
-    setThemeMode((previousTheme) => {
-      const nextTheme = previousTheme === "dark" ? "light" : "dark";
-      const root = document.documentElement;
+    const nextTheme = themeMode === "dark" ? "light" : "dark";
+    const root = document.documentElement;
 
-      root.classList.remove("light", "dark");
-      root.classList.add(nextTheme);
-      document.dispatchEvent(new Event("devdigi-theme-change"));
+    root.classList.remove("light", "dark");
+    root.classList.add(nextTheme);
+    document.dispatchEvent(new Event("devdigi-theme-change"));
 
-      try {
-        window.localStorage.setItem("devdigi-theme", nextTheme);
-      } catch {
-        // Local storage is optional; keep behavior purely visual if unavailable.
-      }
+    try {
+      window.localStorage.setItem("devdigi-theme", nextTheme);
+    } catch {
+      // Local storage is optional; keep behavior purely visual if unavailable.
+    }
 
-      return nextTheme;
-    });
+    setThemeMode(nextTheme);
   };
 
   const onLocaleClick = (event: MouseEvent<HTMLAnchorElement>) => {

@@ -21,6 +21,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe("locale scroll position", () => {
@@ -54,7 +55,9 @@ describe("locale scroll position", () => {
 
     restoreLocaleScrollPosition();
     window.dispatchEvent(new Event("load"));
+    window.dispatchEvent(new Event("load"));
 
+    expect(scrollTo).toHaveBeenCalledOnce();
     expect(scrollTo).toHaveBeenCalledWith(12, 640);
     expect(window.sessionStorage.getItem(localeScrollStorageKey)).toBeNull();
   });

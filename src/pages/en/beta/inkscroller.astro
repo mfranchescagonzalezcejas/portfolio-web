@@ -3,15 +3,17 @@ import BaseLayout from "../../../layouts/BaseLayout.astro";
 import SiteHeader from "../../../sections/header/SiteHeader";
 import { siteContentByLocale } from "../../../content/site";
 import { betaContent, type BetaContent } from "../../../content/beta";
+import { inkscrollerContent } from "../../../content/inkscroller";
 
 const locale = "en";
 const site = siteContentByLocale[locale];
 const content = betaContent[locale] as BetaContent;
-const { inkscroller: page, seo } = content;
+const { inkscroller: page } = content;
+const heroMedia = inkscrollerContent[locale].media[0];
 const currentYear = new Date().getFullYear();
 ---
 
-<BaseLayout locale={locale} site={site} pageSeo={seo}>
+<BaseLayout locale={locale} site={site} pageSeo={page.seo}>
   <div id="top"></div>
   <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-beta">Skip to content</a>
   <SiteHeader
@@ -39,7 +41,7 @@ const currentYear = new Date().getFullYear();
           <div class="hero-glow" aria-hidden="true"></div>
           <div class="mockup-phone">
             <div class="mockup-phone-screen">
-              <img src="/inkscroller/screenshots/dark/en/home.jpg" data-dark-src="/inkscroller/screenshots/dark/en/home.jpg" data-light-src="/inkscroller/screenshots/light/en/home.jpg" alt="InkScroller app preview" width="540" height="1170" loading="eager" />
+              <img src={heroMedia.src.dark} data-dark-src={heroMedia.src.dark} data-light-src={heroMedia.src.light} alt={heroMedia.alt} width={heroMedia.width} height={heroMedia.height} loading="eager" />
             </div>
             <div class="mockup-phone-frame" aria-hidden="true"></div>
           </div>
@@ -51,7 +53,7 @@ const currentYear = new Date().getFullYear();
       <div class="beta-landing-shell">
         <h2 id="beta-proof-title" class="beta-proof-title">{page.scope.title}</h2>
         <ul class="beta-proof-list">
-          {page.scope.items.slice(0, 4).map((item) => (
+          {page.scope.items.map((item) => (
             <li><span aria-hidden="true">✓</span>{item}</li>
           ))}
         </ul>

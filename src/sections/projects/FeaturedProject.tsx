@@ -1,5 +1,4 @@
 import { GitBranch } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import type { Project, SectionHeading } from "../../content/site";
 import { formatProjectLabel } from "./projectLabel";
 
@@ -20,30 +19,11 @@ export default function FeaturedProject({
   section,
 }: FeaturedProjectProps) {
   const mockups = project.mockups ?? [];
-  const sectionRef = useRef<HTMLElement>(null);
-  const [revealed, setRevealed] = useState(true);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el || revealed) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setRevealed(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [revealed]);
 
   return (
     <section
-      ref={sectionRef}
       id="featured"
-      className={`section-shell featured-section scroll-mt-32 ${revealed ? "featured-reveal featured-revealed" : "featured-reveal"}`}
+      className="section-shell featured-section scroll-mt-32"
       aria-labelledby="featured-title"
     >
       <div className="section-inner">

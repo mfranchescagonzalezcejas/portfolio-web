@@ -55,13 +55,12 @@ const themeBootScript = `
        if (source && image.getAttribute("src") !== source) image.setAttribute("src", source);
      });
    }
-   new MutationObserver(syncThemeImages).observe(root, {
-     attributes: true,
-     attributeFilter: ["class"],
-     childList: true,
-     subtree: true,
-   });
-   syncThemeImages();
+    new MutationObserver(syncThemeImages).observe(root, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    syncThemeImages();
+    document.addEventListener("DOMContentLoaded", syncThemeImages, { once: true });
  })();`;
 ---
 

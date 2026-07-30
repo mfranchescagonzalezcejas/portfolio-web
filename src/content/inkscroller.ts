@@ -8,9 +8,12 @@ export type ProductMedia = {
   height: number;
 };
 
-type SlideMeta = { title: string; description: string };
+export type InkScrollerSlide = ProductMedia & {
+  title: string;
+  description: string;
+};
 
-type InkScrollerContent = {
+export type InkScrollerContent = {
   locale: Locale;
   seo: {
     title: string;
@@ -28,7 +31,7 @@ type InkScrollerContent = {
     items: { capability: string; value: string }[];
   };
   story: { title: string; steps: { title: string; description: string }[] };
-  media: Array<ProductMedia & SlideMeta>;
+  media: InkScrollerSlide[];
   beta: { title: string; description: string; action: string; href: string };
 };
 

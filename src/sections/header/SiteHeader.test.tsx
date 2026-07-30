@@ -139,26 +139,31 @@ describe("SiteHeader primary navigation", () => {
   });
 
   it.each([
-    ["/en/projects/inkscroller", "/es/proyectos/inkscroller"],
-    ["/en/beta/inkscroller", "/es/beta/inkscroller"],
-  ])(
-    "preserves the route when switching locales to %s",
-    (_localePath, href) => {
+    ["en", "/es/proyectos/inkscroller"],
+    ["en", "/es/beta/inkscroller"],
+    ["es", "/en/projects/inkscroller"],
+    ["es", "/en/beta/inkscroller"],
+  ] as const)(
+    "preserves the locale route when switching from %s",
+    (locale, href) => {
+      const localeSite = siteContentByLocale[locale];
       render(
         <SiteHeader
-          currentLocale={site.locale}
+          currentLocale={locale}
           isHome={false}
           localeHref={href}
-          navItems={site.nav}
-          languageSwitcher={site.languageSwitcher}
-          header={site.header}
+          navItems={localeSite.nav}
+          languageSwitcher={localeSite.languageSwitcher}
+          header={localeSite.header}
         />,
       );
 
-      expect(screen.getByTitle("Switch to Spanish")).toHaveAttribute(
-        "href",
-        href,
-      );
+      expect(
+        screen.getByTitle(
+          localeSite.languageSwitcher.hint?.[locale === "en" ? "es" : "en"] ??
+            "",
+        ),
+      ).toHaveAttribute("href", href);
     },
   );
 });
