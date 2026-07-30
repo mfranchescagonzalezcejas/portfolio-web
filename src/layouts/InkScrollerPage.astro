@@ -1,0 +1,303 @@
+---
+import type { InkScrollerContent } from "../content/inkscroller";
+import { siteContentByLocale } from "../content/site";
+import BaseLayout from "./BaseLayout.astro";
+import SiteHeader from "../sections/header/SiteHeader";
+import ContactLinks from "../sections/contact/ContactLinks";
+
+type Props = {
+  content: InkScrollerContent;
+};
+
+const { content } = Astro.props;
+const currentYear = new Date().getFullYear();
+const site = siteContentByLocale[content.locale];
+const firstMedia = content.media[0];
+const heroCapturesJson = JSON.stringify(
+  content.media.map((media) => ({ src: media.src, alt: media.alt })),
+);
+---
+
+<BaseLayout locale={content.locale} pageSeo={content.seo}>
+  <div id="top"></div>
+  <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-content">{content.skipLabel}</a>
+  <SiteHeader
+    currentLocale={site.locale}
+    isHome={false}
+    localeHref={content.counterpart.href}
+    navItems={site.nav}
+    languageSwitcher={site.languageSwitcher}
+    header={site.header}
+    client:load
+  />
+  <main id="inkscroller-content" class="inkscroller-page">
+    <section class="inkscroller-hero hero-section" aria-labelledby="inkscroller-title">
+      <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
+      <div class="hero-content mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-8">
+        <div>
+          <p class="inkscroller-hero-eyebrow">{content.hero.eyebrow}</p>
+          <h1 id="inkscroller-title" class="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl">{content.hero.title}</h1>
+          <p class="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">{content.hero.description}</p>
+        </div>
+        <div class="inkscroller-hero-device">
+          <div class="mockup-phone">
+            <div class="mockup-phone-screen" id="hero-screen">
+              <img id="hero-img-current" class="hero-img-layer" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
+              <img id="hero-img-next" class="hero-img-layer" src="" alt="" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" style="display:none" />
+            </div>
+            <div class="mockup-phone-frame" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="inkscroller-proof" aria-labelledby="inkscroller-proof-title">
+      <h2 id="inkscroller-proof-title">{content.proof.title}</h2>
+      <ul>{content.proof.items.map((item) => <li>{item}</li>)}</ul>
+    </section>
+    <section class="inkscroller-carousel-section" aria-label="Product carousel">
+      <div id="inkscroller-carousel" class="inkscroller-carousel" tabindex="0" role="region" aria-label="Product screenshots carousel">
+        <div class="inkscroller-carousel-viewport">
+          <div class="inkscroller-carousel-track">
+            {content.media.map((entry) => (
+              <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
+                <h3 class="inkscroller-slide-title">{entry.title}</h3>
+                <div class="inkscroller-slide-device">
+                  <div class="mockup-phone">
+                    <div class="mockup-phone-screen">
+                      <img src={entry.src.dark} data-dark-src={entry.src.dark} data-light-src={entry.src.light} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
+                    </div>
+                    <div class="mockup-phone-frame" aria-hidden="true"></div>
+                  </div>
+                </div>
+                <p class="inkscroller-slide-desc">{entry.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+        <button class="inkscroller-arrow inkscroller-prev" aria-label="Previous slide" type="button">&#8592;</button>
+        <button class="inkscroller-arrow inkscroller-next" aria-label="Next slide" type="button">&#8594;</button>
+        <nav class="inkscroller-dots" aria-label="Carousel navigation">
+          {content.media.map((entry, i) => (
+            <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-current={i === 0 ? "true" : undefined} aria-label={`Go to slide ${i + 1}: ${entry.title}`} type="button" data-index={i}></button>
+          ))}
+        </nav>
+      </div>
+    </section>
+    <section class="inkscroller-beta" aria-labelledby="inkscroller-beta-title">
+      <h2 id="inkscroller-beta-title">{content.beta.title}</h2>
+      <p>{content.beta.description}</p>
+      <a href={content.beta.href}>{content.beta.action}</a>
+    </section>
+  </main>
+  <ContactLinks links={site.contacts} section={site.contactSection} />
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>DevDigi by Mercedes Gonzalez</p>
+      <p>© {currentYear} · {site.footerText}</p>
+    </div>
+  </footer>
+</BaseLayout>
+
+<script>
+  // @ts-nocheck
+  import { createCarouselQueue } from "../lib/carousel-navigation";
+
+  const carousel = document.getElementById("inkscroller-carousel");
+  if (carousel) {
+    const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const track = carousel.querySelector(".inkscroller-carousel-track");
+    const viewport = carousel.querySelector(".inkscroller-carousel-viewport");
+    const prev = carousel.querySelector(".inkscroller-prev");
+    const next = carousel.querySelector(".inkscroller-next");
+    const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot"));
+    let timer = null;
+
+    // One edge clone per side keeps the wrap animation continuous.
+    const origSlides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
+    const cloneCount = 3;
+    const cloneSlide = (slide) => {
+      const clone = slide.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      return clone;
+    };
+    track?.prepend(...origSlides.slice(-cloneCount).map(cloneSlide));
+    track?.append(...origSlides.slice(0, cloneCount).map(cloneSlide));
+    const slides = Array.from(track?.querySelectorAll(".inkscroller-slide") ?? []);
+    const totalReal = origSlides.length;
+    let isAnimating = false;
+    const navigation = createCarouselQueue(totalReal);
+    let physicalIndex = cloneCount;
+    let activeAction = null;
+    let settleTimer = null;
+
+    function setPosition(index, animate) {
+      if (!track) return;
+      track.classList.toggle("is-resetting", !animate);
+      const slideWidth = parseFloat(getComputedStyle(slides[0]).width) || viewport.clientWidth;
+      const preview = (viewport.clientWidth - slideWidth) / 2;
+      track.style.transform = `translate3d(${preview - index * slideWidth}px, 0, 0)`;
+      physicalIndex = index;
+      if (!animate) void track.offsetWidth;
+      track.classList.remove("is-resetting");
+    }
+
+    function updateActive(index) {
+      origSlides.forEach((slide, slideIndex) => slide.classList.toggle("active", slideIndex === index));
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === index;
+        dot.classList.toggle("active", active);
+        if (active) dot.setAttribute("aria-current", "true");
+        else dot.removeAttribute("aria-current");
+      });
+    }
+
+    function physicalTarget(action) {
+      if (action.type === "index") return cloneCount + action.index;
+      return physicalIndex + action.direction;
+    }
+
+    function settleNavigation() {
+      if (!activeAction) return;
+      clearTimeout(settleTimer);
+      const action = activeAction;
+      activeAction = null;
+      navigation.settle(action.index);
+      if (physicalIndex < cloneCount || physicalIndex >= totalReal + cloneCount) {
+        setPosition(cloneCount + action.index, false);
+      }
+      updateActive(action.index);
+      isAnimating = false;
+      runNavigation();
+    }
+
+    function runNavigation() {
+      if (isAnimating || !track) return;
+      const action = navigation.take();
+      if (!action) return;
+
+      isAnimating = true;
+      activeAction = action;
+      setPosition(physicalTarget(action), !prefersReducedMotion.matches);
+      if (prefersReducedMotion.matches) {
+        settleNavigation();
+      } else {
+        settleTimer = setTimeout(settleNavigation, 500);
+      }
+    }
+
+    function nextSlide() {
+      navigation.enqueueStep(1);
+      runNavigation();
+    }
+
+    function prevSlide() {
+      navigation.enqueueStep(-1);
+      runNavigation();
+    }
+
+    function goToSlide(index) {
+      navigation.enqueueIndex(index);
+      runNavigation();
+    }
+
+    function startAutoPlay() {
+      if (prefersReducedMotion.matches || timer) return;
+      timer = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoPlay() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    track?.addEventListener("transitionend", (event) => {
+      if (event.target === track && event.propertyName === "transform") settleNavigation();
+    });
+
+    new ResizeObserver(() => {
+      if (activeAction) navigation.retry(activeAction);
+      clearTimeout(settleTimer);
+      activeAction = null;
+      isAnimating = false;
+      setPosition(cloneCount + navigation.current(), false);
+      runNavigation();
+    }).observe(carousel);
+
+    carousel.addEventListener("mouseenter", stopAutoPlay);
+    carousel.addEventListener("focusin", stopAutoPlay);
+    carousel.addEventListener("mouseleave", startAutoPlay);
+    carousel.addEventListener("focusout", (e) => {
+      if (!carousel.contains(e.relatedTarget)) startAutoPlay();
+    });
+
+    prev?.addEventListener("click", () => { stopAutoPlay(); prevSlide(); });
+    next?.addEventListener("click", () => { stopAutoPlay(); nextSlide(); });
+    dots.forEach((dot) => dot.addEventListener("click", () => { stopAutoPlay(); goToSlide(Number(dot.dataset.index)); }));
+
+    carousel.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        e.preventDefault();
+        stopAutoPlay();
+        if (e.key === "ArrowLeft") prevSlide(); else nextSlide();
+      }
+    });
+
+    setPosition(physicalIndex, false);
+    updateActive(0);
+    if (!prefersReducedMotion.matches) startAutoPlay();
+  }
+
+  // Hero image auto-cycle
+  {
+    const currentImg = document.getElementById("hero-img-current");
+    const nextImg = document.getElementById("hero-img-next");
+    const screen = document.getElementById("hero-screen");
+    if (currentImg && nextImg && currentImg.dataset.captures) {
+      const captures = JSON.parse(currentImg.dataset.captures);
+      if (captures.length > 1) {
+          let idx = 0;
+          let heroTimer = null;
+          const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+          const setCurrentCapture = (capture) => {
+            currentImg.src = capture.src[document.documentElement.classList.contains("light") ? "light" : "dark"];
+            currentImg.dataset.darkSrc = capture.src.dark;
+            currentImg.dataset.lightSrc = capture.src.light;
+            currentImg.alt = capture.alt;
+          };
+          const startCycle = () => {
+            if (prefersReducedMotion.matches || heroTimer) return;
+            heroTimer = setInterval(() => {
+              const nextIdx = (idx + 1) % captures.length;
+            // Set next image to incoming position (below)
+            nextImg.src = captures[nextIdx].src[document.documentElement.classList.contains("light") ? "light" : "dark"];
+            nextImg.alt = captures[nextIdx].alt;
+            nextImg.style.display = "block";
+            // Animate: current slides out (up), next slides in (from below)
+            currentImg.classList.add("slide-out");
+            nextImg.classList.add("slide-in");
+            // After animation, reset: current becomes the visible image
+            setTimeout(() => {
+              setCurrentCapture(captures[nextIdx]);
+              currentImg.classList.remove("slide-out");
+              nextImg.classList.remove("slide-in");
+              nextImg.style.display = "none";
+              idx = nextIdx;
+            }, 450);
+            }, 4500);
+          };
+          const stopCycle = () => {
+            if (!heroTimer) return;
+            clearInterval(heroTimer);
+            heroTimer = null;
+          };
+          const heroDevice = currentImg.closest(".inkscroller-hero-device");
+          heroDevice?.addEventListener("mouseenter", stopCycle);
+          heroDevice?.addEventListener("mouseleave", startCycle);
+          startCycle();
+      }
+    }
+  }
+</script>
+
+<style>
+  /* All InkScroller styles are in global.css — this block intentionally empty */
+</style>

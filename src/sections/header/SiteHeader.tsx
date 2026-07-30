@@ -1,5 +1,6 @@
 import type { Locale, NavItem } from "../../content/site";
-import { useEffect, useState } from "react";
+import { saveLocaleScrollPosition } from "../../lib/locale-scroll";
+import { useEffect, useState, type MouseEvent } from "react";
 
 type ThemeMode = "light" | "dark";
 
@@ -117,6 +118,9 @@ function getThemeMode(): ThemeMode {
 
 type SiteHeaderProps = {
   currentLocale: Locale;
+  isHome?: boolean;
+  localePath?: string;
+  localeHref?: string;
   navItems: NavItem[];
   languageSwitcher: {
     label: string;
@@ -136,6 +140,9 @@ type SiteHeaderProps = {
 
 export default function SiteHeader({
   currentLocale,
+  isHome = true,
+  localePath,
+  localeHref,
   navItems,
   languageSwitcher,
   header,
@@ -148,22 +155,22 @@ export default function SiteHeader({
 
     root.classList.remove("light", "dark");
     root.classList.add(currentTheme);
+    document.dispatchEvent(new Event("devdigi-theme-change"));
     setThemeMode(currentTheme);
   }, []);
 
-  const primaryNav = navItems.filter((item) =>
-    [
-      "#about",
-      "#experience",
-      "#projects",
-      "#skills",
-      "#education",
-      "#contact",
-    ].includes(item.href),
-  );
   const isEnglishLocale = currentLocale === "en";
+  const homeHref = currentLocale === "en" ? "/en" : "/es";
+  const toHomeHref = (href: string) =>
+    isHome || !href.startsWith("#") ? href : `${homeHref}${href}`;
   const nextLocale = isEnglishLocale ? "es" : "en";
-  const nextLocaleHref = nextLocale === "en" ? "/en" : `/${nextLocale}`;
+  const nextLocaleHref =
+    localeHref ??
+    (localePath
+      ? localePath.replace(/^\/(en|es)(?=\/|$)/, `/${nextLocale}`)
+      : nextLocale === "en"
+        ? "/en"
+        : `/${nextLocale}`);
 
   const currentLocaleLabel = languageSwitcher.options[currentLocale];
   const localeAriaHint =
@@ -176,29 +183,44 @@ export default function SiteHeader({
       : header.themeToggle.switchToDark;
 
   const onThemeToggle = () => {
-    setThemeMode((previousTheme) => {
-      const nextTheme = previousTheme === "dark" ? "light" : "dark";
-      const root = document.documentElement;
+    const nextTheme = themeMode === "dark" ? "light" : "dark";
+    const root = document.documentElement;
 
-      root.classList.remove("light", "dark");
-      root.classList.add(nextTheme);
+    root.classList.remove("light", "dark");
+    root.classList.add(nextTheme);
+    document.dispatchEvent(new Event("devdigi-theme-change"));
 
-      try {
-        window.localStorage.setItem("devdigi-theme", nextTheme);
-      } catch {
-        // Local storage is optional; keep behavior purely visual if unavailable.
-      }
+    try {
+      window.localStorage.setItem("devdigi-theme", nextTheme);
+    } catch {
+      // Local storage is optional; keep behavior purely visual if unavailable.
+    }
 
-      return nextTheme;
-    });
+    setThemeMode(nextTheme);
+  };
+
+  const onLocaleClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      (event.currentTarget.target && event.currentTarget.target !== "_self")
+    ) {
+      return;
+    }
+
+    saveLocaleScrollPosition(nextLocaleHref);
   };
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4">
       <div className="header-shell glass mx-auto flex max-w-6xl items-center justify-between rounded-full px-4 py-2.5 sm:px-6">
         <a
-          className="flex items-center gap-2"
-          href="#top"
+          className="header-brand-link flex items-center gap-2"
+          href={toHomeHref("#top")}
           aria-label={header.homeLabel}
         >
           <span className="header-brand-mark" aria-hidden="true">
@@ -213,8 +235,12 @@ export default function SiteHeader({
           aria-label={header.ariaLabel}
           className="header-primary-nav flex items-center gap-1"
         >
-          {primaryNav.map((item) => (
-            <a key={item.href} className="header-nav-link" href={item.href}>
+          {navItems.map((item) => (
+            <a
+              key={item.href}
+              className="header-nav-link"
+              href={toHomeHref(item.href)}
+            >
               {item.label}
             </a>
           ))}
@@ -224,6 +250,7 @@ export default function SiteHeader({
           <div role="group" aria-label={languageSwitcher.label}>
             <a
               href={nextLocaleHref}
+              onClick={onLocaleClick}
               className="header-lang-toggle"
               aria-label={`${currentLocaleLabel}. ${localeAriaHint}`}
               title={localeAriaHint}
@@ -243,7 +270,7 @@ export default function SiteHeader({
             {themeMode === "dark" ? <SunIcon /> : <MoonIcon />}
           </button>
 
-          <a className="header-contact-cta" href="#contact">
+          <a className="header-contact-cta" href={toHomeHref("#contact")}>
             {header.ctaLabel}
             <ArrowUpRightIcon className="header-icon-sm" />
           </a>

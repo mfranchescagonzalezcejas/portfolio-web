@@ -10,7 +10,8 @@ type ProjectsProps = {
     proofLabel: string;
     repositoryLabel: string;
     repositoryAriaLabel: string;
-    mockupFallback: string;
+    learningProjectsTitle: string;
+    learningProjectsDescription: string;
   };
 };
 
@@ -30,20 +31,34 @@ export default function Projects({ projects, section }: ProjectsProps) {
           <p className="values-description">{section.description}</p>
         </div>
 
-        <div className="projects-grid">
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.name}
-              project={project}
-              linksLabel={section.linksLabel}
-              stackLabel={section.stackLabel}
-              proofLabel={section.proofLabel}
-              repositoryLabel={section.repositoryLabel}
-              repositoryAriaLabel={section.repositoryAriaLabel}
-              mockupFallback={section.mockupFallback}
-            />
-          ))}
-        </div>
+        <section
+          className="projects-learning-group"
+          aria-labelledby="learning-projects-title"
+        >
+          <div className="projects-learning-header">
+            <h3
+              id="learning-projects-title"
+              className="projects-learning-title"
+            >
+              {section.learningProjectsTitle}
+            </h3>
+            <p>{section.learningProjectsDescription}</p>
+          </div>
+
+          <div className="projects-grid">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.name}
+                project={project}
+                linksLabel={section.linksLabel}
+                stackLabel={section.stackLabel}
+                proofLabel={section.proofLabel}
+                repositoryLabel={section.repositoryLabel}
+                repositoryAriaLabel={section.repositoryAriaLabel}
+              />
+            ))}
+          </div>
+        </section>
       </div>
     </section>
   );

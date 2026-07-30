@@ -29,14 +29,9 @@ type HeroProps = {
 };
 
 export default function Hero({ hero, links }: HeroProps) {
-  const profileLinks = links
-    .filter((link) => link.kind === "github" || link.kind === "linkedin")
-    .slice(0, 2);
-
-  const fallbackLinks =
-    profileLinks.length > 0
-      ? profileLinks
-      : links.filter((link) => link.kind !== "cv").slice(0, 2);
+  const profileLinks = links.filter(
+    (link) => link.kind === "linkedin" || link.kind === "github",
+  );
   const firstName = hero.name.split(" ")[0] || hero.name;
   const parsedTagline = splitHeadlineWithAccent(hero.tagline);
 
@@ -96,19 +91,23 @@ export default function Hero({ hero, links }: HeroProps) {
               <span>{hero.cvLabel}</span>
             </a>
 
-            {fallbackLinks.map((link) => {
+            {profileLinks.map((link) => {
               const Icon = getContactIcon(link.kind);
+              const variantClass =
+                link.kind === "linkedin"
+                  ? "contact-cta-link-primary cta-button"
+                  : "contact-cta-link-secondary cta-outline";
 
               return (
                 <a
                   key={link.href}
-                  className="cta-outline hero-cta-secondary hero-cta-social"
+                  className={`contact-cta-link ${variantClass}`}
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
                   rel={link.external ? "noopener noreferrer" : undefined}
                 >
                   <Icon
-                    className="hero-cta-icon"
+                    className="contact-cta-icon"
                     aria-hidden="true"
                     data-contact-icon={link.kind}
                   />

@@ -1,4 +1,4 @@
-import { Code2, GitBranch, Smartphone, Sparkles } from "lucide-react";
+import { GitBranch, Sparkles } from "lucide-react";
 import type { Project } from "../../content/site";
 import { formatProjectLabel } from "./projectLabel";
 
@@ -9,7 +9,6 @@ type ProjectCardProps = {
   proofLabel: string;
   repositoryLabel: string;
   repositoryAriaLabel: string;
-  mockupFallback: string;
 };
 
 export default function ProjectCard({
@@ -19,27 +18,9 @@ export default function ProjectCard({
   proofLabel,
   repositoryLabel,
   repositoryAriaLabel,
-  mockupFallback,
 }: ProjectCardProps) {
   return (
     <article className="project-card card-surface">
-      <div aria-hidden="true" className="project-card-visual">
-        <div className="grid-bg" />
-        <div className="project-card-device">
-          <div className="project-card-device-notch" />
-          <div className="project-card-device-screen">
-            <Smartphone
-              aria-hidden="true"
-              className="project-card-phone-icon"
-            />
-            <span>{project.mockupStatus ?? mockupFallback}</span>
-          </div>
-        </div>
-        <div className="project-card-code-icon">
-          <Code2 aria-hidden="true" />
-        </div>
-      </div>
-
       <div className="project-card-content">
         <h3 className="project-card-title font-display">{project.name}</h3>
 

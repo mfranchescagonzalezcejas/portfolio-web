@@ -11,3 +11,4 @@ npm-debug.log*
 .cursor/
 design/design.op
 .vercel/
+openspec/

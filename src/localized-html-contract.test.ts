@@ -2,6 +2,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
+import { inkscrollerContent } from "./content/inkscroller";
+import { betaContent } from "./content/beta";
 import { siteContentByLocale, validateSiteContent } from "./content/site";
 
 type LocaleEntrypoint = {
@@ -26,6 +28,11 @@ type SeoContract = {
 const productionSiteUrl = "https://devdigi.dev";
 const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
+const inkScrollerPagePath = resolve(
+  process.cwd(),
+  "src/layouts/InkScrollerPage.astro",
+);
+const globalStylesPath = resolve(process.cwd(), "src/styles/global.css");
 const fontStylesheetUrl =
   "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
 const pngSignature = Buffer.from([
@@ -35,7 +42,6 @@ const pngSignature = Buffer.from([
 const requiredProjectRepoUrls = [
   "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
   "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
-  "https://github.com/mfranchescagonzalezcejas/portfolio-web",
   "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
   "https://github.com/mfranchescagonzalezcejas/AppUIKit",
   "https://github.com/mfranchescagonzalezcejas/AppAndroid",
@@ -54,6 +60,11 @@ const requiredCaseStudyUrls = [
   "https://play.google.com/store/apps/details?id=com.nestle.nescafe.dolcegusto&pcampaignid=web_share",
 ];
 
+const homeMockupPaths = (locale: "en" | "es", theme: "dark" | "light") =>
+  ["explore", "home", "library"].map(
+    (capture) => `/inkscroller/screenshots/${theme}/${locale}/${capture}.jpg`,
+  );
+
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
@@ -66,6 +77,8 @@ type StaticContract = {
   summaryBrandSnippet: string;
   cta: string;
   portfolioItems: string[];
+  learningProjectsTitle: string;
+  learningProjectsDescription: string;
   caseStudyItems: string[];
   caseStudySnippets: string[];
   skillsHeading: string;
@@ -75,7 +88,7 @@ type StaticContract = {
   footerText: string;
   footerYearText: string;
   navLabel: string;
-  skillsNavLabel: string;
+  primaryNav: [string, string][];
   educationHeading: string;
   educationCard: string;
   languagesCard: string;
@@ -89,6 +102,29 @@ const entrypoints: LocaleEntrypoint[] = [
   { path: "dist/en/index.html", locale: "en" },
   { path: "dist/es/index.html", locale: "es" },
 ];
+
+const productEntrypoints = [
+  {
+    path: "dist/en/projects/inkscroller/index.html",
+    locale: "en",
+    title: "InkScroller | DevDigi",
+    canonical: `${productionSiteUrl}/en/projects/inkscroller`,
+    alternate: `${productionSiteUrl}/es/proyectos/inkscroller`,
+    hero: "Keep your next chapter within reach.",
+    preview: "Browse curated stories and discover new reads.",
+    beta: "Apply as a tester",
+  },
+  {
+    path: "dist/es/proyectos/inkscroller/index.html",
+    locale: "es",
+    title: "InkScroller | DevDigi",
+    canonical: `${productionSiteUrl}/es/proyectos/inkscroller`,
+    alternate: `${productionSiteUrl}/en/projects/inkscroller`,
+    hero: "Tu próximo capítulo, siempre a mano.",
+    preview: "Navega por historias seleccionadas y descubre nuevas lecturas.",
+    beta: "Solicitar acceso",
+  },
+] as const;
 
 const seoContracts: Record<string, SeoContract> = {
   "dist/index.html": {
@@ -179,14 +215,9 @@ const staticContracts: Record<
     summaryBrandSnippet:
       "where I showcase my mobile work, projects and technical growth",
     cta: "Contact me",
-    portfolioItems: [
-      "Inkscroller Frontend",
-      "Inkscroller Backend",
-      "DevDigi Portfolio Web",
-      "AppSwiftUI",
-      "AppUIKit",
-      "AppAndroid",
-    ],
+    portfolioItems: ["AppSwiftUI", "AppUIKit", "AppAndroid"],
+    learningProjectsTitle: "Learning projects",
+    learningProjectsDescription: "Worldline internship learning projects",
     caseStudyItems: [
       "La Mercè production release",
       "Barcelona a la Butxaca air quality",
@@ -220,7 +251,14 @@ const staticContracts: Record<
     footerText: "Built with care in Barcelona",
     footerYearText: `© ${new Date().getFullYear()} · Built with care in Barcelona`,
     navLabel: "Primary",
-    skillsNavLabel: "Skills",
+    primaryNav: [
+      ["About", "#about"],
+      ["Experience", "#experience"],
+      ["Projects", "#projects"],
+      ["Skills", "#skills"],
+      ["Education", "#education"],
+      ["Contact", "#contact"],
+    ],
     educationHeading: "Education and languages",
     educationCard: "Education",
     languagesCard: "Languages",
@@ -262,14 +300,9 @@ const staticContracts: Record<
     summaryBrandSnippet:
       "donde muestro mi trabajo mobile, proyectos y crecimiento técnico",
     cta: "Contáctame",
-    portfolioItems: [
-      "Inkscroller Frontend",
-      "Inkscroller Backend",
-      "Web Portfolio DevDigi",
-      "AppSwiftUI",
-      "AppUIKit",
-      "AppAndroid",
-    ],
+    portfolioItems: ["AppSwiftUI", "AppUIKit", "AppAndroid"],
+    learningProjectsTitle: "Proyectos de aprendizaje",
+    learningProjectsDescription: "prácticas en Worldline",
     caseStudyItems: [
       "Release en producción de La Mercè",
       "Barcelona a la Butxaca calidad del aire",
@@ -303,7 +336,14 @@ const staticContracts: Record<
     footerText: "Desarrollado con cariño en Barcelona",
     footerYearText: `© ${new Date().getFullYear()} · Desarrollado con cariño en Barcelona`,
     navLabel: "Principal",
-    skillsNavLabel: "Competencias",
+    primaryNav: [
+      ["Sobre mí", "#about"],
+      ["Experiencia", "#experience"],
+      ["Proyectos", "#projects"],
+      ["Habilidades", "#skills"],
+      ["Educación", "#education"],
+      ["Contacto", "#contact"],
+    ],
     educationHeading: "Formación e idiomas",
     educationCard: "Formación",
     languagesCard: "Idiomas",
@@ -351,11 +391,41 @@ const assertNoJsContract = (
   expect(
     body.querySelector(`nav[aria-label="${contract.navLabel}"]`),
   ).not.toBeNull();
+  const primaryNav = body.querySelector(
+    `nav[aria-label="${contract.navLabel}"]`,
+  );
   expect(
-    body
-      .querySelector(`nav[aria-label="${contract.navLabel}"] a[href="#skills"]`)
-      ?.textContent?.trim(),
-  ).toBe(contract.skillsNavLabel);
+    Array.from(primaryNav?.querySelectorAll("a") ?? []).map((link) => [
+      link.textContent?.trim(),
+      link.getAttribute("href"),
+    ]),
+  ).toEqual(contract.primaryNav);
+
+  const inkScrollerPath =
+    locale === "en" ? "/en/projects/inkscroller" : "/es/proyectos/inkscroller";
+  expect(primaryNav?.querySelector(`a[href="${inkScrollerPath}"]`)).toBeNull();
+  expect(
+    body.querySelector(`section#featured a[href="${inkScrollerPath}"]`),
+  ).not.toBeNull();
+
+  const featuredMockups = Array.from(
+    body.querySelectorAll<HTMLImageElement>(
+      'section#featured .mockup-phone-screen img[alt=""][loading="lazy"]',
+    ),
+  );
+  expect(featuredMockups).toHaveLength(3);
+  expect(featuredMockups.map((mockup) => mockup.getAttribute("src"))).toEqual(
+    homeMockupPaths(locale, "dark"),
+  );
+  featuredMockups.forEach((mockup) => {
+    expect(mockup.getAttribute("width")).toBe("1080");
+    expect(mockup.getAttribute("height")).toBe("2340");
+    expect(mockup.getAttribute("decoding")).toBe("async");
+  });
+  expect(
+    featuredMockups.map((mockup) => mockup.getAttribute("data-light-src")),
+  ).toEqual(homeMockupPaths(locale, "light"));
+  expect(html).not.toContain("drive-download-20260726T185531Z-1-001");
 
   for (const sectionId of sectionIds) {
     const section = body.querySelector(`section#${sectionId}`);
@@ -390,6 +460,14 @@ const assertNoJsContract = (
   for (const projectName of contract.portfolioItems) {
     expect(bodyText).toContain(projectName);
   }
+  const projectsSection = body.querySelector("section#projects");
+  expect(projectsSection?.querySelector("h3")?.textContent?.trim()).toBe(
+    contract.learningProjectsTitle,
+  );
+  expect(projectsSection?.textContent).toContain(
+    contract.learningProjectsDescription,
+  );
+  expect(projectsSection?.querySelectorAll("article")).toHaveLength(3);
 
   const caseStudiesSection = body.querySelector("section#case-studies");
   expect(caseStudiesSection).not.toBeNull();
@@ -569,8 +647,6 @@ describe("Localized static entrypoints", () => {
       expect(html).toContain('href="#about"');
       expect(html).toContain('href="#experience"');
       expect(html).toContain('href="#projects"');
-      expect(html).toContain('href="#skills"');
-      expect(html).toContain('href="#education"');
       expect(html).toContain('href="#contact"');
 
       assertNoJsContract(html, locale);
@@ -957,5 +1033,354 @@ describe("Localized static entrypoints", () => {
     } finally {
       warn.mockRestore();
     }
+  });
+});
+
+describe("InkScroller static product routes", () => {
+  it.each(productEntrypoints)(
+    "renders the canonical $locale product route with the shared hydrated header",
+    ({ path, locale, title, canonical, alternate, hero, preview, beta }) => {
+      const html = readHtml(path);
+      const document = new DOMParser().parseFromString(html, "text/html");
+      const site = siteContentByLocale[locale];
+      const headerNavigation = document.querySelector("header nav");
+      const sections = Array.from(document.querySelectorAll("main section"));
+      const sectionText = sections.map((section) =>
+        normalizeReadableText(section.textContent ?? ""),
+      );
+
+      expect(document.documentElement.lang).toBe(locale);
+      expect(document.title).toBe(title);
+      expect(
+        document.head
+          .querySelector('link[rel="canonical"]')
+          ?.getAttribute("href"),
+      ).toBe(canonical);
+      expect(
+        document.head
+          .querySelector(
+            `link[rel="alternate"][hreflang="${locale === "en" ? "es" : "en"}"]`,
+          )
+          ?.getAttribute("href"),
+      ).toBe(alternate);
+      expect(
+        document.querySelector("main#inkscroller-content h1")?.textContent,
+      ).toBe(hero);
+      expect(document.querySelector("header.fixed")).not.toBeNull();
+      expect(headerNavigation?.getAttribute("aria-label")).toBe(
+        site.header.ariaLabel,
+      );
+      const homeHref = locale === "en" ? "/en" : "/es";
+      expect(
+        document
+          .querySelector(`header a[aria-label="${site.header.homeLabel}"]`)
+          ?.getAttribute("href"),
+      ).toBe(`${homeHref}#top`);
+      site.nav
+        .filter((item) => item.href.startsWith("#"))
+        .forEach((item) => {
+          expect(
+            headerNavigation
+              ?.querySelector(`a[href="${homeHref}${item.href}"]`)
+              ?.textContent?.trim(),
+          ).toBe(item.label);
+        });
+      expect(
+        document.querySelector(".header-contact-cta")?.getAttribute("href"),
+      ).toBe(`${homeHref}#contact`);
+      expect(
+        headerNavigation?.querySelector(
+          `a[href="${locale === "en" ? "/en/projects/inkscroller" : "/es/proyectos/inkscroller"}"]`,
+        ),
+      ).toBeNull();
+      expect(
+        document.querySelector(".header-lang-toggle")?.textContent,
+      ).toContain(site.languageSwitcher.options[locale]);
+      expect(
+        document.querySelector(".header-lang-toggle")?.getAttribute("href"),
+      ).toBe(
+        locale === "en"
+          ? "/es/proyectos/inkscroller"
+          : "/en/projects/inkscroller",
+      );
+      expect(document.querySelectorAll("astro-island")).toHaveLength(1);
+      const media = inkscrollerContent[locale].media;
+      expect(Array.isArray(media)).toBe(true);
+      expect(media).toHaveLength(7);
+      expect(media.map((entry) => entry.src.dark)).toEqual([
+        `/inkscroller/screenshots/dark/${locale}/home.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/explore.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/library.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/story-detail.jpg`,
+        "/inkscroller/screenshots/dark/reader.jpg",
+        "/inkscroller/screenshots/dark/reader-2.jpg",
+        `/inkscroller/screenshots/dark/${locale}/reader-settings.jpg`,
+      ]);
+      expect(media.map((entry) => entry.src.light)).toEqual([
+        `/inkscroller/screenshots/light/${locale}/home.jpg`,
+        `/inkscroller/screenshots/light/${locale}/explore.jpg`,
+        `/inkscroller/screenshots/light/${locale}/library.jpg`,
+        `/inkscroller/screenshots/light/${locale}/story-detail.jpg`,
+        "/inkscroller/screenshots/light/reader.jpg",
+        "/inkscroller/screenshots/light/reader-2.jpg",
+        locale === "en"
+          ? "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg"
+          : "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
+      ]);
+      expect(media.slice(4, 6).map((entry) => entry.title)).toEqual(
+        locale === "en"
+          ? ["Reader: vertical", "Reader: paginated"]
+          : ["Lector: vertical", "Lector: paginado"],
+      );
+      media.forEach((entry) => {
+        expect(entry.kind).toBe("capture");
+        expect(typeof entry.title).toBe("string");
+        expect(typeof entry.description).toBe("string");
+        Object.values(entry.src).forEach((src) => {
+          expect(
+            existsSync(resolve(process.cwd(), "public", src.slice(1))),
+          ).toBe(true);
+        });
+      });
+      expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
+        preview,
+      );
+      expect(normalizeReadableText(document.body.textContent ?? "")).toContain(
+        beta,
+      );
+      expect(sectionText).toHaveLength(4);
+      expect(sectionText[3]).toContain(beta);
+      expect(
+        document.querySelectorAll(
+          ".inkscroller-hero-device .mockup-phone .mockup-phone-screen",
+        ),
+      ).toHaveLength(1);
+      const carouselImgs = document.querySelectorAll(
+        ".inkscroller-carousel .mockup-phone .mockup-phone-screen img",
+      );
+      expect(carouselImgs).toHaveLength(7);
+      expect(
+        Array.from(carouselImgs).map((image) => image.getAttribute("src")),
+      ).toContain(
+        `/inkscroller/screenshots/dark/${locale}/reader-settings.jpg`,
+      );
+      expect(
+        Array.from(carouselImgs).map((image) =>
+          image.getAttribute("data-light-src"),
+        ),
+      ).toContain(
+        locale === "en"
+          ? "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg"
+          : "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
+      );
+    },
+  );
+
+  it("switches product carousel captures for the boot theme and later theme changes", async () => {
+    const html = readHtml("dist/en/projects/inkscroller/index.html");
+    const renderedDocument = new DOMParser().parseFromString(html, "text/html");
+    const bootScript = Array.from(
+      renderedDocument.head.querySelectorAll("script"),
+    )
+      .map((script) => script.textContent ?? "")
+      .find((script) => script.includes("syncThemeImages"));
+    const previousHtmlClass = document.documentElement.className;
+    const previousHead = document.head.innerHTML;
+    const previousBody = document.body.innerHTML;
+    const previousMatchMedia = Object.getOwnPropertyDescriptor(
+      window,
+      "matchMedia",
+    );
+
+    try {
+      Object.defineProperty(window, "matchMedia", {
+        configurable: true,
+        value: () => ({ matches: true }),
+      });
+      document.documentElement.className = "";
+      document.head.innerHTML = "";
+      document.body.innerHTML = "";
+      window.eval(bootScript ?? "");
+      expect(document.documentElement).toHaveClass("light");
+
+      document.body.innerHTML = renderedDocument.body.innerHTML;
+      document.dispatchEvent(new Event("DOMContentLoaded"));
+
+      const carouselImages = Array.from(
+        document.querySelectorAll<HTMLImageElement>(
+          ".inkscroller-carousel .mockup-phone-screen img",
+        ),
+      );
+      expect(carouselImages).toHaveLength(7);
+      expect(carouselImages.map((image) => image.getAttribute("src"))).toEqual(
+        inkscrollerContent.en.media.map((entry) => entry.src.light),
+      );
+
+      document.documentElement.className = "dark";
+      await Promise.resolve();
+
+      expect(carouselImages.map((image) => image.getAttribute("src"))).toEqual(
+        inkscrollerContent.en.media.map((entry) => entry.src.dark),
+      );
+    } finally {
+      document.documentElement.className = previousHtmlClass;
+      document.head.innerHTML = previousHead;
+      document.body.innerHTML = previousBody;
+      if (previousMatchMedia) {
+        Object.defineProperty(window, "matchMedia", previousMatchMedia);
+      } else {
+        delete window.matchMedia;
+      }
+    }
+  });
+
+  it("observes only theme class changes when synchronizing images", () => {
+    const layout = readFileSync(
+      resolve(process.cwd(), "src/layouts/BaseLayout.astro"),
+      "utf8",
+    );
+
+    expect(layout).toContain('attributeFilter: ["class"]');
+    expect(layout).not.toContain("childList:");
+    expect(layout).not.toContain("subtree:");
+  });
+});
+
+describe("InkScroller carousel loop", () => {
+  it("uses a transform track with hidden edge clones instead of scroll rebases", () => {
+    const page = readFileSync(inkScrollerPagePath, "utf8");
+
+    expect(page).toContain("const cloneSlide = (slide) => {");
+    expect(page).toContain('clone.setAttribute("aria-hidden", "true");');
+    expect(page).toContain(
+      "track?.prepend(...origSlides.slice(-cloneCount).map(cloneSlide));",
+    );
+    expect(page).toContain("createCarouselQueue(totalReal)");
+    expect(page).toContain(
+      "const preview = (viewport.clientWidth - slideWidth) / 2;",
+    );
+    expect(page).toContain(
+      "const slideWidth = parseFloat(getComputedStyle(slides[0]).width) || viewport.clientWidth;",
+    );
+    expect(page).toContain(
+      "track.style.transform = `translate3d(${preview - index * slideWidth}px, 0, 0)`;",
+    );
+    expect(page).toContain('event.propertyName === "transform"');
+    expect(page).toContain("new ResizeObserver(() => {");
+    expect(page).toContain('dot.setAttribute("aria-current", "true");');
+    expect(page).not.toContain("scrollLeft");
+    expect(page).not.toContain("scroll-snap");
+  });
+});
+
+describe("Beta index routes", () => {
+  it.each([
+    {
+      path: "dist/en/beta/index.html",
+      locale: "en",
+      title: "Beta Programs | DevDigi",
+      programName: "InkScroller",
+      cta: "Learn more",
+    },
+    {
+      path: "dist/es/beta/index.html",
+      locale: "es",
+      title: "Programas Beta | DevDigi",
+      programName: "InkScroller",
+      cta: "Más información",
+    },
+  ])(
+    "renders the $locale beta index with program listing",
+    ({ path, locale, title, programName, cta }) => {
+      const html = readHtml(path);
+      const document = new DOMParser().parseFromString(html, "text/html");
+
+      expect(document.documentElement.lang).toBe(locale);
+      expect(document.title).toBe(title);
+      expect(document.querySelector(".beta-program-name")?.textContent).toBe(
+        programName,
+      );
+      expect(
+        document.querySelector(".beta-cta-primary")?.textContent?.trim(),
+      ).toBe(cta);
+      expect(document.querySelector("header")).not.toBeNull();
+    },
+  );
+});
+
+describe("InkScroller beta landing routes", () => {
+  it.each([
+    {
+      path: "dist/en/beta/inkscroller/index.html",
+      locale: "en",
+      eyebrow: "Closed beta",
+      heading: "Join InkScroller Beta",
+      languageHref: "/es/beta/inkscroller",
+    },
+    {
+      path: "dist/es/beta/inkscroller/index.html",
+      locale: "es",
+      eyebrow: "Beta cerrada",
+      heading: "Únete a la beta de InkScroller",
+      languageHref: "/en/beta/inkscroller",
+    },
+  ])(
+    "renders the $locale InkScroller beta landing",
+    ({ path, locale, eyebrow, heading, languageHref }) => {
+      const html = readHtml(path);
+      const document = new DOMParser().parseFromString(html, "text/html");
+
+      expect(document.documentElement.lang).toBe(locale);
+      expect(
+        document.querySelector(".inkscroller-hero-eyebrow")?.textContent,
+      ).toBe(eyebrow);
+      expect(document.querySelector("h1")?.textContent).toBe(heading);
+      expect(document.querySelector("header")).not.toBeNull();
+      expect(
+        document.querySelector(".header-lang-toggle")?.getAttribute("href"),
+      ).toBe(languageHref);
+      const beta = betaContent[locale as "en" | "es"].inkscroller;
+      expect(document.querySelectorAll(".beta-proof-list li")).toHaveLength(
+        beta.scope.items.length,
+      );
+      expect(document.querySelectorAll(".beta-faq details")).toHaveLength(
+        beta.faq.questions.length,
+      );
+      expect(document.querySelectorAll(".beta-cta--primary")).toHaveLength(2);
+      expect(document.querySelector("section#contact")).toBeNull();
+      expect(document.body.textContent).toContain(beta.hero.microcopy);
+      expect(document.title).toBe(beta.seo.title);
+      expect(
+        document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
+      ).toBe(`https://devdigi.dev${beta.seo.canonicalPath}`);
+      (
+        Object.entries(beta.seo.alternates) as [
+          "en" | "es" | "x-default",
+          string,
+        ][]
+      ).forEach(([hreflang, path]) => {
+        expect(
+          document
+            .querySelector(`link[rel="alternate"][hreflang="${hreflang}"]`)
+            ?.getAttribute("href"),
+        ).toBe(`https://devdigi.dev${path}`);
+      });
+      expect(
+        document.querySelector(".beta-hero-device img")?.getAttribute("src"),
+      ).toBe(inkscrollerContent[locale as "en" | "es"].media[0].src.dark);
+    },
+  );
+
+  it("keeps beta route styling in the global stylesheet", () => {
+    const styles = readFileSync(globalStylesPath, "utf8");
+    const betaPage = readFileSync(
+      resolve(process.cwd(), "src/pages/en/beta/inkscroller.astro"),
+      "utf8",
+    );
+
+    expect(styles).toContain(".beta-landing-shell");
+    expect(styles).toContain("scroll-margin-top: 9rem");
+    expect(styles).toContain(".beta-hero-layout");
+    expect(betaPage).not.toContain("<style>");
   });
 });

@@ -56,6 +56,33 @@ type ResponsiveMetrics = {
     whiteSpace: string;
     textOverflow: string;
   }>;
+  featuredMockups: Array<{
+    src: string;
+    width: string | null;
+    height: string | null;
+    loading: string;
+    decoding: string;
+    objectFit: string;
+    objectPosition: string;
+    screenWidth: number;
+    screenHeight: number;
+    imageWidth: number;
+    imageHeight: number;
+  }>;
+  learningProjects: {
+    title: string;
+    cardCount: number;
+    columns: number;
+  } | null;
+  primaryNavHrefs: string[];
+  headerControls: Array<{
+    className: string;
+    display: string;
+    width: number;
+    height: number;
+    rects: number;
+  }>;
+  featuredInkScrollerLinkFocused: boolean;
 };
 
 const chromeCandidates = [
@@ -227,6 +254,8 @@ async function waitForExpression<T>(
 
 async function collectMetrics(
   theme: "light" | "dark",
+  path = "/es/",
+  width = 320,
 ): Promise<ResponsiveMetrics> {
   const target = await readJson<TargetDescriptor>(
     `http://${previewHost}:${chromePort}/json/new?about:blank`,
@@ -238,7 +267,7 @@ async function collectMetrics(
     await client.send("Page.enable");
     await client.send("Runtime.enable");
     await client.send("Emulation.setDeviceMetricsOverride", {
-      width: 320,
+      width,
       height: 900,
       deviceScaleFactor: 1,
       mobile: true,
@@ -251,21 +280,24 @@ async function collectMetrics(
       `,
     });
     await client.send("Page.navigate", {
-      url: `http://${previewHost}:${previewPort}/es/`,
+      url: `http://${previewHost}:${previewPort}${path}`,
     });
     await waitForExpression<boolean>(
       client,
       "document.readyState === 'complete' && Boolean(document.querySelector('header nav[aria-label]'))",
     );
-
     const evaluation = await client.send<
       RuntimeEvaluateResult<ResponsiveMetrics>
     >("Runtime.evaluate", {
       expression: `(() => {
           const nav = document.querySelector('header nav[aria-label]');
-          const cta = document.querySelector('.header-contact-cta');
-          const navStyle = window.getComputedStyle(nav);
-          const ctaStyle = window.getComputedStyle(cta);
+           const cta = document.querySelector('.header-contact-cta');
+            const featuredInkScrollerLink = document.querySelector('section#featured a[href*="inkscroller"]');
+            const learningProjects = document.querySelector('.projects-learning-group');
+            const projectsGrid = learningProjects?.querySelector('.projects-grid');
+           const navStyle = window.getComputedStyle(nav);
+           const ctaStyle = window.getComputedStyle(cta);
+           featuredInkScrollerLink?.focus();
 
           return {
             documentElement: {
@@ -307,7 +339,46 @@ async function collectMetrics(
                 textOverflow: style.textOverflow,
               };
             }),
-          };
+             featuredMockups: Array.from(document.querySelectorAll('.mockup-phone-screen img')).map((image) => {
+               const screen = image.closest('.mockup-phone-screen');
+              const screenRect = screen.getBoundingClientRect();
+              const imageRect = image.getBoundingClientRect();
+              const style = window.getComputedStyle(image);
+
+              return {
+                src: image.getAttribute('src'),
+                width: image.getAttribute('width'),
+                height: image.getAttribute('height'),
+                loading: image.loading,
+                decoding: image.decoding,
+                objectFit: style.objectFit,
+                objectPosition: style.objectPosition,
+                screenWidth: screenRect.width,
+                screenHeight: screenRect.height,
+                imageWidth: imageRect.width,
+                imageHeight: imageRect.height,
+               };
+             }),
+              learningProjects: learningProjects && projectsGrid ? {
+                title: learningProjects.querySelector('h3').textContent.trim(),
+                cardCount: projectsGrid.querySelectorAll('.project-card').length,
+                columns: window.getComputedStyle(projectsGrid).gridTemplateColumns.split(' ').length,
+              } : null,
+              primaryNavHrefs: Array.from(nav.querySelectorAll('a')).map((link) => link.getAttribute('href')),
+              headerControls: Array.from(document.querySelectorAll('header a, header button')).map((control) => {
+                const rect = control.getBoundingClientRect();
+                const style = window.getComputedStyle(control);
+
+                return {
+                  className: control.className,
+                  display: style.display,
+                  width: rect.width,
+                  height: rect.height,
+                  rects: control.getClientRects().length,
+                };
+              }),
+              featuredInkScrollerLinkFocused: document.activeElement === featuredInkScrollerLink,
+            };
         })()`,
       returnByValue: true,
     });
@@ -464,6 +535,38 @@ describe("rendered responsive overflow", () => {
         expect(metrics.primaryNav.overflowX, theme).toBe("auto");
         expect(metrics.contactCta.display, theme).toBe("none");
         expect(metrics.contactCta.rects, theme).toBe(0);
+        for (const control of metrics.headerControls) {
+          if (control.display === "none") {
+            continue;
+          }
+
+          expect(
+            control.rects,
+            `${theme}: ${control.className}`,
+          ).toBeGreaterThan(0);
+          expect(
+            control.width,
+            `${theme}: ${control.className}`,
+          ).toBeGreaterThanOrEqual(
+            control.className.includes("header-nav-link") ||
+              control.className.includes("header-lang-toggle") ||
+              control.className.includes("header-theme-toggle") ||
+              control.className.includes("header-contact-cta")
+              ? 36
+              : 44,
+          );
+          expect(
+            control.height,
+            `${theme}: ${control.className}`,
+          ).toBeGreaterThanOrEqual(
+            control.className.includes("header-nav-link") ||
+              control.className.includes("header-lang-toggle") ||
+              control.className.includes("header-theme-toggle") ||
+              control.className.includes("header-contact-cta")
+              ? 36
+              : 44,
+          );
+        }
         expect(metrics.experiencePeriodBadges.length, theme).toBeGreaterThan(0);
 
         for (const badge of metrics.experiencePeriodBadges) {
@@ -486,6 +589,210 @@ describe("rendered responsive overflow", () => {
           expect(title.whiteSpace, `${theme}: ${title.text}`).toBe("normal");
           expect(title.textOverflow, `${theme}: ${title.text}`).toBe("clip");
         }
+      }
+    },
+    testTimeoutMs,
+  );
+
+  it.each([
+    {
+      path: "/en/",
+      width: 320,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Learning projects",
+      learningProjectColumns: 1,
+    },
+    {
+      path: "/en/",
+      width: 375,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Learning projects",
+      learningProjectColumns: 1,
+    },
+    {
+      path: "/en/",
+      width: 768,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Learning projects",
+      learningProjectColumns: 2,
+    },
+    {
+      path: "/en/",
+      width: 1440,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Learning projects",
+      learningProjectColumns: 3,
+    },
+    {
+      path: "/es/",
+      width: 320,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Proyectos de aprendizaje",
+      learningProjectColumns: 1,
+    },
+    {
+      path: "/es/",
+      width: 375,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Proyectos de aprendizaje",
+      learningProjectColumns: 1,
+    },
+    {
+      path: "/es/",
+      width: 768,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Proyectos de aprendizaje",
+      learningProjectColumns: 2,
+    },
+    {
+      path: "/es/",
+      width: 1440,
+      primaryNavHrefs: [
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ],
+      learningProjectsTitle: "Proyectos de aprendizaje",
+      learningProjectColumns: 3,
+    },
+  ])(
+    "keeps featured InkScroller captures contained at $path $widthpx",
+    async ({
+      path,
+      width,
+      primaryNavHrefs,
+      learningProjectsTitle,
+      learningProjectColumns,
+    }) => {
+      const metrics = await collectMetrics("dark", path, width);
+
+      expect(metrics.documentElement.scrollWidth).toBe(width);
+      expect(metrics.body.scrollWidth).toBe(width);
+      expect(metrics.primaryNavHrefs).toEqual(primaryNavHrefs);
+      expect(metrics.featuredInkScrollerLinkFocused).toBe(true);
+      expect(metrics.featuredMockups).toHaveLength(3);
+      const locale = path.startsWith("/es") ? "es" : "en";
+      expect(metrics.featuredMockups.map((mockup) => mockup.src)).toEqual([
+        `/inkscroller/screenshots/dark/${locale}/explore.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/home.jpg`,
+        `/inkscroller/screenshots/dark/${locale}/library.jpg`,
+      ]);
+      expect(metrics.learningProjects).toEqual({
+        title: learningProjectsTitle,
+        cardCount: 3,
+        columns: learningProjectColumns,
+      });
+
+      for (const mockup of metrics.featuredMockups) {
+        expect(mockup.width).toBe("1080");
+        expect(mockup.height).toBe("2340");
+        expect(mockup.loading).toBe("lazy");
+        expect(mockup.decoding).toBe("async");
+        expect(mockup.objectFit).toBe("cover");
+        expect(mockup.objectPosition).toBe("50% 0%");
+        expect(mockup.screenWidth, JSON.stringify(mockup)).toBeGreaterThan(0);
+        expect(mockup.screenHeight, JSON.stringify(mockup)).toBeGreaterThan(0);
+        expect(mockup.imageWidth).toBeCloseTo(mockup.screenWidth, 1);
+        expect(mockup.imageHeight).toBeCloseTo(mockup.screenHeight, 1);
+        expect(mockup.screenWidth / mockup.screenHeight).toBeCloseTo(
+          1080 / 2340,
+          2,
+        );
+      }
+    },
+    testTimeoutMs,
+  );
+
+  it.each([
+    { path: "/en/projects/inkscroller", width: 320, home: "/en" },
+    { path: "/en/projects/inkscroller", width: 768, home: "/en" },
+    { path: "/en/projects/inkscroller", width: 1440, home: "/en" },
+    { path: "/es/proyectos/inkscroller", width: 320, home: "/es" },
+    { path: "/es/proyectos/inkscroller", width: 768, home: "/es" },
+    { path: "/es/proyectos/inkscroller", width: 1440, home: "/es" },
+  ])(
+    "keeps the $path shared header usable at $widthpx",
+    async ({ path, width, home }) => {
+      const metrics = await collectMetrics("dark", path, width);
+
+      expect(metrics.documentElement.scrollWidth).toBe(width);
+      expect(metrics.body.scrollWidth).toBe(width);
+      expect(metrics.primaryNavHrefs).toEqual([
+        `${home}#about`,
+        `${home}#experience`,
+        `${home}#projects`,
+        `${home}#skills`,
+        `${home}#education`,
+        `${home}#contact`,
+      ]);
+      for (const control of metrics.headerControls) {
+        if (control.display === "none") {
+          continue;
+        }
+
+        const minDim =
+          control.className.includes("header-nav-link") ||
+          control.className.includes("header-lang-toggle") ||
+          control.className.includes("header-theme-toggle") ||
+          control.className.includes("header-contact-cta")
+            ? 36
+            : 44;
+        expect(control.width, control.className).toBeGreaterThanOrEqual(minDim);
+        expect(control.height, control.className).toBeGreaterThanOrEqual(
+          minDim,
+        );
       }
     },
     testTimeoutMs,

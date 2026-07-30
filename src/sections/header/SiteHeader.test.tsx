@@ -109,3 +109,61 @@ describe("SiteHeader theme toggle", () => {
     );
   });
 });
+
+describe("SiteHeader primary navigation", () => {
+  it("renders the six localized primary destinations", () => {
+    renderHeader();
+
+    const navigation = screen.getByRole("navigation", {
+      name: site.header.ariaLabel,
+    });
+    const links = Array.from(navigation.querySelectorAll("a"));
+
+    expect(links.map((link) => link.textContent)).toEqual([
+      "About",
+      "Experience",
+      "Projects",
+      "Skills",
+      "Education",
+      "Contact",
+    ]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "#about",
+      "#experience",
+      "#projects",
+      "#skills",
+      "#education",
+      "#contact",
+    ]);
+    expect(navigation).not.toHaveTextContent("InkScroller");
+  });
+
+  it.each([
+    ["en", "/es/proyectos/inkscroller"],
+    ["en", "/es/beta/inkscroller"],
+    ["es", "/en/projects/inkscroller"],
+    ["es", "/en/beta/inkscroller"],
+  ] as const)(
+    "preserves the locale route when switching from %s",
+    (locale, href) => {
+      const localeSite = siteContentByLocale[locale];
+      render(
+        <SiteHeader
+          currentLocale={locale}
+          isHome={false}
+          localeHref={href}
+          navItems={localeSite.nav}
+          languageSwitcher={localeSite.languageSwitcher}
+          header={localeSite.header}
+        />,
+      );
+
+      expect(
+        screen.getByTitle(
+          localeSite.languageSwitcher.hint?.[locale === "en" ? "es" : "en"] ??
+            "",
+        ),
+      ).toHaveAttribute("href", href);
+    },
+  );
+});

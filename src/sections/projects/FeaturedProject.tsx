@@ -1,4 +1,4 @@
-import { GitBranch, Smartphone } from "lucide-react";
+import { GitBranch } from "lucide-react";
 import type { Project, SectionHeading } from "../../content/site";
 import { formatProjectLabel } from "./projectLabel";
 
@@ -18,11 +18,7 @@ export default function FeaturedProject({
   project,
   section,
 }: FeaturedProjectProps) {
-  const [primaryLink, secondaryLink] = project.links;
-  const primaryCtaLabel = primaryLink?.ctaLabel ?? section.primaryCtaLabel;
-  const secondaryCtaLabel =
-    secondaryLink?.ctaLabel ?? section.secondaryCtaLabel;
-  const mockupLabels = project.mockupLabels ?? [];
+  const mockups = project.mockups ?? [];
 
   return (
     <section
@@ -39,13 +35,26 @@ export default function FeaturedProject({
         </div>
 
         <div className="featured-project-card card-surface">
-          <div className="featured-project-glow featured-project-glow-primary" />
-          <div className="featured-project-glow featured-project-glow-secondary" />
+          <div className="card-bg-clip">
+            <div className="featured-project-glow featured-project-glow-primary" />
+            <div className="featured-project-glow featured-project-glow-secondary" />
+          </div>
 
           <div className="featured-project-layout">
             <div className="featured-project-copy">
               <p className="featured-project-kicker">{section.kicker}</p>
               <h3 className="featured-project-title">
+                <span className="featured-project-title-icon">
+                  <img
+                    src="/inkscroller/icons/foreground-v1.png"
+                    alt=""
+                    className="featured-icon-fg"
+                    aria-hidden="true"
+                    loading="lazy"
+                    width="500"
+                    height="500"
+                  />
+                </span>
                 <span className="text-gradient">{project.name}</span>
               </h3>
               <p className="featured-project-description">
@@ -70,77 +79,69 @@ export default function FeaturedProject({
                   className="featured-project-links"
                   aria-label={`${project.name} · ${section.linksLabel}`}
                 >
-                  {primaryLink ? (
-                    <li>
-                      <a
-                        className="cta-button featured-project-link-primary"
-                        href={primaryLink.href}
-                        target={primaryLink.external ? "_blank" : undefined}
-                        rel={
-                          primaryLink.external
-                            ? "noopener noreferrer"
-                            : undefined
-                        }
-                        aria-label={formatProjectLabel(section.linkAriaLabel, {
-                          label: primaryCtaLabel,
-                          project: project.name,
-                        })}
-                      >
-                        <GitBranch
-                          aria-hidden="true"
-                          className="project-link-icon"
-                        />
-                        {primaryCtaLabel}
-                      </a>
-                    </li>
-                  ) : null}
-                  {secondaryLink ? (
-                    <li>
-                      <a
-                        className="cta-outline featured-project-link-secondary"
-                        href={secondaryLink.href}
-                        target={secondaryLink.external ? "_blank" : undefined}
-                        rel={
-                          secondaryLink.external
-                            ? "noopener noreferrer"
-                            : undefined
-                        }
-                        aria-label={formatProjectLabel(section.linkAriaLabel, {
-                          label: secondaryCtaLabel,
-                          project: project.name,
-                        })}
-                      >
-                        <GitBranch
-                          aria-hidden="true"
-                          className="project-link-icon"
-                        />
-                        {secondaryCtaLabel}
-                      </a>
-                    </li>
-                  ) : null}
+                  {project.links.map((link, index) => {
+                    const ctaLabel =
+                      link.ctaLabel ??
+                      (index === 0
+                        ? section.primaryCtaLabel
+                        : section.secondaryCtaLabel);
+
+                    return (
+                      <li key={link.href}>
+                        <a
+                          className={
+                            index === 0
+                              ? "cta-button featured-project-link-primary"
+                              : "cta-outline featured-project-link-secondary"
+                          }
+                          href={link.href}
+                          target={link.external ? "_blank" : undefined}
+                          rel={
+                            link.external ? "noopener noreferrer" : undefined
+                          }
+                          aria-label={formatProjectLabel(
+                            section.linkAriaLabel,
+                            {
+                              label: ctaLabel,
+                              project: project.name,
+                            },
+                          )}
+                        >
+                          <GitBranch
+                            aria-hidden="true"
+                            className="project-link-icon"
+                          />
+                          {ctaLabel}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
             </div>
+          </div>
 
-            <div className="featured-project-mockups" aria-hidden="true">
-              {mockupLabels.map((label, index) => (
-                <div
-                  key={label}
-                  className={`featured-phone featured-phone-${index + 1}`}
-                >
-                  <div className="featured-phone-notch" />
-                  <div className="featured-phone-screen">
-                    <div className="featured-phone-icon">
-                      <Smartphone aria-hidden="true" />
-                    </div>
-                    <p className="featured-phone-label">{label}</p>
-                    <p className="featured-phone-status">
-                      {project.mockupStatus}
-                    </p>
-                  </div>
+          <div className="featured-project-mockups" aria-hidden="true">
+            {mockups.map((mockup, index) => (
+              <div
+                key={mockup.src.dark}
+                className={`mockup-phone featured-mockup featured-mockup-${index + 1}`}
+              >
+                <div className="mockup-phone-screen">
+                  <img
+                    src={mockup.src.dark}
+                    data-dark-src={mockup.src.dark}
+                    data-light-src={mockup.src.light}
+                    width={mockup.width}
+                    height={mockup.height}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
-              ))}
-            </div>
+                <div className="mockup-phone-frame" />
+              </div>
+            ))}
           </div>
         </div>
       </div>

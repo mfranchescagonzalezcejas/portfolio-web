@@ -1,0 +1,129 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import SiteHeader from "../../../sections/header/SiteHeader";
+import { siteContentByLocale } from "../../../content/site";
+import { betaContent, type BetaContent } from "../../../content/beta";
+import { inkscrollerContent } from "../../../content/inkscroller";
+
+const locale = "es";
+const site = siteContentByLocale[locale];
+const content = betaContent[locale] as BetaContent;
+const { inkscroller: page } = content;
+const heroMedia = inkscrollerContent[locale].media[0];
+const currentYear = new Date().getFullYear();
+---
+
+<BaseLayout locale={locale} site={site} pageSeo={page.seo}>
+  <div id="top"></div>
+  <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-beta">Saltar al contenido</a>
+  <SiteHeader
+    currentLocale={site.locale}
+    isHome={false}
+    localePath="/es/beta/inkscroller"
+    navItems={site.nav}
+    languageSwitcher={site.languageSwitcher}
+    header={site.header}
+    client:load
+  />
+
+  <main id="inkscroller-beta" class="beta-landing">
+    <section class="inkscroller-beta-hero hero-section" aria-labelledby="inkscroller-beta-title">
+      <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
+      <div class="beta-landing-shell beta-hero-layout">
+        <div class="beta-hero-copy">
+          <p class="inkscroller-hero-eyebrow">{page.hero.eyebrow}</p>
+          <h1 id="inkscroller-beta-title" class="font-display hero-title beta-hero-title">{page.hero.title}</h1>
+          <p class="hero-copy beta-hero-description">{page.hero.description}</p>
+          <a class="beta-cta beta-cta--primary beta-hero-cta" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">{page.cta.primary.label}</a>
+          <p class="beta-hero-microcopy">{page.hero.microcopy}</p>
+      </div>
+        <div class="inkscroller-hero-device beta-hero-device">
+          <div class="hero-glow" aria-hidden="true"></div>
+          <div class="mockup-phone">
+            <div class="mockup-phone-screen">
+              <img src={heroMedia.src.dark} data-dark-src={heroMedia.src.dark} data-light-src={heroMedia.src.light} alt={heroMedia.alt} width={heroMedia.width} height={heroMedia.height} loading="eager" />
+            </div>
+            <div class="mockup-phone-frame" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="validation" class="beta-proof" aria-labelledby="beta-proof-title">
+      <div class="beta-landing-shell">
+        <h2 id="beta-proof-title" class="beta-proof-title">{page.scope.title}</h2>
+        <ul class="beta-proof-list">
+          {page.scope.items.map((item) => (
+            <li><span aria-hidden="true">✓</span>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section id="eligibility" class="beta-section" aria-labelledby="beta-eligibility-title">
+      <div class="beta-landing-shell beta-two-column">
+        <div>
+          <h2 id="beta-eligibility-title" class="beta-section-title">{page.requirements.title}</h2>
+          <ul class="beta-check-list">
+            {page.requirements.items.map((item) => (
+              <li><span aria-hidden="true">✓</span>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2 class="beta-section-title">{page.process.title}</h2>
+          <ol class="beta-process-list">
+            {page.process.steps.map((step, index) => (
+              <li><span aria-hidden="true">{index + 1}</span>{step}</li>
+            ))}
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="beta-contextual-cta" aria-label="Solicitud de beta">
+      <div class="beta-landing-shell beta-contextual-cta-inner">
+        <a class="beta-cta beta-cta--primary" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">{page.cta.primary.label}</a>
+        <a class="beta-cta beta-cta--secondary" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">{page.cta.secondary.label}</a>
+      </div>
+    </section>
+
+    <section id="faq" class="beta-section" aria-labelledby="beta-faq-title">
+      <div class="beta-landing-shell beta-faq-shell">
+        <h2 id="beta-faq-title" class="beta-section-title">{page.faq.title}</h2>
+        <div class="beta-faq">
+          {page.faq.questions.map(({ q, a }) => (
+            <details class="beta-faq-item">
+              <summary class="beta-faq-question">{q}</summary>
+              <p class="beta-faq-answer">{a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" class="beta-section beta-section--privacy" aria-labelledby="beta-privacy-title">
+      <div class="beta-landing-shell beta-privacy">
+        <h2 id="beta-privacy-title" class="beta-section-title">{page.privacy.title}</h2>
+        <p>{page.privacy.body}</p>
+        <p>Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
+        <p>{page.privacy.deletionInfo}</p>
+      </div>
+    </section>
+
+    <section id="beta-help" class="beta-help" aria-labelledby="beta-help-title">
+      <div class="beta-landing-shell beta-help-inner">
+        <h2 id="beta-help-title" class="beta-help-title">{page.help.title}</h2>
+        <a href={`mailto:${page.privacy.contactEmail}`}>{page.help.emailLabel}: {page.privacy.contactEmail}</a>
+        <a href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">{page.help.communityLabel}</a>
+        </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>DevDigi por Mercedes Gonzalez</p>
+      <p>&copy; {currentYear} &middot; Desarrollado con cariño en Barcelona</p>
+    </div>
+  </footer>
+</BaseLayout>

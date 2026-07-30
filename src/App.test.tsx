@@ -7,6 +7,8 @@ import {
   within,
 } from "@testing-library/react";
 import App from "./app/App";
+import { siteContentByLocale } from "./content/site";
+import SiteHeader from "./sections/header/SiteHeader";
 
 const renderAtPath = (path: string) => {
   window.history.pushState({}, "", path);
@@ -37,8 +39,14 @@ describe("locale routing behavior", () => {
       currentLocaleName: "EN",
       nextLocaleHref: "/es",
       nextLocaleHint: "Switch to Spanish",
-      skillsNavLabel: "Skills",
-      educationNavLabel: "Education",
+      primaryNavLabels: [
+        "About",
+        "Experience",
+        "Projects",
+        "Skills",
+        "Education",
+        "Contact",
+      ],
       themeToggleLabel: "Switch to light mode",
     },
     {
@@ -55,8 +63,14 @@ describe("locale routing behavior", () => {
       currentLocaleName: "EN",
       nextLocaleHref: "/es",
       nextLocaleHint: "Switch to Spanish",
-      skillsNavLabel: "Skills",
-      educationNavLabel: "Education",
+      primaryNavLabels: [
+        "About",
+        "Experience",
+        "Projects",
+        "Skills",
+        "Education",
+        "Contact",
+      ],
       themeToggleLabel: "Switch to light mode",
     },
     {
@@ -73,8 +87,14 @@ describe("locale routing behavior", () => {
       currentLocaleName: "ES",
       nextLocaleHref: "/en",
       nextLocaleHint: "Cambiar a inglés",
-      skillsNavLabel: "Competencias",
-      educationNavLabel: "Educación",
+      primaryNavLabels: [
+        "Sobre mí",
+        "Experiencia",
+        "Proyectos",
+        "Habilidades",
+        "Educación",
+        "Contacto",
+      ],
       themeToggleLabel: "Cambiar a modo claro",
     },
   ])(
@@ -92,8 +112,7 @@ describe("locale routing behavior", () => {
       currentLocaleName,
       nextLocaleHref,
       nextLocaleHint,
-      skillsNavLabel,
-      educationNavLabel,
+      primaryNavLabels,
       themeToggleLabel,
     }) => {
       renderAtPath(path);
@@ -136,12 +155,27 @@ describe("locale routing behavior", () => {
       expect(languageLink).toHaveAttribute("href", nextLocaleHref);
       expect(languageLink).toHaveAttribute("title", nextLocaleHint);
 
+      const primaryNav = within(header).getByRole("navigation");
       expect(
-        within(header).getByRole("link", { name: skillsNavLabel }),
-      ).toHaveAttribute("href", "#skills");
+        within(primaryNav)
+          .getAllByRole("link")
+          .map((link) => link.textContent),
+      ).toEqual(primaryNavLabels);
       expect(
-        within(header).getByRole("link", { name: educationNavLabel }),
-      ).toHaveAttribute("href", "#education");
+        within(primaryNav)
+          .getAllByRole("link")
+          .map((link) => link.getAttribute("href")),
+      ).toEqual([
+        "#about",
+        "#experience",
+        "#projects",
+        "#skills",
+        "#education",
+        "#contact",
+      ]);
+      expect(
+        within(primaryNav).queryByText("InkScroller"),
+      ).not.toBeInTheDocument();
       const themeToggle = within(header).getByRole("button", {
         name: themeToggleLabel,
       });
@@ -303,6 +337,72 @@ describe("Experience behavior", () => {
 });
 
 describe("navigation anchors", () => {
+  it.each([
+    {
+      locale: "en" as const,
+      isHome: true,
+      expectedHome: "#top",
+      expectedSection: "#about",
+      expectedContact: "#contact",
+    },
+    {
+      locale: "es" as const,
+      isHome: true,
+      expectedHome: "#top",
+      expectedSection: "#about",
+      expectedContact: "#contact",
+    },
+    {
+      locale: "en" as const,
+      isHome: false,
+      expectedHome: "/en#top",
+      expectedSection: "/en#about",
+      expectedContact: "/en#contact",
+    },
+    {
+      locale: "es" as const,
+      isHome: false,
+      expectedHome: "/es#top",
+      expectedSection: "/es#about",
+      expectedContact: "/es#contact",
+    },
+  ])(
+    "keeps $locale SiteHeader links correct when isHome is $isHome",
+    ({ locale, isHome, expectedHome, expectedSection, expectedContact }) => {
+      const site = siteContentByLocale[locale];
+      render(
+        <SiteHeader
+          currentLocale={locale}
+          isHome={isHome}
+          navItems={site.nav}
+          languageSwitcher={site.languageSwitcher}
+          header={site.header}
+        />,
+      );
+
+      const header = screen.getByRole("banner");
+      expect(
+        within(header).getByRole("link", { name: site.header.homeLabel }),
+      ).toHaveAttribute("href", expectedHome);
+      expect(
+        within(header).getByRole("link", { name: site.nav[0].label }),
+      ).toHaveAttribute("href", expectedSection);
+      site.nav
+        .filter((item) => item.href.startsWith("#"))
+        .forEach((item) => {
+          expect(
+            within(header).getByRole("link", { name: item.label }),
+          ).toHaveAttribute(
+            "href",
+            isHome ? item.href : `/${locale}${item.href}`,
+          );
+        });
+      expect(
+        within(header).getByRole("link", { name: site.header.ctaLabel }),
+      ).toHaveAttribute("href", expectedContact);
+    },
+  );
+
   it("uses a non-navigation group for the language switcher", () => {
     renderAtPath("/");
 
@@ -312,23 +412,6 @@ describe("navigation anchors", () => {
     expect(screen.getAllByRole("navigation", { name: "Primary" })).toHaveLength(
       1,
     );
-  });
-
-  it("includes a valid Skills anchor and target section", () => {
-    renderAtPath("/");
-
-    const skillsLink = screen.getByRole("link", { name: "Skills" });
-    expect(skillsLink).toHaveAttribute("href", "#skills");
-
-    const skillsSection = document.getElementById("skills");
-    expect(skillsSection).toBeInTheDocument();
-    expect(
-      within(skillsSection as HTMLElement).getByRole("heading", {
-        name: /Technical toolbox/i,
-      }),
-    ).toBeInTheDocument();
-
-    expect(skillsSection).toHaveClass("scroll-mt-32");
   });
 
   it.each([
@@ -436,7 +519,7 @@ describe("navigation anchors", () => {
       within(projectsSection as HTMLElement).queryByRole("heading", {
         name: "Inkscroller Frontend",
       }),
-    ).toBeInTheDocument();
+    ).not.toBeInTheDocument();
   });
 
   it("renders the richer featured project showcase with real repository links", () => {
@@ -489,25 +572,71 @@ describe("navigation anchors", () => {
     ).not.toBeInTheDocument();
   });
 
+  it.each([
+    {
+      path: "/",
+      ctaLabel: "View InkScroller",
+      href: "/en/projects/inkscroller",
+    },
+    {
+      path: "/es",
+      ctaLabel: "Ver InkScroller",
+      href: "/es/proyectos/inkscroller",
+    },
+  ])(
+    "renders locale-correct InkScroller discovery links and decorative captures for $path",
+    ({ path, ctaLabel, href }) => {
+      renderAtPath(path);
+
+      const featuredSection = document.getElementById("featured");
+      expect(featuredSection).toBeInTheDocument();
+      expect(
+        within(featuredSection as HTMLElement).getByRole("link", {
+          name: `${ctaLabel} ${path === "/es" ? "de" : "for"} Inkscroller`,
+        }),
+      ).toHaveAttribute("href", href);
+
+      const mockups = Array.from(
+        featuredSection?.querySelectorAll<HTMLImageElement>(
+          '.mockup-phone-screen img[alt=""][loading="lazy"]',
+        ) ?? [],
+      );
+      expect(mockups).toHaveLength(3);
+      expect(mockups.map((mockup) => mockup.getAttribute("src"))).toEqual([
+        `/inkscroller/screenshots/dark/${path === "/es" ? "es" : "en"}/explore.jpg`,
+        `/inkscroller/screenshots/dark/${path === "/es" ? "es" : "en"}/home.jpg`,
+        `/inkscroller/screenshots/dark/${path === "/es" ? "es" : "en"}/library.jpg`,
+      ]);
+      expect(mockups.map((mockup) => mockup.dataset.lightSrc)).toEqual([
+        `/inkscroller/screenshots/light/${path === "/es" ? "es" : "en"}/explore.jpg`,
+        `/inkscroller/screenshots/light/${path === "/es" ? "es" : "en"}/home.jpg`,
+        `/inkscroller/screenshots/light/${path === "/es" ? "es" : "en"}/library.jpg`,
+      ]);
+      mockups.forEach((mockup) => {
+        expect(mockup).toHaveAttribute("width", "1080");
+        expect(mockup).toHaveAttribute("height", "2340");
+        expect(mockup).toHaveAttribute("decoding", "async");
+      });
+    },
+  );
+
   it("renders truthful project titles with real repository links", () => {
     renderAtPath("/");
 
     const projectsSection = document.getElementById("projects");
     expect(projectsSection).toBeInTheDocument();
 
+    expect(
+      within(projectsSection as HTMLElement).getByRole("heading", {
+        level: 3,
+        name: "Learning projects",
+      }),
+    ).toBeInTheDocument();
+    expect(projectsSection).toHaveTextContent(
+      "Worldline internship learning projects",
+    );
+
     for (const { name, href } of [
-      {
-        name: "Inkscroller Frontend",
-        href: "https://github.com/mfranchescagonzalezcejas/inkscroller_frontend",
-      },
-      {
-        name: "Inkscroller Backend",
-        href: "https://github.com/mfranchescagonzalezcejas/Inkscroller_backend",
-      },
-      {
-        name: "DevDigi Portfolio Web",
-        href: "https://github.com/mfranchescagonzalezcejas/portfolio-web",
-      },
       {
         name: "AppSwiftUI",
         href: "https://github.com/mfranchescagonzalezcejas/AppSwiftUI",
@@ -540,6 +669,10 @@ describe("navigation anchors", () => {
       "Expense Tracker",
     );
     expect(projectsSection as HTMLElement).not.toHaveTextContent("storyboards");
+    expect(projectsSection as HTMLElement).not.toHaveTextContent(
+      "DevDigi Portfolio Web",
+    );
+    expect(projectsSection?.querySelectorAll(".project-card")).toHaveLength(3);
   });
 
   it("renders compact English professional case studies with verified public links", () => {
@@ -652,9 +785,9 @@ describe("navigation anchors", () => {
         name: "Caso de estudio de Inkscroller",
       }),
     ).not.toBeInTheDocument();
-    expect(featuredSection as HTMLElement).toHaveTextContent(
-      "Flujos UI en progreso",
-    );
+    expect(
+      featuredSection?.querySelectorAll(".mockup-phone-screen img"),
+    ).toHaveLength(3);
 
     expect(
       within(projectsSection as HTMLElement).getByRole("list", {
@@ -671,20 +804,17 @@ describe("navigation anchors", () => {
     );
     expect(
       within(projectsSection as HTMLElement).getByRole("heading", {
-        name: "Web Portfolio DevDigi",
+        level: 3,
+        name: "Proyectos de aprendizaje",
       }),
     ).toBeInTheDocument();
+    expect(projectsSection).toHaveTextContent("prácticas en Worldline");
     expect(
-      within(projectsSection as HTMLElement).getByRole("link", {
-        name: "Ver repo: Repositorio de Web Portfolio DevDigi",
+      within(projectsSection as HTMLElement).queryByRole("heading", {
+        name: "Web Portfolio DevDigi",
       }),
-    ).toHaveAttribute(
-      "href",
-      "https://github.com/mfranchescagonzalezcejas/portfolio-web",
-    );
-    expect(projectsSection as HTMLElement).toHaveTextContent(
-      "Visuales del proyecto en progreso",
-    );
+    ).not.toBeInTheDocument();
+    expect(projectsSection?.querySelectorAll(".project-card")).toHaveLength(3);
 
     expect(
       within(featuredSection as HTMLElement).queryByRole("list", {
@@ -797,15 +927,27 @@ describe("navigation anchors", () => {
     ).toBeInTheDocument();
   });
 
-  it("localizes Spanish skills navigation and theme toggle labels", () => {
+  it("localizes Spanish primary navigation and theme toggle labels", () => {
     renderAtPath("/es");
 
     const header = screen.getByRole("banner");
+    const primaryNav = within(header).getByRole("navigation", {
+      name: "Principal",
+    });
     expect(
-      within(header).getByRole("link", { name: "Competencias" }),
-    ).toHaveAttribute("href", "#skills");
+      within(primaryNav)
+        .getAllByRole("link")
+        .map((link) => link.textContent),
+    ).toEqual([
+      "Sobre mí",
+      "Experiencia",
+      "Proyectos",
+      "Habilidades",
+      "Educación",
+      "Contacto",
+    ]);
     expect(
-      within(header).queryByRole("link", { name: "Skills" }),
+      within(primaryNav).queryByRole("link", { name: "InkScroller" }),
     ).not.toBeInTheDocument();
 
     const themeToggle = within(header).getByRole("button", {
