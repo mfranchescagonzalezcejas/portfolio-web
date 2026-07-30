@@ -30,11 +30,14 @@ export default function Values({ values }: ValuesProps) {
         </div>
 
         <div className="values-grid">
-          {values.cards.map((card) => {
+          {values.cards.map((card, index) => {
             const Icon = valueIcons[card.icon] ?? Smartphone;
 
             return (
-              <article key={card.title} className="values-card card-surface">
+              <article
+                key={`${card.title}-${index}`}
+                className="values-card card-surface"
+              >
                 <div className="values-card-highlight" aria-hidden="true" />
                 <div className="values-card-icon" aria-hidden="true">
                   <Icon />
