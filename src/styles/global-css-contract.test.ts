@@ -49,7 +49,7 @@ describe("responsive CSS contract", () => {
       "overflow-x: hidden;",
       "overflow-x: clip;",
     );
-    expect(globalCss).toContain('.hero-section::before');
+    expect(globalCss).toContain(".hero-section::before");
     expect(globalCss).toContain('content: ""');
     expect(globalCss).toContain("position: absolute;");
     expect(heroGlowStart).toBeGreaterThanOrEqual(0);
@@ -132,11 +132,7 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps hero profile links quiet while retaining 44px touch targets", () => {
-    blockContains(
-      ".hero-profile-links",
-      "display: flex;",
-      "flex-wrap: wrap;",
-    );
+    blockContains(".hero-profile-links", "display: flex;", "flex-wrap: wrap;");
     blockContains(
       ".hero-profile-link",
       "display: inline-flex;",
@@ -179,9 +175,7 @@ describe("responsive CSS contract", () => {
     expect(globalCss).toMatch(
       /@media\s*\(min-width:\s*48rem\)\s*\{[\s\S]*\.inkscroller-carousel[\s\S]*padding-inline:\s*1\.5rem;/,
     );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide[\s\S]*flex-basis:\s*35%;/,
-    );
+    expect(globalCss).toMatch(/\.inkscroller-slide[\s\S]*flex-basis:\s*35%;/);
     expect(globalCss).toMatch(
       /\.inkscroller-slide\.active[\s\S]*transform:\s*scale\(1\.05\);/,
     );
@@ -197,11 +191,7 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps Learning project cards symmetric", () => {
-    blockContains(
-      ".projects-grid",
-      "display: grid;",
-      "align-items: stretch;",
-    );
+    blockContains(".projects-grid", "display: grid;", "align-items: stretch;");
     expect(globalCss).toContain(".projects-learning-group {");
     expect(globalCss).toContain(".projects-learning-header {");
     expect(globalCss).toMatch(
