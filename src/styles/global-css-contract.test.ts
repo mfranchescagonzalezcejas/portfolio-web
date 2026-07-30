@@ -138,13 +138,13 @@ describe("responsive CSS contract", () => {
       /\.inkscroller-carousel\s*\{[\s\S]*position:\s*relative;[\s\S]*width:\s*100%;[\s\S]*padding-inline:\s*0;/,
     );
     expect(globalCss).toMatch(
-      /\.inkscroller-slide\s*\{[\s\S]*flex:\s*0 0 82%;/,
+      /\.inkscroller-slide\s*\{[^}]*flex:\s*0 0 82%;[^}]*\}/,
     );
     expect(globalCss).toMatch(
       /\.inkscroller-slide\.active\s*\{[\s\S]*transform:\s*scale\(1\.02\);/,
     );
     expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)\s*\{[\s\S]*transform:\s*scale\(0\.88\);[\s\S]*opacity:\s*0\.3;/,
+      /\.inkscroller-slide:not\(\.active\)\s*\{[^}]*transform:\s*scale\(0\.88\);[^}]*opacity:\s*0\.3;[^}]*\}/,
     );
     expect(globalCss).toContain(
       ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n.inkscroller-slide:not(.active) .inkscroller-slide-desc {\n  visibility: hidden;",
