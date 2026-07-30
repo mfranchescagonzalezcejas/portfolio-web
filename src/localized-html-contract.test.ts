@@ -28,14 +28,7 @@ type SeoContract = {
 const productionSiteUrl = "https://devdigi.dev";
 const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
-const inkScrollerPagePath = resolve(
-  process.cwd(),
-  "src/layouts/InkScrollerPage.astro",
-);
-const carouselRenderPath = resolve(
-  process.cwd(),
-  "src/lib/carousel-render.ts",
-);
+const carouselRenderPath = resolve(process.cwd(), "src/lib/carousel-render.ts");
 const globalStylesPath = resolve(process.cwd(), "src/styles/global.css");
 const fontStylesheetUrl =
   "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
@@ -1263,12 +1256,10 @@ describe("InkScroller carousel loop", () => {
     expect(page).toContain(
       "const preview = (viewport!.clientWidth - slideWidth) / 2;",
     );
-    expect(page).toContain(
-      "parseFloat(getComputedStyle(slides[0]).width)",
-    );
+    expect(page).toContain("parseFloat(getComputedStyle(slides[0]).width)");
     expect(page).toContain("viewport!.clientWidth");
     expect(page).toContain(
-      "(track as HTMLElement).style.transform = `translate3d(${preview - index * slideWidth}px, 0, 0)`;",
+      "translate3d(${preview - index * slideWidth}px, 0, 0)",
     );
     expect(page).toContain('propertyName === "transform"');
     expect(page).toContain("new ResizeObserver(() => {");

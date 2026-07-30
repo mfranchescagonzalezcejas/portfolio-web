@@ -3,9 +3,7 @@ import { createCarouselQueue } from "./carousel-navigation";
 export function initializeInkScrollerPage(doc: Document): void {
   const carousel = doc.getElementById("inkscroller-carousel");
   if (carousel) {
-    const prefersReducedMotion = matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
+    const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const track = carousel.querySelector(".inkscroller-carousel-track");
     const viewport = carousel.querySelector(".inkscroller-carousel-viewport");
     const prev = carousel.querySelector(".inkscroller-prev");
@@ -38,10 +36,10 @@ export function initializeInkScrollerPage(doc: Document): void {
       if (!track) return;
       track.classList.toggle("is-resetting", !animate);
       const slideWidth =
-        parseFloat(getComputedStyle(slides[0]).width) ||
-        viewport!.clientWidth;
+        parseFloat(getComputedStyle(slides[0]).width) || viewport!.clientWidth;
       const preview = (viewport!.clientWidth - slideWidth) / 2;
-      (track as HTMLElement).style.transform = `translate3d(${preview - index * slideWidth}px, 0, 0)`;
+      (track as HTMLElement).style.transform =
+        `translate3d(${preview - index * slideWidth}px, 0, 0)`;
       physicalIndex = index;
       if (!animate) void (track as HTMLElement).offsetWidth;
       track.classList.remove("is-resetting");
@@ -126,7 +124,10 @@ export function initializeInkScrollerPage(doc: Document): void {
     }
 
     track?.addEventListener("transitionend", (event: Event) => {
-      if (event.target === track && (event as TransitionEvent).propertyName === "transform")
+      if (
+        event.target === track &&
+        (event as TransitionEvent).propertyName === "transform"
+      )
         settleNavigation();
     });
 
@@ -177,9 +178,12 @@ export function initializeInkScrollerPage(doc: Document): void {
 
   // Hero image auto-cycle
   {
-    const currentImg = doc.getElementById("hero-img-current") as HTMLImageElement | null;
-    const nextImg = doc.getElementById("hero-img-next") as HTMLImageElement | null;
-    const screen = doc.getElementById("hero-screen");
+    const currentImg = doc.getElementById(
+      "hero-img-current",
+    ) as HTMLImageElement | null;
+    const nextImg = doc.getElementById(
+      "hero-img-next",
+    ) as HTMLImageElement | null;
     if (currentImg && nextImg && currentImg.dataset.captures) {
       const captures = JSON.parse(currentImg.dataset.captures);
       if (captures.length > 1) {
@@ -188,10 +192,14 @@ export function initializeInkScrollerPage(doc: Document): void {
         const prefersReducedMotion = matchMedia(
           "(prefers-reduced-motion: reduce)",
         );
-        const setCurrentCapture = (capture: { src: { light: string; dark: string }; alt: string }) => {
-          currentImg.src = capture.src[
-            doc.documentElement.classList.contains("light") ? "light" : "dark"
-          ];
+        const setCurrentCapture = (capture: {
+          src: { light: string; dark: string };
+          alt: string;
+        }) => {
+          currentImg.src =
+            capture.src[
+              doc.documentElement.classList.contains("light") ? "light" : "dark"
+            ];
           currentImg.dataset.darkSrc = capture.src.dark;
           currentImg.dataset.lightSrc = capture.src.light;
           currentImg.alt = capture.alt;
