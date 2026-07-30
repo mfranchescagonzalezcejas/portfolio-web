@@ -72,7 +72,7 @@ describe("SiteHeader theme toggle", () => {
     expect(window.localStorage.getItem("devdigi-theme")).toBeNull();
   });
 
-  it("renders correct light-mode icon when initialTheme=\"light\"", async () => {
+  it('renders correct light-mode icon when initialTheme="light"', async () => {
     const { switchToDark } = site.header.themeToggle;
 
     window.localStorage.setItem("devdigi-theme", "light");
