@@ -1,5 +1,5 @@
 import { MapPin } from "lucide-react";
-import type { SummaryContent } from "../../content/site";
+import type { SummaryContent } from "../../content/types";
 
 type SummaryProps = {
   summary: SummaryContent;

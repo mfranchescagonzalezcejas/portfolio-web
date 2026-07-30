@@ -1,5 +1,5 @@
 import { ArrowUpRight, Rocket } from "lucide-react";
-import type { CaseStudy, CaseStudySectionHeading } from "../../content/site";
+import type { CaseStudy, CaseStudySectionHeading } from "../../content/types";
 
 type CaseStudiesProps = {
   caseStudies: CaseStudy[];

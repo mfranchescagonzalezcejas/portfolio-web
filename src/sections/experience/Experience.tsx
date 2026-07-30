@@ -2,7 +2,7 @@ import { ArrowUpRight, Briefcase } from "lucide-react";
 import type {
   Experience as ExperienceContent,
   ExperienceSectionHeading,
-} from "../../content/site";
+} from "../../content/types";
 
 type ExperienceProps = {
   experience: ExperienceContent[];

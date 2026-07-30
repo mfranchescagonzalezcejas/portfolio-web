@@ -1,5 +1,5 @@
 import { ArrowUpRight, Download } from "lucide-react";
-import type { ContactLinkItem, HeroContent } from "../../content/site";
+import type { ContactLinkItem, HeroContent } from "../../content/types";
 import { getContactIcon } from "../contact/contactIcons";
 import HeroVisual from "./HeroVisual";
 

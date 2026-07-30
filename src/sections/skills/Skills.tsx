@@ -1,4 +1,4 @@
-import type { SkillsSectionContent } from "../../content/site";
+import type { SkillsSectionContent } from "../../content/types";
 
 type SkillsProps = {
   section: SkillsSectionContent;

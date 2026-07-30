@@ -1,4 +1,4 @@
-import type { Locale } from "./site";
+import type { Locale } from "./types";
 
 export type BetaProgram = {
   id: string;

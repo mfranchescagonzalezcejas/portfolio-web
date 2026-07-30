@@ -1,5 +1,5 @@
 import { GitBranch, Sparkles } from "lucide-react";
-import type { Project } from "../../content/site";
+import type { Project } from "../../content/types";
 import { formatProjectLabel } from "./projectLabel";
 
 type ProjectCardProps = {

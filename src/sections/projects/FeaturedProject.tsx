@@ -1,5 +1,5 @@
 import { GitBranch } from "lucide-react";
-import type { Project, SectionHeading } from "../../content/site";
+import type { Project, SectionHeading } from "../../content/types";
 import { formatProjectLabel } from "./projectLabel";
 
 type FeaturedProjectProps = {

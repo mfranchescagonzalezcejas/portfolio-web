@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import type { ContactLinkItem, HeroContent } from "../../content/site";
+import type { ContactLinkItem, HeroContent } from "../../content/types";
 import Hero from "./Hero";
 
 const hero: HeroContent = {
