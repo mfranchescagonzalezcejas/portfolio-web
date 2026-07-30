@@ -1,12 +1,7 @@
 import type { Locale, NavItem } from "../../content/site";
 import { saveLocaleScrollPosition } from "../../lib/locale-scroll";
 import { useEffect, useState, type MouseEvent } from "react";
-import {
-  ArrowUpRight,
-  Languages,
-  Moon,
-  Sun,
-} from "lucide-react";
+import { ArrowUpRight, Languages, Moon, Sun } from "lucide-react";
 
 type ThemeMode = "light" | "dark";
 
@@ -189,7 +184,11 @@ export default function SiteHeader({
             aria-label={themeAriaLabel}
             title={themeAriaLabel}
           >
-            {themeMode === "dark" ? <Sun className="header-icon" /> : <Moon className="header-icon" />}
+            {themeMode === "dark" ? (
+              <Sun className="header-icon" />
+            ) : (
+              <Moon className="header-icon" />
+            )}
           </button>
 
           <a className="header-contact-cta" href={toHomeHref("#contact")}>
