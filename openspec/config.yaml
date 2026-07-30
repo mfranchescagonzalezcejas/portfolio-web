@@ -2,26 +2,26 @@ schema: spec-driven
 
 context: |
   Project: portfolio-web
-  Goal: Personal website / personal landing page
-  Stack: Not detected yet (repository bootstrap stage)
-  Architecture: Not detected yet (no source files)
-  Testing: No test runner configured
-  Style: No lint/format/type-check config detected
+  Goal: Personal website / personal landing page (static, devdigi.dev)
+  Stack: Astro 7.1.6 + React 19 + TypeScript 6.0.3 + Tailwind CSS 4.3 + Vite
+  Architecture: Static output, component-based (Astro pages + React islands), i18n (en/es), Vercel hosting
+  Testing: Vitest 4.1.9 + jsdom, @testing-library/react, @testing-library/jest-dom
+  Style: ESLint 9 + @typescript-eslint + react-hooks, Prettier 3 + tailwind plugin, astro check + tsc --noEmit
 
 testing:
   strict_tdd: false
-  detected_at: 2026-05-19
+  detected_at: 2026-07-31
   runner:
-    available: false
-    command: ""
-    framework: ""
+    available: true
+    command: "npm run build && vitest run"
+    framework: "vitest"
   layers:
     unit:
-      available: false
-      tool: ""
+      available: true
+      tool: "vitest + @testing-library/react"
     integration:
-      available: false
-      tool: ""
+      available: true
+      tool: "vitest + jsdom"
     e2e:
       available: false
       tool: ""
@@ -30,14 +30,14 @@ testing:
     command: ""
   quality:
     linter:
-      available: false
-      command: ""
+      available: true
+      command: "npm run lint"
     type_checker:
-      available: false
-      command: ""
+      available: true
+      command: "npm run typecheck"
     formatter:
-      available: false
-      command: ""
+      available: true
+      command: "npm run format:check"
 
 rules:
   proposal:
@@ -52,10 +52,10 @@ rules:
   apply:
     - Follow existing repository patterns.
     tdd: false
-    test_command: ""
+    test_command: "npm run build && vitest run"
   verify:
-    test_command: ""
-    build_command: ""
+    test_command: "npm run build && vitest run"
+    build_command: "npm run build"
     coverage_threshold: 0
   archive:
     - Warn before merging destructive deltas.
