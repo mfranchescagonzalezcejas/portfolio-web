@@ -1,0 +1,50 @@
+---
+import type { BetaContent } from "../content/beta";
+import type { SiteContent } from "../content/types";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../sections/header/SiteHeader";
+
+type Props = {
+  content: BetaContent;
+  site: SiteContent;
+};
+
+const { content, site } = Astro.props;
+---
+
+<BaseLayout locale={content.locale} site={site} pageSeo={content.seo}>
+  <div id="top"></div>
+  <a class="skip-link sr-only focus:not-sr-only" href="#beta-content">{content.skipLink}</a>
+  <SiteHeader
+    currentLocale={site.locale}
+    isHome={false}
+    localePath={content.seo.canonicalPath}
+    navItems={site.nav}
+    languageSwitcher={site.languageSwitcher}
+    header={site.header}
+    initialTheme="dark"
+    client:load
+  />
+  <main id="beta-content" class="section-shell">
+    <section class="section-inner">
+      <h1 class="section-title">{content.index.title}</h1>
+      <p class="hero-copy">{content.index.description}</p>
+      <div class="beta-program-list">
+        {content.index.programs.map((program) => (
+          <article class="beta-program-card card-surface">
+            <div class="beta-program-header">
+              <h2 class="beta-program-name">{program.name}</h2>
+              <span class="beta-program-status" data-status={program.status}>
+                {content.index.statusLabels[program.status]}
+              </span>
+            </div>
+            <p class="beta-program-desc">{program.description}</p>
+            <a class="beta-cta-primary" href={program.href}>
+              {content.index.actionLabels[program.status]}
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

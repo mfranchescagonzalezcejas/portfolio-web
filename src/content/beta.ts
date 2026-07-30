@@ -10,6 +10,7 @@ export type BetaProgram = {
 
 export type BetaContent = {
   locale: Locale;
+  skipLink: string;
   seo: {
     title: string;
     description: string;
@@ -20,6 +21,8 @@ export type BetaContent = {
     title: string;
     description: string;
     programs: BetaProgram[];
+    statusLabels: Record<BetaProgram["status"], string>;
+    actionLabels: Record<BetaProgram["status"], string>;
   };
   inkscroller: {
     seo: {
@@ -34,6 +37,7 @@ export type BetaContent = {
       description: string;
       microcopy: string;
     };
+    applicationAriaLabel: string;
     scope: {
       title: string;
       items: string[];
@@ -65,6 +69,10 @@ export type BetaContent = {
       emailLabel: string;
       communityLabel: string;
     };
+    footer: {
+      byline: string;
+      location: string;
+    };
   };
 };
 
@@ -83,6 +91,7 @@ const betaInkScrollerPaths = {
 export const betaContent: Record<Locale, BetaContent> = {
   en: {
     locale: "en",
+    skipLink: "Skip to content",
     seo: {
       title: "Beta Programs | DevDigi",
       description:
@@ -104,6 +113,16 @@ export const betaContent: Record<Locale, BetaContent> = {
           href: "/en/beta/inkscroller",
         },
       ],
+      statusLabels: {
+        open: "Open",
+        closed: "Closed",
+        paused: "Paused",
+      },
+      actionLabels: {
+        open: "Learn more",
+        closed: "View",
+        paused: "View",
+      },
     },
     inkscroller: {
       seo: {
@@ -120,6 +139,7 @@ export const betaContent: Record<Locale, BetaContent> = {
           "Help shape a reading companion built for discovering, organising and following manga, manhwa and manhua — across platforms, at your own pace.",
         microcopy: "Android · Google Play · 14 days",
       },
+      applicationAriaLabel: "Beta application",
       scope: {
         title: "What we are validating",
         items: [
@@ -190,10 +210,15 @@ export const betaContent: Record<Locale, BetaContent> = {
         emailLabel: "Email",
         communityLabel: "Discord community",
       },
+      footer: {
+        byline: "DevDigi by Mercedes Gonzalez",
+        location: "Built with care in Barcelona",
+      },
     },
   },
   es: {
     locale: "es",
+    skipLink: "Saltar al contenido",
     seo: {
       title: "Programas Beta | DevDigi",
       description:
@@ -215,6 +240,16 @@ export const betaContent: Record<Locale, BetaContent> = {
           href: "/es/beta/inkscroller",
         },
       ],
+      statusLabels: {
+        open: "Abierta",
+        closed: "Cerrada",
+        paused: "Pausada",
+      },
+      actionLabels: {
+        open: "Más información",
+        closed: "Ver",
+        paused: "Ver",
+      },
     },
     inkscroller: {
       seo: {
@@ -231,6 +266,7 @@ export const betaContent: Record<Locale, BetaContent> = {
           "Ayuda a dar forma a un acompañante de lectura diseñado para descubrir, organizar y seguir manga, manhwa y manhua — entre plataformas, a tu ritmo.",
         microcopy: "Android · Google Play · 14 días",
       },
+      applicationAriaLabel: "Solicitud de beta",
       scope: {
         title: "Qué estamos validando",
         items: [
@@ -300,6 +336,10 @@ export const betaContent: Record<Locale, BetaContent> = {
         title: "Ayuda beta",
         emailLabel: "Email",
         communityLabel: "Comunidad en Discord",
+      },
+      footer: {
+        byline: "DevDigi por Mercedes Gonzalez",
+        location: "Desarrollado con cariño en Barcelona",
       },
     },
   },
