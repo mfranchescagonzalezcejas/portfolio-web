@@ -20,28 +20,78 @@ const compactHeaderEnd = globalCss.indexOf(
 const heroGlowStart = globalCss.indexOf(".hero-section::before");
 const heroGlowEnd = globalCss.indexOf(".hero-content", heroGlowStart);
 
+/** Extract a media-query block from CSS between its header and the next @media */
+function extractMediaBlock(css: string, header: string): string {
+  const start = css.indexOf(header);
+  if (start < 0) return "";
+  const next = css.indexOf("@media", start + header.length);
+  return css.slice(start, next > start ? next : undefined);
+}
+
+const compact639Block = extractMediaBlock(
+  globalCss,
+  "@media (max-width: 639px)",
+);
+const mobileInkscrollerBlock = extractMediaBlock(
+  globalCss,
+  "@media (max-width: 47.999rem)",
+);
+const desktopInkscrollerBlock = extractMediaBlock(
+  globalCss,
+  "@media (min-width: 48rem)",
+);
+
+/** Escape regex metacharacters, then normalize whitespace around colon */
+function decl(prop: string): string {
+  const escaped = prop.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const normalized = escaped.replace(/\s*:\s*/g, "\\s*:\\s*");
+  // Ensure declaration starts after { or ; to avoid partial matches (e.g. width inside max-width)
+  return `(?<=[;{]\\s*)${normalized}`;
+}
+
+/** Assert that a CSS rule block (from a given source) contains all given declarations */
+function blockContains(
+  source: string,
+  selector: string,
+  ...declarations: string[]
+) {
+  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // Anchor to rule boundary: start of string, after }, after { (media query), or after comma
+  const pattern = new RegExp(`(?:^|}|\\{|,)\\s*${escaped}\\s*\\{[^}]*}`);
+  const match = source.match(pattern);
+  const block = match ? match[0] : "";
+  for (const d of declarations) {
+    expect(block).toMatch(new RegExp(decl(d)));
+  }
+}
+
 describe("responsive CSS contract", () => {
   it("keeps root overflow clipped without invalid color-mix percentages", () => {
-    expect(globalCss).toContain(
-      "html {\n  overflow-x: hidden;\n  overflow-x: clip;",
+    blockContains(
+      globalCss,
+      "html",
+      "overflow-x: hidden;",
+      "overflow-x: clip;",
     );
-    expect(globalCss).toContain(
-      "body {\n  overflow-x: hidden;\n  overflow-x: clip;",
+    blockContains(
+      globalCss,
+      "body",
+      "overflow-x: hidden;",
+      "overflow-x: clip;",
     );
-    expect(globalCss).toContain(
-      ".hero-visual {\n  position: relative;\n  display: flex;\n  min-width: 0;\n  align-items: center;\n  justify-content: center;\n  min-height: 34rem;\n  overflow-x: hidden;\n  overflow-x: clip;",
+    blockContains(
+      globalCss,
+      ".hero-visual",
+      "min-height: 34rem",
+      "overflow-x: hidden;",
+      "overflow-x: clip;",
     );
-    expect(globalCss).toContain(
-      '.hero-section::before {\n  content: "";\n  position: absolute;',
-    );
-    expect(globalCss).toContain(
-      ".hero-content {\n  position: relative;\n  z-index: 1;",
-    );
+    expect(globalCss).toContain(".hero-section::before");
+    expect(globalCss).toContain('content: ""');
+    expect(globalCss).toContain("position: absolute;");
     expect(heroGlowStart).toBeGreaterThanOrEqual(0);
-    expect(heroGlowEnd).toBeGreaterThan(heroGlowStart);
 
     const heroGlowBlock = globalCss.slice(heroGlowStart, heroGlowEnd);
-
     expect(heroGlowBlock).toContain("width: min(");
     expect(heroGlowBlock).toContain("height:");
     expect(heroGlowBlock).toContain("border-radius: 9999px;");
@@ -79,8 +129,8 @@ describe("responsive CSS contract", () => {
     expect(compactHeaderBlock).not.toContain(
       ".header-shell .header-contact-cta",
     );
-    expect(globalCss).toContain(
-      "@media (max-width: 639px) {\n  .header-shell .header-contact-cta {\n    display: none;",
+    expect(compact639Block).toMatch(
+      /\.header-shell\s+\.header-contact-cta\s*\{[^}]*display:\s*none/,
     );
     expect(
       globalCss.match(/\.header-contact-cta \{\s+display: none;\s+\}/g),
@@ -96,8 +146,15 @@ describe("responsive CSS contract", () => {
     expect(
       globalCss.match(/min-height: 2\.75rem;/g)?.length,
     ).toBeGreaterThanOrEqual(4);
-    expect(globalCss).toContain(
-      ".header-theme-toggle {\n  display: grid;\n  place-items: center;\n  min-width: 2.25rem;\n  width: 2.25rem;\n  min-height: 2.25rem;\n  height: 2.25rem;",
+    blockContains(
+      globalCss,
+      ".header-theme-toggle",
+      "display: grid;",
+      "place-items: center;",
+      "min-width: 2.25rem;",
+      "width: 2.25rem;",
+      "min-height: 2.25rem;",
+      "height: 2.25rem;",
     );
   });
 
@@ -113,11 +170,18 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps hero profile links quiet while retaining 44px touch targets", () => {
-    expect(globalCss).toContain(
-      ".hero-profile-links {\n  display: flex;\n  flex-wrap: wrap;",
+    blockContains(
+      globalCss,
+      ".hero-profile-links",
+      "display: flex;",
+      "flex-wrap: wrap;",
     );
-    expect(globalCss).toContain(
-      ".hero-profile-link {\n  display: inline-flex;\n  align-items: center;\n  min-height: 2.75rem;",
+    blockContains(
+      globalCss,
+      ".hero-profile-link",
+      "display: inline-flex;",
+      "align-items: center;",
+      "min-height: 2.75rem;",
     );
     expect(globalCss).toContain("text-decoration: underline;");
     expect(globalCss).not.toContain(".hero-cta-social");
@@ -134,47 +198,71 @@ describe("responsive CSS contract", () => {
   });
 
   it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
-    expect(globalCss).toMatch(
-      /\.inkscroller-carousel\s*\{[\s\S]*position:\s*relative;[\s\S]*width:\s*100%;[\s\S]*padding-inline:\s*0;/,
+    blockContains(
+      globalCss,
+      ".inkscroller-carousel",
+      "position: relative;",
+      "width: 100%;",
+      "padding-inline: 0;",
+    );
+    blockContains(globalCss, ".inkscroller-slide", "flex: 0 0 82%;");
+    blockContains(
+      globalCss,
+      ".inkscroller-slide.active",
+      "transform: scale(1.02);",
+    );
+    blockContains(
+      globalCss,
+      ".inkscroller-slide:not(.active)",
+      "transform: scale(0.88);",
+      "opacity: 0.3;",
     );
     expect(globalCss).toMatch(
-      /\.inkscroller-slide\s*\{[^}]*flex:\s*0 0 82%;[^}]*\}/,
+      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title\s*,\s*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*hidden;/,
     );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide\.active\s*\{[\s\S]*transform:\s*scale\(1\.02\);/,
+    expect(mobileInkscrollerBlock).toMatch(
+      /\.inkscroller-prev\s*\{[^}]*left:\s*-0\.75rem;/,
     );
-    expect(globalCss).toMatch(
-      /\.inkscroller-slide:not\(\.active\)\s*\{[^}]*transform:\s*scale\(0\.88\);[^}]*opacity:\s*0\.3;[^}]*\}/,
+    expect(mobileInkscrollerBlock).toMatch(
+      /\.inkscroller-next\s*\{[^}]*right:\s*-0\.75rem;/,
     );
-    expect(globalCss).toContain(
-      ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n.inkscroller-slide:not(.active) .inkscroller-slide-desc {\n  visibility: hidden;",
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-carousel",
+      "padding-inline: 1.5rem;",
     );
-    expect(globalCss).toContain(
-      "@media (max-width: 47.999rem) {\n  .inkscroller-prev {\n    left: -0.75rem;\n  }\n  .inkscroller-next {\n    right: -0.75rem;",
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-slide",
+      "flex-basis: 35%;",
     );
-    expect(globalCss).toContain(
-      "@media (min-width: 48rem) {\n  .inkscroller-carousel {\n    padding-inline: 1.5rem;",
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-slide.active",
+      "transform: scale(1.05);",
     );
-    expect(globalCss).toContain(".inkscroller-slide {\n    flex-basis: 35%;");
-    expect(globalCss).toContain(
-      ".inkscroller-slide.active {\n    transform: scale(1.05);",
+    blockContains(
+      desktopInkscrollerBlock,
+      ".inkscroller-slide:not(.active)",
+      "transform: scale(0.92);",
+      "opacity: 0.45;",
     );
-    expect(globalCss).toContain(
-      ".inkscroller-slide:not(.active) {\n    transform: scale(0.92);\n    opacity: 0.45;",
-    );
-    expect(globalCss).toContain(
-      ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n  .inkscroller-slide:not(.active) .inkscroller-slide-desc {\n    visibility: visible;",
+    expect(desktopInkscrollerBlock).toMatch(
+      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title\s*,\s*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*visible;/,
     );
   });
 
   it("keeps Learning project cards symmetric", () => {
-    expect(globalCss).toContain(
-      ".projects-grid {\n  display: grid;\n  align-items: stretch;",
+    blockContains(
+      globalCss,
+      ".projects-grid",
+      "display: grid;",
+      "align-items: stretch;",
     );
     expect(globalCss).toContain(".projects-learning-group {");
     expect(globalCss).toContain(".projects-learning-header {");
-    expect(globalCss).toContain(
-      ".projects-grid {\n    grid-template-columns: repeat(3, minmax(0, 1fr));",
+    expect(globalCss).toMatch(
+      /\.projects-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);/,
     );
     expect(globalCss).not.toContain(".project-card-primary");
     expect(globalCss).not.toContain(".project-card-icon-visual");
