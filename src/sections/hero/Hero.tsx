@@ -3,23 +3,20 @@ import type { ContactLinkItem, HeroContent } from "../../content/site";
 import { getContactIcon } from "../contact/contactIcons";
 import HeroVisual from "./HeroVisual";
 
-function splitHeadlineWithAccent(tagline: string) {
-  const match =
-    tagline.match(/^(.*?)(mobile apps|apps m\u00f3viles)(.*)$/i) ??
-    tagline.match(
-      /^(.*?)(mobile applications|aplicaciones m\u00f3viles)(.*)$/i,
-    );
-
-  if (!match) {
+function splitHeadlineWithAccent(tagline: string, accent?: string) {
+  if (!accent) {
     return { lead: "", highlight: "", tail: tagline };
   }
 
-  const [, lead, highlight, tail] = match;
+  const accentIndex = tagline.indexOf(accent);
+  if (accentIndex < 0) {
+    return { lead: "", highlight: "", tail: tagline };
+  }
 
   return {
-    lead: lead.trim(),
-    highlight: highlight,
-    tail: tail.trim(),
+    lead: tagline.slice(0, accentIndex).trim(),
+    highlight: accent,
+    tail: tagline.slice(accentIndex + accent.length).trim(),
   };
 }
 
@@ -33,7 +30,7 @@ export default function Hero({ hero, links }: HeroProps) {
     (link) => link.kind === "linkedin" || link.kind === "github",
   );
   const firstName = hero.name.split(" ")[0] || hero.name;
-  const parsedTagline = splitHeadlineWithAccent(hero.tagline);
+  const parsedTagline = splitHeadlineWithAccent(hero.tagline, hero.taglineAccent);
 
   const headlineLine = parsedTagline.highlight ? (
     <>
