@@ -73,7 +73,7 @@ describe("SiteHeader theme toggle", () => {
   });
 
   it('uses initialTheme="light" as the default before effect sync', () => {
-    const { switchToDark, switchToLight } = site.header.themeToggle;
+    const { switchToLight } = site.header.themeToggle;
 
     /* SSR/hydration scenario: render with initialTheme="light",
        no localStorage set. getThemeMode() returns dark as default
