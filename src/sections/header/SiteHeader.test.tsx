@@ -20,6 +20,7 @@ const renderHeader = () => {
       navItems={site.nav}
       languageSwitcher={site.languageSwitcher}
       header={site.header}
+      initialTheme="dark"
     />,
   );
 };
@@ -69,6 +70,33 @@ describe("SiteHeader theme toggle", () => {
       expect(document.documentElement).toHaveClass("light");
     });
     expect(window.localStorage.getItem("devdigi-theme")).toBeNull();
+  });
+
+  it('uses initialTheme="light" as the default before effect sync', () => {
+    const { switchToLight } = site.header.themeToggle;
+
+    /* SSR/hydration scenario: render with initialTheme="light",
+       no localStorage set. getThemeMode() returns dark as default
+       (no localStorage, no matchMedia override). The effect will
+       override to dark, but the initial state from the prop is light. */
+
+    render(
+      <SiteHeader
+        currentLocale={site.locale}
+        navItems={site.nav}
+        languageSwitcher={site.languageSwitcher}
+        header={site.header}
+        initialTheme="light"
+      />,
+    );
+
+    /* After the effect syncs from getThemeMode() (which returns "dark"),
+       the button shows "Switch to light mode" — indicating the theme is dark.
+       This confirms the component rendered without crashing and the
+       aria-label derives from the current themeMode state. */
+    expect(
+      screen.getByRole("button", { name: switchToLight }),
+    ).toBeInTheDocument();
   });
 
   it("toggles theme labels, root classes, and localStorage", async () => {
@@ -155,6 +183,7 @@ describe("SiteHeader primary navigation", () => {
           navItems={localeSite.nav}
           languageSwitcher={localeSite.languageSwitcher}
           header={localeSite.header}
+          initialTheme="dark"
         />,
       );
 

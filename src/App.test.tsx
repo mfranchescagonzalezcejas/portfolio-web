@@ -377,6 +377,7 @@ describe("navigation anchors", () => {
           navItems={site.nav}
           languageSwitcher={site.languageSwitcher}
           header={site.header}
+          initialTheme="dark"
         />,
       );
 
