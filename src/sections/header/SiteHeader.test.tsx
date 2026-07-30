@@ -72,6 +72,29 @@ describe("SiteHeader theme toggle", () => {
     expect(window.localStorage.getItem("devdigi-theme")).toBeNull();
   });
 
+  it("renders correct light-mode icon when initialTheme=\"light\"", async () => {
+    const { switchToDark } = site.header.themeToggle;
+
+    window.localStorage.setItem("devdigi-theme", "light");
+
+    render(
+      <SiteHeader
+        currentLocale={site.locale}
+        navItems={site.nav}
+        languageSwitcher={site.languageSwitcher}
+        header={site.header}
+        initialTheme="light"
+      />,
+    );
+
+    await waitFor(() => {
+      expect(document.documentElement).toHaveClass("light");
+    });
+
+    const toggleButton = screen.getByRole("button", { name: switchToDark });
+    expect(toggleButton).toHaveAttribute("title", switchToDark);
+  });
+
   it("toggles theme labels, root classes, and localStorage", async () => {
     const { switchToDark, switchToLight } = site.header.themeToggle;
 
