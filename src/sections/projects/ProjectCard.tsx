@@ -1,6 +1,6 @@
 import { GitBranch, Sparkles } from "lucide-react";
 import type { Project } from "../../content/types";
-import { formatProjectLabel } from "./projectLabel";
+import { formatTemplate } from "../../lib/format";
 
 type ProjectCardProps = {
   project: Project;
@@ -28,7 +28,7 @@ export default function ProjectCard({
 
         <ul
           className="project-stack-list project-card-stack"
-          aria-label={formatProjectLabel(stackLabel, { project: project.name })}
+          aria-label={formatTemplate(stackLabel, { project: project.name })}
         >
           {project.stack.map((stackItem) => (
             <li key={stackItem} className="project-tech-badge">
@@ -60,7 +60,7 @@ export default function ProjectCard({
                     href={link.href}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noopener noreferrer" : undefined}
-                    aria-label={formatProjectLabel(repositoryAriaLabel, {
+                    aria-label={formatTemplate(repositoryAriaLabel, {
                       repository: linkCtaLabel,
                       link: link.label,
                       project: project.name,
