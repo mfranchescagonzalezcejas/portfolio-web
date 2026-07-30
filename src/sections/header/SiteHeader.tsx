@@ -136,6 +136,7 @@ type SiteHeaderProps = {
       switchToDark: string;
     };
   };
+  initialTheme?: ThemeMode;
 };
 
 export default function SiteHeader({
@@ -146,14 +147,9 @@ export default function SiteHeader({
   navItems,
   languageSwitcher,
   header,
+  initialTheme,
 }: SiteHeaderProps) {
-  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
-    if (typeof document !== "undefined") {
-      const root = document.documentElement;
-      return root.classList.contains("light") ? "light" : "dark";
-    }
-    return "dark";
-  });
+  const [themeMode, setThemeMode] = useState<ThemeMode>(initialTheme ?? "dark");
 
   useEffect(() => {
     const currentTheme = getThemeMode();

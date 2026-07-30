@@ -20,6 +20,7 @@ const renderHeader = () => {
       navItems={site.nav}
       languageSwitcher={site.languageSwitcher}
       header={site.header}
+      initialTheme="dark"
     />,
   );
 };
@@ -155,6 +156,7 @@ describe("SiteHeader primary navigation", () => {
           navItems={localeSite.nav}
           languageSwitcher={localeSite.languageSwitcher}
           header={localeSite.header}
+          initialTheme="dark"
         />,
       );
 
