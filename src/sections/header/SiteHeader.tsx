@@ -147,7 +147,13 @@ export default function SiteHeader({
   languageSwitcher,
   header,
 }: SiteHeaderProps) {
-  const [themeMode, setThemeMode] = useState<ThemeMode>("dark");
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
+    if (typeof document !== "undefined") {
+      const root = document.documentElement;
+      return root.classList.contains("light") ? "light" : "dark";
+    }
+    return "dark";
+  });
 
   useEffect(() => {
     const currentTheme = getThemeMode();
