@@ -41,9 +41,12 @@ const desktopInkscrollerBlock = extractMediaBlock(
   "@media (min-width: 48rem)",
 );
 
-/** Normalize whitespace around colon and trim for flexible matching */
+/** Escape regex metacharacters, then normalize whitespace around colon */
 function decl(prop: string): string {
-  return prop.replace(/\s*:\s*/g, "\\s*:\\s*");
+  const escaped = prop.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const normalized = escaped.replace(/\s*:\s*/g, "\\s*:\\s*");
+  // Ensure declaration starts after { or ; to avoid partial matches (e.g. width inside max-width)
+  return `(?<=[;{]\\s*)${normalized}`;
 }
 
 /** Assert that a CSS selector block contains all given declarations (order-independent, whitespace-flexible) */
@@ -51,7 +54,7 @@ function blockContains(selector: string, ...declarations: string[]) {
   const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const pattern = new RegExp(`${escaped}\\s*\\{[^}]*}`);
   const match = globalCss.match(pattern);
-  const block = match ? match[0] : globalCss;
+  const block = match ? match[0] : "";
   for (const d of declarations) {
     expect(block).toMatch(new RegExp(decl(d)));
   }
