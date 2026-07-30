@@ -20,47 +20,26 @@ const compactHeaderEnd = globalCss.indexOf(
 const heroGlowStart = globalCss.indexOf(".hero-section::before");
 const heroGlowEnd = globalCss.indexOf(".hero-content", heroGlowStart);
 
-const compact639Start = globalCss.indexOf("@media (max-width: 639px)");
-const compact639End = globalCss.indexOf("@media", compact639Start + 20);
-const compact639Block =
-  compact639Start >= 0
-    ? globalCss.slice(
-        compact639Start,
-        compact639End > compact639Start ? compact639End : undefined,
-      )
-    : "";
+/** Extract a media-query block from CSS between its header and the next @media */
+function extractMediaBlock(css: string, header: string): string {
+  const start = css.indexOf(header);
+  if (start < 0) return "";
+  const next = css.indexOf("@media", start + header.length);
+  return css.slice(start, next > start ? next : undefined);
+}
 
-const mobileInkscrollerStart = globalCss.indexOf(
+const compact639Block = extractMediaBlock(
+  globalCss,
+  "@media (max-width: 639px)",
+);
+const mobileInkscrollerBlock = extractMediaBlock(
+  globalCss,
   "@media (max-width: 47.999rem)",
 );
-const mobileInkscrollerEnd = globalCss.indexOf(
-  "@media",
-  mobileInkscrollerStart + 20,
+const desktopInkscrollerBlock = extractMediaBlock(
+  globalCss,
+  "@media (min-width: 48rem)",
 );
-const mobileInkscrollerBlock =
-  mobileInkscrollerStart >= 0
-    ? globalCss.slice(
-        mobileInkscrollerStart,
-        mobileInkscrollerEnd > mobileInkscrollerStart
-          ? mobileInkscrollerEnd
-          : undefined,
-      )
-    : "";
-
-const desktopInkscrollerStart = globalCss.indexOf("@media (min-width: 48rem)");
-const desktopInkscrollerEnd = globalCss.indexOf(
-  "@media",
-  desktopInkscrollerStart + 20,
-);
-const desktopInkscrollerBlock =
-  desktopInkscrollerStart >= 0
-    ? globalCss.slice(
-        desktopInkscrollerStart,
-        desktopInkscrollerEnd > desktopInkscrollerStart
-          ? desktopInkscrollerEnd
-          : undefined,
-      )
-    : "";
 
 /** Assert that a CSS block for a selector contains all given properties */
 function blockContains(selector: string, ...properties: string[]) {
@@ -134,8 +113,9 @@ describe("responsive CSS contract", () => {
     expect(compactHeaderBlock).not.toContain(
       ".header-shell .header-contact-cta",
     );
-    expect(compact639Block).toContain(".header-shell .header-contact-cta");
-    expect(compact639Block).toContain("display: none;");
+    expect(compact639Block).toMatch(
+      /\.header-shell\s+\.header-contact-cta\s*\{[^}]*display:\s*none/,
+    );
     expect(
       globalCss.match(/\.header-contact-cta \{\s+display: none;\s+\}/g),
     ).toHaveLength(1);
@@ -196,7 +176,7 @@ describe("responsive CSS contract", () => {
 
   it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
     expect(globalCss).toMatch(
-      /\.inkscroller-carousel\s*\{[\s\S]*position:\s*relative;[\s\S]*width:\s*100%;[\s\S]*padding-inline:\s*0;/,
+      /\.inkscroller-carousel\s*\{[^}]*position:\s*relative;[^}]*width:\s*100%;[^}]*padding-inline:\s*0;/,
     );
     expect(globalCss).toMatch(
       /\.inkscroller-slide\s*\{[^}]*flex:\s*0 0 82%;[^}]*\}/,
@@ -225,18 +205,17 @@ describe("responsive CSS contract", () => {
     );
     expect(desktopInkscrollerBlock).toContain("transform: scale(0.92);");
     expect(desktopInkscrollerBlock).toContain("opacity: 0.45;");
-    expect(desktopInkscrollerBlock).toContain(
-      ".inkscroller-slide:not(.active) .inkscroller-slide-title,\n  .inkscroller-slide:not(.active) .inkscroller-slide-desc",
+    expect(desktopInkscrollerBlock).toMatch(
+      /\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-title[\s\S]*\.inkscroller-slide:not\(\.active\)\s+\.inkscroller-slide-desc\s*\{[^}]*visibility:\s*visible;/,
     );
-    expect(desktopInkscrollerBlock).toContain("visibility: visible;");
   });
 
   it("keeps Learning project cards symmetric", () => {
     blockContains(".projects-grid", "display: grid;", "align-items: stretch;");
     expect(globalCss).toContain(".projects-learning-group {");
     expect(globalCss).toContain(".projects-learning-header {");
-    expect(globalCss).toContain(
-      ".projects-grid {\n    grid-template-columns: repeat(3, minmax(0, 1fr));",
+    expect(globalCss).toMatch(
+      /\.projects-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3,\s*minmax\(0,\s*1fr\)\);/,
     );
     expect(globalCss).not.toContain(".project-card-primary");
     expect(globalCss).not.toContain(".project-card-icon-visual");
