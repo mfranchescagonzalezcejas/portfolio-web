@@ -124,6 +124,7 @@ export type HeroContent = {
   greeting: string;
   eyebrow: string;
   tagline: string;
+  taglineAccent?: string;
   summary: string;
   panelLabel: string;
   panelTitle: string;
@@ -315,6 +316,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       greeting: "Hi, I'm",
       eyebrow: "Flutter / Mobile Developer · Barcelona · Hybrid / Remote",
       tagline: "I help product teams ship reliable mobile apps.",
+      taglineAccent: "mobile apps",
       summary:
         "Flutter / Mobile Developer for product teams. I build maintainable mobile applications with clean architecture, REST API integration, QA validation, and release ownership across production delivery workflows.",
       panelLabel: "Signal",
@@ -888,6 +890,7 @@ const rawSiteContent: Record<Locale, SiteContent> = {
       greeting: "Hola, soy",
       eyebrow: "Flutter / Mobile Developer · Barcelona · Híbrido / Remoto",
       tagline: "Ayudo a equipos de producto a entregar apps móviles fiables.",
+      taglineAccent: "apps móviles",
       summary:
         "Flutter / Mobile Developer para equipos de producto. Construyo aplicaciones móviles mantenibles con arquitectura limpia, integración REST API, validación QA y responsabilidad sobre releases dentro de flujos de entrega en producción.",
       panelLabel: "Señal",
