@@ -1,9 +1,16 @@
 import { createCarouselQueue } from "./carousel-navigation";
 
 export function initializeInkScrollerPage(doc: Document): void {
+  const view = doc.defaultView;
+  if (!view) return;
+  const window: Window = view;
+  const ResizeObserver = (window as Window & typeof globalThis).ResizeObserver;
+
   const carousel = doc.getElementById("inkscroller-carousel");
   if (carousel) {
-    const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
     const track = carousel.querySelector(".inkscroller-carousel-track");
     const viewport = carousel.querySelector(".inkscroller-carousel-viewport");
     const prev = carousel.querySelector(".inkscroller-prev");
@@ -33,11 +40,13 @@ export function initializeInkScrollerPage(doc: Document): void {
     let settleTimer: ReturnType<typeof setTimeout> | null = null;
 
     function setPosition(index: number, animate: boolean): void {
-      if (!track) return;
+      const firstSlide = slides[0];
+      if (!track || !viewport || !firstSlide) return;
       track.classList.toggle("is-resetting", !animate);
       const slideWidth =
-        parseFloat(getComputedStyle(slides[0]).width) || viewport!.clientWidth;
-      const preview = (viewport!.clientWidth - slideWidth) / 2;
+        parseFloat(window.getComputedStyle(firstSlide).width) ||
+        viewport.clientWidth;
+      const preview = (viewport.clientWidth - slideWidth) / 2;
       (track as HTMLElement).style.transform =
         `translate3d(${preview - index * slideWidth}px, 0, 0)`;
       physicalIndex = index;
@@ -142,9 +151,15 @@ export function initializeInkScrollerPage(doc: Document): void {
 
     carousel.addEventListener("mouseenter", stopAutoPlay);
     carousel.addEventListener("focusin", stopAutoPlay);
-    carousel.addEventListener("mouseleave", startAutoPlay);
+    carousel.addEventListener("mouseleave", () => {
+      if (!carousel.contains(doc.activeElement)) startAutoPlay();
+    });
     carousel.addEventListener("focusout", (e: FocusEvent) => {
-      if (!carousel.contains(e.relatedTarget as Node)) startAutoPlay();
+      if (
+        !carousel.contains(e.relatedTarget as Node) &&
+        !carousel.matches(":hover")
+      )
+        startAutoPlay();
     });
 
     prev?.addEventListener("click", () => {
@@ -189,7 +204,7 @@ export function initializeInkScrollerPage(doc: Document): void {
       if (captures.length > 1) {
         let idx = 0;
         let heroTimer: ReturnType<typeof setInterval> | null = null;
-        const prefersReducedMotion = matchMedia(
+        const prefersReducedMotion = window.matchMedia(
           "(prefers-reduced-motion: reduce)",
         );
         const setCurrentCapture = (capture: {

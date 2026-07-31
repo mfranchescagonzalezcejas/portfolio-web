@@ -1253,11 +1253,13 @@ describe("InkScroller carousel loop", () => {
       "track?.prepend(...origSlides.slice(-cloneCount).map(cloneSlide));",
     );
     expect(page).toContain("createCarouselQueue(totalReal)");
+    expect(page).toContain("if (!track || !viewport || !firstSlide) return;");
     expect(page).toContain(
-      "const preview = (viewport!.clientWidth - slideWidth) / 2;",
+      "parseFloat(window.getComputedStyle(firstSlide).width)",
     );
-    expect(page).toContain("parseFloat(getComputedStyle(slides[0]).width)");
-    expect(page).toContain("viewport!.clientWidth");
+    expect(page).toContain(
+      "const preview = (viewport.clientWidth - slideWidth) / 2;",
+    );
     expect(page).toContain(
       "translate3d(${preview - index * slideWidth}px, 0, 0)",
     );
