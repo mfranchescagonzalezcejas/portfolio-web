@@ -13,7 +13,7 @@ testing:
   detected_at: 2026-07-31
   runner:
     available: true
-    command: "npm run build && vitest run"
+    command: "npm run test"
     framework: "vitest"
   layers:
     unit:
@@ -52,9 +52,9 @@ rules:
   apply:
     - Follow existing repository patterns.
     tdd: false
-    test_command: "npm run build && vitest run"
+    test_command: "npm run test"
   verify:
-    test_command: "npm run build && vitest run"
+    test_command: "npm run test"
     build_command: "npm run build"
     coverage_threshold: 0
   archive:
