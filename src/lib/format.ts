@@ -3,6 +3,6 @@ export const formatTemplate = (
   values: Record<string, string>,
 ) =>
   Object.entries(values).reduce(
-    (result, [key, value]) => result.replaceAll(`{${key}}`, value),
+    (result, [key, value]) => result.replaceAll(`{${key}}`, () => value),
     template,
   );

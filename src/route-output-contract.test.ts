@@ -46,13 +46,7 @@ describe("Route output contract", () => {
 
   it("emits no extra locale routes beyond the expected set", () => {
     const htmlPaths = collectHtmlPaths(distDir);
-    const localePages = htmlPaths.filter(
-      (path) =>
-        path.startsWith("en/") ||
-        path.startsWith("es/") ||
-        path === "index.html",
-    );
 
-    expect(localePages.sort()).toEqual(expectedPages.sort());
+    expect(htmlPaths.sort()).toEqual([...expectedPages].sort());
   });
 });

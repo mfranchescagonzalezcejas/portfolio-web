@@ -91,9 +91,13 @@ describe("initializeInkScrollerPage", () => {
 
     const next = doc.querySelector(".inkscroller-next");
     next?.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(500);
 
     const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
+    const activeDot = doc.querySelector('.inkscroller-dot[data-index="1"]');
+    expect(activeDot?.classList.contains("active")).toBe(true);
+    expect(activeDot?.getAttribute("aria-current")).toBe("true");
   });
 
   it("navigates on prev button click", () => {
@@ -103,9 +107,13 @@ describe("initializeInkScrollerPage", () => {
 
     const prev = doc.querySelector(".inkscroller-prev");
     prev?.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(500);
 
     const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
+    const activeDot = doc.querySelector('.inkscroller-dot[data-index="2"]');
+    expect(activeDot?.classList.contains("active")).toBe(true);
+    expect(activeDot?.getAttribute("aria-current")).toBe("true");
   });
 
   it("handles dot click navigation", () => {
@@ -115,9 +123,12 @@ describe("initializeInkScrollerPage", () => {
 
     const dot = doc.querySelector('.inkscroller-dot[data-index="2"]');
     dot?.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(500);
 
     const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
+    expect(dot?.classList.contains("active")).toBe(true);
+    expect(dot?.getAttribute("aria-current")).toBe("true");
   });
 
   it("handles keyboard navigation", () => {
@@ -129,9 +140,13 @@ describe("initializeInkScrollerPage", () => {
     carousel?.dispatchEvent(
       new KeyboardEvent("keydown", { key: "ArrowRight" }),
     );
+    vi.advanceTimersByTime(500);
 
     const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
+    const activeDot = doc.querySelector('.inkscroller-dot[data-index="1"]');
+    expect(activeDot?.classList.contains("active")).toBe(true);
+    expect(activeDot?.getAttribute("aria-current")).toBe("true");
   });
 
   it("skips autoplay when reduced motion is preferred", () => {

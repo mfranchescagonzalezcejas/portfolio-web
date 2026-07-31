@@ -32,6 +32,14 @@ describe("formatTemplate", () => {
     expect(formatTemplate("Hello {name}!", { name: "" })).toBe("Hello !");
   });
 
+  it("preserves $& in replacement values", () => {
+    expect(formatTemplate("Hello {name}!", { name: "$&" })).toBe("Hello $&!");
+  });
+
+  it("preserves $$ in replacement values", () => {
+    expect(formatTemplate("Hello {name}!", { name: "$$" })).toBe("Hello $$!");
+  });
+
   it("returns template unchanged when values is empty", () => {
     expect(formatTemplate("no tokens here", {})).toBe("no tokens here");
   });
