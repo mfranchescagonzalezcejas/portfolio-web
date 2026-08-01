@@ -26,6 +26,11 @@ export function initializeInkScrollerPage(doc: Document): void {
   const cleanup = () => {
     controller.abort();
     if (heroCommitTimer) clearTimeout(heroCommitTimer);
+    heroCommitTimer = null;
+    heroCurrent?.classList.remove("slide-out");
+    heroNext?.classList.remove("slide-in");
+    heroNext?.classList.add("hero-img-next");
+    heroTransitioning = false;
     clearCarouselSettleTimer();
     carouselInterval && clearInterval(carouselInterval);
     heroInterval && clearInterval(heroInterval);

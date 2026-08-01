@@ -466,13 +466,22 @@ describe("initializeInkScrollerPage", () => {
     ).toBe("true");
   });
 
-  it("cancels staged hero work and old listeners when reinitialized", () => {
+  it("restores staged hero state and cancels old work when reinitialized", () => {
     const doc = parseHtml(autoplayHtml);
     initializeInkScrollerPage(doc);
     vi.advanceTimersByTime(4_500);
+
+    const current = doc.getElementById("hero-img-current")!;
+    const nextLayer = doc.getElementById("hero-img-next")!;
+    expect(current.classList.contains("slide-out")).toBe(true);
+    expect(nextLayer.classList.contains("slide-in")).toBe(true);
+
     initializeInkScrollerPage(doc);
     vi.advanceTimersByTime(450);
 
+    expect(current.classList.contains("slide-out")).toBe(false);
+    expect(nextLayer.classList.contains("slide-in")).toBe(false);
+    expect(nextLayer.classList.contains("hero-img-next")).toBe(true);
     expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
       null,
     );
