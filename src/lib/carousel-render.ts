@@ -1,7 +1,9 @@
 import { createCarouselQueue } from "./carousel-navigation";
 
 export function initializeInkScrollerPage(doc: Document): void {
-  const view = doc.defaultView;
+  const view =
+    doc.defaultView ??
+    (typeof globalThis.window === "undefined" ? undefined : globalThis.window);
   if (!view) return;
   const window: Window = view;
   const ResizeObserver = (window as Window & typeof globalThis).ResizeObserver;

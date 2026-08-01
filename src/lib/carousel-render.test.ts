@@ -73,6 +73,47 @@ afterEach(() => {
 });
 
 describe("initializeInkScrollerPage", () => {
+  it("uses the document window when available", () => {
+    const doc = parseHtml(carouselHtml);
+    const matchMedia = createMatchMediaMock();
+    const observe = vi.fn();
+    Object.defineProperty(doc, "defaultView", {
+      configurable: true,
+      value: {
+        matchMedia,
+        getComputedStyle: () => ({ width: "240px" }),
+        ResizeObserver: class {
+          observe = observe;
+        },
+      },
+    });
+
+    initializeInkScrollerPage(doc);
+
+    expect(matchMedia).toHaveBeenCalledWith("(prefers-reduced-motion: reduce)");
+    expect(observe).toHaveBeenCalled();
+  });
+
+  it("uses the browser window when the document has none", () => {
+    const doc = parseHtml(carouselHtml);
+
+    initializeInkScrollerPage(doc);
+
+    expect(
+      doc.querySelectorAll(".inkscroller-carousel-track .inkscroller-slide"),
+    ).toHaveLength(9);
+  });
+
+  it("exits safely without a document or browser window", () => {
+    const doc = parseHtml(carouselHtml);
+    vi.stubGlobal("window", undefined);
+
+    expect(() => initializeInkScrollerPage(doc)).not.toThrow();
+    expect(
+      doc.querySelectorAll(".inkscroller-carousel-track .inkscroller-slide"),
+    ).toHaveLength(3);
+  });
+
   it("exits safely when carousel nodes are missing", () => {
     const doc = parseHtml("");
 
