@@ -20,6 +20,17 @@ const carouselHtml = [
   "</div>",
 ].join("\n");
 
+const autoplayHtml = [
+  '<div class="inkscroller-hero-device">',
+  '  <div id="hero-screen">',
+  '    <picture><source type="image/avif" /><source type="image/webp" /><img id="hero-img-current" class="hero-img-layer" data-captures=\'[{"src":{"dark":"/dark-1.png","light":"/light-1.png"},"srcset":{"dark":{"avif":"/dark-1.avif","webp":"/dark-1.webp"},"light":{"avif":"/light-1.avif","webp":"/light-1.webp"}},"alt":"One","dimensions":{"dark":{"width":100,"height":200},"light":{"width":101,"height":201}}},{"src":{"dark":"/dark-2.png","light":"/light-2.png"},"srcset":{"dark":{"avif":"/dark-2.avif","webp":"/dark-2.webp"},"light":{"avif":"/light-2.avif","webp":"/light-2.webp"}},"alt":"Two","dimensions":{"dark":{"width":110,"height":210},"light":{"width":111,"height":211}}}]\' /></picture>',
+  '    <picture><source type="image/avif" /><source type="image/webp" /><img id="hero-img-next" class="hero-img-layer hero-img-next" /></picture>',
+  "  </div>",
+  "</div>",
+  carouselHtml,
+  '<button id="inkscroller-autoplay-toggle" type="button" aria-pressed="false" data-pause-label="Pause" data-play-label="Play">Pause</button>',
+].join("\n");
+
 const parseHtml = (body: string) => {
   const doc = new DOMParser().parseFromString(
     "<html><body>" + body + "</body></html>",
@@ -109,7 +120,7 @@ describe("initializeInkScrollerPage", () => {
     vi.advanceTimersByTime(10_000);
     expect(
       doc
-        .querySelector('.inkscroller-dot[data-index="0"]')
+        .querySelector('.inkscroller-dot[data-index="1"]')
         ?.getAttribute("aria-current"),
     ).toBe("true");
   });
@@ -237,5 +248,134 @@ describe("initializeInkScrollerPage", () => {
         .querySelector('.inkscroller-dot[data-index="0"]')
         ?.getAttribute("aria-current"),
     ).toBe("true");
+  });
+
+  it("advances the hero at 4.5 seconds and the carousel at 5 seconds", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+
+    vi.advanceTimersByTime(4_500);
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      null,
+    );
+    vi.advanceTimersByTime(450);
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      "Two",
+    );
+
+    vi.advanceTimersByTime(50);
+    vi.advanceTimersByTime(500);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="1"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+  });
+
+  it("toggles both timers and exposes paused state", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    const toggle = doc.getElementById("inkscroller-autoplay-toggle")!;
+
+    toggle.dispatchEvent(new Event("click"));
+    expect(toggle.textContent).toBe("Play");
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    vi.advanceTimersByTime(10_000);
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      null,
+    );
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="0"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+
+    toggle.dispatchEvent(new Event("click"));
+    expect(toggle.textContent).toBe("Pause");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("starts reduced-motion users paused until they explicitly play", () => {
+    vi.stubGlobal("matchMedia", createMatchMediaMock(true));
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    const toggle = doc.getElementById("inkscroller-autoplay-toggle")!;
+
+    expect(toggle.textContent).toBe("Play");
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    toggle.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(4_500);
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      "Two",
+    );
+  });
+
+  it("keeps an explicit pause through hover and focus while manual navigation works", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    const carousel = doc.getElementById("inkscroller-carousel")!;
+    const toggle = doc.getElementById("inkscroller-autoplay-toggle")!;
+    toggle.dispatchEvent(new Event("click"));
+    carousel.dispatchEvent(new Event("mouseenter"));
+    carousel.dispatchEvent(new Event("mouseleave"));
+    carousel.dispatchEvent(new FocusEvent("focusin"));
+    carousel.dispatchEvent(new FocusEvent("focusout"));
+    vi.advanceTimersByTime(10_000);
+
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    doc.querySelector(".inkscroller-next")?.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(500);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="1"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+    doc
+      .querySelector('.inkscroller-dot[data-index="2"]')
+      ?.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(500);
+    carousel.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+    vi.advanceTimersByTime(500);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="1"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+  });
+
+  it("temporarily suspends autoplay for hover and resumes after it ends", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    const carousel = doc.getElementById("inkscroller-carousel")!;
+
+    carousel.dispatchEvent(new Event("mouseenter"));
+    vi.advanceTimersByTime(10_000);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="0"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+    carousel.dispatchEvent(new Event("mouseleave"));
+    vi.advanceTimersByTime(5_500);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="1"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+  });
+
+  it("cancels staged hero work and old listeners when reinitialized", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    vi.advanceTimersByTime(4_500);
+    initializeInkScrollerPage(doc);
+    vi.advanceTimersByTime(450);
+
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      null,
+    );
+    expect(
+      doc.querySelectorAll(".inkscroller-carousel-track .inkscroller-slide"),
+    ).toHaveLength(9);
   });
 });
