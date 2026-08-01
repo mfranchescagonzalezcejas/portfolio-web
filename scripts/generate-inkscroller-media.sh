@@ -51,15 +51,17 @@ output_path() {
 }
 
 verify_output() {
-  local source="$1" width="$2" format="$3" output
+  local source="$1" width="$2" format="$3" output details
   output="$(output_path "$source" "$width" "$format")"
   [[ -f "$output" ]] || fail "missing derivative: ${output#"$ROOT"/}"
   [[ "$(magick identify -format '%w' "$output")" == "$width" ]] ||
     fail "wrong width for ${output#"$ROOT"/}"
   [[ "$(magick identify -format '%m' "$output")" == "${format^^}" ]] ||
     fail "wrong format for ${output#"$ROOT"/}"
-  [[ -z "$(magick identify -format '%[profile:*]' "$output")" ]] ||
+  details="$(magick identify -verbose "$output")"
+  if grep -Eq '^[[:space:]]*Profiles:$' <<<"$details"; then
     fail "metadata profile retained in ${output#"$ROOT"/}"
+  fi
 }
 
 require_encoder
