@@ -45,14 +45,22 @@ const themeBootScript = `
     }
   }
    var root = document.documentElement;
-   root.classList.remove("light", "dark");
-   root.classList.add(theme);
-   function syncThemeImages() {
-     var activeTheme = root.classList.contains("light") ? "light" : "dark";
-     document.querySelectorAll("img[data-dark-src][data-light-src]").forEach(function (image) {
-       var source = image.dataset[activeTheme + "Src"];
-       if (source && image.getAttribute("src") !== source) image.setAttribute("src", source);
-     });
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    function syncThemeImages() {
+      var activeTheme = root.classList.contains("light") ? "light" : "dark";
+      document.querySelectorAll("source[data-dark-srcset][data-light-srcset]").forEach(function (source) {
+        var srcset = source.dataset[activeTheme + "Srcset"];
+        if (srcset && source.getAttribute("srcset") !== srcset) source.setAttribute("srcset", srcset);
+      });
+      document.querySelectorAll("img[data-dark-src][data-light-src]").forEach(function (image) {
+        var source = image.dataset[activeTheme + "Src"];
+        if (source && image.getAttribute("src") !== source) image.setAttribute("src", source);
+        var width = image.dataset[activeTheme + "Width"];
+        var height = image.dataset[activeTheme + "Height"];
+        if (width) image.setAttribute("width", width);
+        if (height) image.setAttribute("height", height);
+      });
    }
     new MutationObserver(syncThemeImages).observe(root, {
       attributes: true,
