@@ -23,12 +23,12 @@ const carouselHtml = [
 const autoplayHtml = [
   '<div class="inkscroller-hero-device">',
   '  <div id="hero-screen">',
-  '    <picture><source type="image/avif" /><source type="image/webp" /><img id="hero-img-current" class="hero-img-layer" data-captures=\'[{"src":{"dark":"/dark-1.png","light":"/light-1.png"},"srcset":{"dark":{"avif":"/dark-1.avif","webp":"/dark-1.webp"},"light":{"avif":"/light-1.avif","webp":"/light-1.webp"}},"alt":"One","dimensions":{"dark":{"width":100,"height":200},"light":{"width":101,"height":201}}},{"src":{"dark":"/dark-2.png","light":"/light-2.png"},"srcset":{"dark":{"avif":"/dark-2.avif","webp":"/dark-2.webp"},"light":{"avif":"/light-2.avif","webp":"/light-2.webp"}},"alt":"Two","dimensions":{"dark":{"width":110,"height":210},"light":{"width":111,"height":211}}}]\' /></picture>',
-  '    <picture><source type="image/avif" /><source type="image/webp" /><img id="hero-img-next" class="hero-img-layer hero-img-next" /></picture>',
+  '    <picture><source type="image/avif" /><source type="image/webp" /><img id="hero-img-current" class="hero-img-layer" alt="One" data-captures=\'[{"src":{"dark":"/dark-1.png","light":"/light-1.png"},"srcset":{"dark":{"avif":"/dark-1.avif","webp":"/dark-1.webp"},"light":{"avif":"/light-1.avif","webp":"/light-1.webp"}},"alt":"One","dimensions":{"dark":{"width":100,"height":200},"light":{"width":101,"height":201}}},{"src":{"dark":"/dark-2.png","light":"/light-2.png"},"srcset":{"dark":{"avif":"/dark-2.avif","webp":"/dark-2.webp"},"light":{"avif":"/light-2.avif","webp":"/light-2.webp"}},"alt":"Two","dimensions":{"dark":{"width":110,"height":210},"light":{"width":111,"height":211}}}]\' /></picture>',
+  '    <picture><source type="image/avif" /><source type="image/webp" /><img id="hero-img-next" class="hero-img-layer hero-img-next" alt="One" aria-hidden="true" /></picture>',
   "  </div>",
   "</div>",
   carouselHtml,
-  '<button id="inkscroller-autoplay-toggle" type="button" aria-pressed="false" data-pause-label="Pause" data-play-label="Play">Pause</button>',
+  '<button id="inkscroller-autoplay-toggle" type="button" aria-label="Automatic playback" aria-pressed="true" data-pause-label="Pause" data-play-label="Play">Pause</button>',
 ].join("\n");
 
 const parseHtml = (body: string) => {
@@ -279,7 +279,7 @@ describe("initializeInkScrollerPage", () => {
 
     vi.advanceTimersByTime(4_500);
     expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
-      null,
+      "One",
     );
     vi.advanceTimersByTime(450);
     expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
@@ -319,10 +319,10 @@ describe("initializeInkScrollerPage", () => {
 
     toggle.dispatchEvent(new Event("click"));
     expect(toggle.textContent).toBe("Play");
-    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
     vi.advanceTimersByTime(10_000);
     expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
-      null,
+      "One",
     );
     expect(
       doc
@@ -332,7 +332,7 @@ describe("initializeInkScrollerPage", () => {
 
     toggle.dispatchEvent(new Event("click"));
     expect(toggle.textContent).toBe("Pause");
-    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
   });
 
   it("starts reduced-motion users paused until they explicitly play", () => {
@@ -342,11 +342,33 @@ describe("initializeInkScrollerPage", () => {
     const toggle = doc.getElementById("inkscroller-autoplay-toggle")!;
 
     expect(toggle.textContent).toBe("Play");
-    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      "One",
+    );
     toggle.dispatchEvent(new Event("click"));
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    initializeInkScrollerPage(doc);
     vi.advanceTimersByTime(4_500);
     expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
       "Two",
+    );
+  });
+
+  it("keeps an explicit pause choice through reinitialization", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    const toggle = doc.getElementById("inkscroller-autoplay-toggle")!;
+
+    toggle.dispatchEvent(new Event("click"));
+    initializeInkScrollerPage(doc);
+    vi.advanceTimersByTime(10_000);
+
+    expect(toggle.dataset.autoplayPaused).toBe("true");
+    expect(toggle.textContent).toBe("Play");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      "One",
     );
   });
 
@@ -363,7 +385,7 @@ describe("initializeInkScrollerPage", () => {
     carousel.dispatchEvent(new Event("mouseleave"));
     vi.advanceTimersByTime(4_500);
 
-    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
     expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
       "Two",
     );
@@ -373,7 +395,7 @@ describe("initializeInkScrollerPage", () => {
     carousel.dispatchEvent(new FocusEvent("focusout"));
     vi.advanceTimersByTime(5_000);
 
-    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
     expect(
       doc
         .querySelector('.inkscroller-dot[data-index="1"]')
@@ -415,7 +437,7 @@ describe("initializeInkScrollerPage", () => {
     carousel.dispatchEvent(new FocusEvent("focusout"));
     vi.advanceTimersByTime(10_000);
 
-    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
     doc.querySelector(".inkscroller-next")?.dispatchEvent(new Event("click"));
     vi.advanceTimersByTime(500);
     expect(
@@ -500,7 +522,7 @@ describe("initializeInkScrollerPage", () => {
     expect(nextLayer.classList.contains("slide-in")).toBe(false);
     expect(nextLayer.classList.contains("hero-img-next")).toBe(true);
     expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
-      null,
+      "One",
     );
     expect(
       doc.querySelectorAll(".inkscroller-carousel-track .inkscroller-slide"),

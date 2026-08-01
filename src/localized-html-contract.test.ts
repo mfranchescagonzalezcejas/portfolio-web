@@ -1234,7 +1234,10 @@ describe("InkScroller static product routes", () => {
         ),
       ).toBe(motionToggle);
       expect(motionToggle?.getAttribute("type")).toBe("button");
-      expect(motionToggle?.getAttribute("aria-pressed")).toBe("false");
+      expect(motionToggle?.getAttribute("aria-label")).toBe(
+        carousel.autoplayLabel,
+      );
+      expect(motionToggle?.getAttribute("aria-pressed")).toBe("true");
       expect(motionToggle?.textContent?.trim()).toBe(carousel.pauseLabel);
       expect(motionToggle?.getAttribute("data-pause-label")).toBe(
         carousel.pauseLabel,
@@ -1300,6 +1303,7 @@ describe("InkScroller static product routes", () => {
       const heroNextImage = pictures[1]?.querySelector("img");
       expect(heroNextImage?.id).toBe("hero-img-next");
       expect(heroNextImage?.getAttribute("data-capture-index")).toBe("0");
+      expect(heroNextImage?.getAttribute("aria-hidden")).toBe("true");
       expect(heroNextImage?.getAttribute("loading")).toBe("eager");
       expect(heroNextImage?.hasAttribute("fetchpriority")).toBe(false);
       expect(

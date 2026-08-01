@@ -41,7 +41,15 @@ export function initializeInkScrollerPage(doc: Document): void {
   };
   cleanups.set(doc, cleanup);
 
-  let userPaused = Boolean(reducedMotion);
+  const toggle = doc.getElementById(
+    "inkscroller-autoplay-toggle",
+  ) as HTMLButtonElement | null;
+  let userPaused =
+    toggle?.dataset.autoplayPaused === "true"
+      ? true
+      : toggle?.dataset.autoplayPaused === "false"
+        ? false
+        : Boolean(reducedMotion);
   const hovered = new Set<Element>();
   const focused = new Set<Element>();
   let carouselInterval: ReturnType<typeof setInterval> | null = null;
@@ -261,14 +269,11 @@ export function initializeInkScrollerPage(doc: Document): void {
     updateActive(0);
   }
 
-  const toggle = doc.getElementById(
-    "inkscroller-autoplay-toggle",
-  ) as HTMLButtonElement | null;
   const setToggle = () => {
     if (!toggle) return;
     toggle.textContent =
       (userPaused ? toggle.dataset.playLabel : toggle.dataset.pauseLabel) ?? "";
-    toggle.setAttribute("aria-pressed", String(userPaused));
+    toggle.setAttribute("aria-pressed", String(!userPaused));
   };
   const syncAutoplay = () => {
     if (carouselInterval) clearInterval(carouselInterval);
@@ -333,6 +338,7 @@ export function initializeInkScrollerPage(doc: Document): void {
     "click",
     () => {
       userPaused = !userPaused;
+      toggle.dataset.autoplayPaused = String(userPaused);
       setToggle();
       syncAutoplay();
     },
