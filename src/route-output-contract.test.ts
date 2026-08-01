@@ -1,4 +1,4 @@
-import { readdirSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -48,5 +48,38 @@ describe("Route output contract", () => {
     const htmlPaths = collectHtmlPaths(distDir);
 
     expect(htmlPaths.sort()).toEqual([...expectedPages].sort());
+  });
+
+  it("redirects only the root to English before preserving locale rewrites", () => {
+    const vercelConfig = JSON.parse(
+      readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"),
+    ) as {
+      redirects?: { source: string; destination: string; permanent: boolean }[];
+      rewrites?: { source: string; destination: string }[];
+    };
+
+    expect(vercelConfig.redirects).toEqual([
+      { source: "/", destination: "/en", permanent: true },
+    ]);
+    expect(vercelConfig.rewrites).toEqual([
+      { source: "/en", destination: "/en/index.html" },
+      { source: "/en/:path*", destination: "/en/index.html" },
+      { source: "/es", destination: "/es/index.html" },
+      { source: "/es/:path*", destination: "/es/index.html" },
+    ]);
+  });
+
+  it("indexes localized www routes but not the root URL", () => {
+    const sitemap = readFileSync(resolve(distDir, "sitemap-0.xml"), "utf8");
+
+    expect(sitemap).toContain("https://www.devdigi.dev/en/");
+    expect(sitemap).toContain("https://www.devdigi.dev/es/");
+    expect(sitemap).toContain(
+      "https://www.devdigi.dev/en/projects/inkscroller/",
+    );
+    expect(sitemap).toContain(
+      "https://www.devdigi.dev/es/proyectos/inkscroller/",
+    );
+    expect(sitemap).not.toContain("https://www.devdigi.dev/</loc>");
   });
 });

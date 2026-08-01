@@ -25,7 +25,7 @@ type SeoContract = {
   };
 };
 
-const productionSiteUrl = "https://devdigi.dev";
+const productionSiteUrl = "https://www.devdigi.dev";
 const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
 const carouselRenderPath = resolve(process.cwd(), "src/lib/carousel-render.ts");
@@ -1079,6 +1079,11 @@ describe("InkScroller static product routes", () => {
       ).toBe(canonical);
       expect(
         document.head
+          .querySelector('meta[property="og:url"]')
+          ?.getAttribute("content"),
+      ).toBe(canonical);
+      expect(
+        document.head
           .querySelector(
             `link[rel="alternate"][hreflang="${locale === "en" ? "es" : "en"}"]`,
           )
@@ -1407,7 +1412,7 @@ describe("InkScroller beta landing routes", () => {
       expect(document.title).toBe(beta.seo.title);
       expect(
         document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
-      ).toBe(`https://devdigi.dev${beta.seo.canonicalPath}`);
+      ).toBe(`https://www.devdigi.dev${beta.seo.canonicalPath}`);
       (
         Object.entries(beta.seo.alternates) as [
           "en" | "es" | "x-default",
@@ -1418,7 +1423,7 @@ describe("InkScroller beta landing routes", () => {
           document
             .querySelector(`link[rel="alternate"][hreflang="${hreflang}"]`)
             ?.getAttribute("href"),
-        ).toBe(`https://devdigi.dev${path}`);
+        ).toBe(`https://www.devdigi.dev${path}`);
       });
       expect(
         document.querySelector(".beta-hero-device img")?.getAttribute("src"),
