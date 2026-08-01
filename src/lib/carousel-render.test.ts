@@ -417,6 +417,32 @@ describe("initializeInkScrollerPage", () => {
     ).toBe("true");
   });
 
+  it("settles carousel navigation when suspending an active hero transition", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    const hero = doc.querySelector(".inkscroller-hero-device")!;
+    const next = doc.querySelector(".inkscroller-next")!;
+
+    vi.advanceTimersByTime(4_500);
+    next.dispatchEvent(new Event("click"));
+    hero.dispatchEvent(new Event("mouseenter"));
+    vi.advanceTimersByTime(500);
+
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="1"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+
+    next.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(500);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="2"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+  });
+
   it("cancels staged hero work and old listeners when reinitialized", () => {
     const doc = parseHtml(autoplayHtml);
     initializeInkScrollerPage(doc);
@@ -430,5 +456,12 @@ describe("initializeInkScrollerPage", () => {
     expect(
       doc.querySelectorAll(".inkscroller-carousel-track .inkscroller-slide"),
     ).toHaveLength(9);
+    doc.querySelector(".inkscroller-next")?.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(1_000);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="1"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
   });
 });

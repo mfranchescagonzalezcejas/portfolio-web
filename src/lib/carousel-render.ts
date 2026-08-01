@@ -24,8 +24,10 @@ export function initializeInkScrollerPage(doc: Document): void {
   const timers: Array<ReturnType<typeof setTimeout>> = [];
   const addTimer = (timer: ReturnType<typeof setTimeout>) => timers.push(timer);
   const clearTimers = () => timers.splice(0).forEach(clearTimeout);
+  let heroCommitTimer: ReturnType<typeof setTimeout> | null = null;
   const cleanup = () => {
     controller.abort();
+    if (heroCommitTimer) clearTimeout(heroCommitTimer);
     clearTimers();
     carouselInterval && clearInterval(carouselInterval);
     heroInterval && clearInterval(heroInterval);
@@ -102,7 +104,11 @@ export function initializeInkScrollerPage(doc: Document): void {
       heroTransitioning = false;
     };
     if (reducedMotion) commit();
-    else addTimer(setTimeout(commit, 450));
+    else
+      heroCommitTimer = setTimeout(() => {
+        heroCommitTimer = null;
+        commit();
+      }, 450);
   };
 
   const carousel = doc.getElementById("inkscroller-carousel");
@@ -264,7 +270,8 @@ export function initializeInkScrollerPage(doc: Document): void {
     carouselInterval = null;
     heroInterval = null;
     if (heroTransitioning) {
-      clearTimers();
+      if (heroCommitTimer) clearTimeout(heroCommitTimer);
+      heroCommitTimer = null;
       heroCurrent?.classList.remove("slide-out");
       heroNext?.classList.remove("slide-in");
       heroNext?.classList.add("hero-img-next");
