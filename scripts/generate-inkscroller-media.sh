@@ -2,7 +2,8 @@
 set -euo pipefail
 
 # The measured screen slot is 216 CSS px; 432w covers its 2x DPR target.
-readonly ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly ROOT
 readonly MEDIA_ROOT="$ROOT/public/inkscroller/screenshots"
 readonly WIDTHS=(216 432)
 readonly FORMATS=(avif webp)
@@ -52,13 +53,13 @@ output_path() {
 verify_output() {
   local source="$1" width="$2" format="$3" output
   output="$(output_path "$source" "$width" "$format")"
-  [[ -f "$output" ]] || fail "missing derivative: ${output#$ROOT/}"
+  [[ -f "$output" ]] || fail "missing derivative: ${output#"$ROOT"/}"
   [[ "$(magick identify -format '%w' "$output")" == "$width" ]] ||
-    fail "wrong width for ${output#$ROOT/}"
+    fail "wrong width for ${output#"$ROOT"/}"
   [[ "$(magick identify -format '%m' "$output")" == "${format^^}" ]] ||
-    fail "wrong format for ${output#$ROOT/}"
+    fail "wrong format for ${output#"$ROOT"/}"
   [[ -z "$(magick identify -format '%[profile:*]' "$output")" ]] ||
-    fail "metadata profile retained in ${output#$ROOT/}"
+    fail "metadata profile retained in ${output#"$ROOT"/}"
 }
 
 require_encoder
@@ -67,19 +68,19 @@ require_encoder
 expected=0
 for source in "${SOURCES[@]}"; do
   input="$MEDIA_ROOT/$source"
-  [[ -f "$input" ]] || fail "missing source: ${input#$ROOT/}"
+  [[ -f "$input" ]] || fail "missing source: ${input#"$ROOT"/}"
   for width in "${WIDTHS[@]}"; do
     [[ "$(magick identify -format '%w' "$input")" -ge "$width" ]] ||
-      fail "source is too narrow for ${width}w: ${input#$ROOT/}"
+      fail "source is too narrow for ${width}w: ${input#"$ROOT"/}"
     for format in "${FORMATS[@]}"; do
       expected=$((expected + 1))
       output="$(output_path "$source" "$width" "$format")"
       if [[ "${1:-}" == "--check" ]]; then
         verify_output "$source" "$width" "$format"
       else
-        [[ ! -e "$output" ]] || fail "refusing to overwrite: ${output#$ROOT/}"
+        [[ ! -e "$output" ]] || fail "refusing to overwrite: ${output#"$ROOT"/}"
         magick "$input" -auto-orient -strip -resize "${width}x>" "$output" ||
-          fail "conversion failed: ${output#$ROOT/}"
+          fail "conversion failed: ${output#"$ROOT"/}"
         verify_output "$source" "$width" "$format"
       fi
     done
