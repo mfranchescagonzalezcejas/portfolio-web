@@ -2582,6 +2582,9 @@ a {
 .hero-img-layer.slide-in {
   animation: inkscroller-slide-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+.hero-img-next {
+  visibility: hidden;
+}
 
 @keyframes inkscroller-slide-out {
   0% {
@@ -3075,6 +3078,30 @@ a {
 .inkscroller-carousel-section {
   padding: 0;
 }
+.inkscroller-motion-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.inkscroller-autoplay-toggle {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--overlay-border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--foreground);
+  cursor: pointer;
+  font-weight: 600;
+}
+.inkscroller-autoplay-toggle:hover {
+  border-color: var(--foreground);
+  background: var(--overlay-bg-hover);
+}
+.inkscroller-autoplay-toggle:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 3px;
+}
 .inkscroller-carousel {
   position: relative;
   width: 100%;
@@ -3229,8 +3256,10 @@ a {
 @media (prefers-reduced-motion: reduce) {
   .inkscroller-carousel-track,
   .inkscroller-slide,
-  .inkscroller-dot::before {
+  .inkscroller-dot::before,
+  .hero-img-layer {
     transition: none;
+    animation: none;
   }
 }
 
