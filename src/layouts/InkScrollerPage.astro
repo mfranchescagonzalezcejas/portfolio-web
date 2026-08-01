@@ -13,9 +13,6 @@ const { content } = Astro.props;
 const currentYear = new Date().getFullYear();
 const site = siteContentByLocale[content.locale];
 const firstMedia = content.media[0];
-const heroCapturesJson = JSON.stringify(
-  content.media.map((media) => ({ src: media.src, alt: media.alt })),
-);
 ---
 
 <BaseLayout locale={content.locale} pageSeo={content.seo}>
@@ -43,8 +40,7 @@ const heroCapturesJson = JSON.stringify(
         <div class="inkscroller-hero-device">
           <div class="mockup-phone">
             <div class="mockup-phone-screen" id="hero-screen">
-              <img id="hero-img-current" class="hero-img-layer" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" data-captures={heroCapturesJson} />
-              <img id="hero-img-next" class="hero-img-layer" src="" alt="" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" style="display:none" />
+              <img id="hero-img-current" class="hero-img-layer" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
             </div>
             <div class="mockup-phone-frame" aria-hidden="true"></div>
           </div>
@@ -55,8 +51,8 @@ const heroCapturesJson = JSON.stringify(
       <h2 id="inkscroller-proof-title">{content.proof.title}</h2>
       <ul>{content.proof.items.map((item) => <li>{item}</li>)}</ul>
     </section>
-    <section class="inkscroller-carousel-section" aria-label="Product carousel">
-      <div id="inkscroller-carousel" class="inkscroller-carousel" tabindex="0" role="region" aria-label="Product screenshots carousel">
+    <section class="inkscroller-carousel-section" aria-label={content.carousel.sectionLabel}>
+      <div id="inkscroller-carousel" class="inkscroller-carousel" tabindex="0" role="region" aria-label={content.carousel.regionLabel}>
         <div class="inkscroller-carousel-viewport">
           <div class="inkscroller-carousel-track">
             {content.media.map((entry) => (
@@ -75,11 +71,11 @@ const heroCapturesJson = JSON.stringify(
             ))}
           </div>
         </div>
-        <button class="inkscroller-arrow inkscroller-prev" aria-label="Previous slide" type="button">&#8592;</button>
-        <button class="inkscroller-arrow inkscroller-next" aria-label="Next slide" type="button">&#8594;</button>
-        <nav class="inkscroller-dots" aria-label="Carousel navigation">
+        <button class="inkscroller-arrow inkscroller-prev" aria-label={content.carousel.previousLabel} type="button">&#8592;</button>
+        <button class="inkscroller-arrow inkscroller-next" aria-label={content.carousel.nextLabel} type="button">&#8594;</button>
+        <nav class="inkscroller-dots" aria-label={content.carousel.navigationLabel}>
           {content.media.map((entry, i) => (
-            <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-current={i === 0 ? "true" : undefined} aria-label={`Go to slide ${i + 1}: ${entry.title}`} type="button" data-index={i}></button>
+            <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-current={i === 0 ? "true" : undefined} aria-label={content.carousel.slideLabel.replace("{index}", String(i + 1)).replace("{title}", entry.title)} type="button" data-index={i}></button>
           ))}
         </nav>
       </div>

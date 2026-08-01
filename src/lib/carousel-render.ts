@@ -18,7 +18,6 @@ export function initializeInkScrollerPage(doc: Document): void {
     const prev = carousel.querySelector(".inkscroller-prev");
     const next = carousel.querySelector(".inkscroller-next");
     const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot"));
-    let timer: ReturnType<typeof setInterval> | null = null;
 
     const origSlides = Array.from(
       track?.querySelectorAll(".inkscroller-slide") ?? [],
@@ -122,18 +121,6 @@ export function initializeInkScrollerPage(doc: Document): void {
       runNavigation();
     }
 
-    function startAutoPlay(): void {
-      if (prefersReducedMotion.matches || timer) return;
-      timer = setInterval(nextSlide, 5000);
-    }
-
-    function stopAutoPlay(): void {
-      if (timer) {
-        clearInterval(timer);
-        timer = null;
-      }
-    }
-
     track?.addEventListener("transitionend", (event: Event) => {
       if (
         event.target === track &&
@@ -153,30 +140,14 @@ export function initializeInkScrollerPage(doc: Document): void {
       }).observe(carousel);
     }
 
-    carousel.addEventListener("mouseenter", stopAutoPlay);
-    carousel.addEventListener("focusin", stopAutoPlay);
-    carousel.addEventListener("mouseleave", () => {
-      if (!carousel.contains(doc.activeElement)) startAutoPlay();
-    });
-    carousel.addEventListener("focusout", (e: FocusEvent) => {
-      if (
-        !carousel.contains(e.relatedTarget as Node) &&
-        !carousel.matches(":hover")
-      )
-        startAutoPlay();
-    });
-
     prev?.addEventListener("click", () => {
-      stopAutoPlay();
       prevSlide();
     });
     next?.addEventListener("click", () => {
-      stopAutoPlay();
       nextSlide();
     });
     dots.forEach((dot) =>
       dot.addEventListener("click", () => {
-        stopAutoPlay();
         goToSlide(Number((dot as HTMLElement).dataset.index));
       }),
     );
@@ -184,7 +155,6 @@ export function initializeInkScrollerPage(doc: Document): void {
     carousel.addEventListener("keydown", (e: KeyboardEvent) => {
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         e.preventDefault();
-        stopAutoPlay();
         if (e.key === "ArrowLeft") prevSlide();
         else nextSlide();
       }
@@ -192,70 +162,5 @@ export function initializeInkScrollerPage(doc: Document): void {
 
     setPosition(physicalIndex, false);
     updateActive(0);
-    if (!prefersReducedMotion.matches) startAutoPlay();
-  }
-
-  // Hero image auto-cycle
-  {
-    const currentImg = doc.getElementById(
-      "hero-img-current",
-    ) as HTMLImageElement | null;
-    const nextImg = doc.getElementById(
-      "hero-img-next",
-    ) as HTMLImageElement | null;
-    if (currentImg && nextImg && currentImg.dataset.captures) {
-      const captures = JSON.parse(currentImg.dataset.captures);
-      if (captures.length > 1) {
-        let idx = 0;
-        let heroTimer: ReturnType<typeof setInterval> | null = null;
-        const prefersReducedMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        );
-        const setCurrentCapture = (capture: {
-          src: { light: string; dark: string };
-          alt: string;
-        }) => {
-          currentImg.src =
-            capture.src[
-              doc.documentElement.classList.contains("light") ? "light" : "dark"
-            ];
-          currentImg.dataset.darkSrc = capture.src.dark;
-          currentImg.dataset.lightSrc = capture.src.light;
-          currentImg.alt = capture.alt;
-        };
-        const startCycle = () => {
-          if (prefersReducedMotion.matches || heroTimer) return;
-          heroTimer = setInterval(() => {
-            const nextIdx = (idx + 1) % captures.length;
-            nextImg.src =
-              captures[nextIdx].src[
-                doc.documentElement.classList.contains("light")
-                  ? "light"
-                  : "dark"
-              ];
-            nextImg.alt = captures[nextIdx].alt;
-            nextImg.style.display = "block";
-            currentImg.classList.add("slide-out");
-            nextImg.classList.add("slide-in");
-            setTimeout(() => {
-              setCurrentCapture(captures[nextIdx]);
-              currentImg.classList.remove("slide-out");
-              nextImg.classList.remove("slide-in");
-              nextImg.style.display = "none";
-              idx = nextIdx;
-            }, 450);
-          }, 4500);
-        };
-        const stopCycle = () => {
-          if (!heroTimer) return;
-          clearInterval(heroTimer);
-          heroTimer = null;
-        };
-        const heroDevice = currentImg.closest(".inkscroller-hero-device");
-        heroDevice?.addEventListener("mouseenter", stopCycle);
-        heroDevice?.addEventListener("mouseleave", startCycle);
-        startCycle();
-      }
-    }
   }
 }
