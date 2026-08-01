@@ -62,6 +62,11 @@ const homeMockupPaths = (locale: "en" | "es", theme: "dark" | "light") =>
     (capture) => `/inkscroller/screenshots/${theme}/${locale}/${capture}.jpg`,
   );
 
+const responsiveSrcset = (src: string, format: "avif" | "webp") => {
+  const stem = src.slice(0, -4);
+  return `${stem}-216w.${format} 216w, ${stem}-432w.${format} 432w`;
+};
+
 type StaticContract = {
   skipLabel: string;
   sectionHeadings: string[];
@@ -1229,14 +1234,61 @@ describe("InkScroller static product routes", () => {
             .replace("{title}", entry.title),
         ),
       );
+      const renderedMedia = [media[0], ...media];
+      const pictures = Array.from(
+        document.querySelectorAll<HTMLPictureElement>(
+          ".mockup-phone-screen picture",
+        ),
+      );
+      expect(pictures).toHaveLength(8);
+      pictures.forEach((picture, index) => {
+        const entry = renderedMedia[index];
+        const image = picture.querySelector("img");
+        const sources = Array.from(picture.querySelectorAll("source"));
+        const lightHeight =
+          locale === "es" && entry.src.light.endsWith("/library.jpg")
+            ? "2811"
+            : "2340";
+
+        expect(sources.map((source) => source.getAttribute("type"))).toEqual([
+          "image/avif",
+          "image/webp",
+        ]);
+        sources.forEach((source, sourceIndex) => {
+          const format = sourceIndex === 0 ? "avif" : "webp";
+          expect(source.getAttribute("sizes")).toBe(
+            "(max-width: 311px) 69.3vw, 216px",
+          );
+          expect(source.getAttribute("srcset")).toBe(
+            responsiveSrcset(entry.src.dark, format),
+          );
+          expect(source.getAttribute("data-light-srcset")).toBe(
+            responsiveSrcset(entry.src.light, format),
+          );
+        });
+        expect(image?.getAttribute("src")).toBe(entry.src.dark);
+        expect(image?.getAttribute("data-light-src")).toBe(entry.src.light);
+        expect(image?.getAttribute("width")).toBe("1080");
+        expect(image?.getAttribute("height")).toBe("2340");
+        expect(image?.getAttribute("data-light-width")).toBe("1080");
+        expect(image?.getAttribute("data-light-height")).toBe(lightHeight);
+      });
+      const heroImage = pictures[0]?.querySelector("img");
+      expect(heroImage?.getAttribute("loading")).toBe("eager");
+      expect(heroImage?.getAttribute("fetchpriority")).toBe("high");
+      pictures.slice(1).forEach((picture) => {
+        const image = picture.querySelector("img");
+        expect(image?.getAttribute("loading")).toBe("lazy");
+        expect(image?.hasAttribute("fetchpriority")).toBe(false);
+      });
       expect(html).not.toContain("setInterval");
       expect(html).not.toContain("data-captures");
       expect(html).not.toContain('id="hero-img-next"');
     },
   );
 
-  it("switches product carousel captures for the boot theme and later theme changes", async () => {
-    const html = readHtml("dist/en/projects/inkscroller/index.html");
+  it("switches product carousel sources and Spanish library dimensions with the theme", async () => {
+    const html = readHtml("dist/es/proyectos/inkscroller/index.html");
     const renderedDocument = new DOMParser().parseFromString(html, "text/html");
     const bootScript = Array.from(
       renderedDocument.head.querySelectorAll("script"),
@@ -1272,15 +1324,39 @@ describe("InkScroller static product routes", () => {
       );
       expect(carouselImages).toHaveLength(7);
       expect(carouselImages.map((image) => image.getAttribute("src"))).toEqual(
-        inkscrollerContent.en.media.map((entry) => entry.src.light),
+        inkscrollerContent.es.media.map((entry) => entry.src.light),
       );
+      const carouselSources = Array.from(
+        document.querySelectorAll<HTMLSourceElement>(
+          ".inkscroller-carousel .mockup-phone-screen source",
+        ),
+      );
+      expect(
+        carouselSources.map((source) => source.getAttribute("srcset")),
+      ).toEqual(
+        inkscrollerContent.es.media.flatMap((entry) => [
+          responsiveSrcset(entry.src.light, "avif"),
+          responsiveSrcset(entry.src.light, "webp"),
+        ]),
+      );
+      expect(carouselImages[2]?.getAttribute("width")).toBe("1080");
+      expect(carouselImages[2]?.getAttribute("height")).toBe("2811");
 
       document.documentElement.className = "dark";
       await Promise.resolve();
 
       expect(carouselImages.map((image) => image.getAttribute("src"))).toEqual(
-        inkscrollerContent.en.media.map((entry) => entry.src.dark),
+        inkscrollerContent.es.media.map((entry) => entry.src.dark),
       );
+      expect(
+        carouselSources.map((source) => source.getAttribute("srcset")),
+      ).toEqual(
+        inkscrollerContent.es.media.flatMap((entry) => [
+          responsiveSrcset(entry.src.dark, "avif"),
+          responsiveSrcset(entry.src.dark, "webp"),
+        ]),
+      );
+      expect(carouselImages[2]?.getAttribute("height")).toBe("2340");
     } finally {
       document.documentElement.className = previousHtmlClass;
       document.head.innerHTML = previousHead;

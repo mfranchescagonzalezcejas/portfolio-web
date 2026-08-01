@@ -6,6 +6,8 @@ export type ProductMedia = {
   alt: string;
   width: number;
   height: number;
+  lightWidth?: number;
+  lightHeight?: number;
 };
 
 export type InkScrollerSlide = ProductMedia & {
@@ -313,6 +315,8 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
         alt: "Biblioteca de InkScroller mostrando historias guardadas",
         width: 1080,
         height: 2340,
+        lightWidth: 1080,
+        lightHeight: 2811,
         title: "Biblioteca",
         description: "Mantén tus historias guardadas organizadas y a mano.",
       },
