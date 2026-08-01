@@ -94,6 +94,28 @@ describe("initializeInkScrollerPage", () => {
     expect(observe).toHaveBeenCalled();
   });
 
+  it("continues initialization when ResizeObserver is unavailable", () => {
+    const doc = parseHtml(carouselHtml);
+    const matchMedia = createMatchMediaMock();
+    Object.defineProperty(doc, "defaultView", {
+      configurable: true,
+      value: {
+        matchMedia,
+        getComputedStyle: () => ({ width: "240px" }),
+      },
+    });
+
+    expect(() => initializeInkScrollerPage(doc)).not.toThrow();
+    expect(
+      doc.querySelectorAll(".inkscroller-carousel-track .inkscroller-slide"),
+    ).toHaveLength(9);
+
+    vi.advanceTimersByTime(4_500);
+    expect(doc.getElementById("hero-img-next")?.getAttribute("src")).toBe(
+      "/d2.jpg",
+    );
+  });
+
   it("uses the browser window when the document has none", () => {
     const doc = parseHtml(carouselHtml);
 

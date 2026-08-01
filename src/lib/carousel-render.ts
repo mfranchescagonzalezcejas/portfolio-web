@@ -142,14 +142,16 @@ export function initializeInkScrollerPage(doc: Document): void {
         settleNavigation();
     });
 
-    new ResizeObserver(() => {
-      if (activeAction) navigation.retry(activeAction);
-      clearTimeout(settleTimer!);
-      activeAction = null;
-      isAnimating = false;
-      setPosition(cloneCount + navigation.current(), false);
-      runNavigation();
-    }).observe(carousel);
+    if (ResizeObserver) {
+      new ResizeObserver(() => {
+        if (activeAction) navigation.retry(activeAction);
+        clearTimeout(settleTimer!);
+        activeAction = null;
+        isAnimating = false;
+        setPosition(cloneCount + navigation.current(), false);
+        runNavigation();
+      }).observe(carousel);
+    }
 
     carousel.addEventListener("mouseenter", stopAutoPlay);
     carousel.addEventListener("focusin", stopAutoPlay);

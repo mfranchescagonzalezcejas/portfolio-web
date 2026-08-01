@@ -10,13 +10,20 @@ const allowedProtocols = new Set(["https:", "mailto:"]);
 const isValidLinkHref = (href: string) => {
   const trimmedHref = href.trim();
 
-  if (trimmedHref.startsWith("/") && !trimmedHref.startsWith("//")) {
+  if (
+    trimmedHref.startsWith("/") &&
+    trimmedHref[1] !== "/" &&
+    trimmedHref[1] !== "\\"
+  ) {
     return trimmedHref.length > 1;
   }
 
   try {
     const parsed = new URL(trimmedHref);
-    return allowedProtocols.has(parsed.protocol);
+    return (
+      allowedProtocols.has(parsed.protocol) &&
+      (parsed.protocol !== "mailto:" || parsed.pathname.length > 0)
+    );
   } catch {
     return false;
   }

@@ -973,6 +973,18 @@ describe("Localized static entrypoints", () => {
           {
             kind: "github",
             variant: "secondary",
+            label: "Backslash protocol relative",
+            href: "/\\example.com",
+          },
+          {
+            kind: "email",
+            variant: "secondary",
+            label: "Missing email recipient",
+            href: "mailto:",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
             label: "Broken",
             href: "javascript:alert(1)",
           },
@@ -1013,6 +1025,18 @@ describe("Localized static entrypoints", () => {
           expect.objectContaining({
             area: "contact",
             owner: "contacts",
+            label: "Backslash protocol relative",
+            href: "/\\example.com",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Missing email recipient",
+            href: "mailto:",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
             label: "Plain HTTP",
             href: "http://example.com/profile",
           }),
@@ -1025,7 +1049,7 @@ describe("Localized static entrypoints", () => {
         ]),
       );
       expect(warn).toHaveBeenCalledWith(
-        "Dropped 3 invalid configured link(s) from en site content before render.",
+        "Dropped 5 invalid configured link(s) from en site content before render.",
       );
     } finally {
       warn.mockRestore();
