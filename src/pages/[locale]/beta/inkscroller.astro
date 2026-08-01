@@ -1,0 +1,16 @@
+---
+import type { Locale } from "../../../content/types";
+import { locales, siteContentByLocale } from "../../../content/site";
+import { betaContent } from "../../../content/beta";
+import BetaInkScrollerPage from "../../../layouts/BetaInkScrollerPage.astro";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params as { locale: Locale };
+const site = siteContentByLocale[locale];
+const content = betaContent[locale];
+---
+
+<BetaInkScrollerPage content={content} site={site} />
