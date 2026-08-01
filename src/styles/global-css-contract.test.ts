@@ -197,6 +197,32 @@ describe("responsive CSS contract", () => {
     expect(globalCss).toContain(".inkscroller-dot.active::before");
   });
 
+  it("keeps the InkScroller motion toggle persistent, focusable, and motion-safe", () => {
+    blockContains(
+      globalCss,
+      ".inkscroller-motion-controls",
+      "display: flex;",
+      "justify-content: center;",
+    );
+    blockContains(
+      globalCss,
+      ".inkscroller-autoplay-toggle",
+      "min-width: 2.75rem;",
+      "min-height: 2.75rem;",
+    );
+    blockContains(
+      globalCss,
+      ".inkscroller-autoplay-toggle:focus-visible",
+      "outline: 3px solid var(--primary);",
+      "outline-offset: 3px;",
+    );
+    const reducedMotionBlock = globalCss.slice(
+      globalCss.lastIndexOf("@media (prefers-reduced-motion: reduce)"),
+    );
+    expect(reducedMotionBlock).toContain(".hero-img-layer");
+    expect(reducedMotionBlock).toContain("animation: none;");
+  });
+
   it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
     blockContains(
       globalCss,

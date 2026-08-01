@@ -18,6 +18,29 @@ const srcset = (src: string, format: "avif" | "webp") => {
   const stem = src.slice(0, -4);
   return `${stem}-216w.${format} 216w, ${stem}-432w.${format} 432w`;
 };
+const heroCaptures = JSON.stringify(
+  content.media.map((entry) => ({
+    src: entry.src,
+    srcset: {
+      dark: {
+        avif: srcset(entry.src.dark, "avif"),
+        webp: srcset(entry.src.dark, "webp"),
+      },
+      light: {
+        avif: srcset(entry.src.light, "avif"),
+        webp: srcset(entry.src.light, "webp"),
+      },
+    },
+    alt: entry.alt,
+    dimensions: {
+      dark: { width: entry.width, height: entry.height },
+      light: {
+        width: entry.lightWidth ?? entry.width,
+        height: entry.lightHeight ?? entry.height,
+      },
+    },
+  })),
+);
 ---
 
 <BaseLayout locale={content.locale} pageSeo={content.seo}>
@@ -48,7 +71,12 @@ const srcset = (src: string, format: "avif" | "webp") => {
               <picture>
                 <source type="image/avif" srcset={srcset(firstMedia.src.dark, "avif")} data-dark-srcset={srcset(firstMedia.src.dark, "avif")} data-light-srcset={srcset(firstMedia.src.light, "avif")} sizes={sizes} />
                 <source type="image/webp" srcset={srcset(firstMedia.src.dark, "webp")} data-dark-srcset={srcset(firstMedia.src.dark, "webp")} data-light-srcset={srcset(firstMedia.src.light, "webp")} sizes={sizes} />
-                <img id="hero-img-current" class="hero-img-layer" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} data-dark-width={firstMedia.width} data-dark-height={firstMedia.height} data-light-width={firstMedia.lightWidth ?? firstMedia.width} data-light-height={firstMedia.lightHeight ?? firstMedia.height} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" fetchpriority="high" decoding="async" />
+                <img id="hero-img-current" class="hero-img-layer" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} data-dark-width={firstMedia.width} data-dark-height={firstMedia.height} data-light-width={firstMedia.lightWidth ?? firstMedia.width} data-light-height={firstMedia.lightHeight ?? firstMedia.height} data-captures={heroCaptures} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" fetchpriority="high" decoding="async" />
+              </picture>
+              <picture>
+                <source type="image/avif" srcset={srcset(firstMedia.src.dark, "avif")} data-dark-srcset={srcset(firstMedia.src.dark, "avif")} data-light-srcset={srcset(firstMedia.src.light, "avif")} sizes={sizes} />
+                <source type="image/webp" srcset={srcset(firstMedia.src.dark, "webp")} data-dark-srcset={srcset(firstMedia.src.dark, "webp")} data-light-srcset={srcset(firstMedia.src.light, "webp")} sizes={sizes} />
+                <img id="hero-img-next" class="hero-img-layer hero-img-next" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} data-dark-width={firstMedia.width} data-dark-height={firstMedia.height} data-light-width={firstMedia.lightWidth ?? firstMedia.width} data-light-height={firstMedia.lightHeight ?? firstMedia.height} data-capture-index="0" alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
               </picture>
             </div>
             <div class="mockup-phone-frame" aria-hidden="true"></div>
@@ -91,6 +119,9 @@ const srcset = (src: string, format: "avif" | "webp") => {
             <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-current={i === 0 ? "true" : undefined} aria-label={content.carousel.slideLabel.replace("{index}", String(i + 1)).replace("{title}", entry.title)} type="button" data-index={i}></button>
           ))}
         </nav>
+      </div>
+      <div class="inkscroller-motion-controls">
+        <button id="inkscroller-autoplay-toggle" class="inkscroller-autoplay-toggle" type="button" aria-pressed="false" data-pause-label={content.carousel.pauseLabel} data-play-label={content.carousel.playLabel}>{content.carousel.pauseLabel}</button>
       </div>
     </section>
     <section class="inkscroller-beta" aria-labelledby="inkscroller-beta-title">

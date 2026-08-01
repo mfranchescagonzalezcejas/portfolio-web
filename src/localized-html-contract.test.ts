@@ -1205,6 +1205,7 @@ describe("InkScroller static product routes", () => {
           : "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
       );
       const carousel = inkscrollerContent[locale].carousel;
+      const carouselElement = document.querySelector("#inkscroller-carousel");
       expect(
         document
           .querySelector(".inkscroller-carousel-section")
@@ -1221,6 +1222,26 @@ describe("InkScroller static product routes", () => {
       expect(
         document.querySelector(".inkscroller-next")?.getAttribute("aria-label"),
       ).toBe(carousel.nextLabel);
+      const motionToggle = document.querySelector<HTMLButtonElement>(
+        "#inkscroller-autoplay-toggle",
+      );
+      expect(
+        document.querySelectorAll("#inkscroller-autoplay-toggle"),
+      ).toHaveLength(1);
+      expect(
+        carouselElement?.nextElementSibling?.querySelector(
+          "#inkscroller-autoplay-toggle",
+        ),
+      ).toBe(motionToggle);
+      expect(motionToggle?.getAttribute("type")).toBe("button");
+      expect(motionToggle?.getAttribute("aria-pressed")).toBe("false");
+      expect(motionToggle?.textContent?.trim()).toBe(carousel.pauseLabel);
+      expect(motionToggle?.getAttribute("data-pause-label")).toBe(
+        carousel.pauseLabel,
+      );
+      expect(motionToggle?.getAttribute("data-play-label")).toBe(
+        carousel.playLabel,
+      );
       const dots = Array.from(
         document.querySelectorAll<HTMLButtonElement>(".inkscroller-dot"),
       );
@@ -1234,13 +1255,13 @@ describe("InkScroller static product routes", () => {
             .replace("{title}", entry.title),
         ),
       );
-      const renderedMedia = [media[0], ...media];
+      const renderedMedia = [media[0], media[0], ...media];
       const pictures = Array.from(
         document.querySelectorAll<HTMLPictureElement>(
           ".mockup-phone-screen picture",
         ),
       );
-      expect(pictures).toHaveLength(8);
+      expect(pictures).toHaveLength(9);
       pictures.forEach((picture, index) => {
         const entry = renderedMedia[index];
         const image = picture.querySelector("img");
@@ -1276,14 +1297,42 @@ describe("InkScroller static product routes", () => {
       const heroImage = pictures[0]?.querySelector("img");
       expect(heroImage?.getAttribute("loading")).toBe("eager");
       expect(heroImage?.getAttribute("fetchpriority")).toBe("high");
-      pictures.slice(1).forEach((picture) => {
+      const heroNextImage = pictures[1]?.querySelector("img");
+      expect(heroNextImage?.id).toBe("hero-img-next");
+      expect(heroNextImage?.getAttribute("data-capture-index")).toBe("0");
+      expect(heroNextImage?.getAttribute("loading")).toBe("eager");
+      expect(heroNextImage?.hasAttribute("fetchpriority")).toBe(false);
+      expect(
+        JSON.parse(heroImage?.getAttribute("data-captures") ?? "[]"),
+      ).toEqual(
+        media.map((entry) => ({
+          src: entry.src,
+          srcset: {
+            dark: {
+              avif: responsiveSrcset(entry.src.dark, "avif"),
+              webp: responsiveSrcset(entry.src.dark, "webp"),
+            },
+            light: {
+              avif: responsiveSrcset(entry.src.light, "avif"),
+              webp: responsiveSrcset(entry.src.light, "webp"),
+            },
+          },
+          alt: entry.alt,
+          dimensions: {
+            dark: { width: entry.width, height: entry.height },
+            light: {
+              width: entry.lightWidth ?? entry.width,
+              height: entry.lightHeight ?? entry.height,
+            },
+          },
+        })),
+      );
+      pictures.slice(2).forEach((picture) => {
         const image = picture.querySelector("img");
         expect(image?.getAttribute("loading")).toBe("lazy");
         expect(image?.hasAttribute("fetchpriority")).toBe(false);
       });
       expect(html).not.toContain("setInterval");
-      expect(html).not.toContain("data-captures");
-      expect(html).not.toContain('id="hero-img-next"');
     },
   );
 
