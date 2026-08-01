@@ -219,8 +219,12 @@ describe("responsive CSS contract", () => {
     const reducedMotionBlock = globalCss.slice(
       globalCss.lastIndexOf("@media (prefers-reduced-motion: reduce)"),
     );
-    expect(reducedMotionBlock).toContain(".hero-img-layer");
-    expect(reducedMotionBlock).toContain("animation: none;");
+    blockContains(
+      reducedMotionBlock,
+      ".hero-img-layer",
+      "transition: none;",
+      "animation: none;",
+    );
   });
 
   it("keeps a dominant mobile InkScroller focus and restores the three-slide gallery at 768px", () => {
