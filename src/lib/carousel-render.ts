@@ -1,24 +1,135 @@
 import { createCarouselQueue } from "./carousel-navigation";
 
+const cleanups = new WeakMap<Document, () => void>();
+
+type HeroCapture = {
+  src: Record<"dark" | "light", string>;
+  srcset: Record<"dark" | "light", Record<"avif" | "webp", string>>;
+  alt: string;
+  dimensions: Record<"dark" | "light", { width: number; height: number }>;
+};
+
 export function initializeInkScrollerPage(doc: Document): void {
+  cleanups.get(doc)?.();
+
   const view =
     doc.defaultView ??
     (typeof globalThis.window === "undefined" ? undefined : globalThis.window);
   if (!view) return;
   const window: Window = view;
-  const ResizeObserver = (window as Window & typeof globalThis).ResizeObserver;
+  const reducedMotion = window.matchMedia?.(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+  const controller = new AbortController();
+  let heroCommitTimer: ReturnType<typeof setTimeout> | null = null;
+  let clearCarouselSettleTimer = () => {};
+  const cleanup = () => {
+    controller.abort();
+    if (heroCommitTimer) clearTimeout(heroCommitTimer);
+    heroCommitTimer = null;
+    heroCurrent?.classList.remove("slide-out");
+    heroNext?.classList.remove("slide-in");
+    heroNext?.classList.add("hero-img-next");
+    heroTransitioning = false;
+    clearCarouselSettleTimer();
+    carouselInterval && clearInterval(carouselInterval);
+    heroInterval && clearInterval(heroInterval);
+    observer?.disconnect();
+    doc
+      .querySelectorAll("[data-carousel-clone]")
+      .forEach((clone) => clone.remove());
+  };
+  cleanups.set(doc, cleanup);
+
+  const toggle = doc.getElementById(
+    "inkscroller-autoplay-toggle",
+  ) as HTMLButtonElement | null;
+  let userPaused =
+    toggle?.dataset.autoplayPaused === "true"
+      ? true
+      : toggle?.dataset.autoplayPaused === "false"
+        ? false
+        : Boolean(reducedMotion);
+  const hovered = new Set<Element>();
+  const focused = new Set<Element>();
+  let carouselInterval: ReturnType<typeof setInterval> | null = null;
+  let heroInterval: ReturnType<typeof setInterval> | null = null;
+  let observer: ResizeObserver | null = null;
+  let advanceCarousel = () => {};
+
+  const heroCurrent = doc.getElementById(
+    "hero-img-current",
+  ) as HTMLImageElement | null;
+  const heroNext = doc.getElementById(
+    "hero-img-next",
+  ) as HTMLImageElement | null;
+  const captures = (() => {
+    try {
+      return JSON.parse(heroCurrent?.dataset.captures ?? "[]") as HeroCapture[];
+    } catch {
+      return [] as HeroCapture[];
+    }
+  })();
+  let heroIndex = Number(heroNext?.dataset.captureIndex ?? 0);
+  let heroTransitioning = false;
+
+  const updateHeroLayer = (image: HTMLImageElement, capture: HeroCapture) => {
+    const theme = doc.documentElement.classList.contains("light")
+      ? "light"
+      : "dark";
+    image.src = capture.src[theme];
+    image.alt = capture.alt;
+    image.width = capture.dimensions[theme].width;
+    image.height = capture.dimensions[theme].height;
+    image.dataset.darkSrc = capture.src.dark;
+    image.dataset.lightSrc = capture.src.light;
+    image.dataset.darkWidth = String(capture.dimensions.dark.width);
+    image.dataset.darkHeight = String(capture.dimensions.dark.height);
+    image.dataset.lightWidth = String(capture.dimensions.light.width);
+    image.dataset.lightHeight = String(capture.dimensions.light.height);
+    const sources = image.closest("picture")?.querySelectorAll("source") ?? [];
+    sources.forEach((source) => {
+      const format = source.type === "image/avif" ? "avif" : "webp";
+      source.srcset = capture.srcset[theme][format];
+      source.dataset.darkSrcset = capture.srcset.dark[format];
+      source.dataset.lightSrcset = capture.srcset.light[format];
+    });
+  };
+
+  const stageHero = () => {
+    if (!heroCurrent || !heroNext || captures.length < 2 || heroTransitioning)
+      return;
+    heroTransitioning = true;
+    const nextIndex = (heroIndex + 1) % captures.length;
+    updateHeroLayer(heroNext, captures[nextIndex]);
+    heroCurrent.classList.add("slide-out");
+    heroNext.classList.remove("hero-img-next");
+    heroNext.classList.add("slide-in");
+    const commit = () => {
+      heroCurrent.classList.remove("slide-out");
+      heroNext.classList.remove("slide-in");
+      updateHeroLayer(heroCurrent, captures[nextIndex]);
+      updateHeroLayer(heroNext, captures[nextIndex]);
+      heroNext.classList.add("hero-img-next");
+      heroNext.dataset.captureIndex = String(nextIndex);
+      heroIndex = nextIndex;
+      heroTransitioning = false;
+    };
+    if (reducedMotion) commit();
+    else
+      heroCommitTimer = setTimeout(() => {
+        heroCommitTimer = null;
+        commit();
+      }, 450);
+  };
 
   const carousel = doc.getElementById("inkscroller-carousel");
   if (carousel) {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    );
     const track = carousel.querySelector(".inkscroller-carousel-track");
     const viewport = carousel.querySelector(".inkscroller-carousel-viewport");
     const prev = carousel.querySelector(".inkscroller-prev");
     const next = carousel.querySelector(".inkscroller-next");
     const dots = Array.from(carousel.querySelectorAll(".inkscroller-dot"));
-
     const origSlides = Array.from(
       track?.querySelectorAll(".inkscroller-slide") ?? [],
     );
@@ -26,6 +137,7 @@ export function initializeInkScrollerPage(doc: Document): void {
     const cloneSlide = (slide: Element) => {
       const clone = slide.cloneNode(true) as HTMLElement;
       clone.setAttribute("aria-hidden", "true");
+      clone.dataset.carouselClone = "";
       return clone;
     };
     track?.prepend(...origSlides.slice(-cloneCount).map(cloneSlide));
@@ -39,8 +151,13 @@ export function initializeInkScrollerPage(doc: Document): void {
     let physicalIndex = cloneCount;
     let activeAction: ReturnType<typeof navigation.take> = null;
     let settleTimer: ReturnType<typeof setTimeout> | null = null;
+    const clearSettleTimer = () => {
+      if (settleTimer) clearTimeout(settleTimer);
+      settleTimer = null;
+    };
+    clearCarouselSettleTimer = clearSettleTimer;
 
-    function setPosition(index: number, animate: boolean): void {
+    const setPosition = (index: number, animate: boolean) => {
       const firstSlide = slides[0];
       if (!track || !viewport || !firstSlide) return;
       track.classList.toggle("is-resetting", !animate);
@@ -53,9 +170,8 @@ export function initializeInkScrollerPage(doc: Document): void {
       physicalIndex = index;
       if (!animate) void (track as HTMLElement).offsetWidth;
       track.classList.remove("is-resetting");
-    }
-
-    function updateActive(index: number): void {
+    };
+    const updateActive = (index: number) => {
       origSlides.forEach((slide, slideIndex) =>
         slide.classList.toggle("active", slideIndex === index),
       );
@@ -65,102 +181,169 @@ export function initializeInkScrollerPage(doc: Document): void {
         if (active) dot.setAttribute("aria-current", "true");
         else dot.removeAttribute("aria-current");
       });
-    }
-
-    function physicalTarget(
-      action: NonNullable<ReturnType<typeof navigation.take>>,
-    ): number {
-      if (action.type === "index") return cloneCount + action.index;
-      return physicalIndex + action.direction;
-    }
-
-    function settleNavigation(): void {
+    };
+    const settleNavigation = () => {
+      clearSettleTimer();
       if (!activeAction) return;
-      clearTimeout(settleTimer!);
-      const action = activeAction;
+      const completed = activeAction;
       activeAction = null;
-      navigation.settle(action.index);
-      if (
-        physicalIndex < cloneCount ||
-        physicalIndex >= totalReal + cloneCount
-      ) {
-        setPosition(cloneCount + action.index, false);
-      }
-      updateActive(action.index);
+      navigation.settle(completed.index);
+      if (physicalIndex < cloneCount || physicalIndex >= totalReal + cloneCount)
+        setPosition(cloneCount + completed.index, false);
+      updateActive(completed.index);
       isAnimating = false;
       runNavigation();
-    }
-
-    function runNavigation(): void {
+    };
+    const runNavigation = () => {
       if (isAnimating || !track) return;
       const action = navigation.take();
       if (!action) return;
-
       isAnimating = true;
       activeAction = action;
-      setPosition(physicalTarget(action), !prefersReducedMotion.matches);
-      if (prefersReducedMotion.matches) {
-        settleNavigation();
-      } else {
-        settleTimer = setTimeout(settleNavigation, 500);
-      }
-    }
-
-    function nextSlide(): void {
-      navigation.enqueueStep(1);
+      const target =
+        action.type === "index"
+          ? cloneCount + action.index
+          : physicalIndex + action.direction;
+      setPosition(target, !reducedMotion);
+      if (reducedMotion) settleNavigation();
+      else settleTimer = setTimeout(settleNavigation, 500);
+    };
+    const move = (direction: 1 | -1) => {
+      navigation.enqueueStep(direction);
       runNavigation();
-    }
-
-    function prevSlide(): void {
-      navigation.enqueueStep(-1);
-      runNavigation();
-    }
-
-    function goToSlide(index: number): void {
-      navigation.enqueueIndex(index);
-      runNavigation();
-    }
-
-    track?.addEventListener("transitionend", (event: Event) => {
-      if (
-        event.target === track &&
-        (event as TransitionEvent).propertyName === "transform"
-      )
-        settleNavigation();
-    });
-
+    };
+    advanceCarousel = () => {
+      if (!isAnimating) move(1);
+    };
+    track?.addEventListener(
+      "transitionend",
+      (event: Event) => {
+        if (
+          event.target === track &&
+          (event as TransitionEvent).propertyName === "transform"
+        ) {
+          settleNavigation();
+        }
+      },
+      { signal: controller.signal },
+    );
+    const ResizeObserver = (window as Window & typeof globalThis)
+      .ResizeObserver;
     if (ResizeObserver) {
-      new ResizeObserver(() => {
+      observer = new ResizeObserver(() => {
         if (activeAction) navigation.retry(activeAction);
-        clearTimeout(settleTimer!);
+        clearSettleTimer();
         activeAction = null;
         isAnimating = false;
         setPosition(cloneCount + navigation.current(), false);
         runNavigation();
-      }).observe(carousel);
+      });
+      observer.observe(carousel);
     }
-
-    prev?.addEventListener("click", () => {
-      prevSlide();
+    prev?.addEventListener("click", () => move(-1), {
+      signal: controller.signal,
     });
-    next?.addEventListener("click", () => {
-      nextSlide();
+    next?.addEventListener("click", () => move(1), {
+      signal: controller.signal,
     });
     dots.forEach((dot) =>
-      dot.addEventListener("click", () => {
-        goToSlide(Number((dot as HTMLElement).dataset.index));
-      }),
+      dot.addEventListener(
+        "click",
+        () => {
+          navigation.enqueueIndex(Number((dot as HTMLElement).dataset.index));
+          runNavigation();
+        },
+        { signal: controller.signal },
+      ),
     );
-
-    carousel.addEventListener("keydown", (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-        e.preventDefault();
-        if (e.key === "ArrowLeft") prevSlide();
-        else nextSlide();
-      }
-    });
-
+    carousel.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        move(event.key === "ArrowLeft" ? -1 : 1);
+      },
+      { signal: controller.signal },
+    );
     setPosition(physicalIndex, false);
     updateActive(0);
   }
+
+  const setToggle = () => {
+    if (!toggle) return;
+    toggle.textContent =
+      (userPaused ? toggle.dataset.playLabel : toggle.dataset.pauseLabel) ?? "";
+    toggle.setAttribute("aria-pressed", String(!userPaused));
+  };
+  const syncAutoplay = () => {
+    if (carouselInterval) clearInterval(carouselInterval);
+    if (heroInterval) clearInterval(heroInterval);
+    carouselInterval = null;
+    heroInterval = null;
+    if (heroTransitioning) {
+      if (heroCommitTimer) clearTimeout(heroCommitTimer);
+      heroCommitTimer = null;
+      heroCurrent?.classList.remove("slide-out");
+      heroNext?.classList.remove("slide-in");
+      heroNext?.classList.add("hero-img-next");
+      heroTransitioning = false;
+    }
+    if (userPaused || hovered.size || focused.size) return;
+    carouselInterval = setInterval(advanceCarousel, 5_000);
+    heroInterval = setInterval(stageHero, 4_500);
+  };
+  const suspendOnInteraction = (region: Element) => {
+    region.addEventListener(
+      "mouseenter",
+      () => {
+        hovered.add(region);
+        syncAutoplay();
+      },
+      { signal: controller.signal },
+    );
+    region.addEventListener(
+      "mouseleave",
+      () => {
+        hovered.delete(region);
+        syncAutoplay();
+      },
+      { signal: controller.signal },
+    );
+    region.addEventListener(
+      "focusin",
+      () => {
+        focused.add(region);
+        syncAutoplay();
+      },
+      { signal: controller.signal },
+    );
+    region.addEventListener(
+      "focusout",
+      (event) => {
+        if (
+          !region.contains((event as FocusEvent).relatedTarget as Node | null)
+        )
+          focused.delete(region);
+        syncAutoplay();
+      },
+      { signal: controller.signal },
+    );
+  };
+  [carousel, doc.querySelector(".inkscroller-hero-device")].forEach(
+    (region) => {
+      if (region) suspendOnInteraction(region);
+    },
+  );
+  toggle?.addEventListener(
+    "click",
+    () => {
+      userPaused = !userPaused;
+      toggle.dataset.autoplayPaused = String(userPaused);
+      setToggle();
+      syncAutoplay();
+    },
+    { signal: controller.signal },
+  );
+  setToggle();
+  syncAutoplay();
 }

@@ -34,6 +34,9 @@ export type InkScrollerContent = {
     nextLabel: string;
     navigationLabel: string;
     slideLabel: string;
+    autoplayLabel: string;
+    pauseLabel: string;
+    playLabel: string;
   };
   proof: { title: string; items: string[] };
   capabilities: {
@@ -77,6 +80,9 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       nextLabel: "Next slide",
       navigationLabel: "Carousel navigation",
       slideLabel: "Go to slide {index}: {title}",
+      autoplayLabel: "Automatic playback",
+      pauseLabel: "Pause",
+      playLabel: "Play",
     },
     proof: {
       title: "Built around the reading flow",
@@ -237,6 +243,9 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       nextLabel: "Diapositiva siguiente",
       navigationLabel: "Navegación del carrusel",
       slideLabel: "Ir a la diapositiva {index}: {title}",
+      autoplayLabel: "Reproducción automática",
+      pauseLabel: "Pausar",
+      playLabel: "Reproducir",
     },
     proof: {
       title: "Pensado para el ritmo de lectura",
