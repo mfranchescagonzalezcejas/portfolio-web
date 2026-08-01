@@ -782,15 +782,15 @@ describe("Localized static entrypoints", () => {
       readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"),
     ) as {
       cleanUrls: boolean;
+      trailingSlash: boolean;
       rewrites?: { source: string; destination: string }[];
     };
 
     expect(vercelConfig.cleanUrls).toBe(true);
+    expect(vercelConfig.trailingSlash).toBe(false);
     expect(vercelConfig.rewrites).toEqual([
       { source: "/en", destination: "/en/index.html" },
-      { source: "/en/:path*", destination: "/en/index.html" },
       { source: "/es", destination: "/es/index.html" },
-      { source: "/es/:path*", destination: "/es/index.html" },
     ]);
   });
 

@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
+  "trailingSlash": false,
   "framework": "astro",
   "git": {
     "deploymentEnabled": {
@@ -11,8 +12,6 @@
   "redirects": [{ "source": "/", "destination": "/en", "permanent": true }],
   "rewrites": [
     { "source": "/en", "destination": "/en/index.html" },
-    { "source": "/en/:path*", "destination": "/en/index.html" },
-    { "source": "/es", "destination": "/es/index.html" },
-    { "source": "/es/:path*", "destination": "/es/index.html" }
+    { "source": "/es", "destination": "/es/index.html" }
   ]
 }
