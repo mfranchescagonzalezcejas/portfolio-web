@@ -1,11 +1,9 @@
-import type { SkillsSectionContent } from "../../content/site";
+import type { SkillsSectionContent } from "../../content/types";
+import { formatTemplate } from "../../lib/format";
 
 type SkillsProps = {
   section: SkillsSectionContent;
 };
-
-const formatCategoryLabel = (template: string, category: string) =>
-  template.replaceAll("{category}", category);
 
 export default function Skills({ section }: SkillsProps) {
   return (
@@ -32,10 +30,9 @@ export default function Skills({ section }: SkillsProps) {
 
               <ul
                 className="skills-chip-list"
-                aria-label={formatCategoryLabel(
-                  section.categorySkillsLabel,
-                  category.title,
-                )}
+                aria-label={formatTemplate(section.categorySkillsLabel, {
+                  category: category.title,
+                })}
               >
                 {category.skills.map((skill) => (
                   <li key={skill}>

@@ -1,6 +1,6 @@
 import { GitBranch } from "lucide-react";
-import type { Project, SectionHeading } from "../../content/site";
-import { formatProjectLabel } from "./projectLabel";
+import type { Project, SectionHeading } from "../../content/types";
+import { formatTemplate } from "../../lib/format";
 
 type FeaturedProjectProps = {
   project: Project;
@@ -63,7 +63,7 @@ export default function FeaturedProject({
 
               <ul
                 className="project-stack-list"
-                aria-label={formatProjectLabel(section.stackLabel, {
+                aria-label={formatTemplate(section.stackLabel, {
                   project: project.name,
                 })}
               >
@@ -99,13 +99,10 @@ export default function FeaturedProject({
                           rel={
                             link.external ? "noopener noreferrer" : undefined
                           }
-                          aria-label={formatProjectLabel(
-                            section.linkAriaLabel,
-                            {
-                              label: ctaLabel,
-                              project: project.name,
-                            },
-                          )}
+                          aria-label={formatTemplate(section.linkAriaLabel, {
+                            label: ctaLabel,
+                            project: project.name,
+                          })}
                         >
                           <GitBranch
                             aria-hidden="true"

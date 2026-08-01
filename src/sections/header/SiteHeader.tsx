@@ -1,4 +1,4 @@
-import type { Locale, NavItem } from "../../content/site";
+import type { Locale, NavItem } from "../../content/types";
 import { saveLocaleScrollPosition } from "../../lib/locale-scroll";
 import { useEffect, useState, type MouseEvent } from "react";
 import { ArrowUpRight, Languages, Moon, Sun } from "lucide-react";

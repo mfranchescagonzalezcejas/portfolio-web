@@ -28,10 +28,7 @@ type SeoContract = {
 const productionSiteUrl = "https://devdigi.dev";
 const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
-const inkScrollerPagePath = resolve(
-  process.cwd(),
-  "src/layouts/InkScrollerPage.astro",
-);
+const carouselRenderPath = resolve(process.cwd(), "src/lib/carousel-render.ts");
 const globalStylesPath = resolve(process.cwd(), "src/styles/global.css");
 const fontStylesheetUrl =
   "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap";
@@ -976,6 +973,18 @@ describe("Localized static entrypoints", () => {
           {
             kind: "github",
             variant: "secondary",
+            label: "Backslash protocol relative",
+            href: "/\\example.com",
+          },
+          {
+            kind: "email",
+            variant: "secondary",
+            label: "Missing email recipient",
+            href: "mailto:",
+          },
+          {
+            kind: "github",
+            variant: "secondary",
             label: "Broken",
             href: "javascript:alert(1)",
           },
@@ -1016,6 +1025,18 @@ describe("Localized static entrypoints", () => {
           expect.objectContaining({
             area: "contact",
             owner: "contacts",
+            label: "Backslash protocol relative",
+            href: "/\\example.com",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
+            label: "Missing email recipient",
+            href: "mailto:",
+          }),
+          expect.objectContaining({
+            area: "contact",
+            owner: "contacts",
             label: "Plain HTTP",
             href: "http://example.com/profile",
           }),
@@ -1028,7 +1049,7 @@ describe("Localized static entrypoints", () => {
         ]),
       );
       expect(warn).toHaveBeenCalledWith(
-        "Dropped 3 invalid configured link(s) from en site content before render.",
+        "Dropped 5 invalid configured link(s) from en site content before render.",
       );
     } finally {
       warn.mockRestore();
@@ -1248,24 +1269,25 @@ describe("InkScroller static product routes", () => {
 
 describe("InkScroller carousel loop", () => {
   it("uses a transform track with hidden edge clones instead of scroll rebases", () => {
-    const page = readFileSync(inkScrollerPagePath, "utf8");
+    const page = readFileSync(carouselRenderPath, "utf8");
 
-    expect(page).toContain("const cloneSlide = (slide) => {");
+    expect(page).toContain("const cloneSlide = (slide: Element) => {");
     expect(page).toContain('clone.setAttribute("aria-hidden", "true");');
     expect(page).toContain(
       "track?.prepend(...origSlides.slice(-cloneCount).map(cloneSlide));",
     );
     expect(page).toContain("createCarouselQueue(totalReal)");
+    expect(page).toContain("if (!track || !viewport || !firstSlide) return;");
+    expect(page).toContain(
+      "parseFloat(window.getComputedStyle(firstSlide).width)",
+    );
     expect(page).toContain(
       "const preview = (viewport.clientWidth - slideWidth) / 2;",
     );
     expect(page).toContain(
-      "const slideWidth = parseFloat(getComputedStyle(slides[0]).width) || viewport.clientWidth;",
+      "translate3d(${preview - index * slideWidth}px, 0, 0)",
     );
-    expect(page).toContain(
-      "track.style.transform = `translate3d(${preview - index * slideWidth}px, 0, 0)`;",
-    );
-    expect(page).toContain('event.propertyName === "transform"');
+    expect(page).toContain('propertyName === "transform"');
     expect(page).toContain("new ResizeObserver(() => {");
     expect(page).toContain('dot.setAttribute("aria-current", "true");');
     expect(page).not.toContain("scrollLeft");
@@ -1374,7 +1396,7 @@ describe("InkScroller beta landing routes", () => {
   it("keeps beta route styling in the global stylesheet", () => {
     const styles = readFileSync(globalStylesPath, "utf8");
     const betaPage = readFileSync(
-      resolve(process.cwd(), "src/pages/en/beta/inkscroller.astro"),
+      resolve(process.cwd(), "src/pages/[locale]/beta/inkscroller.astro"),
       "utf8",
     );
 

@@ -1,4 +1,4 @@
-import type { ContactLinkItem, ContactSection } from "../../content/site";
+import type { ContactLinkItem, ContactSection } from "../../content/types";
 import { getContactIcon } from "./contactIcons";
 
 type ContactLinksProps = {

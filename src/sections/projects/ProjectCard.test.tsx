@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
-import type { Project } from "../../content/site";
+import type { Project } from "../../content/types";
 import ProjectCard from "./ProjectCard";
 
 const baseProject: Project = {

@@ -1,21 +1,24 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import SiteHeader from "../../../sections/header/SiteHeader";
-import { siteContentByLocale } from "../../../content/site";
-import { betaContent } from "../../../content/beta";
+import type { BetaContent } from "../content/beta";
+import type { SiteContent } from "../content/types";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../sections/header/SiteHeader";
 
-const locale = "en";
-const site = siteContentByLocale[locale];
-const content = betaContent[locale];
+type Props = {
+  content: BetaContent;
+  site: SiteContent;
+};
+
+const { content, site } = Astro.props;
 ---
 
-<BaseLayout locale={locale} site={site} pageSeo={content.seo}>
+<BaseLayout locale={content.locale} site={site} pageSeo={content.seo}>
   <div id="top"></div>
-  <a class="skip-link sr-only focus:not-sr-only" href="#beta-content">Skip to content</a>
+  <a class="skip-link sr-only focus:not-sr-only" href="#beta-content">{content.skipLink}</a>
   <SiteHeader
     currentLocale={site.locale}
     isHome={false}
-    localePath="/en/beta"
+    localePath={content.seo.canonicalPath}
     navItems={site.nav}
     languageSwitcher={site.languageSwitcher}
     header={site.header}
@@ -32,12 +35,12 @@ const content = betaContent[locale];
             <div class="beta-program-header">
               <h2 class="beta-program-name">{program.name}</h2>
               <span class="beta-program-status" data-status={program.status}>
-                {program.status === "open" ? "Open" : program.status === "closed" ? "Closed" : "Paused"}
+                {content.index.statusLabels[program.status]}
               </span>
             </div>
             <p class="beta-program-desc">{program.description}</p>
             <a class="beta-cta-primary" href={program.href}>
-              {program.status === "open" ? "Learn more" : "View"}
+              {content.index.actionLabels[program.status]}
             </a>
           </article>
         ))}

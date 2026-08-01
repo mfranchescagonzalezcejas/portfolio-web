@@ -1,25 +1,28 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import SiteHeader from "../../../sections/header/SiteHeader";
-import { siteContentByLocale } from "../../../content/site";
-import { betaContent, type BetaContent } from "../../../content/beta";
-import { inkscrollerContent } from "../../../content/inkscroller";
+import type { BetaContent } from "../content/beta";
+import type { SiteContent } from "../content/types";
+import { inkscrollerContent } from "../content/inkscroller";
+import BaseLayout from "./BaseLayout.astro";
+import SiteHeader from "../sections/header/SiteHeader";
 
-const locale = "es";
-const site = siteContentByLocale[locale];
-const content = betaContent[locale] as BetaContent;
+type Props = {
+  content: BetaContent;
+  site: SiteContent;
+};
+
+const { content, site } = Astro.props;
 const { inkscroller: page } = content;
-const heroMedia = inkscrollerContent[locale].media[0];
+const heroMedia = inkscrollerContent[content.locale].media[0];
 const currentYear = new Date().getFullYear();
 ---
 
-<BaseLayout locale={locale} site={site} pageSeo={page.seo}>
+<BaseLayout locale={content.locale} site={site} pageSeo={page.seo}>
   <div id="top"></div>
-  <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-beta">Saltar al contenido</a>
+  <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-beta">{content.skipLink}</a>
   <SiteHeader
     currentLocale={site.locale}
     isHome={false}
-    localePath="/es/beta/inkscroller"
+    localePath={page.seo.canonicalPath}
     navItems={site.nav}
     languageSwitcher={site.languageSwitcher}
     header={site.header}
@@ -82,7 +85,7 @@ const currentYear = new Date().getFullYear();
       </div>
     </section>
 
-    <section class="beta-contextual-cta" aria-label="Solicitud de beta">
+    <section class="beta-contextual-cta" aria-label={page.applicationAriaLabel}>
       <div class="beta-landing-shell beta-contextual-cta-inner">
         <a class="beta-cta beta-cta--primary" href={page.cta.primary.href} target="_blank" rel="noopener noreferrer">{page.cta.primary.label}</a>
         <a class="beta-cta beta-cta--secondary" href={page.cta.secondary.href} target="_blank" rel="noopener noreferrer">{page.cta.secondary.label}</a>
@@ -107,7 +110,7 @@ const currentYear = new Date().getFullYear();
       <div class="beta-landing-shell beta-privacy">
         <h2 id="beta-privacy-title" class="beta-section-title">{page.privacy.title}</h2>
         <p>{page.privacy.body}</p>
-        <p>Email: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
+        <p>{page.help.emailLabel}: <a class="beta-link" href={`mailto:${page.privacy.contactEmail}`}>{page.privacy.contactEmail}</a></p>
         <p>{page.privacy.deletionInfo}</p>
       </div>
     </section>
@@ -123,8 +126,8 @@ const currentYear = new Date().getFullYear();
 
   <footer class="site-footer">
     <div class="site-footer-inner">
-      <p>DevDigi por Mercedes Gonzalez</p>
-      <p>&copy; <span class="copyright-year">{currentYear}</span> &middot; Desarrollado con cariño en Barcelona</p>
+      <p>{page.footer.byline}</p>
+      <p>&copy; <span class="copyright-year">{currentYear}</span> &middot; {page.footer.location}</p>
     </div>
   </footer>
 

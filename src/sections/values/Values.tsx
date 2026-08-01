@@ -1,6 +1,6 @@
 import { CheckCircle2, GitBranch, Layers, Smartphone } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { ValueIconName, ValuesContent } from "../../content/site";
+import type { ValueIconName, ValuesContent } from "../../content/types";
 
 type ValuesProps = {
   values: ValuesContent;
