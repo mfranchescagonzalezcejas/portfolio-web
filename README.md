@@ -133,6 +133,7 @@ Use these settings when importing or validating the GitHub repo in Vercel:
 | Install command | `npm ci` |
 | Build command | `npm run build` |
 | Output directory | `dist` |
+| Trailing slash policy | `"trailingSlash": false` in `vercel.json` redirects slash-suffixed paths to their slashless canonical URL (308). |
 
 No server runtime is required. The portfolio is a static site.
 

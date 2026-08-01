@@ -25,7 +25,7 @@ type SeoContract = {
   };
 };
 
-const productionSiteUrl = "https://devdigi.dev";
+const productionSiteUrl = "https://www.devdigi.dev";
 const socialImageUrl = `${productionSiteUrl}/social-preview.png`;
 const socialImagePath = resolve(process.cwd(), "public/social-preview.png");
 const carouselRenderPath = resolve(process.cwd(), "src/lib/carousel-render.ts");
@@ -782,15 +782,15 @@ describe("Localized static entrypoints", () => {
       readFileSync(resolve(process.cwd(), "vercel.json"), "utf8"),
     ) as {
       cleanUrls: boolean;
+      trailingSlash: boolean;
       rewrites?: { source: string; destination: string }[];
     };
 
     expect(vercelConfig.cleanUrls).toBe(true);
+    expect(vercelConfig.trailingSlash).toBe(false);
     expect(vercelConfig.rewrites).toEqual([
       { source: "/en", destination: "/en/index.html" },
-      { source: "/en/:path*", destination: "/en/index.html" },
       { source: "/es", destination: "/es/index.html" },
-      { source: "/es/:path*", destination: "/es/index.html" },
     ]);
   });
 
@@ -1076,6 +1076,11 @@ describe("InkScroller static product routes", () => {
         document.head
           .querySelector('link[rel="canonical"]')
           ?.getAttribute("href"),
+      ).toBe(canonical);
+      expect(
+        document.head
+          .querySelector('meta[property="og:url"]')
+          ?.getAttribute("content"),
       ).toBe(canonical);
       expect(
         document.head
@@ -1407,7 +1412,7 @@ describe("InkScroller beta landing routes", () => {
       expect(document.title).toBe(beta.seo.title);
       expect(
         document.querySelector('link[rel="canonical"]')?.getAttribute("href"),
-      ).toBe(`https://devdigi.dev${beta.seo.canonicalPath}`);
+      ).toBe(`https://www.devdigi.dev${beta.seo.canonicalPath}`);
       (
         Object.entries(beta.seo.alternates) as [
           "en" | "es" | "x-default",
@@ -1418,7 +1423,7 @@ describe("InkScroller beta landing routes", () => {
           document
             .querySelector(`link[rel="alternate"][hreflang="${hreflang}"]`)
             ?.getAttribute("href"),
-        ).toBe(`https://devdigi.dev${path}`);
+        ).toBe(`https://www.devdigi.dev${path}`);
       });
       expect(
         document.querySelector(".beta-hero-device img")?.getAttribute("src"),

@@ -254,7 +254,7 @@ async function waitForExpression<T>(
 
 async function collectMetrics(
   theme: "light" | "dark",
-  path = "/es/",
+  path = "/es",
   width = 320,
 ): Promise<ResponsiveMetrics> {
   const target = await readJson<TargetDescriptor>(
@@ -495,7 +495,7 @@ beforeAll(async () => {
   );
 
   await Promise.all([
-    waitForHttpOk(`http://${previewHost}:${previewPort}/es/`, "Astro preview"),
+    waitForHttpOk(`http://${previewHost}:${previewPort}/es`, "Astro preview"),
     waitForHttpOk(
       `http://${previewHost}:${chromePort}/json/version`,
       "Chrome CDP",
@@ -514,7 +514,7 @@ afterAll(async () => {
 
 describe("rendered responsive overflow", () => {
   it(
-    "keeps /es/ contained at 320px while preserving local nav scrolling",
+    "keeps /es contained at 320px while preserving local nav scrolling",
     async () => {
       const themes = ["light", "dark"] as const;
 
@@ -596,7 +596,7 @@ describe("rendered responsive overflow", () => {
 
   it.each([
     {
-      path: "/en/",
+      path: "/en",
       width: 320,
       primaryNavHrefs: [
         "#about",
@@ -610,7 +610,7 @@ describe("rendered responsive overflow", () => {
       learningProjectColumns: 1,
     },
     {
-      path: "/en/",
+      path: "/en",
       width: 375,
       primaryNavHrefs: [
         "#about",
@@ -624,7 +624,7 @@ describe("rendered responsive overflow", () => {
       learningProjectColumns: 1,
     },
     {
-      path: "/en/",
+      path: "/en",
       width: 768,
       primaryNavHrefs: [
         "#about",
@@ -638,7 +638,7 @@ describe("rendered responsive overflow", () => {
       learningProjectColumns: 2,
     },
     {
-      path: "/en/",
+      path: "/en",
       width: 1440,
       primaryNavHrefs: [
         "#about",
@@ -652,7 +652,7 @@ describe("rendered responsive overflow", () => {
       learningProjectColumns: 3,
     },
     {
-      path: "/es/",
+      path: "/es",
       width: 320,
       primaryNavHrefs: [
         "#about",
@@ -666,7 +666,7 @@ describe("rendered responsive overflow", () => {
       learningProjectColumns: 1,
     },
     {
-      path: "/es/",
+      path: "/es",
       width: 375,
       primaryNavHrefs: [
         "#about",
@@ -680,7 +680,7 @@ describe("rendered responsive overflow", () => {
       learningProjectColumns: 1,
     },
     {
-      path: "/es/",
+      path: "/es",
       width: 768,
       primaryNavHrefs: [
         "#about",
@@ -694,7 +694,7 @@ describe("rendered responsive overflow", () => {
       learningProjectColumns: 2,
     },
     {
-      path: "/es/",
+      path: "/es",
       width: 1440,
       primaryNavHrefs: [
         "#about",
