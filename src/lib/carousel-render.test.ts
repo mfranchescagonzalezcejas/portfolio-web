@@ -24,11 +24,25 @@ const carouselHtml = [
   "</div>",
 ].join("\n");
 
-const parseHtml = (body: string) =>
-  new DOMParser().parseFromString(
+const parseHtml = (body: string) => {
+  const doc = new DOMParser().parseFromString(
     "<html><body>" + body + "</body></html>",
     "text/html",
   );
+  const viewport = doc.querySelector(
+    ".inkscroller-carousel-viewport",
+  ) as HTMLElement | null;
+  if (viewport) {
+    Object.defineProperty(viewport, "clientWidth", {
+      configurable: true,
+      value: 320,
+    });
+    doc.querySelectorAll<HTMLElement>(".inkscroller-slide").forEach((slide) => {
+      slide.style.width = "240px";
+    });
+  }
+  return doc;
+};
 
 const createMatchMediaMock = (reducedMotion = false) => {
   const mock = vi.fn().mockImplementation((query: string) => ({
@@ -89,15 +103,17 @@ describe("initializeInkScrollerPage", () => {
 
     initializeInkScrollerPage(doc);
 
+    const track = doc.querySelector(".inkscroller-carousel-track");
+    const initialTransform = (track as HTMLElement).style.transform;
     const next = doc.querySelector(".inkscroller-next");
     next?.dispatchEvent(new Event("click"));
     vi.advanceTimersByTime(500);
 
-    const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
     const activeDot = doc.querySelector('.inkscroller-dot[data-index="1"]');
     expect(activeDot?.classList.contains("active")).toBe(true);
     expect(activeDot?.getAttribute("aria-current")).toBe("true");
+    expect((track as HTMLElement).style.transform).not.toBe(initialTransform);
   });
 
   it("navigates on prev button click", () => {
@@ -105,15 +121,17 @@ describe("initializeInkScrollerPage", () => {
 
     initializeInkScrollerPage(doc);
 
+    const track = doc.querySelector(".inkscroller-carousel-track");
+    const initialTransform = (track as HTMLElement).style.transform;
     const prev = doc.querySelector(".inkscroller-prev");
     prev?.dispatchEvent(new Event("click"));
     vi.advanceTimersByTime(500);
 
-    const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
     const activeDot = doc.querySelector('.inkscroller-dot[data-index="2"]');
     expect(activeDot?.classList.contains("active")).toBe(true);
     expect(activeDot?.getAttribute("aria-current")).toBe("true");
+    expect((track as HTMLElement).style.transform).not.toBe(initialTransform);
   });
 
   it("handles dot click navigation", () => {
@@ -121,14 +139,16 @@ describe("initializeInkScrollerPage", () => {
 
     initializeInkScrollerPage(doc);
 
+    const track = doc.querySelector(".inkscroller-carousel-track");
+    const initialTransform = (track as HTMLElement).style.transform;
     const dot = doc.querySelector('.inkscroller-dot[data-index="2"]');
     dot?.dispatchEvent(new Event("click"));
     vi.advanceTimersByTime(500);
 
-    const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
     expect(dot?.classList.contains("active")).toBe(true);
     expect(dot?.getAttribute("aria-current")).toBe("true");
+    expect((track as HTMLElement).style.transform).not.toBe(initialTransform);
   });
 
   it("handles keyboard navigation", () => {
@@ -136,17 +156,19 @@ describe("initializeInkScrollerPage", () => {
 
     initializeInkScrollerPage(doc);
 
+    const track = doc.querySelector(".inkscroller-carousel-track");
+    const initialTransform = (track as HTMLElement).style.transform;
     const carousel = doc.getElementById("inkscroller-carousel");
     carousel?.dispatchEvent(
       new KeyboardEvent("keydown", { key: "ArrowRight" }),
     );
     vi.advanceTimersByTime(500);
 
-    const track = doc.querySelector(".inkscroller-carousel-track");
     expect(track?.getAttribute("style")).toContain("translate3d");
     const activeDot = doc.querySelector('.inkscroller-dot[data-index="1"]');
     expect(activeDot?.classList.contains("active")).toBe(true);
     expect(activeDot?.getAttribute("aria-current")).toBe("true");
+    expect((track as HTMLElement).style.transform).not.toBe(initialTransform);
   });
 
   it("skips autoplay when reduced motion is preferred", () => {
