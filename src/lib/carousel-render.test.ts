@@ -188,6 +188,29 @@ describe("initializeInkScrollerPage", () => {
     expect((track as HTMLElement).style.transform).not.toBe(initialTransform);
   });
 
+  it("does not retain completed carousel settle timers during cleanup", () => {
+    const doc = parseHtml(carouselHtml);
+    initializeInkScrollerPage(doc);
+    doc.querySelector(".inkscroller-next")?.dispatchEvent(new Event("click"));
+    vi.advanceTimersByTime(500);
+    const clearTimeout = vi.spyOn(globalThis, "clearTimeout");
+
+    initializeInkScrollerPage(doc);
+
+    expect(clearTimeout).not.toHaveBeenCalled();
+  });
+
+  it("clears a pending carousel settle timer during cleanup", () => {
+    const doc = parseHtml(carouselHtml);
+    initializeInkScrollerPage(doc);
+    doc.querySelector(".inkscroller-next")?.dispatchEvent(new Event("click"));
+    const clearTimeout = vi.spyOn(globalThis, "clearTimeout");
+
+    initializeInkScrollerPage(doc);
+
+    expect(clearTimeout).toHaveBeenCalledTimes(1);
+  });
+
   it("navigates on prev button click", () => {
     const doc = parseHtml(carouselHtml);
 

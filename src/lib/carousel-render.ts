@@ -21,14 +21,12 @@ export function initializeInkScrollerPage(doc: Document): void {
     "(prefers-reduced-motion: reduce)",
   ).matches;
   const controller = new AbortController();
-  const timers: Array<ReturnType<typeof setTimeout>> = [];
-  const addTimer = (timer: ReturnType<typeof setTimeout>) => timers.push(timer);
-  const clearTimers = () => timers.splice(0).forEach(clearTimeout);
   let heroCommitTimer: ReturnType<typeof setTimeout> | null = null;
+  let clearCarouselSettleTimer = () => {};
   const cleanup = () => {
     controller.abort();
     if (heroCommitTimer) clearTimeout(heroCommitTimer);
-    clearTimers();
+    clearCarouselSettleTimer();
     carouselInterval && clearInterval(carouselInterval);
     heroInterval && clearInterval(heroInterval);
     observer?.disconnect();
@@ -139,6 +137,11 @@ export function initializeInkScrollerPage(doc: Document): void {
     let physicalIndex = cloneCount;
     let activeAction: ReturnType<typeof navigation.take> = null;
     let settleTimer: ReturnType<typeof setTimeout> | null = null;
+    const clearSettleTimer = () => {
+      if (settleTimer) clearTimeout(settleTimer);
+      settleTimer = null;
+    };
+    clearCarouselSettleTimer = clearSettleTimer;
 
     const setPosition = (index: number, animate: boolean) => {
       const firstSlide = slides[0];
@@ -166,6 +169,7 @@ export function initializeInkScrollerPage(doc: Document): void {
       });
     };
     const settleNavigation = () => {
+      clearSettleTimer();
       if (!activeAction) return;
       const completed = activeAction;
       activeAction = null;
@@ -188,10 +192,7 @@ export function initializeInkScrollerPage(doc: Document): void {
           : physicalIndex + action.direction;
       setPosition(target, !reducedMotion);
       if (reducedMotion) settleNavigation();
-      else {
-        settleTimer = setTimeout(settleNavigation, 500);
-        addTimer(settleTimer);
-      }
+      else settleTimer = setTimeout(settleNavigation, 500);
     };
     const move = (direction: 1 | -1) => {
       navigation.enqueueStep(direction);
@@ -207,7 +208,6 @@ export function initializeInkScrollerPage(doc: Document): void {
           event.target === track &&
           (event as TransitionEvent).propertyName === "transform"
         ) {
-          if (settleTimer) clearTimeout(settleTimer);
           settleNavigation();
         }
       },
@@ -218,7 +218,7 @@ export function initializeInkScrollerPage(doc: Document): void {
     if (ResizeObserver) {
       observer = new ResizeObserver(() => {
         if (activeAction) navigation.retry(activeAction);
-        if (settleTimer) clearTimeout(settleTimer);
+        clearSettleTimer();
         activeAction = null;
         isAnimating = false;
         setPosition(cloneCount + navigation.current(), false);
