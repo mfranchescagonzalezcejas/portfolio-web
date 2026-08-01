@@ -18,10 +18,6 @@ const carouselHtml = [
   '    <button class="inkscroller-dot" data-index="2"></button>',
   "  </nav>",
   "</div>",
-  '<div class="inkscroller-hero-device">',
-  '  <img id="hero-img-current" src="/test.jpg" data-captures=\'[{"src":{"dark":"/d.jpg","light":"/l.jpg"},"alt":"alt1"},{"src":{"dark":"/d2.jpg","light":"/l2.jpg"},"alt":"alt2"}]\' />',
-  '  <img id="hero-img-next" src="" style="display:none" />',
-  "</div>",
 ].join("\n");
 
 const parseHtml = (body: string) => {
@@ -110,10 +106,12 @@ describe("initializeInkScrollerPage", () => {
       doc.querySelectorAll(".inkscroller-carousel-track .inkscroller-slide"),
     ).toHaveLength(9);
 
-    vi.advanceTimersByTime(4_500);
-    expect(doc.getElementById("hero-img-next")?.getAttribute("src")).toBe(
-      "/d2.jpg",
-    );
+    vi.advanceTimersByTime(10_000);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="0"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
   });
 
   it("uses the browser window when the document has none", () => {
@@ -214,7 +212,7 @@ describe("initializeInkScrollerPage", () => {
     expect((track as HTMLElement).style.transform).not.toBe(initialTransform);
   });
 
-  it("handles keyboard navigation", () => {
+  it("handles keyboard navigation in both directions", () => {
     const doc = parseHtml(carouselHtml);
 
     initializeInkScrollerPage(doc);
@@ -232,18 +230,12 @@ describe("initializeInkScrollerPage", () => {
     expect(activeDot?.classList.contains("active")).toBe(true);
     expect(activeDot?.getAttribute("aria-current")).toBe("true");
     expect((track as HTMLElement).style.transform).not.toBe(initialTransform);
-  });
-
-  it("skips autoplay when reduced motion is preferred", () => {
-    vi.stubGlobal("matchMedia", createMatchMediaMock(true));
-
-    const doc = parseHtml(carouselHtml);
-
-    initializeInkScrollerPage(doc);
-
-    vi.advanceTimersByTime(10_000);
-
-    const firstDot = doc.querySelector('.inkscroller-dot[data-index="0"]');
-    expect(firstDot?.getAttribute("aria-current")).toBe("true");
+    carousel?.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft" }));
+    vi.advanceTimersByTime(500);
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="0"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
   });
 });

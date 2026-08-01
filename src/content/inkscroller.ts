@@ -25,6 +25,14 @@ export type InkScrollerContent = {
   counterpart: { label: string; href: string };
   skipLabel: string;
   hero: { eyebrow: string; title: string; description: string };
+  carousel: {
+    sectionLabel: string;
+    regionLabel: string;
+    previousLabel: string;
+    nextLabel: string;
+    navigationLabel: string;
+    slideLabel: string;
+  };
   proof: { title: string; items: string[] };
   capabilities: {
     title: string;
@@ -59,6 +67,14 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       title: "Keep your next chapter within reach.",
       description:
         "InkScroller brings saved reads, progress and quiet discovery into one focused mobile experience.",
+    },
+    carousel: {
+      sectionLabel: "Product carousel",
+      regionLabel: "Product screenshots carousel",
+      previousLabel: "Previous slide",
+      nextLabel: "Next slide",
+      navigationLabel: "Carousel navigation",
+      slideLabel: "Go to slide {index}: {title}",
     },
     proof: {
       title: "Built around the reading flow",
@@ -211,6 +227,14 @@ export const inkscrollerContent: Record<Locale, InkScrollerContent> = {
       title: "Tu próximo capítulo, siempre a mano.",
       description:
         "InkScroller reúne lecturas guardadas, progreso y descubrimiento tranquilo en una experiencia móvil enfocada.",
+    },
+    carousel: {
+      sectionLabel: "Carrusel de producto",
+      regionLabel: "Carrusel de capturas de pantalla del producto",
+      previousLabel: "Diapositiva anterior",
+      nextLabel: "Diapositiva siguiente",
+      navigationLabel: "Navegación del carrusel",
+      slideLabel: "Ir a la diapositiva {index}: {title}",
     },
     proof: {
       title: "Pensado para el ritmo de lectura",

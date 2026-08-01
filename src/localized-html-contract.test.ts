@@ -1194,6 +1194,39 @@ describe("InkScroller static product routes", () => {
           ? "/inkscroller/screenshots/light/en/reader-settings-vertical-en.jpg"
           : "/inkscroller/screenshots/light/es/reader-settings-vertical.jpg",
       );
+      const carousel = inkscrollerContent[locale].carousel;
+      expect(
+        document
+          .querySelector(".inkscroller-carousel-section")
+          ?.getAttribute("aria-label"),
+      ).toBe(carousel.sectionLabel);
+      expect(
+        document
+          .querySelector("#inkscroller-carousel")
+          ?.getAttribute("aria-label"),
+      ).toBe(carousel.regionLabel);
+      expect(
+        document.querySelector(".inkscroller-prev")?.getAttribute("aria-label"),
+      ).toBe(carousel.previousLabel);
+      expect(
+        document.querySelector(".inkscroller-next")?.getAttribute("aria-label"),
+      ).toBe(carousel.nextLabel);
+      const dots = Array.from(
+        document.querySelectorAll<HTMLButtonElement>(".inkscroller-dot"),
+      );
+      expect(
+        document.querySelector(".inkscroller-dots")?.getAttribute("aria-label"),
+      ).toBe(carousel.navigationLabel);
+      expect(dots.map((dot) => dot.getAttribute("aria-label"))).toEqual(
+        media.map((entry, index) =>
+          carousel.slideLabel
+            .replace("{index}", String(index + 1))
+            .replace("{title}", entry.title),
+        ),
+      );
+      expect(html).not.toContain("setInterval");
+      expect(html).not.toContain("data-captures");
+      expect(html).not.toContain('id="hero-img-next"');
     },
   );
 
