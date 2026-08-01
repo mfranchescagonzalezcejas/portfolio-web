@@ -295,6 +295,23 @@ describe("initializeInkScrollerPage", () => {
     ).toBe("true");
   });
 
+  it("continues from the committed hero capture after reinitialization", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+
+    vi.advanceTimersByTime(4_950);
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      "Two",
+    );
+
+    initializeInkScrollerPage(doc);
+    vi.advanceTimersByTime(4_950);
+
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      "One",
+    );
+  });
+
   it("toggles both timers and exposes paused state", () => {
     const doc = parseHtml(autoplayHtml);
     initializeInkScrollerPage(doc);

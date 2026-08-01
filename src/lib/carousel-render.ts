@@ -103,6 +103,7 @@ export function initializeInkScrollerPage(doc: Document): void {
       updateHeroLayer(heroCurrent, captures[nextIndex]);
       updateHeroLayer(heroNext, captures[nextIndex]);
       heroNext.classList.add("hero-img-next");
+      heroNext.dataset.captureIndex = String(nextIndex);
       heroIndex = nextIndex;
       heroTransitioning = false;
     };
