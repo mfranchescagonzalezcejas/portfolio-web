@@ -5,10 +5,12 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   output: "static",
-  site: "https://devdigi.dev",
+  site: "https://www.devdigi.dev",
+  trailingSlash: "never",
   integrations: [
     react(),
     sitemap({
+      filter: (page) => page !== "https://www.devdigi.dev/",
       i18n: {
         defaultLocale: "en",
         locales: {
