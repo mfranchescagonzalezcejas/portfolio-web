@@ -310,6 +310,59 @@ describe("initializeInkScrollerPage", () => {
     );
   });
 
+  it("keeps an explicit reduced-motion Play choice through temporary interactions", () => {
+    vi.stubGlobal("matchMedia", createMatchMediaMock(true));
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    const carousel = doc.getElementById("inkscroller-carousel")!;
+    const toggle = doc.getElementById("inkscroller-autoplay-toggle")!;
+
+    toggle.dispatchEvent(new Event("click"));
+    carousel.dispatchEvent(new Event("mouseenter"));
+    vi.advanceTimersByTime(10_000);
+    carousel.dispatchEvent(new Event("mouseleave"));
+    vi.advanceTimersByTime(4_500);
+
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(doc.getElementById("hero-img-current")?.getAttribute("alt")).toBe(
+      "Two",
+    );
+
+    carousel.dispatchEvent(new FocusEvent("focusin"));
+    vi.advanceTimersByTime(10_000);
+    carousel.dispatchEvent(new FocusEvent("focusout"));
+    vi.advanceTimersByTime(5_000);
+
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(
+      doc
+        .querySelector('.inkscroller-dot[data-index="1"]')
+        ?.getAttribute("aria-current"),
+    ).toBe("true");
+  });
+
+  it("keeps both hero layers responsive to a theme change during rotation", () => {
+    const doc = parseHtml(autoplayHtml);
+    initializeInkScrollerPage(doc);
+    vi.advanceTimersByTime(4_500);
+
+    const next = doc.getElementById("hero-img-next")!;
+    expect(next.getAttribute("src")).toContain("/dark-2.png");
+    doc.documentElement.classList.add("light");
+    vi.advanceTimersByTime(450);
+
+    ["hero-img-current", "hero-img-next"].forEach((id) => {
+      const image = doc.getElementById(id) as HTMLImageElement;
+      const sources = image.closest("picture")?.querySelectorAll("source")!;
+
+      expect(image.getAttribute("src")).toContain("/light-2.png");
+      expect(image.width).toBe(111);
+      expect(image.height).toBe(211);
+      expect(sources[0].getAttribute("srcset")).toBe("/light-2.avif");
+      expect(sources[1].getAttribute("srcset")).toBe("/light-2.webp");
+    });
+  });
+
   it("keeps an explicit pause through hover and focus while manual navigation works", () => {
     const doc = parseHtml(autoplayHtml);
     initializeInkScrollerPage(doc);
