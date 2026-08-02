@@ -85,6 +85,8 @@ describe("release governance workflow", () => {
       git(repository.checkout, "push", "origin", "main");
 
       const result = runReleaseGuard(repository.checkout, staleSha);
+      expect(result.error).toBeUndefined();
+      expect(result.status).not.toBeNull();
       expect(result.status).not.toBe(0);
       expect(result.stdout).toContain(
         "Release tag does not point to current origin/main",
@@ -109,7 +111,10 @@ describe("release governance workflow", () => {
       );
       git(repository.checkout, "push", "origin", "--delete", "main");
 
-      expect(runReleaseGuard(repository.checkout, tagSha).status).not.toBe(0);
+      const result = runReleaseGuard(repository.checkout, tagSha);
+      expect(result.error).toBeUndefined();
+      expect(result.status).not.toBeNull();
+      expect(result.status).not.toBe(0);
     } finally {
       rmSync(repository.root, { force: true, recursive: true });
     }
@@ -138,7 +143,7 @@ describe("release governance workflow", () => {
     const commands = [
       "npm ci",
       "npm run build",
-      "npx vitest run",
+      "npm exec --no -- vitest run",
       "npm run typecheck",
       "npm run lint",
       "npm run format:check",

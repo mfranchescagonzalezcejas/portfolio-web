@@ -46,7 +46,7 @@ jobs:
         run: npm run build
 
       - name: Run tests
-        run: npx vitest run
+        run: npm exec --no -- vitest run
 
       - name: Run typecheck
         run: npm run typecheck
