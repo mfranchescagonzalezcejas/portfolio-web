@@ -15,7 +15,7 @@ Latest validated release: **v0.2.3**
 |---|---|
 | Positioning | Mobile Developer focused on Flutter, Android, iOS, API integration, CI/CD, QA, and product quality. |
 | Content | Hero, about, experience, featured project, selected projects, case studies, skills, education, languages, and contact paths. |
-| Locales | `/` defaults to English, `/en` serves English, and `/es` serves Spanish. |
+| Locales | `/` is served by the English home page and redirected to `/en` by Vercel; `/en` serves English, and `/es` serves Spanish. |
 | Featured work | Inkscroller, Inkscroller Frontend, Inkscroller Backend, DevDigi Portfolio Web, AppSwiftUI, AppUIKit, and AppAndroid. |
 | Case studies | Public, non-confidential references for La Mercè, Barcelona a la Butxaca, and Nescafé Dolce Gusto QA validation. |
 | Deployment | Static Astro output deployed to Vercel Production through tag-driven GitHub Actions releases. |
@@ -133,7 +133,7 @@ Use these settings when importing or validating the GitHub repo in Vercel:
 | Install command | `npm ci` |
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Trailing slash policy | `"trailingSlash": false` in `vercel.json` redirects slash-suffixed paths to their slashless canonical URL (308). |
+| Trailing slash policy | `"trailingSlash": false` in `vercel.json` redirects slash-suffixed paths to their slashless canonical URL with a 308 redirect, and `/` redirects permanently to `/en`. |
 
 No server runtime is required. The portfolio is a static site.
 

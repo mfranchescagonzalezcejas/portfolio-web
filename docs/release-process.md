@@ -10,11 +10,11 @@ This repo releases Production only from version tags. `develop` gets Vercel Prev
 
 ## Release contract
 
-| Ref       | Deployment behavior                                                                |
-| --------- | ---------------------------------------------------------------------------------- |
-| `develop` | Creates Vercel Preview deployments.                                                |
-| `main`    | Does not auto-deploy from branch pushes.                                           |
-| `v*` tags | Trigger `.github/workflows/vercel-production.yml` and deploy Production to Vercel. |
+| Ref                 | Deployment behavior                                                                                                                                   |
+| ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `develop`           | Creates Vercel Preview deployments.                                                                                                                   |
+| `main`              | Does not auto-deploy from branch pushes.                                                                                                              |
+| Any pushed `v*` tag | Starts `.github/workflows/vercel-production.yml`; the gate deploys only when the tag points to the current `main` commit and all quality checks pass. |
 
 ## Good release checklist
 
@@ -33,6 +33,7 @@ Set the release version first:
 
 ```bash
 VERSION=v1.2.3
+TAG_TARGET=$(git rev-parse HEAD)
 ```
 
 Sync `main`:
@@ -45,7 +46,7 @@ git pull --ff-only origin main
 Create an annotated tag from `main`:
 
 ```bash
-git tag -a "$VERSION" -m "Release $VERSION"
+git tag -a "$VERSION" -m "Release $VERSION" "$TAG_TARGET"
 ```
 
 Push the tag to trigger Production deployment:
