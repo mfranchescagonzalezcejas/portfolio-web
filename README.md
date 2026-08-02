@@ -15,7 +15,7 @@ Latest validated release: **v0.2.3**
 |---|---|
 | Positioning | Mobile Developer focused on Flutter, Android, iOS, API integration, CI/CD, QA, and product quality. |
 | Content | Hero, about, experience, featured project, selected projects, case studies, skills, education, languages, and contact paths. |
-| Locales | `/` is served by the English home page and redirected to `/en` by Vercel; `/en` serves English, and `/es` serves Spanish. |
+| Locales | `/` redirects to `/en` by Vercel; `/en` serves English, and `/es` serves Spanish. |
 | Featured work | Inkscroller, Inkscroller Frontend, Inkscroller Backend, DevDigi Portfolio Web, AppSwiftUI, AppUIKit, and AppAndroid. |
 | Case studies | Public, non-confidential references for La Mercè, Barcelona a la Butxaca, and Nescafé Dolce Gusto QA validation. |
 | Deployment | Static Astro output deployed to Vercel Production through tag-driven GitHub Actions releases. |

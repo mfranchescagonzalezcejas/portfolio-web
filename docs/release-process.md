@@ -33,7 +33,6 @@ Set the release version first:
 
 ```bash
 VERSION=v1.2.3
-TAG_TARGET=$(git rev-parse HEAD)
 ```
 
 Sync `main`:
@@ -41,6 +40,7 @@ Sync `main`:
 ```bash
 git switch main
 git pull --ff-only origin main
+TAG_TARGET=$(git rev-parse HEAD)
 ```
 
 Create an annotated tag from `main`:
