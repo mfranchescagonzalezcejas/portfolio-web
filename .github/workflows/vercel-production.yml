@@ -75,6 +75,18 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Revalidate tag points to current main
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --prune origin \
+            '+refs/heads/main:refs/remotes/origin/main'
+          tag_sha="$(git rev-parse --verify "${GITHUB_SHA}^{commit}")"
+          main_sha="$(git rev-parse --verify 'refs/remotes/origin/main^{commit}')"
+          if [[ "$tag_sha" != "$main_sha" ]]; then
+            echo "::error::Release tag does not point to current origin/main"
+            exit 1
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:

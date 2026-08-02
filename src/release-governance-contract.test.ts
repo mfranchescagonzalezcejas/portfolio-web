@@ -96,6 +96,26 @@ describe("release governance workflow", () => {
     }
   });
 
+  it("rejects a tag when main advances between release gate and deploy", () => {
+    const repository = createRepository();
+
+    try {
+      const tagSha = git(repository.checkout, "rev-parse", "HEAD");
+      expect(runReleaseGuard(repository.checkout, tagSha).status).toBe(0);
+
+      writeFileSync(
+        join(repository.checkout, "release.txt"),
+        "advanced main\n",
+      );
+      git(repository.checkout, "commit", "-am", "advance main after gate");
+      git(repository.checkout, "push", "origin", "main");
+
+      expect(runReleaseGuard(repository.checkout, tagSha).status).not.toBe(0);
+    } finally {
+      rmSync(repository.root, { force: true, recursive: true });
+    }
+  });
+
   it("fails closed when origin/main cannot be fetched", () => {
     const repository = createRepository();
 
@@ -124,6 +144,16 @@ describe("release governance workflow", () => {
     const contents = workflow();
     const gateIndex = contents.indexOf("release-gate:");
     const deployIndex = contents.indexOf("  deploy:");
+    const deployGuardIndex = contents.indexOf(
+      "Revalidate tag points to current main",
+    );
+    const deployGuardEnd = contents.indexOf(
+      "      - name: Setup Node.js",
+      deployGuardIndex,
+    );
+    const vercelPullIndex = contents.indexOf(
+      "vercel pull --yes --environment=production",
+    );
 
     expect(contents).toContain('tags:\n      - "v*"');
     expect(contents).toContain("git fetch --no-tags --prune origin");
@@ -139,6 +169,11 @@ describe("release governance workflow", () => {
     expect(gateIndex).toBeGreaterThan(-1);
     expect(deployIndex).toBeGreaterThan(gateIndex);
     expect(contents.slice(0, deployIndex)).not.toContain("secrets.VERCEL_");
+    expect(deployGuardIndex).toBeGreaterThan(deployIndex);
+    expect(vercelPullIndex).toBeGreaterThan(deployGuardIndex);
+    expect(contents.slice(deployGuardIndex, deployGuardEnd)).not.toContain(
+      "secrets.VERCEL_",
+    );
 
     const commands = [
       "npm ci",
