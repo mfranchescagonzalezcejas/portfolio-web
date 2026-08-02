@@ -164,7 +164,9 @@ describe("release governance workflow", () => {
     expect(contents).toContain(
       "Release tag does not point to current origin/main",
     );
-    expect(contents).toContain('node-version: "22.12.0"');
+    expect(contents.match(/node-version: ">=22\.12\.0"/g) ?? []).toHaveLength(
+      2,
+    );
     expect(contents).toContain("needs: release-gate");
     expect(gateIndex).toBeGreaterThan(-1);
     expect(deployIndex).toBeGreaterThan(gateIndex);
