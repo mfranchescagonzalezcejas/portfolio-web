@@ -23,6 +23,10 @@ const globalCss = [
     readFileSync(resolve(process.cwd(), "src/styles", file), "utf8"),
   ),
 ].join("\n");
+const featuredProjectsCss = readFileSync(
+  resolve(process.cwd(), "src/styles/sections/featured-projects.css"),
+  "utf8",
+);
 
 const experienceSource = readFileSync(
   resolve(process.cwd(), "src/sections/experience/Experience.tsx"),
@@ -213,6 +217,54 @@ describe("responsive CSS contract", () => {
     );
     expect(globalCss).toContain("text-decoration: underline;");
     expect(globalCss).not.toContain(".hero-cta-social");
+  });
+
+  it("keeps section decorative surfaces behind isolated section content", () => {
+    blockContains(
+      globalCss,
+      ".section-shell",
+      "position: relative;",
+      "isolation: isolate;",
+    );
+    blockContains(globalCss, ".section-shell::before", "z-index: 0;");
+    blockContains(
+      globalCss,
+      ".section-inner",
+      "position: relative;",
+      "z-index: 1;",
+    );
+  });
+
+  it("limits featured mockup hover transforms to motion-safe preferences", () => {
+    const mockupMotionBlock = extractMediaBlock(
+      featuredProjectsCss.slice(
+        featuredProjectsCss.lastIndexOf(
+          "@media (prefers-reduced-motion: no-preference)",
+        ),
+      ),
+      "@media (prefers-reduced-motion: no-preference)",
+    );
+
+    blockContains(
+      mockupMotionBlock,
+      ".featured-project-mockups .featured-mockup-2:hover",
+      "transform: scale(1.166666667);",
+    );
+    blockContains(
+      mockupMotionBlock,
+      ".featured-project-mockups:has(.featured-mockup-2:hover) .featured-mockup-1",
+      "transform: scale(0.8);",
+    );
+    blockContains(
+      mockupMotionBlock,
+      ".featured-project-mockups:has(.featured-mockup-2:hover) .featured-mockup-3",
+      "transform: scale(0.8);",
+    );
+    expect(
+      featuredProjectsCss.match(
+        /\.featured-project-mockups(?:\s+|:has\([^)]*\)\s+)\.featured-mockup-[123][^{]*\{[^}]*transform:/g,
+      ),
+    ).toHaveLength(3);
   });
 
   it("keeps InkScroller dots visually small with 24px hit targets", () => {
