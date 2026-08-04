@@ -2,10 +2,27 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const globalCss = readFileSync(
-  resolve(process.cwd(), "src/styles/global.css"),
-  "utf8",
-);
+const globalCssPath = resolve(process.cwd(), "src/styles/global.css");
+const globalCssImports = [
+  "tokens.css",
+  "base.css",
+  "layout.css",
+  "sections/portfolio.css",
+  "sections/featured-projects.css",
+  "header.css",
+  "sections/home.css",
+  "responsive.css",
+  "sections/inkscroller.css",
+  "sections/beta.css",
+  "sections/inkscroller-carousel.css",
+];
+const globalCssEntry = readFileSync(globalCssPath, "utf8");
+const globalCss = [
+  globalCssEntry,
+  ...globalCssImports.map((file) =>
+    readFileSync(resolve(process.cwd(), "src/styles", file), "utf8"),
+  ),
+].join("\n");
 
 const experienceSource = readFileSync(
   resolve(process.cwd(), "src/sections/experience/Experience.tsx"),
@@ -66,6 +83,17 @@ function blockContains(
 }
 
 describe("responsive CSS contract", () => {
+  it("keeps global.css as the ordered global stylesheet entrypoint", () => {
+    expect(globalCssEntry).toContain('@import "tailwindcss";');
+    expect(globalCssEntry).toContain(
+      "/* Import order matches the original stylesheet order to preserve the cascade. */",
+    );
+    expect(globalCssEntry.match(/^@import [^;]+;$/gm)).toEqual([
+      '@import "tailwindcss";',
+      ...globalCssImports.map((file) => `@import "./${file}";`),
+    ]);
+  });
+
   it("keeps root overflow clipped without invalid color-mix percentages", () => {
     blockContains(
       globalCss,

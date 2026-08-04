@@ -1,0 +1,397 @@
+/* Beta routes use global styles because Astro scoped route styles are not shipped. */
+.beta-program-list {
+  display: grid;
+  gap: 1.5rem;
+  max-width: 44rem;
+  margin-top: 2rem;
+}
+
+.beta-program-card {
+  padding: 1.5rem;
+  border-radius: var(--radius);
+}
+
+.beta-program-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.beta-program-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.beta-program-status {
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.beta-program-status[data-status="open"] {
+  background: color-mix(in oklab, var(--primary) 15%, transparent);
+  color: var(--primary);
+}
+
+.beta-program-desc {
+  margin: 0 0 1rem;
+  color: var(--muted-foreground);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.beta-cta-primary,
+.beta-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background-color 0.12s,
+    border-color 0.12s,
+    transform 0.12s;
+}
+
+.beta-cta-primary,
+.beta-cta--primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+
+.beta-cta-primary {
+  min-height: 2.5rem;
+  padding-inline: 1.25rem;
+  font-size: 0.875rem;
+}
+
+.beta-cta {
+  padding-inline: 1.5rem;
+}
+
+.beta-cta--secondary {
+  border: 1px solid var(--overlay-border);
+  color: var(--foreground);
+}
+
+.beta-cta:hover,
+.beta-cta:focus-visible,
+.beta-cta-primary:hover,
+.beta-cta-primary:focus-visible {
+  transform: translateY(-1px);
+}
+
+.beta-cta--primary:hover,
+.beta-cta--primary:focus-visible,
+.beta-cta-primary:hover,
+.beta-cta-primary:focus-visible {
+  background: color-mix(in oklab, var(--primary) 88%, var(--surface));
+}
+
+.beta-cta--secondary:hover,
+.beta-cta--secondary:focus-visible {
+  border-color: var(--foreground);
+  background: var(--overlay-bg-hover);
+}
+
+.beta-landing {
+  overflow-x: clip;
+}
+
+.beta-landing section,
+.beta-landing-shell {
+  scroll-margin-top: 9rem;
+}
+
+.beta-landing-shell {
+  width: calc(100% - 2rem);
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.inkscroller-beta-hero.hero-section {
+  overflow: visible;
+  padding-bottom: 2.5rem;
+}
+
+.inkscroller-beta-hero.hero-section::before {
+  display: none;
+}
+
+.hero-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: min(22rem, 88vw);
+  height: 24rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 18%, transparent);
+  filter: blur(44px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.beta-hero-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+
+.beta-hero-title {
+  margin: 0.75rem 0 0;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+}
+
+.beta-hero-description {
+  max-width: 38rem;
+  margin: 1.25rem 0 0;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.beta-hero-cta {
+  margin-top: 1.5rem;
+}
+
+.beta-hero-microcopy {
+  margin: 0.75rem 0 0;
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.beta-hero-device {
+  position: relative;
+}
+
+.beta-hero-device .carousel-phone {
+  width: min(14rem, 72vw);
+  height: auto;
+  aspect-ratio: 28 / 57;
+}
+
+.beta-proof,
+.beta-section,
+.beta-help {
+  padding-block: 2.5rem;
+}
+
+.beta-proof {
+  border-block: 1px solid var(--overlay-border-subtle);
+}
+
+.beta-proof-title,
+.beta-section-title,
+.beta-help-title {
+  margin: 0 0 1.25rem;
+  color: var(--section-title-color);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 1.5vw + 1rem, 1.75rem);
+  line-height: 1.2;
+}
+
+.beta-proof-title {
+  color: var(--muted-foreground);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.beta-proof-list,
+.beta-check-list,
+.beta-process-list {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.beta-proof-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.beta-proof-list li,
+.beta-check-list li,
+.beta-process-list li {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 0.625rem;
+  color: var(--muted-foreground);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.beta-proof-list span,
+.beta-check-list span,
+.beta-process-list span {
+  display: inline-grid;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: none;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.beta-two-column {
+  display: grid;
+  gap: 2.5rem;
+}
+
+.beta-contextual-cta {
+  border-block: 1px solid var(--overlay-border-subtle);
+  background: color-mix(in oklab, var(--surface) 72%, transparent);
+}
+
+.beta-contextual-cta-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-block: 1.5rem;
+}
+
+.beta-faq-shell {
+  max-width: 48rem;
+}
+
+.beta-faq {
+  display: grid;
+  gap: 0.625rem;
+}
+
+.beta-faq-item {
+  overflow: hidden;
+  border: 1px solid var(--overlay-border-subtle);
+  border-radius: var(--radius);
+  background: var(--overlay-bg-subtle);
+}
+
+.beta-faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.125rem;
+  cursor: pointer;
+  color: var(--foreground);
+  font-weight: 600;
+  list-style: none;
+}
+
+.beta-faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.beta-faq-question::after {
+  content: "+";
+  flex: none;
+  color: var(--muted-foreground);
+  font-size: 1.25rem;
+  transition: transform 0.2s;
+}
+
+.beta-faq-item[open] .beta-faq-question::after {
+  transform: rotate(45deg);
+}
+
+.beta-faq-answer {
+  margin: 0;
+  padding: 0 1.125rem 1rem;
+  color: var(--muted-foreground);
+  line-height: 1.6;
+}
+
+.beta-section--privacy {
+  border-top: 1px solid var(--overlay-border-subtle);
+}
+
+.beta-privacy {
+  max-width: 48rem;
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.beta-privacy p {
+  margin: 0 0 0.75rem;
+}
+
+.beta-privacy p:last-child {
+  margin-bottom: 0;
+}
+
+.beta-link,
+.beta-help a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.beta-help {
+  border-top: 1px solid var(--overlay-border-subtle);
+}
+
+.beta-help-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+  padding-bottom: 2.5rem;
+}
+
+.beta-help-title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+@media (min-width: 768px) {
+  .beta-two-column {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .beta-hero-layout {
+    grid-template-columns: minmax(0, 1.38fr) minmax(18rem, 1fr);
+    gap: 4rem;
+  }
+
+  .beta-hero-device {
+    position: relative;
+    justify-content: center;
+  }
+
+  .beta-hero-device .hero-glow {
+    width: 22rem;
+    height: 24rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .beta-hero-cta,
+  .beta-contextual-cta-inner .beta-cta {
+    width: 100%;
+  }
+}

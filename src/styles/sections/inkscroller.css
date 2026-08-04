@@ -1,0 +1,204 @@
+.inkscroller-page {
+  width: min(100% - 2rem, 70rem);
+  margin: auto;
+  display: grid;
+  gap: 4rem;
+  padding: 0 0 4rem;
+  overflow-x: clip;
+}
+
+.inkscroller-page section {
+  min-width: 0;
+}
+.inkscroller-page h2 {
+  font-family: var(--font-display);
+}
+.inkscroller-page li {
+  margin-block: 1rem;
+}
+
+.carousel-phone {
+  position: relative;
+  width: 14rem;
+  max-width: 100%;
+  height: 28.5rem;
+  border-radius: 2rem;
+  border: 1px solid var(--overlay-border);
+  background: linear-gradient(180deg, var(--surface-elevated), var(--surface));
+  padding: 0.5rem;
+  box-shadow: var(--shadow-elevated);
+  flex-shrink: 0;
+}
+.carousel-phone-notch {
+  position: absolute;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: var(--device-notch);
+  top: 0.625rem;
+  width: 3.5rem;
+  height: 0.875rem;
+}
+
+.mockup-phone {
+  position: relative;
+  width: min(14rem, 72vw);
+  aspect-ratio: 428 / 908;
+  flex-shrink: 0;
+  contain: layout style;
+}
+.mockup-phone-screen {
+  position: absolute;
+  top: 0.8810572687%;
+  right: 1.8691588785%;
+  bottom: 0.8810572687%;
+  left: 1.8691588785%;
+  overflow: hidden;
+  z-index: 0;
+}
+.mockup-phone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+.mockup-phone-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: url("/inkscroller/mockups/phone-frame-dark.png") no-repeat
+    center / 100% 100%;
+  pointer-events: none;
+}
+.light .mockup-phone-frame {
+  background-image: url("/inkscroller/mockups/phone-frame-light.png");
+}
+.carousel-phone-screen {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 1.35rem;
+  background: var(--device-screen-start);
+  position: relative;
+}
+.carousel-phone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.hero-img-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+.hero-img-layer.slide-out {
+  animation: inkscroller-slide-out 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-img-layer.slide-in {
+  animation: inkscroller-slide-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-img-next {
+  visibility: hidden;
+}
+
+@keyframes inkscroller-slide-out {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes inkscroller-slide-in {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.inkscroller-hero-eyebrow {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+}
+.inkscroller-hero-device {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.inkscroller-hero.hero-section {
+  overflow: visible;
+}
+
+.inkscroller-hero.hero-section::before {
+  top: 24rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+@media (min-width: 1024px) {
+  .inkscroller-hero.hero-section::before {
+    top: 10.5rem;
+    left: calc(50% + 19rem);
+    width: 31rem;
+    height: 33rem;
+    opacity: 0.76;
+    background: radial-gradient(
+      ellipse at center,
+      color-mix(in oklab, var(--primary) 22%, transparent) 0%,
+      color-mix(in oklab, var(--accent-blue) 13%, transparent) 42%,
+      transparent 72%
+    );
+  }
+}
+
+.inkscroller-proof {
+  padding: 0;
+}
+.inkscroller-proof h2 {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  margin: 0 0 1rem;
+}
+.inkscroller-proof ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.inkscroller-proof li {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--accent-teal) 20%, transparent);
+  background: color-mix(in oklab, var(--accent-teal) 6%, transparent);
+  color: var(--accent-teal);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
