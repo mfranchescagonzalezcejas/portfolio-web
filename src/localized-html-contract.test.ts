@@ -1561,12 +1561,20 @@ describe("InkScroller beta landing routes", () => {
   );
 
   it("keeps beta route styling in the global stylesheet", () => {
-    const styles = readFileSync(globalStylesPath, "utf8");
+    const globalStyles = readFileSync(globalStylesPath, "utf8");
+    const styles = [
+      globalStyles,
+      readFileSync(
+        resolve(process.cwd(), "src/styles/sections/beta.css"),
+        "utf8",
+      ),
+    ].join("\n");
     const betaPage = readFileSync(
       resolve(process.cwd(), "src/pages/[locale]/beta/inkscroller.astro"),
       "utf8",
     );
 
+    expect(globalStyles).toContain('@import "./sections/beta.css";');
     expect(styles).toContain(".beta-landing-shell");
     expect(styles).toContain("scroll-margin-top: 9rem");
     expect(styles).toContain(".beta-hero-layout");

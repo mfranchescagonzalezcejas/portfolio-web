@@ -1,0 +1,83 @@
+.portfolio-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+.section-shell {
+  position: relative;
+  isolation: isolate;
+  padding: 4rem 1rem;
+}
+
+.section-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 2rem;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.75;
+  background: color-mix(in oklab, var(--surface-elevated) 48%, transparent);
+}
+
+.section-inner {
+  position: relative;
+  z-index: 1;
+  margin-inline: auto;
+  max-width: 72rem;
+}
+
+.section-title {
+  margin-top: 0.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--section-title-color);
+  text-wrap: balance;
+}
+
+@media (min-width: 640px) {
+  .section-title {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  border: 1px solid color-mix(in oklab, var(--primary) 20%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--primary) 6%, transparent);
+  padding: 0.25rem 0.75rem;
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  line-height: 1rem;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 0.25rem;
+  height: 0.25rem;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.hero-copy {
+  color: var(--muted-foreground);
+}
+
+.hero-section .hero-copy {
+  margin: 1.5rem 0 0;
+}
+
+.hero-title {
+  color: var(--section-title-color);
+}
