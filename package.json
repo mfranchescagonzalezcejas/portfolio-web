@@ -50,7 +50,7 @@
     "vitest": "^4.1.9"
   },
   "overrides": {
-    "fast-uri": "3.1.4",
+    "fast-uri": "3.1.5",
     "eslint": {
       "minimatch": {
         "brace-expansion": "1.1.18"
