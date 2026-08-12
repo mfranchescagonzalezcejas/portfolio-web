@@ -25,9 +25,12 @@ Dependabot may open weekly dependency PRs automatically. Maintainers still triag
 
 ## Local setup
 
+This repository requires `pnpm@10.34.5`. npm and `package-lock.json` are retired; do not regenerate or commit a `package-lock.json` file.
+
 ```bash
-npm ci
-npm run dev
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 ## Quality gates
@@ -35,12 +38,12 @@ npm run dev
 Run these before opening or updating a PR:
 
 ```bash
-npm run test
-npm run typecheck
-npm run lint
-npm run format:check
-npm run build
-npm audit --audit-level=high
+pnpm run test
+pnpm run typecheck
+pnpm run lint
+pnpm run format:check
+pnpm run build
+pnpm audit --audit-level=high
 ```
 
 ## Pull request expectations

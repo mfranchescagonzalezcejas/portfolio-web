@@ -13,7 +13,7 @@ testing:
   detected_at: 2026-07-31
   runner:
     available: true
-    command: "npm run test"
+    command: "pnpm run test"
     framework: "vitest"
   layers:
     unit:
@@ -31,13 +31,13 @@ testing:
   quality:
     linter:
       available: true
-      command: "npm run lint"
+      command: "pnpm run lint"
     type_checker:
       available: true
-      command: "npm run typecheck"
+      command: "pnpm run typecheck"
     formatter:
       available: true
-      command: "npm run format:check"
+      command: "pnpm run format:check"
 
 rules:
   proposal:
@@ -52,10 +52,10 @@ rules:
   apply:
     - Follow existing repository patterns.
     tdd: false
-    test_command: "npm run test"
+    test_command: "pnpm run test"
   verify:
-    test_command: "npm run test"
-    build_command: "npm run build"
+    test_command: "pnpm run test"
+    build_command: "pnpm run build"
     coverage_threshold: 0
   archive:
     - Warn before merging destructive deltas.

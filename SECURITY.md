@@ -32,4 +32,4 @@ Include:
 
 ## Dependency updates
 
-Dependabot proposes dependency updates for npm and GitHub Actions. Maintainers triage those PRs and link them to an approved tracking issue before merge when following the protected workflow.
+Dependabot proposes dependency updates for JavaScript packages and GitHub Actions. Maintainers triage those PRs and link them to an approved tracking issue before merge when following the protected workflow.

@@ -33,9 +33,12 @@ Latest validated release: **v0.2.3**
 
 ## Quick start
 
+This repository requires `pnpm@10.34.5`. npm and `package-lock.json` are retired; do not regenerate or commit a `package-lock.json` file.
+
 ```bash
-npm install
-npm run dev
+corepack enable
+pnpm install --frozen-lockfile
+pnpm run dev
 ```
 
 Open the local URL printed by Astro, usually:
@@ -48,29 +51,29 @@ http://localhost:4321
 
 | Command | Purpose |
 |---|---|
-| `npm run dev` | Start the local Astro dev server. |
-| `npm run build` | Build the static production output in `dist/`. |
-| `npm run preview` | Serve the production build locally after building. |
-| `npm run typecheck` | Run Astro and TypeScript checks. |
-| `npm run lint` | Run ESLint. |
-| `npm run format:check` | Check formatting without modifying files. |
-| `npm run format` | Format the project. |
-| `npm run test` | Run the production build and Vitest suite. |
+| `pnpm run dev` | Start the local Astro dev server. |
+| `pnpm run build` | Build the static production output in `dist/`. |
+| `pnpm run preview` | Serve the production build locally after building. |
+| `pnpm run typecheck` | Run Astro and TypeScript checks. |
+| `pnpm run lint` | Run ESLint. |
+| `pnpm run format:check` | Check formatting without modifying files. |
+| `pnpm run format` | Format the project. |
+| `pnpm run test` | Run the production build and Vitest suite. |
 
 ## Quality gates
 
 Run these before opening or updating a pull request:
 
 ```bash
-npm run test
-npm run typecheck
-npm run lint
-npm run format:check
-npm run build
-npm audit --omit=dev --audit-level=high
+pnpm run test
+pnpm run typecheck
+pnpm run lint
+pnpm run format:check
+pnpm run build
+pnpm audit --prod --audit-level=high
 ```
 
-`npm run test` already includes a production build, but the explicit build command is kept in the checklist because deployment depends on static output correctness.
+`pnpm run test` already includes a production build, but the explicit build command is kept in the checklist because deployment depends on static output correctness.
 
 ## Deployment model
 
@@ -98,7 +101,7 @@ https://www.devdigi.dev
 
 Patch releases follow the protected PR flow:
 
-1. Bump `package.json` and `package-lock.json`.
+1. Bump `package.json` and `pnpm-lock.yaml`.
 2. Merge the bump through an approved issue and PR.
 3. Create an annotated tag for the next validated version, for example:
 
@@ -130,8 +133,8 @@ Use these settings when importing or validating the GitHub repo in Vercel:
 | Setting | Value |
 |---|---|
 | Framework preset | Astro |
-| Install command | `npm ci` |
-| Build command | `npm run build` |
+| Install command | `pnpm install --frozen-lockfile` |
+| Build command | `pnpm run build` |
 | Output directory | `dist` |
 | Trailing slash policy | `"trailingSlash": false` in `vercel.json` redirects slash-suffixed paths to their slashless canonical URL with a 308 redirect, and `/` redirects permanently to `/en`. |
 
