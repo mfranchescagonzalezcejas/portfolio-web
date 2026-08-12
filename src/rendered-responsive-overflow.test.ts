@@ -463,16 +463,8 @@ beforeAll(async () => {
   userDataDir = mkdtempSync(join(tmpdir(), "portfolio-web-chrome-"));
 
   previewProcess = spawn(
-    "npm",
-    [
-      "run",
-      "preview",
-      "--",
-      "--host",
-      previewHost,
-      "--port",
-      String(previewPort),
-    ],
+    join(process.cwd(), "node_modules", ".bin", "astro"),
+    ["preview", "--host", previewHost, "--port", String(previewPort)],
     {
       cwd: process.cwd(),
       stdio: "ignore",

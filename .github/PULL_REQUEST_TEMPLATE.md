@@ -27,12 +27,12 @@ Check exactly one and add the matching `type:*` label to the PR.
 
 ## Verification
 
-- [ ] `npm run test`
-- [ ] `npm run typecheck`
-- [ ] `npm run lint`
-- [ ] `npm run format:check`
-- [ ] `npm run build`
-- [ ] `npm audit --audit-level=high`
+- [ ] `pnpm run test`
+- [ ] `pnpm run typecheck`
+- [ ] `pnpm run lint`
+- [ ] `pnpm run format:check`
+- [ ] `pnpm run build`
+- [ ] `pnpm audit --audit-level=high`
 
 ## Release impact
 
