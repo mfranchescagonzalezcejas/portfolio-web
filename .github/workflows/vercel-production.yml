@@ -21,6 +21,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
       - name: Verify tag points to current main
         run: |
           set -euo pipefail
@@ -37,28 +40,28 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ">=22.12.0"
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build app
-        run: npm run build
+        run: pnpm run build
 
       - name: Run tests
-        run: npm exec --no -- vitest run
+        run: pnpm exec vitest run
 
       - name: Run typecheck
-        run: npm run typecheck
+        run: pnpm run typecheck
 
       - name: Run lint
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Check formatting
-        run: npm run format:check
+        run: pnpm run format:check
 
       - name: Run security audit
-        run: npm audit --omit=dev --audit-level=high
+        run: pnpm audit --prod --audit-level=high
 
   deploy:
     needs: release-gate
@@ -74,6 +77,9 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
 
       - name: Revalidate tag points to current main
         run: |
@@ -93,19 +99,19 @@ jobs:
           node-version: ">=22.12.0"
 
       - name: Install Vercel CLI
-        run: npm install -g vercel@54.17.1
+        run: pnpm dlx vercel@54.17.1 --version
 
       - name: Pull Vercel environment
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel pull --yes --environment=production
+        run: pnpm dlx vercel@54.17.1 pull --yes --environment=production
 
       - name: Build production deployment
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel build --prod
+        run: pnpm dlx vercel@54.17.1 build --prod
 
       - name: Deploy production
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel deploy --prebuilt --prod
+        run: pnpm dlx vercel@54.17.1 deploy --prebuilt --prod

@@ -152,7 +152,7 @@ describe("release governance workflow", () => {
       deployGuardIndex,
     );
     const vercelPullIndex = contents.indexOf(
-      "vercel pull --yes --environment=production",
+      "pnpm dlx vercel@54.17.1 pull --yes --environment=production",
     );
 
     expect(contents).toContain('tags:\n      - "v*"');
@@ -178,13 +178,13 @@ describe("release governance workflow", () => {
     );
 
     const commands = [
-      "npm ci",
-      "npm run build",
-      "npm exec --no -- vitest run",
-      "npm run typecheck",
-      "npm run lint",
-      "npm run format:check",
-      "npm audit --omit=dev --audit-level=high",
+      "pnpm install --frozen-lockfile",
+      "pnpm run build",
+      "pnpm exec vitest run",
+      "pnpm run typecheck",
+      "pnpm run lint",
+      "pnpm run format:check",
+      "pnpm audit --prod --audit-level=high",
     ];
     const positions = commands.map((command) => contents.indexOf(command));
 
