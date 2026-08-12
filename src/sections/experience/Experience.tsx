@@ -2,7 +2,7 @@ import { ArrowUpRight, Briefcase } from "lucide-react";
 import type {
   Experience as ExperienceContent,
   ExperienceSectionHeading,
-} from "../../content/site";
+} from "../../content/types";
 
 type ExperienceProps = {
   experience: ExperienceContent[];
@@ -63,8 +63,8 @@ export default function Experience({ experience, section }: ExperienceProps) {
                   </div>
 
                   <ul className="hero-copy mt-6 space-y-3 text-sm leading-7">
-                    {item.highlights.map((highlight) => (
-                      <li className="flex gap-2.5" key={highlight}>
+                    {item.highlights.map((highlight, idx) => (
+                      <li className="flex gap-2.5" key={`${highlight}-${idx}`}>
                         <span
                           className="mt-3 h-1 w-1 shrink-0 rounded-full bg-[color:var(--primary)]/70"
                           aria-hidden="true"
@@ -78,10 +78,10 @@ export default function Experience({ experience, section }: ExperienceProps) {
                     className="mt-4 flex flex-wrap gap-1.5"
                     aria-label={labelForExperience(section.stackLabel, item)}
                   >
-                    {item.stack.map((stackItem) => (
+                    {item.stack.map((stackItem, idx) => (
                       <li
                         className="inline-flex items-center rounded-full border border-[color:var(--primary)]/20 bg-[color:var(--primary)]/[0.08] px-2.5 py-0.5 font-mono text-xs font-medium text-[color:var(--primary)]"
-                        key={stackItem}
+                        key={`${stackItem}-${idx}`}
                       >
                         {stackItem}
                       </li>

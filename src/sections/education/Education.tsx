@@ -3,7 +3,7 @@ import type {
   Education as EducationData,
   EducationSectionContent,
   Language,
-} from "../../content/site";
+} from "../../content/types";
 
 type EducationProps = {
   education: EducationData[];

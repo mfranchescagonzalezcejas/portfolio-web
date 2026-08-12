@@ -1,4 +1,4 @@
-import type { ContactLinkItem, ContactSection } from "../../content/site";
+import type { ContactLinkItem, ContactSection } from "../../content/types";
 import { getContactIcon } from "./contactIcons";
 
 type ContactLinksProps = {
@@ -45,28 +45,26 @@ export default function ContactLinks({ links, section }: ContactLinksProps) {
 
           <nav id="contact-links" aria-label={section.ariaLabel}>
             <ul className="contact-link-list">
-              {links.map((link) => (
-                <li key={link.href}>
-                  <a
-                    className={getContactLinkClass(link)}
-                    href={link.href}
-                    target={link.external ? "_blank" : undefined}
-                    rel={link.external ? "noopener noreferrer" : undefined}
-                  >
-                    {(() => {
-                      const Icon = getContactIcon(link.kind);
-                      return (
-                        <Icon
-                          className="contact-cta-icon"
-                          aria-hidden="true"
-                          data-contact-icon={link.kind}
-                        />
-                      );
-                    })()}
-                    <span>{link.label}</span>
-                  </a>
-                </li>
-              ))}
+              {links.map((link) => {
+                const Icon = getContactIcon(link.kind);
+                return (
+                  <li key={link.href}>
+                    <a
+                      className={getContactLinkClass(link)}
+                      href={link.href}
+                      target={link.external ? "_blank" : undefined}
+                      rel={link.external ? "noopener noreferrer" : undefined}
+                    >
+                      <Icon
+                        className="contact-cta-icon"
+                        aria-hidden="true"
+                        data-contact-icon={link.kind}
+                      />
+                      <span>{link.label}</span>
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </div>

@@ -1,5 +1,5 @@
 import { Download, Mail, createLucideIcon } from "lucide-react";
-import type { ContactLinkKind } from "../../content/site";
+import type { ContactLinkKind } from "../../content/types";
 
 const Github = createLucideIcon("Github", [
   [

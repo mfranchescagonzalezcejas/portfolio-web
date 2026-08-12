@@ -2,7 +2,7 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import ContactLinks from "./ContactLinks";
-import type { ContactLinkItem, ContactSection } from "../../content/site";
+import type { ContactLinkItem, ContactSection } from "../../content/types";
 
 const section: ContactSection = {
   eyebrow: "Contact",

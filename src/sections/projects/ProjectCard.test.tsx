@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { cleanup, render, screen, within } from "@testing-library/react";
-import type { Project } from "../../content/site";
+import type { Project } from "../../content/types";
 import ProjectCard from "./ProjectCard";
 
 const baseProject: Project = {
@@ -21,7 +21,6 @@ const renderCard = (project = baseProject) =>
       proofLabel="Demonstrates"
       repositoryLabel="View repo"
       repositoryAriaLabel="{repository}: {link} for {project}"
-      mockupFallback={"Project\nvisuals\nin progress"}
     />,
   );
 
@@ -106,7 +105,7 @@ describe("ProjectCard", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("uses localized section labels for mockup fallback and link metadata", () => {
+  it("uses localized labels for repository metadata", () => {
     render(
       <ProjectCard
         project={{
@@ -124,13 +123,9 @@ describe("ProjectCard", () => {
         proofLabel="Demuestra"
         repositoryLabel="Ver repo"
         repositoryAriaLabel="{repository}: {link} de {project}"
-        mockupFallback={"Visuales\ndel proyecto\nen progreso"}
       />,
     );
 
-    expect(
-      screen.getByText(/Visuales\s+del proyecto\s+en progreso/),
-    ).toBeInTheDocument();
     expect(
       screen.getByRole("list", { name: "Tecnologías de Sample Project" }),
     ).toBeInTheDocument();

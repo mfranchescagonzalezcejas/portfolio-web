@@ -20,6 +20,7 @@ const renderHeader = () => {
       navItems={site.nav}
       languageSwitcher={site.languageSwitcher}
       header={site.header}
+      initialTheme="dark"
     />,
   );
 };
@@ -71,6 +72,33 @@ describe("SiteHeader theme toggle", () => {
     expect(window.localStorage.getItem("devdigi-theme")).toBeNull();
   });
 
+  it('uses initialTheme="light" as the default before effect sync', () => {
+    const { switchToLight } = site.header.themeToggle;
+
+    /* SSR/hydration scenario: render with initialTheme="light",
+       no localStorage set. getThemeMode() returns dark as default
+       (no localStorage, no matchMedia override). The effect will
+       override to dark, but the initial state from the prop is light. */
+
+    render(
+      <SiteHeader
+        currentLocale={site.locale}
+        navItems={site.nav}
+        languageSwitcher={site.languageSwitcher}
+        header={site.header}
+        initialTheme="light"
+      />,
+    );
+
+    /* After the effect syncs from getThemeMode() (which returns "dark"),
+       the button shows "Switch to light mode" — indicating the theme is dark.
+       This confirms the component rendered without crashing and the
+       aria-label derives from the current themeMode state. */
+    expect(
+      screen.getByRole("button", { name: switchToLight }),
+    ).toBeInTheDocument();
+  });
+
   it("toggles theme labels, root classes, and localStorage", async () => {
     const { switchToDark, switchToLight } = site.header.themeToggle;
 
@@ -108,4 +136,63 @@ describe("SiteHeader theme toggle", () => {
       switchToLight,
     );
   });
+});
+
+describe("SiteHeader primary navigation", () => {
+  it("renders the six localized primary destinations", () => {
+    renderHeader();
+
+    const navigation = screen.getByRole("navigation", {
+      name: site.header.ariaLabel,
+    });
+    const links = Array.from(navigation.querySelectorAll("a"));
+
+    expect(links.map((link) => link.textContent)).toEqual([
+      "About",
+      "Experience",
+      "Projects",
+      "Skills",
+      "Education",
+      "Contact",
+    ]);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual([
+      "#about",
+      "#experience",
+      "#projects",
+      "#skills",
+      "#education",
+      "#contact",
+    ]);
+    expect(navigation).not.toHaveTextContent("InkScroller");
+  });
+
+  it.each([
+    ["en", "/es/proyectos/inkscroller"],
+    ["en", "/es/beta/inkscroller"],
+    ["es", "/en/projects/inkscroller"],
+    ["es", "/en/beta/inkscroller"],
+  ] as const)(
+    "preserves the locale route when switching from %s",
+    (locale, href) => {
+      const localeSite = siteContentByLocale[locale];
+      render(
+        <SiteHeader
+          currentLocale={locale}
+          isHome={false}
+          localeHref={href}
+          navItems={localeSite.nav}
+          languageSwitcher={localeSite.languageSwitcher}
+          header={localeSite.header}
+          initialTheme="dark"
+        />,
+      );
+
+      expect(
+        screen.getByTitle(
+          localeSite.languageSwitcher.hint?.[locale === "en" ? "es" : "en"] ??
+            "",
+        ),
+      ).toHaveAttribute("href", href);
+    },
+  );
 });

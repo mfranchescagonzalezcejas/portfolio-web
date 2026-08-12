@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
-import type { ContactLinkItem, HeroContent } from "../../content/site";
+import type { ContactLinkItem, HeroContent } from "../../content/types";
 import Hero from "./Hero";
 
 const hero: HeroContent = {
@@ -34,7 +34,7 @@ const hero: HeroContent = {
 };
 
 describe("Hero", () => {
-  it("uses contact kind metadata for social profile links and icons", () => {
+  it("keeps project and CV actions separate from social profile links", () => {
     const links: ContactLinkItem[] = [
       {
         kind: "email",
@@ -64,20 +64,23 @@ describe("Hero", () => {
       name: /hi, i'm mercedes/i,
     });
 
-    expect(
-      within(heroSection).queryByRole("link", { name: "GitHub" }),
-    ).not.toBeInTheDocument();
+    const ctaRow = heroSection.querySelector<HTMLElement>(".hero-cta-row");
 
-    const githubLink = within(heroSection).getByRole("link", {
-      name: "Code host",
-    });
+    expect(ctaRow).toBeInTheDocument();
+    expect(within(ctaRow!).getAllByRole("link")).toHaveLength(4);
+    expect(
+      within(ctaRow!).getByRole("link", { name: "View Projects" }),
+    ).toHaveClass("hero-cta-primary");
+    expect(
+      within(ctaRow!).getByRole("link", { name: "Download CV" }),
+    ).toHaveClass("hero-cta-secondary");
+
+    const githubLink = within(ctaRow!).getByRole("link", { name: "Code host" });
     expect(githubLink).toHaveAttribute("href", "https://github.com/example");
     expect(githubLink).toHaveAttribute("target", "_blank");
-    expect(
-      githubLink.querySelector('svg[data-contact-icon="github"]'),
-    ).toBeInTheDocument();
+    expect(githubLink).toHaveClass("contact-cta-link");
 
-    const linkedinLink = within(heroSection).getByRole("link", {
+    const linkedinLink = within(ctaRow!).getByRole("link", {
       name: "Professional profile",
     });
     expect(linkedinLink).toHaveAttribute(
@@ -85,12 +88,9 @@ describe("Hero", () => {
       "https://www.linkedin.com/in/example",
     );
     expect(linkedinLink).toHaveAttribute("rel", "noopener noreferrer");
-    expect(
-      linkedinLink.querySelector('svg[data-contact-icon="linkedin"]'),
-    ).toBeInTheDocument();
   });
 
-  it("falls back to non-CV links when no social profile links are present", () => {
+  it("does not turn non-profile contacts into hero actions", () => {
     const links: ContactLinkItem[] = [
       {
         kind: "email",
@@ -118,21 +118,18 @@ describe("Hero", () => {
       name: /hi, i'm mercedes/i,
     });
 
-    const emailLink = within(heroSection).getByRole("link", { name: "Email" });
-    expect(emailLink).toHaveAttribute("href", "mailto:test@example.com");
     expect(
-      emailLink.querySelector('svg[data-contact-icon="email"]'),
-    ).toBeInTheDocument();
-
-    const cvLinks = within(heroSection).getAllByRole("link", {
-      name: "Download CV",
-    });
-    expect(cvLinks).toHaveLength(1);
-    expect(cvLinks[0]).toHaveAttribute("href", "/cv.pdf");
+      within(heroSection).queryByRole("navigation", {
+        name: hero.profileLinksLabel,
+      }),
+    ).not.toBeInTheDocument();
 
     expect(
-      within(heroSection).getByRole("link", { name: "Alternate email" }),
-    ).toHaveAttribute("href", "mailto:alternate@example.com");
+      within(heroSection).queryByRole("link", { name: "Email" }),
+    ).not.toBeInTheDocument();
+    expect(
+      within(heroSection).queryByRole("link", { name: "Alternate email" }),
+    ).not.toBeInTheDocument();
   });
 
   it("keeps the phone glow out of the clipped visual markup layer", () => {

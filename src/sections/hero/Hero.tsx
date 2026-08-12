@@ -1,25 +1,22 @@
 import { ArrowUpRight, Download } from "lucide-react";
-import type { ContactLinkItem, HeroContent } from "../../content/site";
+import type { ContactLinkItem, HeroContent } from "../../content/types";
 import { getContactIcon } from "../contact/contactIcons";
 import HeroVisual from "./HeroVisual";
 
-function splitHeadlineWithAccent(tagline: string) {
-  const match =
-    tagline.match(/^(.*?)(mobile apps|apps m\u00f3viles)(.*)$/i) ??
-    tagline.match(
-      /^(.*?)(mobile applications|aplicaciones m\u00f3viles)(.*)$/i,
-    );
-
-  if (!match) {
+function splitHeadlineWithAccent(tagline: string, accent?: string) {
+  if (!accent) {
     return { lead: "", highlight: "", tail: tagline };
   }
 
-  const [, lead, highlight, tail] = match;
+  const accentIndex = tagline.indexOf(accent);
+  if (accentIndex < 0) {
+    return { lead: "", highlight: "", tail: tagline };
+  }
 
   return {
-    lead: lead.trim(),
-    highlight: highlight,
-    tail: tail.trim(),
+    lead: tagline.slice(0, accentIndex).trim(),
+    highlight: accent,
+    tail: tagline.slice(accentIndex + accent.length).trim(),
   };
 }
 
@@ -29,16 +26,14 @@ type HeroProps = {
 };
 
 export default function Hero({ hero, links }: HeroProps) {
-  const profileLinks = links
-    .filter((link) => link.kind === "github" || link.kind === "linkedin")
-    .slice(0, 2);
-
-  const fallbackLinks =
-    profileLinks.length > 0
-      ? profileLinks
-      : links.filter((link) => link.kind !== "cv").slice(0, 2);
+  const profileLinks = links.filter(
+    (link) => link.kind === "linkedin" || link.kind === "github",
+  );
   const firstName = hero.name.split(" ")[0] || hero.name;
-  const parsedTagline = splitHeadlineWithAccent(hero.tagline);
+  const parsedTagline = splitHeadlineWithAccent(
+    hero.tagline,
+    hero.taglineAccent,
+  );
 
   const headlineLine = parsedTagline.highlight ? (
     <>
@@ -96,19 +91,23 @@ export default function Hero({ hero, links }: HeroProps) {
               <span>{hero.cvLabel}</span>
             </a>
 
-            {fallbackLinks.map((link) => {
+            {profileLinks.map((link, index) => {
               const Icon = getContactIcon(link.kind);
+              const variantClass =
+                link.kind === "linkedin"
+                  ? "contact-cta-link-primary cta-button"
+                  : "contact-cta-link-secondary cta-outline";
 
               return (
                 <a
-                  key={link.href}
-                  className="cta-outline hero-cta-secondary hero-cta-social"
+                  key={`${link.href}-${index}`}
+                  className={`contact-cta-link ${variantClass}`}
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
                   rel={link.external ? "noopener noreferrer" : undefined}
                 >
                   <Icon
-                    className="hero-cta-icon"
+                    className="contact-cta-icon"
                     aria-hidden="true"
                     data-contact-icon={link.kind}
                   />

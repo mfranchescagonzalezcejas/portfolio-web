@@ -1,0 +1,154 @@
+---
+import type { InkScrollerContent } from "../content/inkscroller";
+import { siteContentByLocale } from "../content/site";
+import BaseLayout from "./BaseLayout.astro";
+import SiteHeader from "../sections/header/SiteHeader";
+import ContactLinks from "../sections/contact/ContactLinks";
+
+type Props = {
+  content: InkScrollerContent;
+};
+
+const { content } = Astro.props;
+const currentYear = new Date().getFullYear();
+const site = siteContentByLocale[content.locale];
+const firstMedia = content.media[0];
+const sizes = "(max-width: 311px) 69.3vw, 216px";
+const srcset = (src: string, format: "avif" | "webp") => {
+  const stem = src.slice(0, -4);
+  return `${stem}-216w.${format} 216w, ${stem}-432w.${format} 432w`;
+};
+const heroCaptures = JSON.stringify(
+  content.media.map((entry) => ({
+    src: entry.src,
+    srcset: {
+      dark: {
+        avif: srcset(entry.src.dark, "avif"),
+        webp: srcset(entry.src.dark, "webp"),
+      },
+      light: {
+        avif: srcset(entry.src.light, "avif"),
+        webp: srcset(entry.src.light, "webp"),
+      },
+    },
+    alt: entry.alt,
+    dimensions: {
+      dark: { width: entry.width, height: entry.height },
+      light: {
+        width: entry.lightWidth ?? entry.width,
+        height: entry.lightHeight ?? entry.height,
+      },
+    },
+  })),
+);
+---
+
+<BaseLayout locale={content.locale} pageSeo={content.seo}>
+  <div id="top"></div>
+  <a class="skip-link sr-only focus:not-sr-only" href="#inkscroller-content">{content.skipLabel}</a>
+  <SiteHeader
+    currentLocale={site.locale}
+    isHome={false}
+    localeHref={content.counterpart.href}
+    navItems={site.nav}
+    languageSwitcher={site.languageSwitcher}
+    header={site.header}
+    initialTheme="dark"
+    client:load
+  />
+  <main id="inkscroller-content" class="inkscroller-page">
+    <section class="inkscroller-hero hero-section" aria-labelledby="inkscroller-title">
+      <div class="grid-bg absolute inset-0 -z-10" aria-hidden="true" />
+      <div class="hero-content mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-8">
+        <div>
+          <p class="inkscroller-hero-eyebrow">{content.hero.eyebrow}</p>
+          <h1 id="inkscroller-title" class="font-display hero-title text-4xl leading-[1.05] font-bold tracking-tight sm:text-5xl lg:text-6xl">{content.hero.title}</h1>
+          <p class="hero-copy mt-6 max-w-xl text-base leading-relaxed sm:text-lg">{content.hero.description}</p>
+        </div>
+        <div class="inkscroller-hero-device">
+          <div class="mockup-phone">
+            <div class="mockup-phone-screen" id="hero-screen">
+              <picture>
+                <source type="image/avif" srcset={srcset(firstMedia.src.dark, "avif")} data-dark-srcset={srcset(firstMedia.src.dark, "avif")} data-light-srcset={srcset(firstMedia.src.light, "avif")} sizes={sizes} />
+                <source type="image/webp" srcset={srcset(firstMedia.src.dark, "webp")} data-dark-srcset={srcset(firstMedia.src.dark, "webp")} data-light-srcset={srcset(firstMedia.src.light, "webp")} sizes={sizes} />
+                <img id="hero-img-current" class="hero-img-layer" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} data-dark-width={firstMedia.width} data-dark-height={firstMedia.height} data-light-width={firstMedia.lightWidth ?? firstMedia.width} data-light-height={firstMedia.lightHeight ?? firstMedia.height} data-captures={heroCaptures} alt={firstMedia.alt} width={firstMedia.width} height={firstMedia.height} loading="eager" fetchpriority="high" decoding="async" />
+              </picture>
+              <picture>
+                <source type="image/avif" srcset={srcset(firstMedia.src.dark, "avif")} data-dark-srcset={srcset(firstMedia.src.dark, "avif")} data-light-srcset={srcset(firstMedia.src.light, "avif")} sizes={sizes} />
+                <source type="image/webp" srcset={srcset(firstMedia.src.dark, "webp")} data-dark-srcset={srcset(firstMedia.src.dark, "webp")} data-light-srcset={srcset(firstMedia.src.light, "webp")} sizes={sizes} />
+                <img id="hero-img-next" class="hero-img-layer hero-img-next" src={firstMedia.src.dark} data-dark-src={firstMedia.src.dark} data-light-src={firstMedia.src.light} data-dark-width={firstMedia.width} data-dark-height={firstMedia.height} data-light-width={firstMedia.lightWidth ?? firstMedia.width} data-light-height={firstMedia.lightHeight ?? firstMedia.height} data-capture-index="0" alt={firstMedia.alt} aria-hidden="true" width={firstMedia.width} height={firstMedia.height} loading="eager" decoding="async" />
+              </picture>
+            </div>
+            <div class="mockup-phone-frame" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="inkscroller-proof" aria-labelledby="inkscroller-proof-title">
+      <h2 id="inkscroller-proof-title">{content.proof.title}</h2>
+      <ul>{content.proof.items.map((item) => <li>{item}</li>)}</ul>
+    </section>
+    <section class="inkscroller-carousel-section" aria-label={content.carousel.sectionLabel}>
+      <div id="inkscroller-carousel" class="inkscroller-carousel" tabindex="0" role="region" aria-label={content.carousel.regionLabel}>
+        <div class="inkscroller-carousel-viewport">
+          <div class="inkscroller-carousel-track">
+            {content.media.map((entry) => (
+              <article class="inkscroller-slide" aria-label={`${entry.title}: ${entry.description}`}>
+                <h3 class="inkscroller-slide-title">{entry.title}</h3>
+                <div class="inkscroller-slide-device">
+                  <div class="mockup-phone">
+                    <div class="mockup-phone-screen">
+                      <picture>
+                        <source type="image/avif" srcset={srcset(entry.src.dark, "avif")} data-dark-srcset={srcset(entry.src.dark, "avif")} data-light-srcset={srcset(entry.src.light, "avif")} sizes={sizes} />
+                        <source type="image/webp" srcset={srcset(entry.src.dark, "webp")} data-dark-srcset={srcset(entry.src.dark, "webp")} data-light-srcset={srcset(entry.src.light, "webp")} sizes={sizes} />
+                        <img src={entry.src.dark} data-dark-src={entry.src.dark} data-light-src={entry.src.light} data-dark-width={entry.width} data-dark-height={entry.height} data-light-width={entry.lightWidth ?? entry.width} data-light-height={entry.lightHeight ?? entry.height} alt={entry.alt} width={entry.width} height={entry.height} loading="lazy" decoding="async" />
+                      </picture>
+                    </div>
+                    <div class="mockup-phone-frame" aria-hidden="true"></div>
+                  </div>
+                </div>
+                <p class="inkscroller-slide-desc">{entry.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+        <button class="inkscroller-arrow inkscroller-prev" aria-label={content.carousel.previousLabel} type="button">&#8592;</button>
+        <button class="inkscroller-arrow inkscroller-next" aria-label={content.carousel.nextLabel} type="button">&#8594;</button>
+        <nav class="inkscroller-dots" aria-label={content.carousel.navigationLabel}>
+          {content.media.map((entry, i) => (
+            <button class:list={["inkscroller-dot", { active: i === 0 }]} aria-current={i === 0 ? "true" : undefined} aria-label={content.carousel.slideLabel.replace("{index}", String(i + 1)).replace("{title}", entry.title)} type="button" data-index={i}></button>
+          ))}
+        </nav>
+      </div>
+      <div class="inkscroller-motion-controls">
+        <button id="inkscroller-autoplay-toggle" class="inkscroller-autoplay-toggle" type="button" aria-label={content.carousel.autoplayLabel} aria-pressed="true" data-pause-label={content.carousel.pauseLabel} data-play-label={content.carousel.playLabel}>{content.carousel.pauseLabel}</button>
+      </div>
+    </section>
+    <section class="inkscroller-beta" aria-labelledby="inkscroller-beta-title">
+      <h2 id="inkscroller-beta-title">{content.beta.title}</h2>
+      <p>{content.beta.description}</p>
+      <a href={content.beta.href}>{content.beta.action}</a>
+    </section>
+  </main>
+  <ContactLinks links={site.contacts} section={site.contactSection} />
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p>DevDigi by Mercedes Gonzalez</p>
+      <p>© <span class="copyright-year">{currentYear}</span> · {site.footerText}</p>
+    </div>
+  </footer>
+</BaseLayout>
+
+<script>
+  import { initializeInkScrollerPage } from "../lib/carousel-render";
+  initializeInkScrollerPage(document);
+</script>
+
+<style>
+  /* All InkScroller styles are in global.css — this block intentionally empty */
+</style>
+
+<script is:inline>
+  document.querySelector(".copyright-year").textContent =
+    String(new Date().getFullYear());
+</script>

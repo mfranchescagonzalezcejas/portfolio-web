@@ -1,5 +1,5 @@
 ---
-import type { Locale, SiteContent } from "../content/site";
+import type { Locale, SiteContent } from "../content/types";
 import SiteHeader from "../sections/header/SiteHeader";
 import Hero from "../sections/hero/Hero";
 import Values from "../sections/values/Values";
@@ -37,6 +37,7 @@ const projectCards = site.projects.filter((project) => !project.featured);
     navItems={site.nav}
     languageSwitcher={site.languageSwitcher}
     header={site.header}
+    initialTheme="dark"
     client:load
   />
 
@@ -71,7 +72,12 @@ const projectCards = site.projects.filter((project) => !project.featured);
   <footer class="site-footer">
     <div class="site-footer-inner">
       <p>DevDigi by Mercedes Gonzalez</p>
-      <p>© {currentYear} · {site.footerText}</p>
+      <p>© <span class="copyright-year">{currentYear}</span> · {site.footerText}</p>
     </div>
   </footer>
 </div>
+
+<script is:inline>
+  document.querySelector(".copyright-year").textContent =
+    String(new Date().getFullYear());
+</script>

@@ -1,6 +1,6 @@
-import { Code2, GitBranch, Smartphone, Sparkles } from "lucide-react";
-import type { Project } from "../../content/site";
-import { formatProjectLabel } from "./projectLabel";
+import { GitBranch, Sparkles } from "lucide-react";
+import type { Project } from "../../content/types";
+import { formatTemplate } from "../../lib/format";
 
 type ProjectCardProps = {
   project: Project;
@@ -9,7 +9,6 @@ type ProjectCardProps = {
   proofLabel: string;
   repositoryLabel: string;
   repositoryAriaLabel: string;
-  mockupFallback: string;
 };
 
 export default function ProjectCard({
@@ -19,27 +18,9 @@ export default function ProjectCard({
   proofLabel,
   repositoryLabel,
   repositoryAriaLabel,
-  mockupFallback,
 }: ProjectCardProps) {
   return (
     <article className="project-card card-surface">
-      <div aria-hidden="true" className="project-card-visual">
-        <div className="grid-bg" />
-        <div className="project-card-device">
-          <div className="project-card-device-notch" />
-          <div className="project-card-device-screen">
-            <Smartphone
-              aria-hidden="true"
-              className="project-card-phone-icon"
-            />
-            <span>{project.mockupStatus ?? mockupFallback}</span>
-          </div>
-        </div>
-        <div className="project-card-code-icon">
-          <Code2 aria-hidden="true" />
-        </div>
-      </div>
-
       <div className="project-card-content">
         <h3 className="project-card-title font-display">{project.name}</h3>
 
@@ -47,7 +28,7 @@ export default function ProjectCard({
 
         <ul
           className="project-stack-list project-card-stack"
-          aria-label={formatProjectLabel(stackLabel, { project: project.name })}
+          aria-label={formatTemplate(stackLabel, { project: project.name })}
         >
           {project.stack.map((stackItem) => (
             <li key={stackItem} className="project-tech-badge">
@@ -79,7 +60,7 @@ export default function ProjectCard({
                     href={link.href}
                     target={link.external ? "_blank" : undefined}
                     rel={link.external ? "noopener noreferrer" : undefined}
-                    aria-label={formatProjectLabel(repositoryAriaLabel, {
+                    aria-label={formatTemplate(repositoryAriaLabel, {
                       repository: linkCtaLabel,
                       link: link.label,
                       project: project.name,

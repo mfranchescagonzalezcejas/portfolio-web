@@ -1,5 +1,5 @@
 import { Layers, Rocket } from "lucide-react";
-import type { HeroVisualContent } from "../../content/site";
+import type { HeroVisualContent } from "../../content/types";
 
 type HeroVisualProps = {
   visual: HeroVisualContent;

@@ -1,0 +1,18 @@
+---
+import type { Locale } from "../../content/types";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HomePage from "../../layouts/HomePage.astro";
+import { locales, siteContentByLocale } from "../../content/site";
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params as { locale: Locale };
+const site = siteContentByLocale[locale];
+const currentYear = new Date().getFullYear();
+---
+
+<BaseLayout locale={locale} site={site}>
+  <HomePage locale={locale} site={site} currentYear={currentYear} />
+</BaseLayout>
