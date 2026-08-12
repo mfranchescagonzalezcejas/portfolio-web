@@ -7,7 +7,7 @@ Production portfolio site for **Mercedes Franchesca Gonzalez Cejas** and the **D
 
 Live site: **https://www.devdigi.dev**
 
-Latest validated release: **v0.2.3**
+Latest validated release: **v0.3.0**
 
 ## What this site contains
 
