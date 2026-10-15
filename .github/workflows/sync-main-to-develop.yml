@@ -28,13 +28,12 @@ jobs:
             exit 0
           fi
 
-          # Close any existing sync PR
+          # Identify sync PRs by branch prefix (no custom label required).
           gh pr list \
             --base develop \
-            --label "sync:main-to-develop" \
             --state open \
-            --json number \
-            --jq '.[].number' | while read -r num; do
+            --json number,headRefName \
+            --jq '.[] | select(.headRefName | startswith("chore/sync-main-to-develop-")) | .number' | while read -r num; do
             gh pr close "$num" --comment "Replaced by newer sync"
           done
 
@@ -49,5 +48,4 @@ jobs:
             --head "$BRANCH" \
             --title "chore: sync main → develop" \
             --body "Automated sync after merge to \`main\`." \
-            --label "type:chore" \
-            --label "sync:main-to-develop"
+            --label "type:chore"
