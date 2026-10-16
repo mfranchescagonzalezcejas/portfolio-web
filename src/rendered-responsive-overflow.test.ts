@@ -15,6 +15,21 @@ type CdpResponse<T = unknown> = {
 
 type FetchInit = Parameters<typeof fetch>[1];
 
+type PreviewProcessDiagnostics = {
+  requestedPort: number;
+  startedAt: number;
+  pid?: number;
+  stdout: string;
+  stderr: string;
+  exitCode?: number | null;
+  signal?: string | null;
+  exitedAt?: number;
+  spawnError?: string;
+  exited: boolean;
+  exitPromise: Promise<void>;
+  resolveExit: () => void;
+};
+
 type TargetDescriptor = {
   webSocketDebuggerUrl: string;
 };
@@ -98,10 +113,12 @@ const chromeExecutable = chromeCandidates.find((candidate) =>
 );
 const previewHost = "127.0.0.1";
 const testTimeoutMs = 60_000;
+const previewOutputLimit = 16 * 1024;
 
 let previewPort = 0;
 let chromePort = 0;
 let previewProcess: ChildProcess | undefined;
+let previewDiagnostics: PreviewProcessDiagnostics | undefined;
 let chromeProcess: ChildProcess | undefined;
 let userDataDir = "";
 
@@ -124,27 +141,97 @@ async function getFreePort(): Promise<number> {
   });
 }
 
-async function waitForHttpOk(url: string, label: string): Promise<void> {
+function appendPreviewOutput(current: string, chunk: Buffer | string): string {
+  const next = current + chunk.toString();
+
+  return next.length > previewOutputLimit
+    ? next.slice(-previewOutputLimit)
+    : next;
+}
+
+function formatPreviewDiagnostics(
+  diagnostics: PreviewProcessDiagnostics,
+): string {
+  const durationMs =
+    (diagnostics.exitedAt ?? Date.now()) - diagnostics.startedAt;
+  const exitCode =
+    diagnostics.exitCode === undefined
+      ? "unknown"
+      : String(diagnostics.exitCode);
+  const signal = diagnostics.signal ?? "none";
+
+  return [
+    `pid=${diagnostics.pid ?? "unknown"}`,
+    `requestedPort=${diagnostics.requestedPort}`,
+    `durationMs=${durationMs}`,
+    `exitCode=${exitCode}`,
+    `signal=${signal}`,
+    diagnostics.spawnError ? `spawnError=${diagnostics.spawnError}` : undefined,
+    `stdout (last ${previewOutputLimit} characters):\n${diagnostics.stdout || "<empty>"}`,
+    `stderr (last ${previewOutputLimit} characters):\n${diagnostics.stderr || "<empty>"}`,
+  ]
+    .filter((line): line is string => line !== undefined)
+    .join("\n");
+}
+
+async function waitForHttpOk(
+  url: string,
+  label: string,
+  preview?: PreviewProcessDiagnostics,
+): Promise<void> {
   const deadline = Date.now() + 30_000;
   let lastError: unknown;
 
   while (Date.now() < deadline) {
-    try {
-      const response = await fetch(url);
+    if (preview?.exited) {
+      throw new Error(
+        `${label} did not become ready because its Astro preview process exited.\n${formatPreviewDiagnostics(preview)}`,
+      );
+    }
+
+    const fetchResult = fetch(url).then(
+      (response) => ({ type: "response" as const, response }),
+      (error: unknown) => ({ type: "error" as const, error }),
+    );
+    const result = preview
+      ? await Promise.race([
+          fetchResult,
+          preview.exitPromise.then(() => ({ type: "preview-exit" as const })),
+        ])
+      : await fetchResult;
+
+    if (result.type === "preview-exit") {
+      throw new Error(
+        `${label} did not become ready because its Astro preview process exited.\n${formatPreviewDiagnostics(preview!)}`,
+      );
+    }
+
+    if (result.type === "error") {
+      if (preview?.exited) {
+        throw new Error(
+          `${label} did not become ready because its Astro preview process exited.\n${formatPreviewDiagnostics(preview)}`,
+        );
+      }
+
+      lastError = result.error;
+    } else {
+      const response = result.response;
 
       if (response.ok) {
         return;
       }
 
       lastError = new Error(`${label} returned HTTP ${response.status}`);
-    } catch (error) {
-      lastError = error;
     }
 
     await new Promise((resolveDelay) => setTimeout(resolveDelay, 250));
   }
 
-  throw new Error(`${label} did not become ready: ${String(lastError)}`);
+  const diagnostics = preview ? `\n${formatPreviewDiagnostics(preview)}` : "";
+
+  throw new Error(
+    `${label} did not become ready: ${String(lastError)}${diagnostics}`,
+  );
 }
 
 async function readJson<T>(url: string, init?: FetchInit): Promise<T> {
@@ -461,15 +548,82 @@ beforeAll(async () => {
 
   [previewPort, chromePort] = await Promise.all([getFreePort(), getFreePort()]);
   userDataDir = mkdtempSync(join(tmpdir(), "portfolio-web-chrome-"));
+  let resolvePreviewExit!: () => void;
+  const previewExitPromise = new Promise<void>((resolve) => {
+    resolvePreviewExit = resolve;
+  });
+  previewDiagnostics = {
+    requestedPort: previewPort,
+    startedAt: Date.now(),
+    stdout: "",
+    stderr: "",
+    exited: false,
+    exitPromise: previewExitPromise,
+    resolveExit: resolvePreviewExit,
+  };
 
   previewProcess = spawn(
     join(process.cwd(), "node_modules", ".bin", "astro"),
-    ["preview", "--host", previewHost, "--port", String(previewPort)],
+    [
+      "preview",
+      "--host",
+      previewHost,
+      "--port",
+      String(previewPort),
+      "--ignore-lock",
+    ],
     {
       cwd: process.cwd(),
-      stdio: "ignore",
+      env: {
+        ...process.env,
+        ASTRO_PREVIEW_BACKGROUND: "0",
+      },
+      stdio: ["ignore", "pipe", "pipe"],
     },
   );
+  previewDiagnostics.pid = previewProcess.pid;
+  previewProcess.stdout?.on("data", (chunk: Buffer | string) => {
+    if (previewDiagnostics) {
+      previewDiagnostics.stdout = appendPreviewOutput(
+        previewDiagnostics.stdout,
+        chunk,
+      );
+    }
+  });
+  previewProcess.stderr?.on("data", (chunk: Buffer | string) => {
+    if (previewDiagnostics) {
+      previewDiagnostics.stderr = appendPreviewOutput(
+        previewDiagnostics.stderr,
+        chunk,
+      );
+    }
+  });
+  previewProcess.once("exit", (code, signal) => {
+    if (previewDiagnostics) {
+      previewDiagnostics.exited = true;
+      previewDiagnostics.exitedAt = Date.now();
+      previewDiagnostics.exitCode = code;
+      previewDiagnostics.signal = signal;
+      previewDiagnostics.resolveExit();
+    }
+  });
+  previewProcess.once("close", (code, signal) => {
+    if (previewDiagnostics) {
+      previewDiagnostics.exited = true;
+      previewDiagnostics.exitedAt ??= Date.now();
+      previewDiagnostics.exitCode ??= code;
+      previewDiagnostics.signal ??= signal;
+      previewDiagnostics.resolveExit();
+    }
+  });
+  previewProcess.once("error", (error) => {
+    if (previewDiagnostics) {
+      previewDiagnostics.exited = true;
+      previewDiagnostics.exitedAt = Date.now();
+      previewDiagnostics.spawnError = error.message;
+      previewDiagnostics.resolveExit();
+    }
+  });
 
   chromeProcess = spawn(
     chromeExecutable,
@@ -487,7 +641,11 @@ beforeAll(async () => {
   );
 
   await Promise.all([
-    waitForHttpOk(`http://${previewHost}:${previewPort}/es`, "Astro preview"),
+    waitForHttpOk(
+      `http://${previewHost}:${previewPort}/es`,
+      "Astro preview",
+      previewDiagnostics,
+    ),
     waitForHttpOk(
       `http://${previewHost}:${chromePort}/json/version`,
       "Chrome CDP",
